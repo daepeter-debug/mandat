@@ -37,11 +37,11 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, on
   const lower = (label: string) => label.charAt(0).toLowerCase() + label.slice(1);
   const headline = <>{w.coalitionLabel} by dnes mala <b>{w.coalition}</b> kresiel, {lower(w.oppositionLabel)} <b>{w.opposition}</b>.</>;
   const majorityHolder = w.coalition >= m ? lower(w.coalitionLabel) : w.opposition >= m ? lower(w.oppositionLabel) : null;
-  const outside = edition.now.othersMembers.map(x => `${x.short} (${x.seats})`);
+  // Čísla blokov nesú karty nižšie, preto ich lead neopakuje: hovorí len o väčšine a o predpoklade.
+  const seatsOf = (short: string) => edition.now.rows.find(r => r.short === short)?.seats ?? 0;
+  const partnerPhrase = (labels: string[], side: string) => labels.length ? `${list(labels.map(x => `${x} (${seatsOf(x)})`))} ${side}` : "";
   const lead = (majorityHolder ? `Väčšinu ${m} kresiel zo 150 by mala ${majorityHolder}. ` : `Väčšinu ${m} kresiel zo 150 by nemal ani jeden blok. `)
-    + `Bez partnerov: dnešná koalícia ${list(edition.coalitionLabel)} ${edition.now.coalition}, opozícia ${list(edition.oppositionLabel)} ${edition.now.opposition}${outside.length ? `; mimo blokov ${list(outside)}` : ""}. `
-    + (w.others > 0 ? `Aj po pridaní partnerov by mimo blokov ostalo ${w.others} kresiel (${list(w.othersMembers.map(x => x.short))}). ` : "")
-    + `Priradenie partnerov (${list([...w.coalitionPartners, ...w.oppositionPartners])}) je redakčný predpoklad, nie dohoda strán.`;
+    + `Priradenie ${partnerPhrase(w.coalitionPartners, "ku koalícii")} a ${partnerPhrase(w.oppositionPartners, "k opozícii")} je redakčný predpoklad, nie dohoda strán.`;
   const kpis = [
     { label: w.coalitionLabel, value: w.coalition, delta: dWithCoalition, note: `${signedInt(dWithCoalition)} za 30 dní` },
     { label: w.oppositionLabel, value: w.opposition, delta: dWithOpposition, note: `${signedInt(dWithOpposition)} za 30 dní` },
@@ -57,7 +57,7 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, on
 
   return <section className="national-intro" aria-labelledby="national-title">
     <div className="national-copy">
-      <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát k {date(edition.asOf)} · {edition.agencies.length} agentúr · scenár kresiel, nie predpoveď</span></p>
+      <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát k {date(edition.asOf)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
       <h1 id="national-title">{headline}</h1>
       <p className="edition-lead">{lead}</p>
       <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">

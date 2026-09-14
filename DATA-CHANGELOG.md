@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 14. 9. 2026 — desktopové body z kritiky (vetva desktop, Claude)
+
+Úvodný odsek už neopakuje čísla, ktoré sú hneď pod ním na kartách. Zostali dve vety: kto by mal väčšinu a že priradenie Republiky ku koalícii a Hnutia Slovensko k opozícii je redakčný predpoklad, teraz aj s ich počtom kresiel. Zoznam zmien je na desktope v dvoch stĺpcoch a nadtitulok je kratší. Výsledok pri 1440 px: úvodný stĺpec z 961 na 860 px, tlačidlo Preskúmať prieskumy z 906 na 815 px (nad zlomom obrazovky), karty Zodpovednosť a Parlament z 1166 na 1065 px. Na mobile sa karta parlamentu posunula z 1384 na 1311 px.
+
+Karty strán ukazujú ako hlavné číslo Model Mandát (vážený priemer) a hodnotu agentúry ako druhý riadok, takže sa už nelíšia od pásu strán a bočnej lišty. Dekoratívna šípka v rohu karty, ktorá vyzerala ako cieľ, ale klikateľná nebola, je preč. Hlavička profilu strany má hodnotu z agregátu hneď pri názve, nie až po sekcii o ľuďoch.
+
+Drobné písmo: podlaha 11,5 až 12 px na desktope pre panel správ, kartu zodpovednosti, bočnú lištu a monogramy; počet textov pod 12 px na úvode klesol zo 165 na 130 (zvyšok sú legendy grafov a tabuliek). V záložke Prieskumy je nadpis Archív meraní nad grafom, takže poradie nadpisov na mobile začína H1 a nie H2.
+
 ## 14. 9. 2026 — Mobilný Prehľad: aktuálne karty a rozcestník (Claude)
 
 Na mobile do 760 px Prehľad ukazuje len aktuálny obsah v tomto poradí: pás strán, vydanie (hlavná správa, štyri čísla, čo sa zmenilo), Parlament dnes s prepínačom, Politika v krátkosti (dve správy), Zodpovednosť (zbalená) a rozcestník „Ďalej na webe“ s ôsmimi dlaždicami (Prieskumy, Strany, Kauzy, Vlastný model, Dátový prehľad, Programy, Správy, O dátach). Sekcie, ktoré na mobile duplikovali záložky (graf podpory, posledné meranie každej agentúry, ukážka modelu, ďalšie pohľady, edičný pruh), sú na mobile skryté; graf podpory (agregátor) je na mobile v záložke Prieskumy nad archívom, tlačidlo Preskúmať prieskumy tam na mobile prepne. Desktop sa nemení. Komponent components/overview-directory.tsx.

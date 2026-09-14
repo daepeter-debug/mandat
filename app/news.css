@@ -255,3 +255,30 @@ html .lab-input-row input[type=number]{width:68px}
 .agency-switcher>button:nth-last-child(-n+3){border-bottom:0}
 .agency-switcher>button.is-election{border-right:2px solid #c9d4c2}
 }
+
+/* Desktop (vetva desktop): kratší úvodník, čitateľnejšie drobné písmo v bočnej lište a jednotné číslo strany. */
+.party-card-second{margin:7px 0 0;font-size:12.5px;line-height:1.5;color:var(--text-3)}
+.party-card-second b{font-weight:600;color:var(--text-2);font-variant-numeric:tabular-nums}
+@media(min-width:761px){
+.edition-changes{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 26px;max-width:none}
+.edition-changes li{grid-template-columns:76px minmax(0,1fr)}
+.national-copy>.election-countdown{margin-top:18px;padding-top:14px}
+.national-copy .election-countdown-head h2{font-size:14px}
+.party-rail-name{font-size:11.5px;line-height:1.3}
+.party-rail-value small{font-size:10px}
+.party-rail-head p,.party-rail-foot p,.party-rail-colheads,.party-rail-divider{font-size:10.5px}
+.edition-kpis dt{font-size:11px}
+.news-selection{font-size:11px;padding:5px 8px}
+.studio-time button{font-size:11px}
+}
+@media(min-width:1201px){.party-rail-name{font-size:12px}}
+
+/* Podlaha drobného písma na desktope: rovnaké minimum ako na mobile, karty sú dosť široké. */
+@media(min-width:761px){
+.news-digest .news-entry-meta,.news-digest .news-entry-meta>span,.news-digest .news-checked,.news-checked{font-size:12px}
+.responsibility-value small{font-size:11.5px;min-width:44px}
+.responsibility-never,.responsibility-legend,.responsibility-note,.responsibility-inactive-note{font-size:11.5px}
+.responsibility-name,.responsibility-head span{font-size:11.5px}
+.party-rail-value small{font-size:11px}
+.party-monogram,.party-card-top span{font-size:12px}
+}
