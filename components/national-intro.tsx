@@ -48,7 +48,12 @@ export default function NationalIntro({ onNavigate }: { onNavigate: (view: strin
     { label: `Koalícia dnes: ${edition.coalitionLabel.join(", ")}`, value: edition.now.coalition, delta: dCoalition, note: `${signedInt(dCoalition)} za 30 dní` },
     { label: `Opozícia dnes: ${edition.oppositionLabel.join(", ")}`, value: edition.now.opposition, delta: dOpposition, note: `${signedInt(dOpposition)} za 30 dní` },
   ];
-  const explore = () => document.getElementById("aggregate-title")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+  const explore = () => {
+    const target = document.getElementById("aggregate-title");
+    // Na mobile je graf podpory v záložke Prieskumy, na prehľade je skrytý.
+    if (!target || !target.offsetParent) { onNavigate("polls"); return; }
+    target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+  };
 
   return <section className="national-intro" aria-labelledby="national-title">
     <div className="national-copy">

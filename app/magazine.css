@@ -262,3 +262,19 @@
 .edition-changes .up,.edition-changes .down{font-weight:600}
 @media(min-width:1700px){.with-party-rail .national-copy h1{font-size:clamp(26px,1.9vw,34px)}.edition-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.national-copy h1{font-size:clamp(25px,6.6vw,31px);max-width:none}.edition-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.edition-kpis dd{font-size:23px}.edition-changes li{grid-template-columns:74px minmax(0,1fr)}.edition-lead{font-size:14px}}
+
+/* Mobilný Prehľad: aktuálne karty, potom rozcestník; duplikované sekcie sú na mobile skryté a graf podpory je v záložke Prieskumy. */
+.overview-directory,.polls-aggregate-mobile{display:none}
+@media(max-width:760px){
+.magazine .mag-edition,.magazine .poll-studio,.magazine .mag-pulse,.magazine .mag-lab,.magazine .mag-explore{display:none}
+.polls-aggregate-mobile{display:block;margin-bottom:8px}
+.polls-aggregate-mobile .aggregate{padding-top:0}
+.overview-directory{display:block;padding:6px 0 30px}
+.overview-directory h2{font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);margin:0 0 10px}
+.overview-directory ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.overview-directory button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;min-height:78px;padding:12px 12px 10px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--mag-ink);font:inherit;text-align:left;cursor:pointer}
+.overview-directory button b{font-size:14px;font-weight:600}
+.overview-directory button span{font-size:12px;line-height:1.4;color:var(--text-2)}
+.overview-directory button svg{margin-top:auto;align-self:flex-end;color:var(--text-3)}
+.editorial-shell.with-party-rail .national-intro{grid-template-areas:"copy" "parliament" "news" "resp";padding-bottom:18px}
+}

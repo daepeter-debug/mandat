@@ -213,3 +213,6 @@
 .news-digest .news-scroll{max-height:none;overflow:visible;padding-right:0}.news-digest .news-scroll>.news-entry:nth-child(n+3){display:none}
 .national-copy .election-unconfirmed,.national-copy .election-approx{font-size:11px}.news-digest .news-selection{font-size:10.5px}
 }
+
+/* Mobilný Prehľad: poradie kariet na mobile (vydanie, parlament, správy, zodpovednosť). */
+@media(max-width:760px){.editorial-shell.with-party-rail .national-intro{grid-template-areas:"copy" "parliament" "news" "resp"}}

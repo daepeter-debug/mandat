@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 14. 9. 2026 — Mobilný Prehľad: aktuálne karty a rozcestník (Claude)
+
+Na mobile do 760 px Prehľad ukazuje len aktuálny obsah v tomto poradí: pás strán, vydanie (hlavná správa, štyri čísla, čo sa zmenilo), Parlament dnes s prepínačom, Politika v krátkosti (dve správy), Zodpovednosť (zbalená) a rozcestník „Ďalej na webe“ s ôsmimi dlaždicami (Prieskumy, Strany, Kauzy, Vlastný model, Dátový prehľad, Programy, Správy, O dátach). Sekcie, ktoré na mobile duplikovali záložky (graf podpory, posledné meranie každej agentúry, ukážka modelu, ďalšie pohľady, edičný pruh), sú na mobile skryté; graf podpory (agregátor) je na mobile v záložke Prieskumy nad archívom, tlačidlo Preskúmať prieskumy tam na mobile prepne. Desktop sa nemení. Komponent components/overview-directory.tsx.
+
 ## 14. 9. 2026 — titulná strana ako vydanie (vetva obalka, Claude)
 
 Doplnenie na žiadosť Petra (14. 9. večer): hlavné hodnotenie v titulku a číslach ráta s partnermi, v texte „Koalícia s Republikou“ a „Opozícia s Matovičom“ (Igor Matovič vedie Hnutie Slovensko); dnešné bloky bez partnerov (SMER, HLAS, SNS 48 · PS, KDH, SaS, Demokrati 64) ostávajú ako druhý pár čísel a v texte. K 7. 9. 2026: koalícia s Republikou 70 kresiel, opozícia s Matovičom 80, teda väčšina. Priradenie partnerov je redakčný predpoklad podľa lib/blocs.ts, slovné tvary v lib/edition.ts (partnerWording).
