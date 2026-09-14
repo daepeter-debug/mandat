@@ -19,12 +19,14 @@ for (const [records, checked] of [[politicalNews, newsChecked], [politicalCases,
     assert((record.published??record.statusAsOf)<=checked,'Žiadny budúci dátum v kontrolovanom výbere');
   }
 }
-const fixtureNews=['2026-09-06','2026-09-07','2026-09-13','2026-09-14'].map((published,i)=>({...politicalNews[0],id:String(i),published}));
-assert.deepEqual(filterNews(fixtureNews,'2026-09-13','week','all').map(n=>n.published),['2026-09-13','2026-09-07'],'Týždeň od pondelka do dneška, bez budúcich správ');
-assert.deepEqual(filterNews(fixtureNews,'2026-09-14','week','all').map(n=>n.published),['2026-09-14'],'V pondelok začína nový týždeň');
+assert.equal(new Set(politicalNews.map(n=>n.source)).size,politicalNews.length,'Každá správa má jedinečný zdroj');
+assert(politicalNews.some(n=>n.published===newsChecked),'Výber obsahuje aspoň jednu správu z dňa kontroly');
+const fixtureNews=['2026-09-06','2026-09-07','2026-09-09','2026-09-13','2026-09-14'].map((published,i)=>({...politicalNews[0],id:String(i),published}));
+assert.deepEqual(filterNews(fixtureNews,'2026-09-13','week','all').map(n=>n.published),['2026-09-13','2026-09-09','2026-09-07'],'Posledných 7 dní vrátane dneška, bez budúcich správ');
+assert.deepEqual(filterNews(fixtureNews,'2026-09-14','week','all').map(n=>n.published),['2026-09-14','2026-09-13','2026-09-09'],'Pohyblivé okno, nie kalendárny týždeň: v pondelok nezostane len dnešok');
 assert.equal(filterNews(fixtureNews,'2026-09-13','today','all').length,1);
 assert.equal(filterNews(fixtureNews,'2026-09-13','all','Prieskumy').length,0,'Filter témy');
-assert.equal(filterNews(fixtureNews,'2026-09-13','all','all').length,3,'Aj archív vylúči budúce správy');
+assert.equal(filterNews(fixtureNews,'2026-09-13','all','all').length,4,'Aj archív vylúči budúce správy');
 for (const record of politicalCases) {
   assert(record.parties.length>0&&record.parties.every(id=>partyIds.has(id)),'Kauza odkazuje na existujúci profil');
   assert(record.status in caseStatuses,'Kauza má pomenovaný stav');
