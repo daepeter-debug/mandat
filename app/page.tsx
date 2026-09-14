@@ -38,8 +38,9 @@ const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^
 /* Stav rozhrania v URL: záložka (v), agentúra prehľadu (a), obdobie (p), graf/tabuľka (m),
    filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,agency:"all",query:"",partyQuery:"",detail:null,party:null};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;parliament:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
+const parliamentViews = ["model","volby2023"];
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,parliament:"model",agency:"all",query:"",partyQuery:"",detail:null,party:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
@@ -52,6 +53,7 @@ function parseSearch(search:string):UiState {
     legend: s.get("l")===null ? defaults.legend : s.get("l")!.split(",").filter(id=>partyIds.has(id)),
     blocs: (s.get("b") ?? "").split(",").filter(id=>optionalIds.includes(id)),
     caseParty: pick("kp", v=>partyIds.has(v)),
+    parliament: pick("pn", v=>parliamentViews.includes(v)) ?? defaults.parliament,
     agency: pick("f", v=>v==="all"||agencies.includes(v)) ?? defaults.agency,
     query: (s.get("q") ?? "").slice(0,80),
     partyQuery: (s.get("s") ?? "").slice(0,80),
@@ -68,6 +70,7 @@ function serialize(state:UiState) {
   if(state.legend.join(",")!==defaults.legend.join(",")) s.set("l",state.legend.join(","));
   if(state.blocs.length) s.set("b",state.blocs.join(","));
   if(state.caseParty) s.set("kp",state.caseParty);
+  if(state.parliament!==defaults.parliament) s.set("pn",state.parliament);
   if(state.agency!==defaults.agency) s.set("f",state.agency);
   if(state.query) s.set("q",state.query);
   if(state.partyQuery) s.set("s",state.partyQuery);
@@ -189,7 +192,7 @@ export default function Home() {
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">
-        <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView}/></TabsContent>
+        <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed/></TabsContent>
         <TabsContent value="cases"><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></TabsContent>
         <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>
