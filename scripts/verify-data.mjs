@@ -251,6 +251,9 @@ assert(edition.movers.every(m => m.delta !== 0 && m.value >= 1), 'Pohyby sú nen
 for (const c of edition.crossings) assert(c.direction === 'down' ? c.seatsNow === 0 && c.seatsBefore > 0 : c.seatsNow > 0 && c.seatsBefore === 0, `Prechod cez 5 % má zodpovedajúce kreslá: ${c.id}`);
 assert(edition.newPolls.length >= 1 && edition.newPolls.every(p => p.end > edition.monthAgo && p.end <= edition.asOf), 'Nové merania patria do sledovaného okna');
 assert(edition.withPartners.coalition >= edition.now.coalition && edition.withPartners.opposition >= edition.now.opposition, 'Voliteľní partneri kreslá blokom len pridávajú');
+assert.equal(edition.withPartners.coalition + edition.withPartners.opposition + edition.withPartners.others, 150, 'Bloky s partnermi dávajú 150');
+assert(edition.withPartners.coalitionLabel === 'Koalícia s Republikou' && edition.withPartners.oppositionLabel === 'Opozícia s Matovičom', 'Slovné označenie blokov s partnermi');
+assert(edition.before.withCoalition + edition.before.withOpposition <= 150, 'Bloky s partnermi pred mesiacom najviac 150');
 assert(edition.coalitionLabel.length === 3 && edition.oppositionLabel.length === 4, 'Bloky bez voliteľných partnerov: 3 koaličné a 4 opozičné strany');
 
 console.log(`OK: ${archive.length} meraní, ${parties.length} subjektov, ${election2023.subjects.length} subjektov volieb 2023 a ${availableTrendAgencies.length} scenárov kresiel. Zdroje, chronológia, rozsah, súčty, poradie a výpočty prešli kontrolou.`);

@@ -30,25 +30,23 @@ export default function NationalIntro({ onNavigate }: { onNavigate: (view: strin
   // Only a month-level planning horizon is known. Never invent an election day.
   const months = today ? Math.max(0, (2027-year)*12+9-month) : null;
   const monthLabel = months === 1 ? "mesiac" : months !== null && months >= 2 && months <= 4 ? "mesiace" : "mesiacov";
-  const dCoalition = edition.now.coalition - edition.before.coalition;
-  const dOpposition = edition.now.opposition - edition.before.opposition;
-  const dOthers = edition.now.others - edition.before.others;
-  const headline = edition.now.coalition >= edition.majority
-    ? <>Koalícia by si dnes udržala väčšinu: <b>{edition.now.coalition}</b> kresiel, opozícia <b>{edition.now.opposition}</b>.</>
-    : edition.now.opposition >= edition.majority
-      ? <>Opozícia by dnes mala väčšinu: <b>{edition.now.opposition}</b> kresiel, koalícia <b>{edition.now.coalition}</b>.</>
-      : <>Koalícia by dnes mala <b>{edition.now.coalition}</b> kresiel, opozícia <b>{edition.now.opposition}</b>.</>;
-  const others = edition.now.othersMembers.map(m => `${m.short} (${m.seats})`).join(" a ");
-  const lead = (edition.now.coalition >= edition.majority || edition.now.opposition >= edition.majority
-    ? `Väčšina je ${edition.majority} kresiel zo 150. `
-    : `Väčšinu ${edition.majority} kresiel nemá ani jeden blok. `)
-    + (edition.now.others > 0 ? `O zvyšných ${edition.now.others} kreslách by rozhodovali ${others}. ` : "")
-    + `Koalícia + ${edition.withPartners.coalitionPartners.join(" + ")}: ${edition.withPartners.coalition} kresiel, opozícia + ${edition.withPartners.oppositionPartners.join(" + ")}: ${edition.withPartners.opposition} (redakčný predpoklad, nie dohoda strán).`;
+  const w = edition.withPartners, b = edition.before, m = edition.majority;
+  const dWithCoalition = w.coalition - b.withCoalition, dWithOpposition = w.opposition - b.withOpposition;
+  const dCoalition = edition.now.coalition - b.coalition, dOpposition = edition.now.opposition - b.opposition;
+  const list = (items: string[]) => items.length > 1 ? `${items.slice(0, -1).join(", ")} a ${items.at(-1)}` : items.join("");
+  const headline = <>{w.coalitionLabel} by dnes mala <b>{w.coalition}</b> kresiel, {lower(w.oppositionLabel)} <b>{w.opposition}</b>.</>;
+  const lower = (label: string) => label.charAt(0).toLowerCase() + label.slice(1);
+  const majorityHolder = w.coalition >= m ? lower(w.coalitionLabel) : w.opposition >= m ? lower(w.oppositionLabel) : null;
+  const outside = edition.now.othersMembers.map(x => `${x.short} (${x.seats})`);
+  const lead = (majorityHolder ? `Väčšinu ${m} kresiel zo 150 by mala ${majorityHolder}. ` : `Väčšinu ${m} kresiel zo 150 by nemal ani jeden blok. `)
+    + `Bez partnerov: dnešná koalícia ${list(edition.coalitionLabel)} ${edition.now.coalition}, opozícia ${list(edition.oppositionLabel)} ${edition.now.opposition}${outside.length ? `; mimo blokov ${list(outside)}` : ""}. `
+    + (w.others > 0 ? `Aj po pridaní partnerov by mimo blokov ostalo ${w.others} kresiel (${list(w.othersMembers.map(x => x.short))}). ` : "")
+    + `Priradenie partnerov (${list([...w.coalitionPartners, ...w.oppositionPartners])}) je redakčný predpoklad, nie dohoda strán.`;
   const kpis = [
-    { label: `Koalícia ${edition.coalitionLabel.join(", ")}`, value: edition.now.coalition, delta: dCoalition, note: `${signedInt(dCoalition)} za 30 dní` },
-    { label: `Opozícia ${edition.oppositionLabel.join(", ")}`, value: edition.now.opposition, delta: dOpposition, note: `${signedInt(dOpposition)} za 30 dní` },
-    { label: "Ostatní", value: edition.now.others, delta: dOthers, note: `${signedInt(dOthers)} za 30 dní` },
-    { label: "Väčšina", value: edition.majority, delta: 0, note: "kresiel zo 150" },
+    { label: w.coalitionLabel, value: w.coalition, delta: dWithCoalition, note: `${signedInt(dWithCoalition)} za 30 dní` },
+    { label: w.oppositionLabel, value: w.opposition, delta: dWithOpposition, note: `${signedInt(dWithOpposition)} za 30 dní` },
+    { label: `Koalícia dnes: ${edition.coalitionLabel.join(", ")}`, value: edition.now.coalition, delta: dCoalition, note: `${signedInt(dCoalition)} za 30 dní` },
+    { label: `Opozícia dnes: ${edition.oppositionLabel.join(", ")}`, value: edition.now.opposition, delta: dOpposition, note: `${signedInt(dOpposition)} za 30 dní` },
   ];
   const explore = () => document.getElementById("aggregate-title")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
 
@@ -61,7 +59,7 @@ export default function NationalIntro({ onNavigate }: { onNavigate: (view: strin
         {kpis.map(k => <div key={k.label}><dt>{k.label}</dt><dd>{k.value}</dd><small className={k.delta > 0 ? "up" : k.delta < 0 ? "down" : ""}>{k.note}</small></div>)}
       </dl>
       <ul className="edition-changes" aria-label={`Čo sa zmenilo od ${date(edition.monthAgo)}`}>
-        <li><b>Kreslá</b><span>koalícia {signedInt(dCoalition)}, opozícia {signedInt(dOpposition)}, ostatní {signedInt(dOthers)} od {date(edition.monthAgo)}</span></li>
+        <li><b>Kreslá</b><span>s partnermi: koalícia {signedInt(dWithCoalition)}, opozícia {signedInt(dWithOpposition)} · bez partnerov: koalícia {signedInt(dCoalition)}, opozícia {signedInt(dOpposition)} (od {date(edition.monthAgo)})</span></li>
         {edition.movers.length > 0 && <li><b>Podpora</b><span>{edition.movers.slice(0, 3).map((m, i) => <span key={m.id}>{i > 0 && ", "}{m.short} <span className={m.delta > 0 ? "up" : "down"}>{signed(m.delta)}</span></span>)} p. b.</span></li>}
         {edition.crossings.map(c => <li key={c.id}><b>Hranica 5 %</b><span>{c.short}: {c.direction === "down" ? "pokles pod 5 %" : "prekročenie 5 %"} ({c.value.toLocaleString("sk-SK", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %), z {c.seatsBefore} kresiel na {c.seatsNow}</span></li>)}
         <li><b>Merania</b><span>{edition.newPolls.length} {edition.newPolls.length === 1 ? "nové meranie" : edition.newPolls.length < 5 ? "nové merania" : "nových meraní"} za 30 dní: {[...new Set(edition.newPolls.map(p => p.agency))].join(", ")}</span></li>
