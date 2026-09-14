@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 14. 9. 2026 — mobilná verzia (vetva mobil, Claude)
+
+Zmeny rozsahu a správania, dáta sa nemenia. Mobil do 760 px: fixná spodná lišta strán je nahradená posuvným pásom strán na začiatku Prehľadu (rovnaké poradie a hodnoty Modelu Mandát, monogram viditeľný do načítania loga), panel strán tak už neberie 83 px výšky; pás záložiek má náznak posunu a aktívna záložka sa posunie do stredu; vo Vlastnom modeli je pri posúvaní vstupov prilepený riadok s kreslami štyroch najväčších strán a stavom väčšiny; Politika v krátkosti ukazuje dve najnovšie správy bez vnútorného posúvania; drobné popisy v kartách úvodu majú minimálne 12 px. Všetky šírky: knižnica grafov (Recharts) sa načíta až pri prepnutí na Trend alebo pri grafe v Dátovom prehľade (samostatné moduly components/trend-chart.tsx a components/archive-chart.tsx), predvolený filter Správ je Celý výber (Tento týždeň bol v pondelok prázdny), doplnené Open Graph a Twitter značky, theme-color a public/manifest.webmanifest.
+
 ## 13. 9. 2026 — responzívne poradie a mobilné stránkovanie
 
 Mobilný úvod má poradie úvodník → Politika v krátkosti → Parlament dnes → Zodpovednosť za stav krajiny; desktop si zachováva doterajšie rozloženie. Pod 600 px sa karta Zodpovednosť najprv zobrazí v skrátenej podobe a zvyšok sprístupní postupným rozbalením. Na mobile register káuz stránkuje po 10 prípadoch a archív prieskumov po 12 meraniach, kým desktop naďalej zobrazuje celé zoznamy. Opravené je aj vodorovné pretečenie filtrov v Kauzách. Po záverečnej kontrole začína jednostĺpcový úvod pri 1100 px, aby sa karty okolo 1024 px neorezávali, aktívna navigácia si pri hoveri drží papierovo-zelený kontrast a mobilné ciele rozbalenia, štítkov a zdrojov majú 44 px.

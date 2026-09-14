@@ -199,3 +199,12 @@
 @media(max-width:600px){.case-filters>label:not(.case-search){flex:1 1 100%}.case-filters select{width:100%;min-width:0;max-width:100%}}
 @media(max-width:1100px){.editorial-shell.with-party-rail .national-intro{grid-template-columns:1fr;grid-template-areas:"copy" "news" "parliament" "resp";gap:22px}.parliament-now,.responsibility{max-width:none}.news-digest{align-self:start;display:block}.news-digest .news-scroll{flex:none;height:auto;min-height:0;max-height:240px}.news-digest .news-heading{flex-wrap:nowrap}}
 @media(max-width:600px){.cases-intro summary,.case-copy summary,.case-party-tags button,.news-source,.news-digest .news-source,.responsibility-inactive summary,.responsibility-note a,.responsibility-note button,.profile-cases-link{min-height:44px}}
+
+/* Mobil (vetva mobil): typografické minimum 12 px v kartách úvodu a panel správ skrátený na dve správy bez vnútorného posúvania. */
+@media(max-width:600px){
+.responsibility-head span,.responsibility-name{font-size:12px}.responsibility-value b{font-size:14px;min-width:46px}.responsibility-value small{font-size:11.5px;min-width:42px}.responsibility-group h3,.responsibility-group h3 small{font-size:11px}.responsibility-legend,.responsibility-never,.responsibility-note,.responsibility-inactive-note{font-size:12px}.responsibility-never b,.responsibility-inactive summary{font-size:11px}.responsibility-inactive summary small{font-size:11.5px}.responsibility-list{gap:7px}.responsibility-list li{gap:0 10px;min-height:22px}
+.parliament-now-head span,.parliament-now-blocs dt,.parliament-now-note{font-size:12px}.parliament-now-list{font-size:13px}
+.news-checked,.news-digest .news-checked,.news-digest .news-entry-meta,.news-digest .news-entry-meta>span,.news-digest .news-source{font-size:11.5px}
+.news-digest .news-scroll{max-height:none;overflow:visible;padding-right:0}.news-digest .news-scroll>.news-entry:nth-child(n+3){display:none}
+.national-copy .election-unconfirmed,.national-copy .election-approx{font-size:11px}.news-digest .news-selection{font-size:10.5px}
+}

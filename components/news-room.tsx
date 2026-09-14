@@ -10,7 +10,7 @@ export default function PoliticalNewsFeed({compact=false,onOpen}:{compact?:boole
   const uid=useId();
   const Heading=compact?'h2':'h1';
   const today=useSyncExternalStore(subscribe,day,()=>newsChecked);
-  const [period,setPeriod]=useState('week');
+  const [period,setPeriod]=useState('all');
   const [category,setCategory]=useState('all');
   const rows=filterNews(politicalNews,today,compact?'all':period,compact?'all':category);
   return <section className={compact?'news-digest':'news-page'} aria-labelledby={uid}>

@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { ArrowUpRight, ArrowRight, Info, Search, ChartNoAxesCombined, Table2, Check, BookOpen, ListFilter, ShieldCheck, ChevronRight, Activity } from "lucide-react";
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, ReferenceLine } from "recharts";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
@@ -18,14 +16,15 @@ import { aggregateAsPoll, aggregateAgencies, aggregateHalfLifeDays, aggregatePol
 import BlocBar from "@/components/bloc-bar";
 import PartyProfileOverview, { PartyTags, PartyCases } from "@/components/party-profile-overview";
 import { partyProfiles } from "@/lib/party-profiles";
-import PartyRail, { PartyLogoSources } from "@/components/party-rail";
+import PartyRail, { PartyLogoSources, PartyStrip } from "@/components/party-rail";
+// Graf Dátového prehľadu (Recharts) sa načíta až pri otvorení záložky s grafom.
+const ArchiveChart = lazy(() => import("@/components/archive-chart"));
 import PoliticalNewsFeed from "@/components/news-room";
 import PoliticalCases from "@/components/political-cases";
 import { blocs, blocSeats, optionalPartners, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from "@/lib/blocs";
 import { election2023, seated2023, scenarioFromPoll } from "@/lib/parliament";
 import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, rank, difference, dataVerified, type Poll, type Party } from "@/lib/polls";
 
-const config = Object.fromEntries(parties.map(p => [p.id, { label:p.short, color:p.color }]));
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
 const primaryAgencies = ["AKO","FOCUS","INFOSTAT","IPSOS","NMS"];
 const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},{id:"cases",label:"Kauzy"},{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"method",label:"O dátach"}];
@@ -174,6 +173,13 @@ export default function Home() {
     return ()=>{controller.abort();context.unregisterTool?.("filter_poll_archive");};
   },[]);
 
+  // Na mobile posunieme aktívnu záložku do stredu pásu, aby bolo vidieť, že ich je viac.
+  useEffect(() => {
+    if (!window.matchMedia("(max-width:760px)").matches) return;
+    const tab = document.querySelector<HTMLElement>(".nav-tabs [role=tab][data-state=active]");
+    const list = tab?.parentElement;
+    if (tab && list) list.scrollTo({ left: Math.max(0, tab.offsetLeft - (list.clientWidth - tab.offsetWidth) / 2), behavior: "auto" });
+  }, [view]);
   const changeView = (next:string) => {setView(next);window.scrollTo({top:0,behavior:"instant"});};
   return <div className="site-shell editorial-shell with-party-rail">
     <a className="skip-link" href="#main">Preskočiť na obsah</a>
@@ -182,7 +188,7 @@ export default function Home() {
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">
-        <TabsContent value="overview"><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView}/></TabsContent>
+        <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed/></TabsContent>
         <TabsContent value="cases"><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></TabsContent>
         <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>
@@ -213,7 +219,7 @@ export default function Home() {
               <div className="card-top"><h2>Vývoj podpory <span>{trendAgency}</span></h2><Select value={period} onValueChange={setPeriod}><SelectTrigger className="period-select" aria-label="Obdobie grafu"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="9">Rok 2026</SelectItem><SelectItem value="5">Posledných 5 meraní</SelectItem><SelectItem value="3">Posledné 3 merania</SelectItem></SelectContent></Select></div>
               <div className="chart-legend" role="group" aria-label="Strany zobrazené v grafe">{parties.slice(0,8).map(p=><button key={p.id} aria-pressed={active.includes(p.id)} className={active.includes(p.id)?"legend-item selected":"legend-item"} onClick={()=>setActive(active.includes(p.id)?active.filter(id=>id!==p.id):[...active,p.id])}><i style={{background:p.color}}/>{p.short}</button>)}</div>
               <div className="chart-control-row"><span className="label">Podiel hlasov v %</span><div className="segmented" role="group" aria-label="Zobrazenie dát"><button aria-pressed={mode==="chart"} onClick={()=>setMode("chart")}><ChartNoAxesCombined size={15}/>Graf</button><button aria-pressed={mode==="table"} onClick={()=>setMode("table")}><Table2 size={15}/>Tabuľka</button></div></div>
-              {active.length===0 ? <div className="chart-empty"><ChartNoAxesCombined size={32}/><h3>Vyberte strany na porovnanie</h3><p>Kliknite na ich názvy nad grafom.</p><button className="text-button" onClick={()=>setActive(defaultActive)}>Obnoviť výber <ArrowRight size={16}/></button></div> : mode==="chart" ? <ChartContainer config={config} className="main-chart"><LineChart data={visiblePolls.map(p=>({month:p.month,at:new Date(p.end+"T12:00:00").getTime(),...p.values}))} margin={{top:20,right:24,bottom:12,left:0}} accessibilityLayer><CartesianGrid vertical={false} stroke="#e5e9ef"/><XAxis type="number" dataKey="at" domain={["dataMin","dataMax"]} ticks={visiblePolls.map(p=>new Date(p.end+"T12:00:00").getTime())} tickFormatter={n=>new Date(n).toLocaleDateString("sk-SK",{month:"short"}).replace(".","")} axisLine={false} tickLine={false} minTickGap={12} tickMargin={16} fontSize={13}/><YAxis domain={[0,25]} ticks={[0,5,10,15,20,25]} axisLine={false} tickLine={false} width={34} fontSize={13}/><ReferenceLine y={5} stroke="#778395" strokeDasharray="5 5"/><ChartTooltip content={({active:shown,payload})=>shown&&payload?.length ? <div className="poll-tooltip"><strong>{payload[0].payload.month} 2026 · {trendAgency}</strong>{payload.map(item=><div key={String(item.dataKey)}><i style={{background:item.color}}/><span>{parties.find(p=>p.id===item.dataKey)?.short}</span><b>{typeof item.value==="number"?fmt(item.value):"—"} %</b></div>)}<small>Zdroj merania nájdete pod grafom</small></div>:null}/>{parties.filter(p=>active.includes(p.id)).map(p=><Line key={p.id} type="linear" dataKey={p.id} stroke={p.color} strokeWidth={2.7} dot={{r:3,strokeWidth:2,fill:"#fff"}} activeDot={{r:6}} isAnimationActive={false} connectNulls={false}/>)}</LineChart></ChartContainer> : <div className="chart-table"><Table><TableCaptionText>Preferencie {trendAgency} v percentách, so zdrojom pri každom meraní.</TableCaptionText><TableHeader><TableRow><TableHead>Strana</TableHead>{visiblePolls.map(p=><TableHead key={p.id}><Source poll={p} compact/></TableHead>)}</TableRow></TableHeader><TableBody>{parties.filter(p=>active.includes(p.id)).map(p=><TableRow key={p.id}><TableCell><span className="party-label"><i style={{background:p.color}}/>{p.short}</span></TableCell>{visiblePolls.map(poll=><TableCell key={poll.id}>{poll.values[p.id]===undefined?"—":`${fmt(poll.values[p.id])} %`}</TableCell>)}</TableRow>)}</TableBody></Table></div>}
+              {active.length===0 ? <div className="chart-empty"><ChartNoAxesCombined size={32}/><h3>Vyberte strany na porovnanie</h3><p>Kliknite na ich názvy nad grafom.</p><button className="text-button" onClick={()=>setActive(defaultActive)}>Obnoviť výber <ArrowRight size={16}/></button></div> : mode==="chart" ? <Suspense fallback={<div className="main-chart chart-loading" aria-hidden="true"/>}><ArchiveChart polls={visiblePolls} active={active} agency={trendAgency}/></Suspense> : <div className="chart-table"><Table><TableCaptionText>Preferencie {trendAgency} v percentách, so zdrojom pri každom meraní.</TableCaptionText><TableHeader><TableRow><TableHead>Strana</TableHead>{visiblePolls.map(p=><TableHead key={p.id}><Source poll={p} compact/></TableHead>)}</TableRow></TableHeader><TableBody>{parties.filter(p=>active.includes(p.id)).map(p=><TableRow key={p.id}><TableCell><span className="party-label"><i style={{background:p.color}}/>{p.short}</span></TableCell>{visiblePolls.map(poll=><TableCell key={poll.id}>{poll.values[p.id]===undefined?"—":`${fmt(poll.values[p.id])} %`}</TableCell>)}</TableRow>)}</TableBody></Table></div>}
               <div className="chart-bottom"><p><i className="dash-key"/>5 % · orientačná referencia</p><button className="text-button" onClick={()=>changeView("method")}>Ako čítať dáta <ArrowRight size={14}/></button></div>
               <div className="chart-sources"><span>Zdroj: {current.sourceName}</span><div>{visiblePolls.map(p=><a key={p.id} href={p.source} target="_blank" rel="noopener noreferrer">{p.month}<ArrowUpRight size={12}/></a>)}</div></div>
             </section>

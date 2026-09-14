@@ -1,0 +1,14 @@
+{
+  "name": "Mandát — Slovensko v číslach",
+  "short_name": "Mandát",
+  "description": "Nezávislý prehľad volebných prieskumov a politických strán. Overiteľné zdroje, zrozumiteľné súvislosti.",
+  "lang": "sk",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f6f0",
+  "theme_color": "#f4f6f0",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

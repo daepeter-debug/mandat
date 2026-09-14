@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight, ChartNoAxesCombined } from "lucide-react";
+import type { CSSProperties } from "react";
+import { ArrowRight, ArrowUpRight, ChartNoAxesCombined } from "lucide-react";
 import { currentAggregate, aggregateLastDate } from "@/lib/aggregate";
 import { parties, fmt, date, type Party } from "@/lib/polls";
 import logos from "@/lib/party-logos.json";
@@ -28,4 +29,15 @@ export default function PartyRail({selected,onSelect,onMethod}:{selected:string|
     </div>
     <div className="party-rail-foot"><p>Vážený priemer, nie predpoveď.<br/>Zobrazené subjekty nad 1 %.</p><button onClick={onMethod}>Zdroje a metodika <ArrowUpRight size={14}/></button></div>
   </aside>;
+}
+
+/* Mobil: vodorovný pás strán na začiatku prehľadu namiesto fixnej spodnej lišty (šetrí výšku obrazovky). Monogram je viditeľný, kým sa logo nenačíta. */
+export function PartyStrip({selected,onSelect,onMore}:{selected:string|null;onSelect:(party:Party)=>void;onMore:()=>void}) {
+  return <section className="party-strip" aria-label="Politické strany podľa Modelu Mandát">
+    <div className="party-strip-head"><span>Model Mandát · {date(aggregateLastDate)}</span><button type="button" onClick={onMore} aria-label="Všetky strany a profily">Všetky strany <ArrowRight size={14} aria-hidden="true"/></button></div>
+    <div className="party-strip-scroll">{ranked.map(p=>{const value=currentAggregate.values[p.id].value;return <button key={p.id} type="button" className="party-strip-item" aria-pressed={selected===p.id} aria-label={`${p.name}: ${fmt(value)} percent, ${selected===p.id?"zatvoriť":"otvoriť"} profil`} onClick={()=>onSelect(p)}>
+      <span className="party-strip-logo" style={{"--party-color":p.color} as CSSProperties}><span aria-hidden="true">{p.short.slice(0,2)}</span>{logoMap[p.id]&&<Image src={logoMap[p.id].src} alt="" width={36} height={36} unoptimized loading="eager"/>}</span>
+      <span className="party-strip-name">{p.short}</span><b className="party-strip-value">{fmt(value)}<small> %</small></b>
+    </button>;})}</div>
+  </section>;
 }

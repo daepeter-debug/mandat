@@ -1,9 +1,7 @@
 "use client";
 
-import {useId,useMemo,useState,type CSSProperties} from "react";
+import {lazy,Suspense,useId,useMemo,useState,type CSSProperties} from "react";
 import {ArrowRight,ArrowUpRight,Info,ChartNoAxesCombined,ListOrdered,RotateCcw} from "lucide-react";
-import {Area,CartesianGrid,ComposedChart,Line,ReferenceLine,ReferenceDot,Tooltip,XAxis,YAxis} from "recharts";
-import {ChartContainer} from "@/components/ui/chart";
 import {aggregatePolls,aggregateSeries,currentAggregate,aggregateLastDate} from "@/lib/aggregate";
 import {parties,fmt,date} from "@/lib/polls";
 
@@ -11,8 +9,9 @@ const ranked=parties.filter(p=>currentAggregate.values[p.id]?.value>1).sort((a,b
 const primary=ranked.filter(p=>currentAggregate.values[p.id].value>=5);
 const belowThreshold=ranked.filter(p=>currentAggregate.values[p.id].value<5);
 const fullDate=(value:string)=>new Date(`${value}T12:00:00Z`).toLocaleDateString("sk-SK",{day:"numeric",month:"long",year:"numeric"});
-const monthTick=(value:number)=>new Date(value).toLocaleDateString("sk-SK",{month:"short"});
 const timestamp=(value:string)=>Date.parse(`${value}T12:00:00Z`);
+// Recharts sa načíta až pri prepnutí na Trend; predvolené Poradie ho nepotrebuje.
+const TrendChart=lazy(()=>import("@/components/trend-chart"));
 
 export default function PollAggregator({onMethod}:{onMethod:()=>void}) {
   const [focus,setFocus]=useState("ps");
@@ -62,22 +61,7 @@ export default function PollAggregator({onMethod}:{onMethod:()=>void}) {
         <div className="studio-main">
           <div className="studio-chart-heading"><div>{mode==="trend"?<label className="studio-inline-select"><span className="sr-only">Vybraná strana</span><select value={focus} onChange={e=>setFocus(e.target.value)}>{ranked.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>:<h3>Podpora strán v jednom pohľade</h3>}<span className="studio-date">{fullDate(point.date)}{mode==="trend"&&!compare&&` · Detail, os ${yMin} – ${yMax} %`}</span></div>{mode==="trend"&&<div className="studio-layer-controls"><label><input type="checkbox" checked={compare} onChange={e=>setCompare(e.target.checked)}/> Ostatné strany</label><label><input type="checkbox" checked={showBand} onChange={e=>setShowBand(e.target.checked)}/> Pásmo neistoty</label><label><input type="checkbox" checked={showMonths} onChange={e=>setShowMonths(e.target.checked)}/> Mesačné hodnoty</label></div>}</div>
           {mode==="trend"?<div className="studio-plot" role="img" aria-label={`Trend: ${focused.name}. K ${date(point.date)} ${current?`${fmt(current.value)} percenta, orientačné modelové pásmo ${fmt(current.lower)} až ${fmt(current.upper)} percenta`:"bez údaja"}. Presné hodnoty sú aj v paneli strán a dostupné časovým posuvníkom.`}>
-            <ChartContainer config={Object.fromEntries(ranked.map(p=>[p.id,{label:p.short,color:p.color}]))} initialDimension={{width:900,height:320}}>
-              <ComposedChart data={data} margin={{top:28,right:30,left:-12,bottom:4}} accessibilityLayer onMouseMove={moveToPoint} onMouseLeave={()=>setHovered(null)} onClick={state=>{const next=Number(state.activeTooltipIndex);if(state.activeTooltipIndex!==null&&state.activeTooltipIndex!==undefined&&Number.isInteger(next)&&points[next]){setPinned(points[next].date);setHovered(null);}}}>
-                <defs><linearGradient id={`${uid}-band`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={focused.color} stopOpacity=".2"/><stop offset="100%" stopColor={focused.color} stopOpacity=".035"/></linearGradient></defs>
-                <CartesianGrid vertical={false} stroke="#dce3dd" strokeOpacity={.7}/>
-                <XAxis type="number" dataKey="time" domain={[timestamp(points[0].date),timestamp(points.at(-1)!.date)]} ticks={monthTicks} minTickGap={30} tickFormatter={monthTick} axisLine={false} tickLine={false} tickMargin={13} tick={{fontSize:11,fill:"#59695f"}}/>
-                <YAxis domain={[yMin,yMax]} ticks={Array.from({length:(yMax-yMin)/5+1},(_,i)=>yMin+i*5)} axisLine={false} tickLine={false} tickFormatter={v=>`${v} %`} tick={{fontSize:10,fill:"#59695f"}}/>
-                {yMin<=5&&<ReferenceLine y={5} stroke="#85978a" strokeDasharray="4 5" label={{value:"5 %",position:"insideTopLeft",fill:"#59695f",fontSize:10}}/>}
-                {showBand&&<Area key={focus} type="monotone" dataKey="range" stroke="none" fill={`url(#${uid}-band)`} isAnimationActive={false}/>}
-                {chartParties.filter(p=>p.id!==focus).map(p=><Line key={p.id} type="monotone" dataKey={p.id} stroke={p.color} strokeWidth={1.4} strokeOpacity={.35} dot={false} activeDot={false} connectNulls={false} isAnimationActive={false}/>)}
-                <Line type="monotone" dataKey={focus} stroke={focused.color} strokeWidth={3} dot={false} activeDot={false} connectNulls={false} isAnimationActive={false}/>
-                {showMonths&&monthlyPoints.map((p,i)=>p.values[focus]&&<ReferenceDot key={p.date} className={`studio-month-dot ${monthlyPoints.length>5&&i%2===1&&i!==monthlyPoints.length-1?"studio-month-secondary":""}`} x={timestamp(p.date)} y={p.values[focus].value} r={3.5} fill="#fcfdf9" stroke={focused.color} strokeWidth={2} label={{position:"top",value:`${fmt(p.values[focus].value)} %`,fontSize:11,fontWeight:600,fill:"#20392f",offset:12}}/>)}
-                <ReferenceLine x={timestamp(point.date)} stroke={focused.color} strokeOpacity={.38} strokeDasharray="3 4"/>
-                {current&&<ReferenceDot x={timestamp(point.date)} y={current.value} r={5} fill={focused.color} stroke="#fcfdf9" strokeWidth={3}/>}
-                <Tooltip content={()=>null} cursor={false}/>
-              </ComposedChart>
-            </ChartContainer>
+            <Suspense fallback={<div className="studio-plot-loading" aria-hidden="true"/>}><TrendChart uid={uid} data={data} ranked={ranked} chartParties={chartParties} focus={focus} focused={focused} points={points} point={point} current={current} monthTicks={monthTicks} monthlyPoints={monthlyPoints} yMin={yMin} yMax={yMax} showBand={showBand} showMonths={showMonths} onMove={moveToPoint} onLeave={()=>setHovered(null)} onPick={d=>{setPinned(d);setHovered(null);}}/></Suspense>
           </div>:<div className="studio-ranking" aria-label={`Poradie strán k ${date(point.date)}`}>{pointRanking.map((p,i)=>{const value=point.values[p.id].value;const maximum=Math.max(5,...pointRanking.map(party=>point.values[party.id].value));return <div key={p.id} className={value<5?"studio-ranking-small":""}>{value<5&&i>0&&point.values[pointRanking[i-1].id].value>=5&&<div className="studio-ranking-threshold">Pod hranicou 5 % pre samostatnú stranu</div>}<button aria-pressed={p.id===focus} onClick={()=>setFocus(p.id)}><span>{p.short}</span><div className="studio-rank-track"><i style={{width:`${value/maximum*100}%`,background:p.color}}/><em style={{left:`${5/maximum*100}%`}}/></div><b>{fmt(value)} <small>%</small></b></button></div>;})}</div>}
           {mode==="trend"&&showMonths&&<div className="studio-months" aria-label="Mesačné body vybranej strany">{monthlyPoints.map(p=><button key={p.date} aria-pressed={point.date===p.date} onClick={()=>{setPinned(p.date);setHovered(null);}} aria-label={`${fullDate(p.date)}: ${p.values[focus]?fmt(p.values[focus].value)+" percent":"bez údaja"}`}><span>{new Date(`${p.date}T12:00:00Z`).toLocaleDateString("sk-SK",{month:"short"})}</span><b>{p.values[focus]?fmt(p.values[focus].value)+" %":"—"}</b></button>)}</div>}{mode==="trend"&&showMonths&&<p className="studio-months-note">Posledný bod v každom zobrazenom mesiaci, nie mesačný priemer. Presný dátum zobrazíte kliknutím.</p>}<div className="studio-time"><div><label htmlFor={`${uid}-time`}>Preskúmať dátum</label><output htmlFor={`${uid}-time`}>{date(point.date)}</output><button onClick={()=>{setPinned(null);setHovered(null);}} disabled={pinned===null&&hovered===null} aria-label="Vrátiť sa k najnovším údajom"><RotateCcw size={13}/> Najnovšie</button></div><input id={`${uid}-time`} type="range" min="0" max={points.length-1} step="1" value={index} aria-valuetext={fullDate(point.date)} onChange={e=>{setPinned(points[e.target.valueAsNumber].date);setHovered(null);}}/><div className="studio-time-ends"><span>{date(points[0].date)}</span><span>{date(points.at(-1)!.date)}</span></div></div>
         </div>
