@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
+const fonts = ["/fonts/ibm-plex-sans-latin-wght-normal.woff2", "/fonts/ibm-plex-sans-latin-ext-wght-normal.woff2"];
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sk">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {/* Písmo je v každom texte; React tieto prednačítania presunie do <head>. */}
+        {fonts.map(file => <link key={file} rel="preload" as="font" type="font/woff2" href={file} crossOrigin="anonymous"/>)}
+        {children}
+      </body>
     </html>
   );
 }
