@@ -20,6 +20,7 @@ import PartyRail, { PartyLogoSources, PartyStrip } from "@/components/party-rail
 // Graf Dátového prehľadu (Recharts) sa načíta až pri otvorení záložky s grafom.
 const ArchiveChart = lazy(() => import("@/components/archive-chart"));
 import PoliticalNewsFeed from "@/components/news-room";
+import { newsById, newsChecked } from "@/lib/political-news";
 import PollAggregator from "@/components/poll-aggregator";
 import PoliticalCases from "@/components/political-cases";
 import { blocs, blocSeats, optionalPartners, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from "@/lib/blocs";
@@ -38,9 +39,9 @@ const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^
 /* Stav rozhrania v URL: záložka (v), agentúra prehľadu (a), obdobie (p), graf/tabuľka (m),
    filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;parliament:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;parliament:string;news:string|null;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
 const parliamentViews = ["model","volby2023"];
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,parliament:"model",agency:"all",query:"",partyQuery:"",detail:null,party:null};
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,parliament:"model",news:null,agency:"all",query:"",partyQuery:"",detail:null,party:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
@@ -54,6 +55,7 @@ function parseSearch(search:string):UiState {
     blocs: (s.get("b") ?? "").split(",").filter(id=>optionalIds.includes(id)),
     caseParty: pick("kp", v=>partyIds.has(v)),
     parliament: pick("pn", v=>parliamentViews.includes(v)) ?? defaults.parliament,
+    news: pick("sp", v=>newsById(v)!==null),
     agency: pick("f", v=>v==="all"||agencies.includes(v)) ?? defaults.agency,
     query: (s.get("q") ?? "").slice(0,80),
     partyQuery: (s.get("s") ?? "").slice(0,80),
@@ -71,6 +73,7 @@ function serialize(state:UiState) {
   if(state.blocs.length) s.set("b",state.blocs.join(","));
   if(state.caseParty) s.set("kp",state.caseParty);
   if(state.parliament!==defaults.parliament) s.set("pn",state.parliament);
+  if(state.news) s.set("sp",state.news);
   if(state.agency!==defaults.agency) s.set("f",state.agency);
   if(state.query) s.set("q",state.query);
   if(state.partyQuery) s.set("s",state.partyQuery);
@@ -131,6 +134,7 @@ export default function Home() {
   const setQuery = (q:string) => { resetArchiveVisible(); update({query:q.slice(0,80)}); };
   const setPartyQuery = (q:string) => update({partyQuery:q.slice(0,80)});
   const setDetail = (p:Poll|null) => update({detail:p?.id??null});
+  const openNews = newsById(ui.news);
   const setParty = (p:Party|null) => update({party:p?.id??null});
   const visiblePolls = agencySeries(trendAgency,Number(period));
   const current = agencySeries(trendAgency,1)[0] ?? latest;
@@ -192,8 +196,8 @@ export default function Home() {
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">
-        <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})}/></TabsContent>
-        <TabsContent value="news"><PoliticalNewsFeed/></TabsContent>
+        <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
+        <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="cases"><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></TabsContent>
         <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>
         <TabsContent value="data">
@@ -271,6 +275,7 @@ export default function Home() {
     </Tabs>
     <footer><button className="brand small" onClick={()=>changeView("overview")}>mandát.</button><p>Nezávislý hobby projekt. Bez reklamy.</p><button className="text-button" onClick={()=>changeView("method")}>Metodika a zdroje <ArrowRight size={13}/></button><span>Dáta skontrolované {verified}</span></footer>
 
+    <Sheet open={openNews!==null} onOpenChange={open=>{if(!open)update({news:null});}}><SheetContent className="detail-sheet news-sheet">{openNews&&<><SheetHeader><SheetTitle>{openNews.title}</SheetTitle><SheetDescription>{openNews.category} · {date(openNews.published)} · naše zhrnutie</SheetDescription></SheetHeader><div className="sheet-body news-sheet-body">{openNews.detail.map((paragraph,i)=><p key={i}>{paragraph}</p>)}<div className="news-sheet-source"><h3>Zdroj</h3><p>Zhrnutie sme napísali z článku, ktorý vydal {openNews.sourceName}. Kontrola zdrojov {date(newsChecked)}.</p><a href={openNews.source} target="_blank" rel="noopener noreferrer">Čítať pôvodný článok<ArrowUpRight size={15} aria-hidden="true"/><span className="sr-only"> (otvorí sa v novej karte)</span></a></div></div><SheetClose className="sheet-bottom-close">Zavrieť</SheetClose></>}</SheetContent></Sheet>
     <Sheet open={detail!==null} onOpenChange={open=>{if(!open)setDetail(null);}}><SheetContent className="detail-sheet">{detail&&<><SheetHeader><SheetTitle>{detail.agency} · {detail.month.toLowerCase()} 2026</SheetTitle><SheetDescription>Detail merania · {detail.type.toLowerCase()} · publikované {date(detail.published)}</SheetDescription></SheetHeader><div className="sheet-body"><dl className="poll-facts"><div><dt>Zber dát</dt><dd>{date(detail.start)} – {date(detail.end)}</dd></div><div><dt>Celková vzorka</dt><dd>{detail.sample===null?"Neuvedené v použitom zdroji":`${detail.sample.toLocaleString("sk-SK")} respondentov`}</dd></div><div><dt>Metóda</dt><dd>{detail.method}</dd></div><div><dt>Zadávateľ</dt><dd>{detail.client}</dd></div></dl><div className="primary-source"><span>Pôvodná publikácia</span><Source poll={detail}/><SourceFallback poll={detail}/></div><PollValues poll={detail}/>{detail.other!==undefined&&<p className="other-results">Iné strany (kategória zdroja) <b>{fmt(detail.other)} %</b></p>}<div className="data-note standalone"><Info size={17}/><p>Prepísané výsledky môžu tvoriť iba časť distribúcie. Neuvedený subjekt neznamená nulovú podporu. Úplné výsledky a metodiku nájdete v zdroji.</p></div>{detail.note&&<div className="editor-note"><h3>Poznámka k údajom</h3><p>{detail.note}</p></div>}<SheetClose className="sheet-close-bottom">Zavrieť detail</SheetClose></div></>}</SheetContent></Sheet>
     <Sheet modal={false} open={party!==null} onOpenChange={open=>{if(!open)setParty(null);}}><SheetContent key={party?.id??"party"} id="party-profile" className="detail-sheet party-profile-sheet" showOverlay={false} onInteractOutside={event=>event.preventDefault()}>{party&&<><SheetHeader><SheetTitle>{party.name}</SheetTitle><SheetDescription>Zameranie · osobnosti · prieskumy · programy</SheetDescription></SheetHeader><div className="sheet-body"><PartyProfileOverview partyId={party.id}/><h2 className="profile-polls-heading">Podpora v prieskumoch</h2><div className="party-detail-head"><span style={{color:party.color}}>{currentAggregate.values[party.id]===undefined?"—":`${fmt(currentAggregate.values[party.id].value)} %`}</span><p>Model Mandát · vážený priemer<br/><Source poll={aggregatePoll}/></p></div><Table><TableCaptionText>{party.name} — posledné meranie každej z piatich agentúr</TableCaptionText><TableHeader><TableRow><TableHead>Posledné meranie</TableHead><TableHead className="number-cell">Podpora</TableHead><TableHead>Zdroj</TableHead></TableRow></TableHeader><TableBody>{snapshots.map(p=><TableRow key={p.id}><TableCell>{p.agency}<span className="cell-caption">{p.month} 2026</span></TableCell><TableCell className="number-cell">{p.values[party.id]===undefined?"—":`${fmt(p.values[party.id])} %`}</TableCell><TableCell><Source poll={p} compact/></TableCell></TableRow>)}</TableBody></Table><div className="data-note standalone"><Info size={17}/><p>Hlavné číslo je rovnaký vážený priemer ako v ľavom paneli. Nižšie je iba najnovšie dostupné meranie každej z piatich vstupných agentúr; ich rozdielne metódy môžu viesť k odlišným výsledkom.</p></div><PartyCases partyId={party.id} onCases={id=>{update({party:null,view:"cases",caseParty:id},true);window.scrollTo({top:0,behavior:"instant"});}}/><PartyDocuments partyId={party.id}/><div className="editor-note profile-next"><h3>Kandidátne listiny 2027</h3><p>Aktuálne osobnosti strany nie sú automaticky kandidátmi do ďalších volieb. Overené kandidátne listiny doplníme po ich zverejnení.</p></div><SheetClose className="sheet-close-bottom">Zavrieť profil</SheetClose></div></>}</SheetContent></Sheet>
   </div>;

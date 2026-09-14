@@ -59,7 +59,8 @@
 .news-entry-meta time{font-variant-numeric:tabular-nums;font-weight:550}
 .news-entry-meta>span{font-size:10px}
 .news-entry h3{font-size:22px;letter-spacing:-.02em;line-height:1.3;font-weight:550;margin:0 0 9px;color:var(--mag-ink)}
-.news-entry h3 a{display:flex;align-items:start;justify-content:space-between;gap:14px;color:inherit;text-decoration:none}
+.news-entry h3 button{display:flex;align-items:start;justify-content:space-between;gap:14px;width:100%;min-height:44px;padding:0;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.news-entry h3 button:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px}
 .news-entry h3 svg{flex-shrink:0;margin-top:4px}
 .news-entry p{font-size:14px;line-height:1.75;max-width:74ch;color:#4a5d4f;margin:0 0 7px}
 .news-source{display:inline-flex;align-items:center;gap:5px;font-size:11px;min-height:32px;color:#36583f;text-decoration:underline;text-underline-offset:3px}
@@ -153,7 +154,7 @@
 .case-copy .case-relationship{font-size:11px;margin:6px 0 13px;color:var(--text-2)}
 .case-copy details p{font-size:12px;line-height:1.7;color:var(--text-2);margin:0 0 15px;max-width:70ch}
 .news-digest :focus-visible,.news-page :focus-visible,.cases-page :focus-visible{outline:2px solid var(--focus);outline-offset:3px}
-@media(hover:hover){.news-entry h3 a:hover{text-decoration:underline;text-underline-offset:3px}.news-open:hover{color:var(--primary)}.case-party-tags button:hover{background:#dce7d3}}
+@media(hover:hover){.news-entry h3 button:hover{text-decoration:underline;text-underline-offset:3px}.news-open:hover{color:var(--primary)}.case-party-tags button:hover{background:#dce7d3}}
 /* Zodpovednosť za stav krajiny: teplý pergamenový odtieň (história), Parlament dnes chladný šalviový (inštitúcia), správy zelené. */
 .responsibility{grid-area:resp;--card-muted:#5f5b47;--card-line:#dbd3ba;min-width:0;padding:16px 18px 14px;background:#f3efe2;border:1px solid #dfd7bf;border-radius:12px;display:flex;flex-direction:column;gap:9px}
 .responsibility-content{display:flex;flex:1;flex-direction:column;gap:9px;min-width:0}
@@ -210,7 +211,7 @@
 .responsibility-head span,.responsibility-name{font-size:12px}.responsibility-value b{font-size:14px;min-width:46px}.responsibility-value small{font-size:11.5px;min-width:42px}.responsibility-group h3,.responsibility-group h3 small{font-size:11px}.responsibility-legend,.responsibility-never,.responsibility-note,.responsibility-inactive-note{font-size:12px}.responsibility-never b,.responsibility-inactive summary{font-size:11px}.responsibility-inactive summary small{font-size:11.5px}.responsibility-list{gap:7px}.responsibility-list li{gap:0 10px;min-height:22px}
 .parliament-now-head span,.parliament-now-blocs dt,.parliament-now-note{font-size:12px}.parliament-now-list{font-size:13px}
 .news-checked,.news-digest .news-checked,.news-digest .news-entry-meta,.news-digest .news-entry-meta>span,.news-digest .news-source{font-size:11.5px}
-.news-digest .news-scroll{max-height:none;overflow:visible;padding-right:0}.news-digest .news-scroll>.news-entry:nth-child(n+3){display:none}
+.news-digest .news-scroll{max-height:none;overflow:visible;padding-right:0}.news-digest .news-scroll>.news-entry:nth-child(n+4){display:none}
 .national-copy .election-unconfirmed,.national-copy .election-approx{font-size:11px}.news-digest .news-selection{font-size:10.5px}
 }
 
@@ -224,3 +225,10 @@ html,body{overflow-x:clip}
 html .editorial-shell input:not([type=range]):not([type=checkbox]):not([type=radio]),html .editorial-shell select,html .editorial-shell textarea,html .search-field input,html .case-search input,html .lab-input-row input[type=number]{font-size:16px}
 html .lab-input-row input[type=number]{width:68px}
 }
+
+/* Naše zhrnutie správy: dlhší text u nás, odkaz na pôvodný článok až na konci. */
+.news-sheet-body p{font-size:15px;line-height:1.8;color:#41544a;margin:0 0 14px;max-width:68ch}
+.news-sheet-source{margin-top:6px;padding-top:16px;border-top:1px solid var(--border)}
+.news-sheet-source h3{font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);margin:0 0 7px}
+.news-sheet-source p{font-size:13px;line-height:1.7;margin:0 0 10px;color:var(--text-2)}
+.news-sheet-source a{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:14px;font-weight:600;color:var(--mag-ink);text-decoration:underline;text-underline-offset:3px}

@@ -20,6 +20,12 @@ for (const [records, checked] of [[politicalNews, newsChecked], [politicalCases,
   }
 }
 assert.equal(new Set(politicalNews.map(n=>n.source)).size,politicalNews.length,'Každá správa má jedinečný zdroj');
+for (const n of politicalNews) {
+  assert(Array.isArray(n.detail) && n.detail.length >= 2, `Každá správa má dlhšie zhrnutie aspoň v dvoch odsekoch: ${n.id}`);
+  assert(n.detail.every(p => typeof p === 'string' && p.trim().length > 80), `Odseky zhrnutia nie sú útržky: ${n.id}`);
+  assert(n.detail.join(' ').length > n.summary.length * 1.5, `Zhrnutie je výrazne dlhšie ako popis v zozname: ${n.id}`);
+  assert(!n.summary.includes('http') && n.detail.every(p => !p.includes('http')), `Text správy neobsahuje odkazy, tie patria k zdroju: ${n.id}`);
+}
 assert(politicalNews.some(n=>n.published===newsChecked),'Výber obsahuje aspoň jednu správu z dňa kontroly');
 const fixtureNews=['2026-09-06','2026-09-07','2026-09-09','2026-09-13','2026-09-14'].map((published,i)=>({...politicalNews[0],id:String(i),published}));
 assert.deepEqual(filterNews(fixtureNews,'2026-09-13','week','all').map(n=>n.published),['2026-09-13','2026-09-09','2026-09-07'],'Posledných 7 dní vrátane dneška, bez budúcich správ');
