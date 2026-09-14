@@ -1,0 +1,401 @@
+{
+  "ps": {
+    "tags": [
+      "Liberálne",
+      "Progresívne",
+      "Európska spolupráca"
+    ],
+    "summary": "Hnutie zdôrazňuje slobodu jednotlivca, rovnosť práv a modernizáciu Slovenska. Hlási sa k liberálnej demokracii a k spolupráci v Európskej únii.",
+    "source": "https://progresivne.sk/o-nas/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "simecka",
+        "name": "Michal Šimečka",
+        "role": "Predseda PS",
+        "bio": "Vedie hnutie a zastupuje ho pri politických rokovaniach.",
+        "imageSource": "https://progresivne.sk/wp-content/uploads/2023/04/Profilovky-Web-991-×-1080-px-–-kopia.png",
+        "source": "https://progresivne.sk/o-nas/",
+        "photo": "/people/simecka.png"
+      },
+      {
+        "id": "korcok",
+        "name": "Ivan Korčok",
+        "role": "Podpredseda PS",
+        "bio": "Je súčasťou užšieho vedenia hnutia.",
+        "imageSource": "https://progresivne.sk/wp-content/uploads/2025/03/Profilovky-Web-991-×-1080-px-–-kopia-3.png",
+        "source": "https://progresivne.sk/o-nas/",
+        "photo": "/people/korcok.png"
+      }
+    ]
+  },
+  "smer": {
+    "tags": [
+      "Sociálna demokracia",
+      "Sociálna politika",
+      "Suverenita"
+    ],
+    "summary": "Strana sa hlási k sociálnej demokracii. V politike zdôrazňuje sociálne istoty, úlohu štátu a národnoštátne záujmy Slovenska.",
+    "source": "https://www.strana-smer.sk/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "fico",
+        "name": "Robert Fico",
+        "role": "Predseda vlády SR",
+        "bio": "Predstaviteľ SMER-u na čele vlády Slovenskej republiky.",
+        "imageSource": "https://www.strana-smer.sk/storage/app/media/Predsednictvo/01-fico.jpg",
+        "source": "https://www.strana-smer.sk/o-nas/predstavitelia/clenovia-vlady-SR",
+        "photo": "/people/fico.jpg"
+      },
+      {
+        "id": "kalinak",
+        "name": "Robert Kaliňák",
+        "role": "Minister obrany SR",
+        "bio": "Vo vláde pôsobí aj ako podpredseda vlády.",
+        "imageSource": "https://www.strana-smer.sk/storage/app/media/Vedenie_strany/robert_kalinak_0.jpg",
+        "source": "https://www.strana-smer.sk/o-nas/predstavitelia/clenovia-vlady-SR",
+        "photo": "/people/kalinak.jpg"
+      }
+    ]
+  },
+  "rep": {
+    "tags": [
+      "Národná suverenita",
+      "Konzervatívne témy",
+      "Migrácia"
+    ],
+    "summary": "Hnutie kladie dôraz na suverenitu Slovenska, tradičnú rodinu a obmedzenie migrácie. V programe presadzuje posilnenie rozhodovania na úrovni národného štátu.",
+    "source": "https://www.hnutie-republika.sk/program/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "uhrik",
+        "name": "Milan Uhrík",
+        "role": "Predseda Republiky",
+        "bio": "Poslanec Európskeho parlamentu a podpredseda frakcie Európa suverénnych národov.",
+        "imageSource": "https://www.hnutie-republika.sk/wp-content/uploads/2021/04/Milan_Uhrik_FOTO.jpg",
+        "source": "https://www.hnutie-republika.sk/nas-tim/",
+        "photo": "/people/uhrik.jpg"
+      },
+      {
+        "id": "mazurek",
+        "name": "Milan Mazurek",
+        "role": "Podpredseda Republiky",
+        "bio": "Zastupuje hnutie aj ako poslanec Európskeho parlamentu.",
+        "imageSource": "https://www.hnutie-republika.sk/wp-content/uploads/2024/09/Milan_Mazurek_FOTO.jpg",
+        "source": "https://www.hnutie-republika.sk/nas-tim/",
+        "photo": "/people/mazurek.jpg"
+      }
+    ]
+  },
+  "slovensko": {
+    "tags": [
+      "Boj proti korupcii",
+      "Podpora rodín",
+      "Verejné financie"
+    ],
+    "summary": "Hnutie nadväzuje na OĽANO. Medzi jeho výrazné témy patrí boj proti korupcii, kontrola verejných výdavkov a pomoc rodinám.",
+    "source": "https://www.obycajniludia.sk/sme-obycajni-ludia/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "matovic",
+        "name": "Igor Matovič",
+        "role": "Predseda Hnutia Slovensko",
+        "bio": "Predseda hnutia a poslanec Národnej rady SR.",
+        "imageSource": "https://www.obycajniludia.sk/wp-content/uploads/2020/01/150_Igor_1-255x322.png",
+        "source": "https://www.obycajniludia.sk/ludia-v-hnuti/",
+        "photo": "/people/matovic.png"
+      },
+      {
+        "id": "sipos",
+        "name": "Michal Šipoš",
+        "role": "Podpredseda hnutia",
+        "bio": "Pôsobí vo vedení hnutia a ako poslanec Národnej rady SR.",
+        "imageSource": "https://www.obycajniludia.sk/wp-content/uploads/2020/01/11-Michal-Sipos-web-1-255x322.png",
+        "source": "https://www.obycajniludia.sk/ludia-v-hnuti/",
+        "photo": "/people/sipos.png"
+      }
+    ]
+  },
+  "hlas": {
+    "tags": [
+      "Sociálna demokracia",
+      "Regióny",
+      "Sociálna politika"
+    ],
+    "summary": "HLAS sa profiluje ako sociálnodemokratická strana. Vo svojich prioritách vyzdvihuje pomoc ľuďom, obciam a regiónom.",
+    "source": "https://strana-hlas.sk/aktuality/michaela-eliasova/rozsirene-predsednictvo-hlasu-jednomyselne-vyjadrilo-doveru-predsedovi-strany-a-poverilo-ho-pripravou-pracovnej-programovej-konferencie/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "estok",
+        "name": "Matúš Šutaj Eštok",
+        "role": "Predseda HLAS-u",
+        "bio": "Vedie stranu a jej užšie predsedníctvo.",
+        "imageSource": "https://strana-hlas.sk/wp-content/uploads/2024/06/Matus-Sutaj-Estok.png",
+        "source": "https://strana-hlas.sk/o-nas/predsednictvo/",
+        "photo": "/people/estok.png"
+      },
+      {
+        "id": "rasi",
+        "name": "Richard Raši",
+        "role": "Podpredseda HLAS-u",
+        "bio": "Je členom užšieho vedenia strany.",
+        "imageSource": "https://strana-hlas.sk/wp-content/uploads/2023/07/Richard-Rasi.png",
+        "source": "https://strana-hlas.sk/o-nas/predsednictvo/",
+        "photo": "/people/rasi.png"
+      }
+    ]
+  },
+  "sas": {
+    "tags": [
+      "Liberálne",
+      "Pravicové",
+      "Podnikanie"
+    ],
+    "summary": "SaS sa hlási k pravicovej politike a slobode jednotlivca. Výraznú časť jej agendy tvoria podmienky podnikania a hospodárska politika.",
+    "source": "https://spravy.stvr.sk/2024/04/sas-predstavila-novych-podpredsedov-b-grohling-chce-nadalej-poctivu-pravicovu-stranu/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "grohling",
+        "name": "Branislav Gröhling",
+        "role": "Predseda SaS",
+        "bio": "Poslanec Národnej rady SR, ktorý vedie stranu od roku 2024.",
+        "imageSource": "https://www.nrsr.sk/web/dynamic/PoslanecPhoto.aspx?PoslanecID=971&ImageWidth=140",
+        "source": "https://spravy.stvr.sk/2026/06/sledujte-nazivo-hostami-sobotnych-dialogov-su-erik-tomas-a-branislav-grohling/",
+        "photo": "/people/grohling.jpg"
+      }
+    ]
+  },
+  "kdh": {
+    "tags": [
+      "Kresťanská demokracia",
+      "Konzervatívne",
+      "Rodina"
+    ],
+    "summary": "Hnutie vychádza z kresťanskodemokratických hodnôt. Zdôrazňuje rodinu, ochranu života a zodpovednosť pri správe verejných vecí.",
+    "source": "https://kdh.sk/kto-sme/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "majersky",
+        "name": "Milan Majerský",
+        "role": "Predseda KDH",
+        "bio": "Stojí na čele kresťanskodemokratického hnutia.",
+        "imageSource": "https://kdh.sk/wp-content/uploads/2024/01/MilanMajersky.jpg",
+        "source": "https://kdh.sk/predsednictvo/",
+        "photo": "/people/majersky.jpg"
+      },
+      {
+        "id": "karas",
+        "name": "Viliam Karas",
+        "role": "Podpredseda KDH",
+        "bio": "Právnik a bývalý minister spravodlivosti. Venuje sa témam právneho štátu.",
+        "imageSource": "https://kdh.sk/wp-content/uploads/2024/03/Viliam-Karas.png",
+        "source": "https://kdh.sk/karas-nikto-nesmie-byt-imunny-pred-spravodlivostou/",
+        "photo": "/people/karas.png"
+      }
+    ]
+  },
+  "dem": {
+    "tags": [
+      "Právny štát",
+      "Európska spolupráca",
+      "Bezpečnosť"
+    ],
+    "summary": "Demokrati kladú dôraz na demokratické inštitúcie a zahraničnopolitické ukotvenie Slovenska. Medzi ich programové piliere patria bezpečnosť, zdravotníctvo a vzdelávanie.",
+    "source": "https://www.smedemokrati.sk/programove-piliere-nasej-politiky/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "nad",
+        "name": "Jaroslav Naď",
+        "role": "Predseda Demokratov",
+        "bio": "Vedie stranu Demokrati a jej politický tím.",
+        "imageSource": "https://www.smedemokrati.sk/wp-content/uploads/2023/04/JN.jpg",
+        "source": "https://www.smedemokrati.sk/",
+        "photo": "/people/nad.jpg"
+      },
+      {
+        "id": "heger",
+        "name": "Eduard Heger",
+        "role": "Podpredseda Demokratov",
+        "bio": "Pôsobí v užšom vedení strany.",
+        "imageSource": "https://www.smedemokrati.sk/wp-content/uploads/2023/04/EH.jpg",
+        "source": "https://www.smedemokrati.sk/",
+        "photo": "/people/heger.jpg"
+      }
+    ]
+  },
+  "aliancia": {
+    "tags": [
+      "Maďarská menšina",
+      "Regióny",
+      "Menšinové práva"
+    ],
+    "summary": "Strana zastupuje predovšetkým záujmy maďarskej komunity na Slovensku. Venuje sa právam národnostných menšín a rozvoju regiónov.",
+    "source": "https://szovetseg.sk/hirek/programunk",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "gubik",
+        "name": "László Gubík",
+        "role": "Predseda Maďarskej aliancie",
+        "bio": "Vedie stranu a zastupuje ju pri politických rokovaniach.",
+        "imageSource": "https://szovetseg.sk/sites/default/files/styles/szemely_nagy/public/2024-12/gubik.png?itok=6kCAaEAS",
+        "source": "https://szovetseg.sk/node/567",
+        "photo": "/people/gubik.png"
+      }
+    ]
+  },
+  "sns": {
+    "tags": [
+      "Národné",
+      "Konzervatívne",
+      "Suverenita"
+    ],
+    "summary": "SNS sa hlási k národnej a konzervatívnej politike. Zdôrazňuje slovenskú štátnosť, národnú identitu a tradičné hodnoty.",
+    "source": "https://www.sns.sk/o-nas/profil/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "danko",
+        "name": "Andrej Danko",
+        "role": "Predseda SNS",
+        "bio": "Vedie stranu aj jej predsedníctvo.",
+        "imageSource": "https://www.sns.sk/wp-content/uploads/2023/07/1.png",
+        "source": "https://www.sns.sk/predsednictvo/",
+        "photo": "/people/danko.png"
+      }
+    ]
+  },
+  "rodina": {
+    "tags": [
+      "Podpora rodín",
+      "Sociálna politika",
+      "Bývanie"
+    ],
+    "summary": "Hnutie sa sústreďuje na sociálnu a ekonomickú situáciu rodín. K jeho dlhodobým témam patrí dostupné bývanie a pomoc domácnostiam.",
+    "source": "https://hnutie-smerodina.sk/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "kollar",
+        "name": "Boris Kollár",
+        "role": "Predseda SME RODINA",
+        "bio": "Predseda hnutia, ktorý pred vstupom do politiky pôsobil v podnikaní.",
+        "imageSource": "https://hnutie-smerodina.sk/wp-content/uploads/2026/02/foto-boris_kollar_uvod-podpis-283x300.png",
+        "source": "https://hnutie-smerodina.sk/bezpecnost/",
+        "photo": "/people/kollar.png"
+      }
+    ]
+  },
+  "pnp": {
+    "tags": [
+      "Spravodlivosť",
+      "Verejné výdavky",
+      "Ekonomika"
+    ],
+    "summary": "Právo na pravdu spája svoju prezentáciu s témami fungovania štátu, spravodlivosti a verejných výdavkov. Ide o zhrnutie deklarovaných priorít, nie o hodnotenie ich plnenia.",
+    "source": "https://www.pravonapravdu.sk/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "zoroslav",
+        "name": "Zoroslav Kollár",
+        "role": "Predseda Práva na pravdu",
+        "bio": "Predstaviteľ projektu a strany Právo na pravdu.",
+        "imageSource": "https://www.pravonapravdu.sk/img/zoro-prihovor.jpg",
+        "source": "https://www.pravonapravdu.sk/",
+        "photo": "/people/zoroslav.jpg"
+      }
+    ]
+  },
+  "zaludi": {
+    "tags": [
+      "Boj proti korupcii",
+      "Právny štát",
+      "Regióny"
+    ],
+    "summary": "ZA ĽUDÍ kladie dôraz na boj proti korupcii a fungovanie verejných inštitúcií. V prezentácii strany sa objavuje aj spolupráca s ľuďmi v regiónoch.",
+    "source": "https://stranazaludi.sk/predsednictvo/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "remisova",
+        "name": "Veronika Remišová",
+        "role": "Predsedníčka ZA ĽUDÍ",
+        "bio": "Vedie stranu a venuje sa témam korupcie a fungovania štátu.",
+        "imageSource": "https://stranazaludi.sk/wp-content/uploads/2023/08/147-remisova.jpg",
+        "source": "https://stranazaludi.sk/predsednictvo/",
+        "photo": "/people/remisova.jpg"
+      }
+    ]
+  },
+  "ku": {
+    "tags": [
+      "Konzervatívne",
+      "Kresťanské hodnoty",
+      "Rodina"
+    ],
+    "summary": "Konzervatívci – Kresťanská únia zdôrazňujú podporu rodiny a tradičné hodnoty. Súčasťou ich prezentácie je aj ekonomický program a podpora pracujúcich rodičov.",
+    "source": "https://smekonzervativci.sk/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "krajniak",
+        "name": "Milan Krajniak",
+        "role": "Predseda Konzervatívcov – KÚ",
+        "bio": "Na oficiálnom webe je uvedený ako predseda strany.",
+        "imageSource": "https://smekonzervativci.sk/wp-content/uploads/2026/02/Rectangle-351.png",
+        "source": "https://smekonzervativci.sk/ludia-a-predsednictvo/",
+        "photo": "/people/krajniak.png"
+      }
+    ]
+  },
+  "vidiek": {
+    "tags": [
+      "Rozvoj vidieka",
+      "Pôdohospodárstvo",
+      "Národná identita"
+    ],
+    "summary": "Strana sa sústreďuje na život vo vidieckych regiónoch. Zdôrazňuje poľnohospodárstvo, potravinovú sebestačnosť a zachovanie miestnych tradícií.",
+    "source": "https://stranavidieka.sk/o-nas/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "huliak",
+        "name": "Rudolf Huliak",
+        "role": "Predseda Strany vidieka",
+        "bio": "Minister cestovného ruchu a športu SR.",
+        "imageSource": "https://stranavidieka.sk/wp-content/uploads/2025/02/215b4fb7-67f6-483c-ab6b-986d80b7c4a6.jpg",
+        "source": "https://stranavidieka.sk/o-nas/",
+        "photo": "/people/huliak.jpg"
+      }
+    ]
+  },
+  "lsns": {
+    "tags": [
+      "Nacionalistické",
+      "Euroskeptické",
+      "Národná identita"
+    ],
+    "summary": "ĽSNS spája svoju politiku s nacionalizmom a kritikou Európskej únie a NATO. STVR ju vo svojom profile zaraďuje ku krajnej pravici.",
+    "source": "https://spravy.stvr.sk/eurovolby/strany/kotlebovci-ludova-strana-nase-slovensko/",
+    "verified": "2026-09-12",
+    "people": [
+      {
+        "id": "kotleba",
+        "name": "Marian Kotleba",
+        "role": "Predseda ĽSNS",
+        "bio": "Bývalý poslanec NR SR a bývalý predseda Banskobystrického samosprávneho kraja.",
+        "source": "https://www.tasr.sk/tasr-clanok/TASR%3A2026090100000533",
+        "imageSource": "https://www.nrsr.sk/web/dynamic/PoslanecPhoto.aspx?PoslanecID=944&ImageWidth=140",
+        "photo": "/people/kotleba.jpg"
+      }
+    ]
+  }
+}

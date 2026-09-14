@@ -1,0 +1,67 @@
+{
+  "sns": {
+    "src": "/logos/sns.png",
+    "source": "https://www.sns.sk/wp-content/uploads/2017/12/logo-sns.png",
+    "verified": "2026-09-12"
+  },
+  "kdh": {
+    "src": "/logos/kdh.svg",
+    "source": "https://kdh.sk/wp-content/uploads/2023/06/KDH-logo-web.svg",
+    "verified": "2026-09-12"
+  },
+  "dem": {
+    "src": "/logos/dem.svg",
+    "source": "https://www.smedemokrati.sk/wp-content/themes/demokrati_theme/assets/svg/DEM_logo_symbol.svg",
+    "verified": "2026-09-12"
+  },
+  "rep": {
+    "src": "/logos/rep.png",
+    "source": "https://www.hnutie-republika.sk/android-icon-192x192.png",
+    "verified": "2026-09-12"
+  },
+  "rodina": {
+    "src": "/logos/rodina.webp",
+    "source": "https://hnutie-smerodina.sk/wp-content/uploads/2026/02/logo-sme_rodina.webp",
+    "verified": "2026-09-12"
+  },
+  "hlas": {
+    "src": "/logos/hlas.png",
+    "source": "https://strana-hlas.sk/wp-content/uploads/2023/03/f0e106584fcf2447b0ce-1.png",
+    "verified": "2026-09-12"
+  },
+  "pnp": {
+    "src": "/logos/pnp.svg",
+    "source": "https://www.pravonapravdu.sk/img/logo_new.svg",
+    "verified": "2026-09-12"
+  },
+  "sas": {
+    "src": "/logos/sas.svg",
+    "source": "https://www.sas.sk/favicon.svg",
+    "verified": "2026-09-12"
+  },
+  "smer": {
+    "src": "/logos/smer.png",
+    "source": "https://www.strana-smer.sk/storage/app/media/Logo/logo_small.png",
+    "verified": "2026-09-12"
+  },
+  "slovensko": {
+    "src": "/logos/slovensko.png",
+    "source": "https://www.obycajniludia.sk/wp-content/themes/olano/assets/images/logo-hnutie-slovensko-without-slogan.png",
+    "verified": "2026-09-12"
+  },
+  "ps": {
+    "src": "/logos/ps.svg",
+    "source": "https://progresivne.sk/wp-content/themes/ps-2023/public/images/ps-logo-symbol.0eadbd.svg",
+    "verified": "2026-09-12"
+  },
+  "aliancia": {
+    "src": "/logos/aliancia.png",
+    "source": "https://www.szovetseg.sk/sites/default/files/2026-08/web-logosymbol_0.png",
+    "verified": "2026-09-12"
+  },
+  "zaludi": {
+    "source": "https://stranazaludi.sk/wp-content/uploads/2023/04/ZA-LUDI-logo.webp",
+    "verified": "2026-09-12",
+    "src": "/logos/zaludi.webp"
+  }
+}
