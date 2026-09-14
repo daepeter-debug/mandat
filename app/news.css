@@ -232,3 +232,26 @@ html .lab-input-row input[type=number]{width:68px}
 .news-sheet-source h3{font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);margin:0 0 7px}
 .news-sheet-source p{font-size:13px;line-height:1.7;margin:0 0 10px;color:var(--text-2)}
 .news-sheet-source a{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:14px;font-weight:600;color:var(--mag-ink);text-decoration:underline;text-underline-offset:3px}
+
+/* Dátový prehľad: jedna grafika parlamentu a kompaktnejší prepínač, aby bola grafika hneď pod ním. */
+.agency-switcher{grid-template-columns:repeat(6,minmax(0,1fr))}
+.agency-switcher>button{padding:10px 13px 9px;min-height:52px}
+.agency-switcher>button>span{font-size:14px;letter-spacing:.2px}
+.agency-switcher>button svg{width:14px;height:14px}
+.agency-switcher small{font-size:11px;margin-top:1px}
+.agency-switcher>button.is-election{background:#f1f4ec;border-right:2px solid #c9d4c2}
+.agency-switcher>button.is-election[aria-pressed=true]{background:var(--mag-ink);color:#fff;box-shadow:inset 0 -3px #9ec49f}
+.agency-switcher>button.is-election[aria-pressed=true] small{color:#d6e2cf}
+.agency-switcher>button.is-election svg{color:#bfe0bd}
+.agency-block{margin-bottom:16px}
+.agency-block>legend{margin-bottom:8px}
+@media(hover:hover){.agency-switcher>button.is-election:not([aria-pressed=true]):hover{background:#e6ebdf}}
+@media(max-width:760px){
+.agency-switcher{grid-template-columns:repeat(3,minmax(0,1fr))}
+.agency-switcher>button{padding:9px 11px;min-height:54px}
+.agency-switcher>button:last-child{grid-column:auto}
+.agency-switcher>button:nth-child(3n){border-right:0}
+.agency-switcher>button:nth-child(n){border-bottom:1px solid var(--border)}
+.agency-switcher>button:nth-last-child(-n+3){border-bottom:0}
+.agency-switcher>button.is-election{border-right:2px solid #c9d4c2}
+}

@@ -39,16 +39,22 @@ const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^
 /* Stav rozhrania v URL: záložka (v), agentúra prehľadu (a), obdobie (p), graf/tabuľka (m),
    filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;parliament:string;news:string|null;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;parliament:string;news:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
 const parliamentViews = ["model","volby2023"];
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,parliament:"model",news:null,agency:"all",query:"",partyQuery:"",detail:null,party:null};
+const ELECTION_VIEW = "volby2023";
+// Dátový prehľad má jednu grafiku parlamentu; prepínač vyberá, čo zobrazuje.
+const spreadOptions = [ELECTION_VIEW, ...primaryAgencies];
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,parliament:"model",news:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
   const pick = (key:string, ok:(v:string)=>boolean) => { const v = s.get(key); return v!==null && ok(v) ? v : null; };
+  const trendAgency = pick("a", v=>primaryAgencies.includes(v)) ?? defaults.trendAgency;
   return {
     view: pick("v", v=>viewIds.includes(v)) ?? defaults.view,
-    trendAgency: pick("a", v=>primaryAgencies.includes(v)) ?? defaults.trendAgency,
+    trendAgency,
+    // Bez vlastnej hodnoty sleduje grafika vybranú agentúru; do adresy ide, až keď sa líši.
+    spread: pick("hs", v=>spreadOptions.includes(v)) ?? trendAgency,
     period: pick("p", v=>periods.includes(v)) ?? defaults.period,
     mode: pick("m", v=>v==="chart"||v==="table") ?? defaults.mode,
     legend: s.get("l")===null ? defaults.legend : s.get("l")!.split(",").filter(id=>partyIds.has(id)),
@@ -74,6 +80,7 @@ function serialize(state:UiState) {
   if(state.caseParty) s.set("kp",state.caseParty);
   if(state.parliament!==defaults.parliament) s.set("pn",state.parliament);
   if(state.news) s.set("sp",state.news);
+  if(state.spread!==state.trendAgency) s.set("hs",state.spread);
   if(state.agency!==defaults.agency) s.set("f",state.agency);
   if(state.query) s.set("q",state.query);
   if(state.partyQuery) s.set("s",state.partyQuery);
@@ -123,7 +130,7 @@ export default function Home() {
   const party = ui.party ? parties.find(p=>p.id===ui.party) ?? null : null;
   const update = (patch:Partial<UiState>, push=false) => navigateTo(serialize({...ui,...patch}), push);
   const setView = (v:string) => update({view:v}, true);
-  const setTrendAgency = (a:string) => update({trendAgency:a});
+  const setTrendAgency = (a:string) => update({trendAgency:a,spread:a});
   const setPeriod = (p:string) => update({period:p});
   const setMode = (m:string) => update({mode:m});
   const setActive = (ids:string[]) => update({legend:ids});
@@ -145,6 +152,7 @@ export default function Home() {
   const issuePoll = archive[0];
   const blocs2023 = blocSeats(officialSeats, blocExtras);
   const blocsScenario = blocSeats(scenario.rows, blocExtras);
+  const showElection = ui.spread === ELECTION_VIEW;
   const snapshots = primaryAgencies.map(a=>agencySeries(a,1)[0]).filter((p):p is Poll=>p!==undefined);
   const filtered = archive.filter(p=>(agency==="all" || p.agency===agency) && normalize(`${p.agency} ${p.month} ${p.published} ${p.client}`).includes(normalize(query)));
   const visibleParties = [...parties].sort((a,b)=>a.name.localeCompare(b.name,"sk")).filter(p=>normalize(`${p.name} ${p.short} ${partyProfiles[p.id]?.people.map(person=>person.name).join(" ")??""}`).includes(normalize(partyQuery)));
@@ -203,15 +211,18 @@ export default function Home() {
         <TabsContent value="data">
           <section className="issue-lead" aria-labelledby="issue-title">
             <h1 id="issue-title">Vydanie <span>{issuePoll.month.toLowerCase()} {issuePoll.end.slice(0,4)}</span></h1>
-            <div className="issue-meta"><p>Parlament v dvoch pohľadoch. Výsledok volieb a scenár z prieskumu.</p><span>Kontrola dát <time dateTime={dataVerified}>{verified}</time></span></div>
+            <div className="issue-meta"><p>Jedna grafika parlamentu. Prepnite medzi výsledkom volieb 2023 a scenárom podľa vybranej agentúry.</p><span>Kontrola dát <time dateTime={dataVerified}>{verified}</time></span></div>
           </section>
-          <fieldset className="agency-block"><legend><strong>Samostatný scenár podľa agentúry</strong><span>Výber mení scenár, trend aj rebríček v tomto detailnom pohľade. Agregát nájdete na hlavnom prehľade.</span></legend><div className="agency-switcher" role="group" aria-label="Vybrať agentúru pre prehľad">{primaryAgencies.map(a=>{const p=agencySeries(a,1)[0];return <button key={a} aria-pressed={trendAgency===a} onClick={()=>setTrendAgency(a)}><span>{a}{trendAgency===a&&<Check size={16}/>}</span><small>{p ? `${p.month} 2026` : "Bez merania"}</small></button>})}</div></fieldset>
-          <section className="parliament-spread" aria-label="Výsledok volieb a scenár parlamentu">
-            <Hemicycle label="Parlament z volieb 2023" seats={officialSeats} caption={<><p>{election2023.note}</p><a className="source-link" href={election2023.source} target="_blank" rel="noopener noreferrer">Štatistický úrad SR · výsledky 2023<ArrowUpRight size={14}/><span className="sr-only"> (otvorí sa v novej karte)</span></a></>}/>
+          <fieldset className="agency-block"><legend><strong>Rozdelenie kresiel</strong><span>Výber prepína grafiku parlamentu. Trend a rebríček nižšie ukazujú poslednú vybranú agentúru.</span></legend><div className="agency-switcher" role="group" aria-label="Zdroj rozdelenia kresiel"><button className="is-election" aria-pressed={showElection} onClick={()=>update({spread:ELECTION_VIEW})}><span>Voľby 2023{showElection&&<Check size={16}/>}</span><small>Oficiálny výsledok</small></button>{primaryAgencies.map(a=>{const p=agencySeries(a,1)[0];const on=!showElection&&trendAgency===a;return <button key={a} aria-pressed={on} onClick={()=>setTrendAgency(a)}><span>{a}{on&&<Check size={16}/>}</span><small>{p ? `${p.month} 2026` : "Bez merania"}</small></button>})}</div></fieldset>
+          <section className="parliament-spread" aria-label={showElection ? "Výsledok volieb 2023" : "Scenár parlamentu podľa agentúry"}>
+            {showElection
+              ? <Hemicycle key="volby2023" label="Parlament z volieb 2023" seats={officialSeats} caption={<><p>{election2023.note}</p><a className="source-link" href={election2023.source} target="_blank" rel="noopener noreferrer">Štatistický úrad SR · výsledky 2023<ArrowUpRight size={14}/><span className="sr-only"> (otvorí sa v novej karte)</span></a></>}/>
+              : <Hemicycle key={current.id} label={`Scenár podľa ${current.agency}, ${current.month.toLowerCase()} 2026`} seats={scenario.rows} caption={<><p><b>{current.type}</b> · zber {date(current.start)} – {date(current.end)} · n = {current.sample?.toLocaleString("sk-SK") ?? "neuvedené"}</p><Source poll={current}/></>}/>}
             <div className="scenario-column">
-              <Hemicycle label={`Scenár podľa ${current.agency}, ${current.month.toLowerCase()} 2026`} seats={scenario.rows} caption={<><p><b>{current.type}</b> · zber {date(current.start)} – {date(current.end)} · n = {current.sample?.toLocaleString("sk-SK") ?? "neuvedené"}</p><Source poll={current}/></>}/>
-              <div className="scenario-notice"><p><strong>Scenár, nie predpoveď.</strong> Orientačný prepočet podľa princípu § 68 zákona 180/2014 z publikovaných percent. Koalície nie sú známe; každý uvedený subjekt považujeme za samostatnú stranu s hranicou 5 %.</p><p>Neprepísaná podpora: <b>{fmt(untranscribed)} %</b>. Iné: <b>{scenario.otherShare === null ? "neuvedené samostatne" : `${fmt(scenario.otherShare)} %`}</b>. Zvyšok do 100 % je dopočet a môže zahŕňať zaokrúhlenie; do scenára nevstupuje.</p><button className="text-button" onClick={()=>changeView("method")}>Ako počítame kreslá <ArrowRight size={16}/></button></div>
-              <div className="below-threshold"><h3>Bez mandátu v tomto scenári</h3><ul>{scenario.belowThreshold.map(s=><li key={s.id}><span>{s.short}</span><b>{fmt(s.share)} %</b></li>)}</ul>{scenario.belowThreshold.length===0&&<p>Všetky prepísané subjekty získali kreslá.</p>}</div>
+              {showElection
+                ? <div className="scenario-notice"><p><strong>Oficiálny výsledok, nie scenár.</strong> Ide o rozdelenie mandátov po voľbách 2023 podľa Štatistického úradu SR, nie o aktuálne zloženie poslaneckých klubov. Zmeny členstva poslancov po voľbách tu neevidujeme.</p><p>Pre porovnanie s prieskumom prepnite vyššie na niektorú agentúru.</p><button className="text-button" onClick={()=>changeView("method")}>Ako počítame kreslá <ArrowRight size={16}/></button></div>
+                : <><div className="scenario-notice"><p><strong>Scenár, nie predpoveď.</strong> Orientačný prepočet podľa princípu § 68 zákona 180/2014 z publikovaných percent. Koalície nie sú známe; každý uvedený subjekt považujeme za samostatnú stranu s hranicou 5 %.</p><p>Neprepísaná podpora: <b>{fmt(untranscribed)} %</b>. Iné: <b>{scenario.otherShare === null ? "neuvedené samostatne" : `${fmt(scenario.otherShare)} %`}</b>. Zvyšok do 100 % je dopočet a môže zahŕňať zaokrúhlenie; do scenára nevstupuje.</p><button className="text-button" onClick={()=>changeView("method")}>Ako počítame kreslá <ArrowRight size={16}/></button></div>
+              <div className="below-threshold"><h3>Bez mandátu v tomto scenári</h3><ul>{scenario.belowThreshold.map(s=><li key={s.id}><span>{s.short}</span><b>{fmt(s.share)} %</b></li>)}</ul>{scenario.belowThreshold.length===0&&<p>Všetky prepísané subjekty získali kreslá.</p>}</div></>}
             </div>
           </section>
           <p className="hemicycle-order-note">Kreslá sú zoradené zľava doprava podľa ich počtu, nie podľa politickej osi. Jeden bod predstavuje jedno kreslo.</p>
