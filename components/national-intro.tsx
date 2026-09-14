@@ -34,8 +34,8 @@ export default function NationalIntro({ onNavigate }: { onNavigate: (view: strin
   const dWithCoalition = w.coalition - b.withCoalition, dWithOpposition = w.opposition - b.withOpposition;
   const dCoalition = edition.now.coalition - b.coalition, dOpposition = edition.now.opposition - b.opposition;
   const list = (items: string[]) => items.length > 1 ? `${items.slice(0, -1).join(", ")} a ${items.at(-1)}` : items.join("");
-  const headline = <>{w.coalitionLabel} by dnes mala <b>{w.coalition}</b> kresiel, {lower(w.oppositionLabel)} <b>{w.opposition}</b>.</>;
   const lower = (label: string) => label.charAt(0).toLowerCase() + label.slice(1);
+  const headline = <>{w.coalitionLabel} by dnes mala <b>{w.coalition}</b> kresiel, {lower(w.oppositionLabel)} <b>{w.opposition}</b>.</>;
   const majorityHolder = w.coalition >= m ? lower(w.coalitionLabel) : w.opposition >= m ? lower(w.oppositionLabel) : null;
   const outside = edition.now.othersMembers.map(x => `${x.short} (${x.seats})`);
   const lead = (majorityHolder ? `Väčšinu ${m} kresiel zo 150 by mala ${majorityHolder}. ` : `Väčšinu ${m} kresiel zo 150 by nemal ani jeden blok. `)
