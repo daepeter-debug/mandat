@@ -36,7 +36,7 @@ Táto konfigurácia používa verejnú workers.dev adresu. Nezapína ochranu pri
 
 ## Git a automatické nasadenie
 
-Git repozitár je zakorenený priamo v `outputs/web`, používa vetvu `main` a neukladá `node_modules`, build `dist`, lokálny stav Wrangleru, `.env` súbory ani TypeScript cache.
+Git repozitár je zakorenený priamo v `outputs/web`, používa vetvu `main` a je pripojený k `https://github.com/daepeter-debug/mandat`. Neukladá `node_modules`, build `dist`, lokálny stav Wrangleru, `.env` súbory ani TypeScript cache.
 
 Odporúčané nastavenie Cloudflare Workers Builds pre súkromný GitHub repozitár:
 
