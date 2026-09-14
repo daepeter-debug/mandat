@@ -33,3 +33,16 @@ Ak chýba prihlásenie, spustiť `node node_modules/wrangler/bin/wrangler.js log
 Po prihlásení najprv overiť účet a prípadnú existenciu Workeru s rovnakým názvom. Presnú workers.dev adresu prevziať z úspešného nasadenia; nevymýšľať príponu účtu. Potom skontrolovať HTTP odpoveď, statické súbory a interakcie v online prehliadači.
 
 Táto konfigurácia používa verejnú workers.dev adresu. Nezapína ochranu prihlásením. Pôvodný lokálny dev server na porte 5173 zostáva samostatný.
+
+## Git a automatické nasadenie
+
+Git repozitár je zakorenený priamo v `outputs/web`, používa vetvu `main` a neukladá `node_modules`, build `dist`, lokálny stav Wrangleru, `.env` súbory ani TypeScript cache.
+
+Odporúčané nastavenie Cloudflare Workers Builds pre súkromný GitHub repozitár:
+
+- Production branch: `main`
+- Root directory: `/`
+- Build command: `npm run build`
+- Deploy command: `npm run deploy:preview`
+
+V Cloudflare: Workers & Pages → `mandat-preview` → Settings → Builds → pripojiť Git repository. Cloudflare potom nasadí nový commit po pushnutí na `main`; ostatné vetvy možno používať na náhľady pred spojením.
