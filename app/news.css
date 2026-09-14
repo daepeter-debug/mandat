@@ -216,3 +216,11 @@
 
 /* Mobilný Prehľad: poradie kariet na mobile (vydanie, parlament, správy, zodpovednosť). */
 @media(max-width:760px){.editorial-shell.with-party-rail .national-intro{grid-template-areas:"copy" "parliament" "news" "resp"}}
+
+/* iOS Safari: vstupy s písmom pod 16 px spúšťajú automatické priblíženie stránky (ostane aj po prepnutí záložky) a stránka sa potom posúva do boku. Na mobile preto 16 px a žiadne vodorovné posúvanie dokumentu. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media(max-width:760px){
+html,body{overflow-x:clip}
+html .editorial-shell input:not([type=range]):not([type=checkbox]):not([type=radio]),html .editorial-shell select,html .editorial-shell textarea,html .search-field input,html .case-search input,html .lab-input-row input[type=number]{font-size:16px}
+html .lab-input-row input[type=number]{width:68px}
+}
