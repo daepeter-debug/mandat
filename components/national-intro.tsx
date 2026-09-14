@@ -6,6 +6,8 @@ import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
 import ResponsibilityScale from "@/components/responsibility-scale";
+import { edition, signed, signedInt } from "@/lib/edition";
+import { date } from "@/lib/polls";
 
 // Natural Earth 1:50m (public domain), equirectangular projection at 49° N.
 const coordinates = outline.coordinates[0];
@@ -28,12 +30,42 @@ export default function NationalIntro({ onNavigate }: { onNavigate: (view: strin
   // Only a month-level planning horizon is known. Never invent an election day.
   const months = today ? Math.max(0, (2027-year)*12+9-month) : null;
   const monthLabel = months === 1 ? "mesiac" : months !== null && months >= 2 && months <= 4 ? "mesiace" : "mesiacov";
+  const dCoalition = edition.now.coalition - edition.before.coalition;
+  const dOpposition = edition.now.opposition - edition.before.opposition;
+  const dOthers = edition.now.others - edition.before.others;
+  const headline = edition.now.coalition >= edition.majority
+    ? <>Koalícia by si dnes udržala väčšinu: <b>{edition.now.coalition}</b> kresiel, opozícia <b>{edition.now.opposition}</b>.</>
+    : edition.now.opposition >= edition.majority
+      ? <>Opozícia by dnes mala väčšinu: <b>{edition.now.opposition}</b> kresiel, koalícia <b>{edition.now.coalition}</b>.</>
+      : <>Koalícia by dnes mala <b>{edition.now.coalition}</b> kresiel, opozícia <b>{edition.now.opposition}</b>.</>;
+  const others = edition.now.othersMembers.map(m => `${m.short} (${m.seats})`).join(" a ");
+  const lead = (edition.now.coalition >= edition.majority || edition.now.opposition >= edition.majority
+    ? `Väčšina je ${edition.majority} kresiel zo 150. `
+    : `Väčšinu ${edition.majority} kresiel nemá ani jeden blok. `)
+    + (edition.now.others > 0 ? `O zvyšných ${edition.now.others} kreslách by rozhodovali ${others}. ` : "")
+    + `Koalícia + ${edition.withPartners.coalitionPartners.join(" + ")}: ${edition.withPartners.coalition} kresiel, opozícia + ${edition.withPartners.oppositionPartners.join(" + ")}: ${edition.withPartners.opposition} (redakčný predpoklad, nie dohoda strán).`;
+  const kpis = [
+    { label: `Koalícia ${edition.coalitionLabel.join(", ")}`, value: edition.now.coalition, delta: dCoalition, note: `${signedInt(dCoalition)} za 30 dní` },
+    { label: `Opozícia ${edition.oppositionLabel.join(", ")}`, value: edition.now.opposition, delta: dOpposition, note: `${signedInt(dOpposition)} za 30 dní` },
+    { label: "Ostatní", value: edition.now.others, delta: dOthers, note: `${signedInt(dOthers)} za 30 dní` },
+    { label: "Väčšina", value: edition.majority, delta: 0, note: "kresiel zo 150" },
+  ];
   const explore = () => document.getElementById("aggregate-title")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
 
   return <section className="national-intro" aria-labelledby="national-title">
     <div className="national-copy">
-      <h1 id="national-title">Politika v číslach.<br/><span>Vy v obraze.</span></h1>
-      <p>Prieskumy, strany a možné podoby parlamentu. Objavte súvislosti a vytvorte si vlastný pohľad.</p>
+      <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát k {date(edition.asOf)} · {edition.agencies.length} agentúr · scenár kresiel, nie predpoveď</span></p>
+      <h1 id="national-title">{headline}</h1>
+      <p className="edition-lead">{lead}</p>
+      <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">
+        {kpis.map(k => <div key={k.label}><dt>{k.label}</dt><dd>{k.value}</dd><small className={k.delta > 0 ? "up" : k.delta < 0 ? "down" : ""}>{k.note}</small></div>)}
+      </dl>
+      <ul className="edition-changes" aria-label={`Čo sa zmenilo od ${date(edition.monthAgo)}`}>
+        <li><b>Kreslá</b><span>koalícia {signedInt(dCoalition)}, opozícia {signedInt(dOpposition)}, ostatní {signedInt(dOthers)} od {date(edition.monthAgo)}</span></li>
+        {edition.movers.length > 0 && <li><b>Podpora</b><span>{edition.movers.slice(0, 3).map((m, i) => <span key={m.id}>{i > 0 && ", "}{m.short} <span className={m.delta > 0 ? "up" : "down"}>{signed(m.delta)}</span></span>)} p. b.</span></li>}
+        {edition.crossings.map(c => <li key={c.id}><b>Hranica 5 %</b><span>{c.short}: {c.direction === "down" ? "pokles pod 5 %" : "prekročenie 5 %"} ({c.value.toLocaleString("sk-SK", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %), z {c.seatsBefore} kresiel na {c.seatsNow}</span></li>)}
+        <li><b>Merania</b><span>{edition.newPolls.length} {edition.newPolls.length === 1 ? "nové meranie" : edition.newPolls.length < 5 ? "nové merania" : "nových meraní"} za 30 dní: {[...new Set(edition.newPolls.map(p => p.agency))].join(", ")}</span></li>
+      </ul>
       <div className="national-actions"><button className="mag-button" onClick={explore}>Preskúmať prieskumy <ArrowDown size={17}/></button><button className="mag-text-link" onClick={()=>onNavigate("model")}>Zostaviť scenár <ArrowUpRight size={17}/></button></div>
       <div className="national-principles"><span>Nezávisle</span><span>So zdrojmi</span><span>Bez reklamy</span></div>
     <aside className="election-countdown" aria-labelledby="countdown-title">

@@ -7,6 +7,7 @@ import { aggregateAt, aggregateAgencies, aggregateLastDate, aggregatePolls, curr
 import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../lib/blocs.ts';
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
+import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
 import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats } from '../lib/parliament.ts';
 import { governmentTenure, governmentTenureSources, periodDays, tenureAsOf, tenureDays, tenureDuration, tenureLabel } from '../lib/government-tenure.ts';
 
@@ -238,5 +239,18 @@ const sdku = inactiveRows.find(r => r.id === 'sdku');
 assert(sdku.led === sdku.days && sdku.tier === 'čiastočná', 'SDKÚ viedla vládu vždy, keď v nej bola');
 assert(inactiveRows.find(r => r.id === 'siet').days < 200 && inactiveRows.find(r => r.id === 'du').days < 300, 'Krátke účasti Siete a DÚ');
 assert(responsibilityGroups(inactiveRows).flatMap(g => g.rows).length === inactiveRows.length, 'Skupiny škály pokrývajú aj neaktívne strany');
+
+// Titulná strana: hlavná správa z Modelu Mandát a zmeny za 30 dní
+assert.equal(edition.now.coalition + edition.now.opposition + edition.now.others, 150, 'Kreslá blokov dnes dávajú 150');
+assert.equal(edition.before.coalition + edition.before.opposition + edition.before.others, 150, 'Kreslá blokov pred mesiacom dávajú 150');
+assert.equal(edition.now.rows.reduce((a, r) => a + r.seats, 0), 150, 'Scenár rozdelí všetkých 150 kresiel');
+const lookback = (Date.parse(edition.asOf + 'T12:00:00Z') - Date.parse(edition.monthAgo + 'T12:00:00Z')) / 86400000;
+assert(lookback >= EDITION_LOOKBACK_DAYS - 10 && lookback <= EDITION_LOOKBACK_DAYS + 10, 'Porovnávací bod je približne 30 dní dozadu');
+assert(edition.movers.every((m, i, a) => i === 0 || Math.abs(a[i - 1].delta) >= Math.abs(m.delta)), 'Pohyby podpory sú zoradené od najväčšieho');
+assert(edition.movers.every(m => m.delta !== 0 && m.value >= 1), 'Pohyby sú nenulové a len pre subjekty nad 1 %');
+for (const c of edition.crossings) assert(c.direction === 'down' ? c.seatsNow === 0 && c.seatsBefore > 0 : c.seatsNow > 0 && c.seatsBefore === 0, `Prechod cez 5 % má zodpovedajúce kreslá: ${c.id}`);
+assert(edition.newPolls.length >= 1 && edition.newPolls.every(p => p.end > edition.monthAgo && p.end <= edition.asOf), 'Nové merania patria do sledovaného okna');
+assert(edition.withPartners.coalition >= edition.now.coalition && edition.withPartners.opposition >= edition.now.opposition, 'Voliteľní partneri kreslá blokom len pridávajú');
+assert(edition.coalitionLabel.length === 3 && edition.oppositionLabel.length === 4, 'Bloky bez voliteľných partnerov: 3 koaličné a 4 opozičné strany');
 
 console.log(`OK: ${archive.length} meraní, ${parties.length} subjektov, ${election2023.subjects.length} subjektov volieb 2023 a ${availableTrendAgencies.length} scenárov kresiel. Zdroje, chronológia, rozsah, súčty, poradie a výpočty prešli kontrolou.`);
