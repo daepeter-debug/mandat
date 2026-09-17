@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 17. 9. 2026 — fotografie osobností z Wikimedia Commons (vetva fotky-commons, Claude)
+
+Portréty v profiloch strán už nepochádzajú z webov strán (tie mali „všetky práva vyhradené“, SNS výslovne vyžaduje súhlas), ale z Wikimedia Commons. Pre 23 osobností sme cez Wikidata (vlastnosť P18) a Commons API dohľadali súbor, autora, licenciu a rok vzniku a skontrolovali stránku súboru: VRT tiket pri Šimečkovej fotografii od PS je potvrdený, Rašiho fotografiu sme vymenili za CC0 portrét z roku 2024, Gubíkov portrét je náš výrez z konferenčnej fotografie (CC BY 4.0). Použitých je 20 fotografií: Creative Commons (BY, BY-SA, CC0), voľné dielo vlády USA (Kaliňák, Naď) a oficiálne portréty Európskeho parlamentu (Uhrík, Mazurek) pod podmienkami ďalšieho použitia EÚ.
+
+Bez fotografie zostali traja: Matúš Šutaj Eštok (oba súbory na Commons sú z webu Rady EÚ a od júna 2026 navrhnuté na vymazanie pre nejasnú licenciu), Michal Šipoš a Zoroslav Kollár (na Commons nie je voľne licencovaná fotografia). Na ich mieste je monogram a v profile poznámka „Bez voľne licencovanej fotografie“.
+
+Dáta: `lib/party-profiles.json` má pri každej osobe `imageSource` (stránka súboru na Commons), `imageAuthor`, `imageLicense`, `imageLicenseUrl`, `imageYear` a `imageNote`. Kredit sa zobrazuje pri každom medailóne (Foto: autor, rok · licencia) a súhrnne v záložke O dátach v novej sekcii Fotografie osobností, aj s odkazom na text licencie. Kontrola dát vyžaduje pri použitej fotografii existujúci súbor, zdroj na Commons a úplný kredit, pri chýbajúcej dôvod. Súbory sú náhľady do šírky 500 px, spolu 1,2 MB namiesto 6,4 MB; rok vzniku fotografie neoznačuje aktuálnosť funkcie (Kotleba 2010, Danko a Krajniak 2018).
+
 ## 14. 9. 2026 — desktopové body z kritiky (vetva desktop, Claude)
 
 Úvodný odsek už neopakuje čísla, ktoré sú hneď pod ním na kartách. Zostali dve vety: kto by mal väčšinu a že priradenie Republiky ku koalícii a Hnutia Slovensko k opozícii je redakčný predpoklad, teraz aj s ich počtom kresiel. Zoznam zmien je na desktope v dvoch stĺpcoch a nadtitulok je kratší. Výsledok pri 1440 px: úvodný stĺpec z 961 na 860 px, tlačidlo Preskúmať prieskumy z 906 na 815 px (nad zlomom obrazovky), karty Zodpovednosť a Parlament z 1166 na 1065 px. Na mobile sa karta parlamentu posunula z 1384 na 1311 px.

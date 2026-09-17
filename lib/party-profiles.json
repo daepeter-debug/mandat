@@ -14,18 +14,28 @@
         "name": "Michal Šimečka",
         "role": "Predseda PS",
         "bio": "Vedie hnutie a zastupuje ho pri politických rokovaniach.",
-        "imageSource": "https://progresivne.sk/wp-content/uploads/2023/04/Profilovky-Web-991-×-1080-px-–-kopia.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Michal_%C5%A0ime%C4%8Dka_pri_predstavovan%C3%AD_volebn%C3%A9ho_programu_(cropped).jpg",
         "source": "https://progresivne.sk/o-nas/",
-        "photo": "/people/simecka.png"
+        "photo": "/people/simecka.jpg",
+        "imageAuthor": "Progresívne Slovensko",
+        "imageLicense": "CC BY-SA 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "imageYear": "2023",
+        "imageNote": "Výrez z fotografie z predstavenia volebného programu; súhlas držiteľa práv potvrdený cez Wikimedia VRT."
       },
       {
         "id": "korcok",
         "name": "Ivan Korčok",
         "role": "Podpredseda PS",
         "bio": "Je súčasťou užšieho vedenia hnutia.",
-        "imageSource": "https://progresivne.sk/wp-content/uploads/2025/03/Profilovky-Web-991-×-1080-px-–-kopia-3.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Ivan_Korcok,_official_portrait_(2022).jpg",
         "source": "https://progresivne.sk/o-nas/",
-        "photo": "/people/korcok.png"
+        "photo": "/people/korcok.jpg",
+        "imageAuthor": "Európska komisia (Martin Baumann)",
+        "imageLicense": "CC BY 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "imageYear": "2022",
+        "imageNote": ""
       }
     ]
   },
@@ -44,18 +54,28 @@
         "name": "Robert Fico",
         "role": "Predseda vlády SR",
         "bio": "Predstaviteľ SMER-u na čele vlády Slovenskej republiky.",
-        "imageSource": "https://www.strana-smer.sk/storage/app/media/Predsednictvo/01-fico.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Robert_Fico_(54359433078)_(cropped).jpg",
         "source": "https://www.strana-smer.sk/o-nas/predstavitelia/clenovia-vlady-SR",
-        "photo": "/people/fico.jpg"
+        "photo": "/people/fico.jpg",
+        "imageAuthor": "Gage Skidmore",
+        "imageLicense": "CC BY-SA 2.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "imageYear": "2025",
+        "imageNote": "Výrez z fotografie z konferencie CPAC 2025."
       },
       {
         "id": "kalinak",
         "name": "Robert Kaliňák",
         "role": "Minister obrany SR",
         "bio": "Vo vláde pôsobí aj ako podpredseda vlády.",
-        "imageSource": "https://www.strana-smer.sk/storage/app/media/Vedenie_strany/robert_kalinak_0.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Robert_Kali%C5%88%C3%A1k_Slovakia_Minister_of_Defence_at_the_Pentagon_on_March_1,_2024_(cropped).jpg",
         "source": "https://www.strana-smer.sk/o-nas/predstavitelia/clenovia-vlady-SR",
-        "photo": "/people/kalinak.jpg"
+        "photo": "/people/kalinak.jpg",
+        "imageAuthor": "U.S. Secretary of Defense",
+        "imageLicense": "Voľné dielo (vláda USA)",
+        "imageLicenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-USGov",
+        "imageYear": "2024",
+        "imageNote": "Výrez z fotografie z rokovania v Pentagone."
       }
     ]
   },
@@ -74,18 +94,28 @@
         "name": "Milan Uhrík",
         "role": "Predseda Republiky",
         "bio": "Poslanec Európskeho parlamentu a podpredseda frakcie Európa suverénnych národov.",
-        "imageSource": "https://www.hnutie-republika.sk/wp-content/uploads/2021/04/Milan_Uhrik_FOTO.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:MEP_Milan_Uhr%C3%ADk.jpg",
         "source": "https://www.hnutie-republika.sk/nas-tim/",
-        "photo": "/people/uhrik.jpg"
+        "photo": "/people/uhrik.jpg",
+        "imageAuthor": "Európsky parlament",
+        "imageLicense": "© EÚ – použitie s uvedením zdroja",
+        "imageLicenseUrl": "https://eur-lex.europa.eu/eli/dec/2011/833/oj",
+        "imageYear": "2024",
+        "imageNote": "Oficiálny portrét poslanca EP."
       },
       {
         "id": "mazurek",
         "name": "Milan Mazurek",
         "role": "Podpredseda Republiky",
         "bio": "Zastupuje hnutie aj ako poslanec Európskeho parlamentu.",
-        "imageSource": "https://www.hnutie-republika.sk/wp-content/uploads/2024/09/Milan_Mazurek_FOTO.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:1720604779368_20240709_MAZUREK_Milan_SK_007.jpg",
         "source": "https://www.hnutie-republika.sk/nas-tim/",
-        "photo": "/people/mazurek.jpg"
+        "photo": "/people/mazurek.jpg",
+        "imageAuthor": "Európsky parlament",
+        "imageLicense": "© EÚ – použitie s uvedením zdroja",
+        "imageLicenseUrl": "https://eur-lex.europa.eu/eli/dec/2011/833/oj",
+        "imageYear": "2024",
+        "imageNote": "Oficiálny portrét poslanca EP."
       }
     ]
   },
@@ -104,18 +134,28 @@
         "name": "Igor Matovič",
         "role": "Predseda Hnutia Slovensko",
         "bio": "Predseda hnutia a poslanec Národnej rady SR.",
-        "imageSource": "https://www.obycajniludia.sk/wp-content/uploads/2020/01/150_Igor_1-255x322.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Igor_Matovi%C4%8D_October_2020_(cropped).jpg",
         "source": "https://www.obycajniludia.sk/ludia-v-hnuti/",
-        "photo": "/people/matovic.png"
+        "photo": "/people/matovic.jpg",
+        "imageAuthor": "European People's Party",
+        "imageLicense": "CC BY 2.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "imageYear": "2020",
+        "imageNote": "Výrez z fotografie zo summitu EPP."
       },
       {
         "id": "sipos",
         "name": "Michal Šipoš",
         "role": "Podpredseda hnutia",
         "bio": "Pôsobí vo vedení hnutia a ako poslanec Národnej rady SR.",
-        "imageSource": "https://www.obycajniludia.sk/wp-content/uploads/2020/01/11-Michal-Sipos-web-1-255x322.png",
+        "imageSource": "",
         "source": "https://www.obycajniludia.sk/ludia-v-hnuti/",
-        "photo": "/people/sipos.png"
+        "photo": "",
+        "imageAuthor": "",
+        "imageLicense": "",
+        "imageLicenseUrl": "",
+        "imageYear": "",
+        "imageNote": "Na Wikimedia Commons zatiaľ nie je voľne licencovaná fotografia."
       }
     ]
   },
@@ -134,18 +174,28 @@
         "name": "Matúš Šutaj Eštok",
         "role": "Predseda HLAS-u",
         "bio": "Vedie stranu a jej užšie predsedníctvo.",
-        "imageSource": "https://strana-hlas.sk/wp-content/uploads/2024/06/Matus-Sutaj-Estok.png",
+        "imageSource": "",
         "source": "https://strana-hlas.sk/o-nas/predsednictvo/",
-        "photo": "/people/estok.png"
+        "photo": "",
+        "imageAuthor": "",
+        "imageLicense": "",
+        "imageLicenseUrl": "",
+        "imageYear": "",
+        "imageNote": "Fotografie na Wikimedia Commons pochádzajú z webu Rady EÚ a sú navrhnuté na vymazanie pre nejasnú licenciu, preto ich nepoužívame."
       },
       {
         "id": "rasi",
         "name": "Richard Raši",
         "role": "Podpredseda HLAS-u",
         "bio": "Je členom užšieho vedenia strany.",
-        "imageSource": "https://strana-hlas.sk/wp-content/uploads/2023/07/Richard-Rasi.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Richard_Rasi_portrait,_2024.jpg",
         "source": "https://strana-hlas.sk/o-nas/predsednictvo/",
-        "photo": "/people/rasi.png"
+        "photo": "/people/rasi.jpg",
+        "imageAuthor": "Igec133 (Wikimedia Commons)",
+        "imageLicense": "CC0 1.0",
+        "imageLicenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "imageYear": "2024",
+        "imageNote": ""
       }
     ]
   },
@@ -164,9 +214,14 @@
         "name": "Branislav Gröhling",
         "role": "Predseda SaS",
         "bio": "Poslanec Národnej rady SR, ktorý vedie stranu od roku 2024.",
-        "imageSource": "https://www.nrsr.sk/web/dynamic/PoslanecPhoto.aspx?PoslanecID=971&ImageWidth=140",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Branislav-Grohling-minister-skolstva_(cropped).jpg",
         "source": "https://spravy.stvr.sk/2026/06/sledujte-nazivo-hostami-sobotnych-dialogov-su-erik-tomas-a-branislav-grohling/",
-        "photo": "/people/grohling.jpg"
+        "photo": "/people/grohling.jpg",
+        "imageAuthor": "Jozefpetricek (Wikimedia Commons)",
+        "imageLicense": "CC BY-SA 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "imageYear": "2020",
+        "imageNote": "Výrez z fotografie z čias pôsobenia na ministerstve školstva."
       }
     ]
   },
@@ -185,18 +240,28 @@
         "name": "Milan Majerský",
         "role": "Predseda KDH",
         "bio": "Stojí na čele kresťanskodemokratického hnutia.",
-        "imageSource": "https://kdh.sk/wp-content/uploads/2024/01/MilanMajersky.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Milan_Majersk%C3%BD.jpg",
         "source": "https://kdh.sk/predsednictvo/",
-        "photo": "/people/majersky.jpg"
+        "photo": "/people/majersky.jpg",
+        "imageAuthor": "Veľvyslanectvo Poľskej republiky v Bratislave",
+        "imageLicense": "CC BY-SA 3.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "imageYear": "2020",
+        "imageNote": ""
       },
       {
         "id": "karas",
         "name": "Viliam Karas",
         "role": "Podpredseda KDH",
         "bio": "Právnik a bývalý minister spravodlivosti. Venuje sa témam právneho štátu.",
-        "imageSource": "https://kdh.sk/wp-content/uploads/2024/03/Viliam-Karas.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Viliam_Karas,_June_2025.png",
         "source": "https://kdh.sk/karas-nikto-nesmie-byt-imunny-pred-spravodlivostou/",
-        "photo": "/people/karas.png"
+        "photo": "/people/karas.jpg",
+        "imageAuthor": "TV JOJ (relácia Politika 24)",
+        "imageLicense": "CC BY 3.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+        "imageYear": "2025",
+        "imageNote": "Snímka z relácie zverejnenej na YouTube pod licenciou CC BY."
       }
     ]
   },
@@ -215,18 +280,28 @@
         "name": "Jaroslav Naď",
         "role": "Predseda Demokratov",
         "bio": "Vedie stranu Demokrati a jej politický tím.",
-        "imageSource": "https://www.smedemokrati.sk/wp-content/uploads/2023/04/JN.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Defense_Minister_of_Slovakia_Jaroslav_Nad%E2%80%99_in_2022_(cropped).jpg",
         "source": "https://www.smedemokrati.sk/",
-        "photo": "/people/nad.jpg"
+        "photo": "/people/nad.jpg",
+        "imageAuthor": "U.S. Department of State",
+        "imageLicense": "Voľné dielo (vláda USA)",
+        "imageLicenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-USGov",
+        "imageYear": "2022",
+        "imageNote": "Výrez z fotografie z podpisu dohody vo Washingtone."
       },
       {
         "id": "heger",
         "name": "Eduard Heger",
         "role": "Podpredseda Demokratov",
         "bio": "Pôsobí v užšom vedení strany.",
-        "imageSource": "https://www.smedemokrati.sk/wp-content/uploads/2023/04/EH.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Eduard_Heger_in_Finland,_2022_(cropped).jpg",
         "source": "https://www.smedemokrati.sk/",
-        "photo": "/people/heger.jpg"
+        "photo": "/people/heger.jpg",
+        "imageAuthor": "Lauri Heikkinen / Fínska vláda",
+        "imageLicense": "CC BY 2.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "imageYear": "2022",
+        "imageNote": "Výrez z fotografie z návštevy Helsínk."
       }
     ]
   },
@@ -245,9 +320,14 @@
         "name": "László Gubík",
         "role": "Predseda Maďarskej aliancie",
         "bio": "Vedie stranu a zastupuje ju pri politických rokovaniach.",
-        "imageSource": "https://szovetseg.sk/sites/default/files/styles/szemely_nagy/public/2024-12/gubik.png?itok=6kCAaEAS",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:EuCET_2023_(89).jpg",
         "source": "https://szovetseg.sk/node/567",
-        "photo": "/people/gubik.png"
+        "photo": "/people/gubik.jpg",
+        "imageAuthor": "Elekes Andor",
+        "imageLicense": "CC BY 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "imageYear": "2023",
+        "imageNote": "Výrez redakcie Mandátu z fotografie z konferencie EuCET 2023 v Budapešti."
       }
     ]
   },
@@ -266,9 +346,14 @@
         "name": "Andrej Danko",
         "role": "Predseda SNS",
         "bio": "Vedie stranu aj jej predsedníctvo.",
-        "imageSource": "https://www.sns.sk/wp-content/uploads/2023/07/1.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Andrej_Danko,_2018.jpg",
         "source": "https://www.sns.sk/predsednictvo/",
-        "photo": "/people/danko.png"
+        "photo": "/people/danko.jpg",
+        "imageAuthor": "Igec133 (Wikimedia Commons)",
+        "imageLicense": "CC BY-SA 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "imageYear": "2018",
+        "imageNote": "Fotografia z obdobia, keď bol predsedom NR SR."
       }
     ]
   },
@@ -287,9 +372,14 @@
         "name": "Boris Kollár",
         "role": "Predseda SME RODINA",
         "bio": "Predseda hnutia, ktorý pred vstupom do politiky pôsobil v podnikaní.",
-        "imageSource": "https://hnutie-smerodina.sk/wp-content/uploads/2026/02/foto-boris_kollar_uvod-podpis-283x300.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Boris_Koll%C3%A1r,_4_May_2022.jpg",
         "source": "https://hnutie-smerodina.sk/bezpecnost/",
-        "photo": "/people/kollar.png"
+        "photo": "/people/kollar.jpg",
+        "imageAuthor": "Bratislavský samosprávny kraj",
+        "imageLicense": "CC BY 2.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "imageYear": "2022",
+        "imageNote": ""
       }
     ]
   },
@@ -308,9 +398,14 @@
         "name": "Zoroslav Kollár",
         "role": "Predseda Práva na pravdu",
         "bio": "Predstaviteľ projektu a strany Právo na pravdu.",
-        "imageSource": "https://www.pravonapravdu.sk/img/zoro-prihovor.jpg",
+        "imageSource": "",
         "source": "https://www.pravonapravdu.sk/",
-        "photo": "/people/zoroslav.jpg"
+        "photo": "",
+        "imageAuthor": "",
+        "imageLicense": "",
+        "imageLicenseUrl": "",
+        "imageYear": "",
+        "imageNote": "Na Wikimedia Commons zatiaľ nie je voľne licencovaná fotografia."
       }
     ]
   },
@@ -329,9 +424,14 @@
         "name": "Veronika Remišová",
         "role": "Predsedníčka ZA ĽUDÍ",
         "bio": "Vedie stranu a venuje sa témam korupcie a fungovania štátu.",
-        "imageSource": "https://stranazaludi.sk/wp-content/uploads/2023/08/147-remisova.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Visit_of_Veronika_R%C3%A9mi%C5%A1ov%C3%A1,_Slovak_Deputy_Prime_Minister_and_Minister_for_Investments,_Regional_development_and_Informatization,_to_the_European_Commission_02_(18-11-2021)_(cropped).jpg",
         "source": "https://stranazaludi.sk/predsednictvo/",
-        "photo": "/people/remisova.jpg"
+        "photo": "/people/remisova.jpg",
+        "imageAuthor": "Christophe Licoppe / Európska komisia",
+        "imageLicense": "CC BY 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "imageYear": "2021",
+        "imageNote": "Výrez z fotografie z návštevy Európskej komisie."
       }
     ]
   },
@@ -350,9 +450,14 @@
         "name": "Milan Krajniak",
         "role": "Predseda Konzervatívcov – KÚ",
         "bio": "Na oficiálnom webe je uvedený ako predseda strany.",
-        "imageSource": "https://smekonzervativci.sk/wp-content/uploads/2026/02/Rectangle-351.png",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:MilanKrajniakWikifoto.jpg",
         "source": "https://smekonzervativci.sk/ludia-a-predsednictvo/",
-        "photo": "/people/krajniak.png"
+        "photo": "/people/krajniak.jpg",
+        "imageAuthor": "Durmond (Wikimedia Commons)",
+        "imageLicense": "CC BY-SA 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "imageYear": "2018",
+        "imageNote": ""
       }
     ]
   },
@@ -371,9 +476,14 @@
         "name": "Rudolf Huliak",
         "role": "Predseda Strany vidieka",
         "bio": "Minister cestovného ruchu a športu SR.",
-        "imageSource": "https://stranavidieka.sk/wp-content/uploads/2025/02/215b4fb7-67f6-483c-ab6b-986d80b7c4a6.jpg",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Rudolf_Huliak,_March_2025.png",
         "source": "https://stranavidieka.sk/o-nas/",
-        "photo": "/people/huliak.jpg"
+        "photo": "/people/huliak.jpg",
+        "imageAuthor": "TV JOJ (relácia Politika 24)",
+        "imageLicense": "CC BY 3.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+        "imageYear": "2025",
+        "imageNote": "Snímka z relácie zverejnenej na YouTube pod licenciou CC BY."
       }
     ]
   },
@@ -393,8 +503,13 @@
         "role": "Predseda ĽSNS",
         "bio": "Bývalý poslanec NR SR a bývalý predseda Banskobystrického samosprávneho kraja.",
         "source": "https://www.tasr.sk/tasr-clanok/TASR%3A2026090100000533",
-        "imageSource": "https://www.nrsr.sk/web/dynamic/PoslanecPhoto.aspx?PoslanecID=944&ImageWidth=140",
-        "photo": "/people/kotleba.jpg"
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Marian_Kotleba_(portrait).jpg",
+        "photo": "/people/kotleba.jpg",
+        "imageAuthor": "Jan.kroslak (Wikimedia Commons)",
+        "imageLicense": "CC BY-SA 4.0",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "imageYear": "2010",
+        "imageNote": "Archívna fotografia z mítingu v Detve; novšia voľne licencovaná zatiaľ nie je."
       }
     ]
   }

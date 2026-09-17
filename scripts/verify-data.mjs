@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
 import { politicalNews, newsChecked, filterNews } from '../lib/political-news.ts';
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
 import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies } from '../lib/polls.ts';
@@ -265,3 +266,13 @@ assert(edition.before.withCoalition + edition.before.withOpposition <= 150, 'Blo
 assert(edition.coalitionLabel.length === 3 && edition.oppositionLabel.length === 4, 'Bloky bez voliteľných partnerov: 3 koaličné a 4 opozičné strany');
 
 console.log(`OK: ${archive.length} meraní, ${parties.length} subjektov, ${election2023.subjects.length} subjektov volieb 2023 a ${availableTrendAgencies.length} scenárov kresiel. Zdroje, chronológia, rozsah, súčty, poradie a výpočty prešli kontrolou.`);
+
+// Fotografie osobností: každá použitá je z Wikimedia Commons s úplným kreditom a existujúcim súborom; chýbajúca má dôvod.
+const profilesJson = JSON.parse(readFileSync(new URL('../lib/party-profiles.json', import.meta.url), 'utf8'));
+for (const prof of Object.values(profilesJson)) for (const person of prof.people ?? []) {
+  if (person.photo) {
+    assert(person.photo.startsWith('/people/') && existsSync(new URL('../public' + person.photo, import.meta.url)), `Fotografia existuje: ${person.id}`);
+    assert(person.imageSource.startsWith('https://commons.wikimedia.org/wiki/File:'), `Zdroj fotografie je Wikimedia Commons: ${person.id}`);
+    assert(person.imageAuthor && person.imageLicense && person.imageLicenseUrl.startsWith('https://') && /^\d{4}$/.test(person.imageYear), `Kredit fotografie je úplný: ${person.id}`);
+  } else assert(person.imageNote, `Chýbajúca fotografia má uvedený dôvod: ${person.id}`);
+}

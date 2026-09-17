@@ -14,7 +14,7 @@ import Hemicycle from "@/components/hemicycle";
 import { MandatMagazine, ElectionLab } from "@/components/mandat-magazine";
 import { aggregateAsPoll, aggregateAgencies, aggregateHalfLifeDays, aggregatePolls, aggregateWindowDays, currentAggregate } from "@/lib/aggregate";
 import BlocBar from "@/components/bloc-bar";
-import PartyProfileOverview, { PartyTags, PartyCases } from "@/components/party-profile-overview";
+import PartyProfileOverview, { PartyTags, PartyCases, PersonPhotoSources } from "@/components/party-profile-overview";
 import { partyProfiles } from "@/lib/party-profiles";
 import PartyRail, { PartyLogoSources, PartyStrip } from "@/components/party-rail";
 // Graf Dátového prehľadu (Recharts) sa načíta až pri otvorení záložky s grafom.
@@ -280,6 +280,7 @@ export default function Home() {
           </div></div>
           <section className="coverage-section"><Heading>Agentúry a pokrytie dát</Heading><p className="section-description">Stav overenia: {verified}. Nenájdená správa neznamená, že výskum neexistuje.</p><div className="coverage-grid">{sourceCoverage.map(c=><article key={c.agency}><div><h3>{c.agency}</h3><button className="text-button" onClick={()=>{setAgency(c.agency);setQuery("");changeView("polls");}}>Počet meraní: {archive.filter(p=>p.agency===c.agency).length} <ArrowRight size={15}/></button></div><p>{c.description}</p><p className="coverage-note">{c.note}</p><a className="source-link" href={c.source} target="_blank" rel="noopener noreferrer">{c.agency==="NMS"?"NMS Market Research Slovakia":"Pôvodný zdroj / archív"}<ArrowUpRight size={14}/></a></article>)}</div></section>
           <PartyLogoSources/>
+          <PersonPhotoSources/>
           <section className="source-register"><Heading>Register zdrojov</Heading><div className="panel"><div className="source-register-row"><span><b>Štatistický úrad SR</b> · voľby do NR SR 2023</span><span>{date(election2023.electionDate)}</span><a className="source-link" href={election2023.source} target="_blank" rel="noopener noreferrer">Oficiálne výsledky 2023 <ArrowUpRight size={14}/><span className="sr-only"> (otvorí sa v novej karte)</span></a></div>{archive.map(p=><div className="source-register-row" key={p.id}><span><b>{p.agency}</b> · {p.month} 2026</span><span>{date(p.published)}</span><Source poll={p}/></div>)}</div></section>
         </TabsContent>
       </main>

@@ -1,16 +1,28 @@
 "use client";
 import { useState } from 'react';
 import Image from 'next/image';
-import { ArrowUpRight, ChevronDown, Landmark, UserRound } from 'lucide-react';
-import { partyProfiles, type Personality } from '@/lib/party-profiles';
+import { ArrowUpRight, ChevronDown, Landmark } from 'lucide-react';
+import { partyProfiles, peopleImagesChecked, peopleWithPhoto, peopleWithoutPhoto, type Personality } from '@/lib/party-profiles';
 import { date } from '@/lib/polls';
 import { formatTenureDate, governmentTenure, tenureAsOf, tenureLabel, tenureMethodology } from '@/lib/government-tenure';
 import { casesForParty, caseStatuses, casesChecked, politicalCases } from '@/lib/political-cases';
 import { SeverityChip } from '@/components/political-cases';
 
+const initials=(name:string)=>{const parts=name.trim().split(/\s+/);return (parts[0][0]+(parts.length>1?parts[parts.length-1][0]:'')).toUpperCase();};
 function Portrait({person}:{person:Personality}) {
   const [failed,setFailed]=useState(false);
-  return <div className="person-portrait">{failed?<UserRound size={32} aria-hidden="true"/>:<Image src={person.photo} alt={person.name} width={104} height={120} loading="lazy" unoptimized onError={()=>setFailed(true)}/>}</div>;
+  // Bez voľne licencovanej fotografie (alebo pri chybe načítania) stojí na mieste portrétu monogram.
+  if(!person.photo||failed)return <div className="person-portrait person-monogram" aria-hidden="true"><span>{initials(person.name)}</span></div>;
+  return <div className="person-portrait"><Image src={person.photo} alt={person.name} width={104} height={120} loading="lazy" unoptimized onError={()=>setFailed(true)}/></div>;
+}
+const photoCredit=(p:Personality)=>`${p.imageAuthor}, ${p.imageYear} · ${p.imageLicense}`;
+
+export function PersonPhotoSources() {
+  const withPhoto=peopleWithPhoto();const without=peopleWithoutPhoto();
+  return <section className="party-logo-sources photo-sources" aria-labelledby="photo-sources-title"><h2 id="photo-sources-title">Fotografie osobností</h2><p>Portréty v profiloch strán preberáme z Wikimedia Commons, kde ich autori zverejnili pod voľnými licenciami: Creative Commons, voľné dielo alebo podmienky ďalšieho použitia Európskej únie. Pri každej fotografii uvádzame autora, rok vzniku a licenciu; časť záberov sú výrezy z väčších fotografií a rok vzniku neoznačuje aktuálnosť funkcie. Kde voľná fotografia nie je, zobrazujeme monogram. Kontrola licencií: {date(peopleImagesChecked)}.</p>
+    <ul>{withPhoto.map(p=><li key={p.id}><a href={p.imageSource} target="_blank" rel="noopener noreferrer"><strong>{p.name}</strong><span>{p.imageAuthor}, {p.imageYear}</span><span className="sr-only"> (Wikimedia Commons, nová karta)</span></a><a className="photo-license" href={p.imageLicenseUrl} target="_blank" rel="noopener noreferrer">{p.imageLicense}<span className="sr-only"> (text licencie, nová karta)</span></a>{p.imageNote&&<small>{p.imageNote}</small>}</li>)}</ul>
+    {without.length>0&&<ul className="photo-sources-missing" aria-label="Osobnosti bez fotografie">{without.map(p=><li key={p.id}><strong>{p.name}</strong> — {p.imageNote}</li>)}</ul>}
+  </section>;
 }
 export function PartyTags({partyId}:{partyId:string}) {
   const profile=partyProfiles[partyId];
@@ -59,6 +71,6 @@ export default function PartyProfileOverview({partyId}:{partyId:string}) {
   if(!profile)return <div className="profile-overview"><section className="profile-summary"><h2>O strane</h2><p>Medailón a aktuálne vedenie tejto strany ešte nemáme overené. Dostupné merania a programové dokumenty nájdete nižšie.</p></section></div>;
   return <div className="profile-overview">
     <section className="profile-summary" aria-label="Predstavenie strany"><div className="profile-meta-row"><PartyTags partyId={partyId}/><PartyGovernmentTenure partyId={partyId}/></div><h2>Čím sa profiluje</h2><p>{profile.summary}</p><a className="profile-source" href={profile.source} target="_blank" rel="noopener noreferrer">Podklad k zameraniu <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><p className="profile-editorial-note">Redakčné zhrnutie uvedených podkladov. Deklarované priority nie sú hodnotením výsledkov ani úplnou politologickou klasifikáciou.</p></section>
-    <section className="profile-people" aria-labelledby="profile-people-title"><div className="profile-section-heading"><h2 id="profile-people-title">Ľudia za stranou</h2><span>{profile.people.length===1?'Prvý medailón':'Výber osobností'}</span></div><div className="person-list">{profile.people.map(person=><article className="person-item" key={person.id}><Portrait person={person}/><div><h3>{person.name}</h3><span className="person-role">{person.role}</span><p>{person.bio}</p><div className="person-sources"><a href={person.source} target="_blank" rel="noopener noreferrer">Zdroj profilu <ArrowUpRight size={11}/></a><a href={person.imageSource} target="_blank" rel="noopener noreferrer" aria-label={`Zdroj fotografie: ${person.name}`}>Foto <ArrowUpRight size={11}/></a></div></div></article>)}</div><p className="profile-editorial-note">Kontrola podkladov {date(profile.verified)}. Výber nie je rebríček popularity ani kandidátna listina pre voľby 2027.</p></section>
+    <section className="profile-people" aria-labelledby="profile-people-title"><div className="profile-section-heading"><h2 id="profile-people-title">Ľudia za stranou</h2><span>{profile.people.length===1?'Prvý medailón':'Výber osobností'}</span></div><div className="person-list">{profile.people.map(person=><article className="person-item" key={person.id}><Portrait person={person}/><div><h3>{person.name}</h3><span className="person-role">{person.role}</span><p>{person.bio}</p><div className="person-sources"><a href={person.source} target="_blank" rel="noopener noreferrer">Zdroj profilu <ArrowUpRight size={11}/></a>{person.photo?<a className="person-credit" href={person.imageSource} target="_blank" rel="noopener noreferrer" aria-label={`Fotografia na Wikimedia Commons: ${photoCredit(person)}`}>Foto: {photoCredit(person)} <ArrowUpRight size={11}/></a>:<span className="person-credit-missing">Bez voľne licencovanej fotografie</span>}</div></div></article>)}</div><p className="profile-editorial-note">Kontrola podkladov {date(profile.verified)}. Výber nie je rebríček popularity ani kandidátna listina pre voľby 2027.</p></section>
   </div>;
 }
