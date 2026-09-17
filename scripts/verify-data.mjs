@@ -271,7 +271,7 @@ console.log(`OK: ${archive.length} meraní, ${parties.length} subjektov, ${elect
 const profilesJson = JSON.parse(readFileSync(new URL('../lib/party-profiles.json', import.meta.url), 'utf8'));
 for (const prof of Object.values(profilesJson)) for (const person of prof.people ?? []) {
   if (person.photo) {
-    assert(person.photo.startsWith('/people/') && existsSync(new URL('../public' + person.photo, import.meta.url)), `Fotografia existuje: ${person.id}`);
+    assert(person.photo.startsWith('/people/') && person.photo.endsWith('-2x.webp') && [1, 2, 3].every(n => existsSync(new URL('../public' + person.photo.replace('-2x.webp', `-${n}x.webp`), import.meta.url))), `Fotografia existuje v 1x/2x/3x: ${person.id}`);
     assert(person.imageSource.startsWith('https://commons.wikimedia.org/wiki/File:'), `Zdroj fotografie je Wikimedia Commons: ${person.id}`);
     assert(person.imageAuthor && person.imageLicense && person.imageLicenseUrl.startsWith('https://') && /^\d{4}$/.test(person.imageYear), `Kredit fotografie je úplný: ${person.id}`);
   } else assert(person.imageNote, `Chýbajúca fotografia má uvedený dôvod: ${person.id}`);

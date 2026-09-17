@@ -6,7 +6,9 @@ Portréty v profiloch strán už nepochádzajú z webov strán (tie mali „vše
 
 Bez fotografie zostali traja: Matúš Šutaj Eštok (oba súbory na Commons sú z webu Rady EÚ a od júna 2026 navrhnuté na vymazanie pre nejasnú licenciu), Michal Šipoš a Zoroslav Kollár (na Commons nie je voľne licencovaná fotografia). Na ich mieste je monogram a v profile poznámka „Bez voľne licencovanej fotografie“.
 
-Dáta: `lib/party-profiles.json` má pri každej osobe `imageSource` (stránka súboru na Commons), `imageAuthor`, `imageLicense`, `imageLicenseUrl`, `imageYear` a `imageNote`. Kredit sa zobrazuje pri každom medailóne (Foto: autor, rok · licencia) a súhrnne v záložke O dátach v novej sekcii Fotografie osobností, aj s odkazom na text licencie. Kontrola dát vyžaduje pri použitej fotografii existujúci súbor, zdroj na Commons a úplný kredit, pri chýbajúcej dôvod. Súbory sú náhľady do šírky 500 px, spolu 1,2 MB namiesto 6,4 MB; rok vzniku fotografie neoznačuje aktuálnosť funkcie (Kotleba 2010, Danko a Krajniak 2018).
+Dáta: `lib/party-profiles.json` má pri každej osobe `imageSource` (stránka súboru na Commons), `imageAuthor`, `imageLicense`, `imageLicenseUrl`, `imageYear` a `imageNote`. Kredit sa zobrazuje pri každom medailóne (Foto: autor, rok · licencia) a súhrnne v záložke O dátach v novej sekcii Fotografie osobností, aj s odkazom na text licencie. Kontrola dát vyžaduje pri použitej fotografii existujúci súbor, zdroj na Commons a úplný kredit, pri chýbajúcej dôvod. Rok vzniku fotografie neoznačuje aktuálnosť funkcie (Kotleba 2010, Danko a Krajniak 2018).
+
+Kvalita (dodatok v ten istý deň): prvé nasadenie použilo náhľady z Commons (500 px, JPEG) a prehliadač ich v profile zmenšoval päťnásobne, čo pôsobilo kockovito. Teraz sa portréty režú a zmenšujú vopred zo súborov v plnom rozlíšení (sharp, Lanczos; výrez s pomerom 0,82 a kotvou 22 % zhora ako v CSS) na tri hustoty 96/192/288 px vo WebP a komponent ich ponúka cez srcset; 60 súborov má spolu 445 KB (pôvodné fotky z webov strán mali 6,4 MB).
 
 ## 14. 9. 2026 — desktopové body z kritiky (vetva desktop, Claude)
 

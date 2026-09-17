@@ -1,6 +1,5 @@
 "use client";
 import { useState } from 'react';
-import Image from 'next/image';
 import { ArrowUpRight, ChevronDown, Landmark } from 'lucide-react';
 import { partyProfiles, peopleImagesChecked, peopleWithPhoto, peopleWithoutPhoto, type Personality } from '@/lib/party-profiles';
 import { date } from '@/lib/polls';
@@ -8,12 +7,15 @@ import { formatTenureDate, governmentTenure, tenureAsOf, tenureLabel, tenureMeth
 import { casesForParty, caseStatuses, casesChecked, politicalCases } from '@/lib/political-cases';
 import { SeverityChip } from '@/components/political-cases';
 
+const photoSet=(photo:string)=>[1,2,3].map(n=>`${photo.replace(/-2x\.webp$/,'')}-${n}x.webp ${n}x`).join(', ');
 const initials=(name:string)=>{const parts=name.trim().split(/\s+/);return (parts[0][0]+(parts.length>1?parts[parts.length-1][0]:'')).toUpperCase();};
 function Portrait({person}:{person:Personality}) {
   const [failed,setFailed]=useState(false);
   // Bez voľne licencovanej fotografie (alebo pri chybe načítania) stojí na mieste portrétu monogram.
   if(!person.photo||failed)return <div className="person-portrait person-monogram" aria-hidden="true"><span>{initials(person.name)}</span></div>;
-  return <div className="person-portrait"><Image src={person.photo} alt={person.name} width={104} height={120} loading="lazy" unoptimized onError={()=>setFailed(true)}/></div>;
+  // Tri hustoty (96/192/288 px) vyrezané a zmenšené vopred, aby prehliadač nezmenšoval päťnásobne veľký obrázok.
+  // eslint-disable-next-line @next/next/no-img-element -- srcSet podľa hustoty displeja, next/image ho pri unoptimized nepodporuje
+  return <div className="person-portrait"><img src={person.photo} srcSet={photoSet(person.photo)} alt={person.name} width={192} height={234} loading="lazy" decoding="async" onError={()=>setFailed(true)}/></div>;
 }
 const photoCredit=(p:Personality)=>`${p.imageAuthor}, ${p.imageYear} · ${p.imageLicense}`;
 
