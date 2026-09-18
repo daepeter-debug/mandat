@@ -24,15 +24,39 @@ export type FinanceYear = {
   unemploymentSource?: string; // "historic" = rad pred zmenou metodiky 2021
   inflation?: number;          // HICP, priemerná ročná miera, %
   population?: number;         // obyvateľstvo k 1. januáru
+  // Životná úroveň
+  gdpPcPps?: number;           // HDP na obyvateľa v parite kúpnej sily, EÚ27 = 100
+  minWage?: number;            // minimálna mesačná mzda v januári, €
+  medianIncome?: number;       // medián ekvivalizovaného disponibilného príjmu, € za rok
+  povertyRate?: number;        // miera rizika chudoby (pod 60 % mediánu), %
+  employment?: number;         // miera zamestnanosti 20–64, %
 };
-export type FinanceDataset = { dataset: string; label: string; updated: string; filter: Record<string, string>; url: string };
-export type PublicFinanceData = { fetched: string; from: number; datasets: Record<string, FinanceDataset>; years: FinanceYear[] };
+export type FinanceDataset = { dataset: string; label: string; updated: string; filter: Record<string, string | string[]>; url: string };
+export type CompareRow = { geo: string; deficitPct?: number; debtPct?: number; gdpGrowth?: number; inflation?: number; unemployment?: number; gdpPcPps?: number };
+export type CompareIndicator = { label: string; year: number; dataset: string; url: string; updated: string };
+export type FinanceCompare = { geos: { code: string; label: string }[]; indicators: Record<string, CompareIndicator>; rows: CompareRow[] };
+export type PublicFinanceData = { fetched: string; from: number; datasets: Record<string, FinanceDataset>; years: FinanceYear[]; compare: FinanceCompare };
 
 export const financeFetched = publicFinance.fetched;
 export const financeDatasets = publicFinance.datasets;
 export const financeYears: FinanceYear[] = publicFinance.years;
 export const latestFinanceYear = financeYears[financeYears.length - 1];
 export const financeYearById = (year: number) => financeYears.find(r => r.year === year);
+export const financeCompare: FinanceCompare = publicFinance.compare;
+
+/* ---------- Životná úroveň ---------- */
+
+export const latestWith = (field: keyof FinanceYear) => [...financeYears].reverse().find(r => r[field] !== undefined);
+
+// Porovnanie: poradie Slovenska medzi krajinami V4 (1 = najlepšie) pri ukazovateli, kde vyššia hodnota je lepšia alebo horšia.
+export const compareV4 = ["SK", "CZ", "PL", "HU"];
+export function v4Rank(field: keyof CompareRow, higherIsBetter: boolean) {
+  const rows = financeCompare.rows.filter(r => compareV4.includes(r.geo) && typeof r[field] === "number");
+  const val = (r: CompareRow) => r[field] as number;
+  const sorted = [...rows].sort((a, b) => higherIsBetter ? val(b) - val(a) : val(a) - val(b));
+  const i = sorted.findIndex(r => r.geo === "SK");
+  return i < 0 ? null : { rank: i + 1, of: sorted.length };
+}
 
 // Dlh na obyvateľa v €; obyvateľstvo Eurostat vedie k 1. januáru, dlh ku koncu roka — berieme rok nasledujúci, ak existuje.
 export function debtPerCapita(row: FinanceYear) {
@@ -194,11 +218,22 @@ export const debtBrake = {
 // Maastrichtské referenčné hodnoty (Pakt stability a rastu): deficit 3 % HDP, dlh 60 % HDP.
 export const maastricht = { deficitPct: -3, debtPct: 60 };
 
+// Zmena úrovňového ukazovateľa počas vlády: hodnota na konci roka pred prvým „väčšinovým“ rokom → hodnota na konci posledného.
+export function levelChange(summary: CabinetSummary, field: keyof FinanceYear) {
+  const start = summary.debtStartYear ? financeYearById(summary.debtStartYear)?.[field] : undefined;
+  const end = summary.debtEndYear ? financeYearById(summary.debtEndYear)?.[field] : undefined;
+  if (typeof start !== "number" || typeof end !== "number") return null;
+  return { start, end, change: Math.round((end - start) * 10) / 10 };
+}
 export const financeSources = [
   { name: 'Eurostat · vládny deficit a dlh (EDP)', url: financeDatasets.deficitPct.url, note: `notifikácia deficitu a dlhu, aktualizované ${financeDatasets.deficitPct.updated}` },
   { name: 'Eurostat · príjmy, výdavky a úroky verejnej správy', url: financeDatasets.expenditurePct.url, note: `aktualizované ${financeDatasets.expenditurePct.updated}` },
   { name: 'Eurostat · HDP a jeho rast', url: financeDatasets.gdpGrowth.url, note: `aktualizované ${financeDatasets.gdpGrowth.updated}` },
   { name: 'Eurostat · nezamestnanosť, inflácia HICP, obyvateľstvo', url: financeDatasets.unemployment.url, note: 'nezamestnanosť pred rokom 2009 z historického radu (une_rt_a_h)' },
+  { name: 'Eurostat · HDP na obyvateľa v parite kúpnej sily', url: financeDatasets.gdpPcPps.url, note: `EÚ27 = 100, aktualizované ${financeDatasets.gdpPcPps.updated}` },
+  { name: 'Eurostat · minimálna mzda', url: financeDatasets.minWage.url, note: 'mesačná minimálna mzda, stav k januáru (earn_mw_cur)' },
+  { name: 'Eurostat · príjmy a chudoba (EU-SILC)', url: financeDatasets.medianIncome.url, note: 'medián ekvivalizovaného disponibilného príjmu a miera rizika chudoby pod 60 % mediánu; rad od 2005' },
+  { name: 'Eurostat · zamestnanosť 20–64', url: financeDatasets.employment.url, note: 'rad od 2009' },
   { name: 'Štatistický úrad SR · notifikácia deficitu a dlhu', url: 'https://slovak.statistics.sk/', note: 'primárny zostavovateľ údajov, ktoré Eurostat preberá' },
   { name: 'Rada pre rozpočtovú zodpovednosť', url: debtBrake.council, note: 'hodnotenie dlhovej brzdy a dlhodobej udržateľnosti' },
   { name: debtBrake.law, url: debtBrake.source, note: 'horný limit dlhu a sankčné pásma' },

@@ -68,7 +68,7 @@ function parseSearch(search:string):UiState {
     legend: s.get("l")===null ? defaults.legend : s.get("l")!.split(",").filter(id=>partyIds.has(id)),
     blocs: (s.get("b") ?? "").split(",").filter(id=>optionalIds.includes(id)),
     caseParty: pick("kp", v=>partyIds.has(v)),
-    finance: pick("hv", v=>v==="years"||v==="governments") ?? defaults.finance,
+    finance: pick("hv", v=>["years","governments","living","compare"].includes(v)) ?? defaults.finance,
     parliament: pick("pn", v=>parliamentViews.includes(v)) ?? defaults.parliament,
     news: pick("sp", v=>newsById(v)!==null),
     agency: pick("f", v=>v==="all"||agencies.includes(v)) ?? defaults.agency,

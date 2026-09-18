@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { politicalNews, newsChecked, filterNews } from '../lib/political-news.ts';
 import { casesEnabled } from '../lib/features.ts';
-import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, financeYears, latestFinanceYear, primaryBalance, yearShares } from '../lib/public-finance.ts';
+import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, financeCompare, financeYears, latestFinanceYear, primaryBalance, yearShares } from '../lib/public-finance.ts';
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
 import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies } from '../lib/polls.ts';
 import { programmes, positions } from '../lib/programmes.ts';
@@ -322,4 +322,17 @@ assert.equal(cabinets.at(-1).end, null, 'Posledná vláda úraduje');
 const summaries = cabinetSummaries();
 assert(Math.abs(summaries.reduce((a, s) => a + s.weight, 0) - financeYears.length) < 0.05, 'Súčet podielov vlád = počet rokov v dátach');
 assert(summaries.filter(s => s.years.length === 0).every(s => s.cabinet.end && s.cabinet.end < '1995-01-01'), 'Bez dát sú len vlády pred rokom 1995');
+// Životná úroveň a porovnanie: rozumné medze, HDP na obyvateľa v PPS (nie v eurách) a Slovensko v každom rebríčku.
+for (const r of financeYears) {
+  if (r.gdpPcPps !== undefined) assert(r.gdpPcPps > 40 && r.gdpPcPps < 100, `HDP na obyvateľa v PPS v medziach: ${r.year}`);
+  if (r.minWage !== undefined) assert(r.minWage > 50 && r.minWage < 2000, `Minimálna mzda v medziach: ${r.year}`);
+  if (r.povertyRate !== undefined) assert(r.povertyRate > 5 && r.povertyRate < 25, `Chudoba v medziach: ${r.year}`);
+  assert(r.netEarnings === undefined, `Čistý príjem (earn_nt_net) zámerne nepoužívame, má zlom radu: ${r.year}`);
+}
+assert(latestFinanceYear.gdpPcPps !== undefined && latestFinanceYear.gdpPcPps > 65, 'Posledný rok má HDP na obyvateľa v PPS okolo 70–80 % EÚ');
+assert(financeCompare.rows.length >= 6 && financeCompare.rows.some(r => r.geo === 'SK') && financeCompare.rows.some(r => r.geo === 'EU27_2020'), 'Porovnanie má Slovensko aj EÚ');
+for (const field of ['deficitPct', 'debtPct', 'gdpGrowth', 'inflation', 'unemployment', 'gdpPcPps']) {
+  assert(financeCompare.rows.every(r => typeof r[field] === 'number'), `Porovnanie má hodnotu ${field} pre všetky celky`);
+  assert(financeCompare.indicators[field]?.year >= 2023, `Porovnanie ${field} nie je staršie než 2023`);
+}
 assert.equal(debtBrake.upperLimit(2017), 60); assert.equal(debtBrake.upperLimit(2018), 59); assert.equal(debtBrake.upperLimit(2025), 52); assert.equal(debtBrake.upperLimit(2027), 50); assert.equal(debtBrake.upperLimit(2030), 50);

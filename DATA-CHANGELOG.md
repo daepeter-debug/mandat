@@ -1,5 +1,15 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — Hospodárenie: životná úroveň a porovnanie s EÚ (vetva porovnanie, Claude)
+
+Záložka Hospodárenie má štyri pohľady: Po rokoch, Po vládach, Životná úroveň a EÚ a susedia (adresa `hv=living` / `hv=compare`). Pôvodné dva pohľady ostali bez zmeny.
+
+**EÚ a susedia:** šesť rebríčkov za posledný rok, ktorý má Eurostat pre všetky celky (2025): saldo, dlh, rast HDP, inflácia, nezamestnanosť a HDP na obyvateľa v parite kúpnej sily — Slovensko, Česko, Poľsko, Maďarsko, Rakúsko, eurozóna a EÚ 27. Každý rebríček je zoradený od najlepšej hodnoty, Slovensko je zvýraznené a pri každom je poradie v rámci V4; úvodná veta hovorí, kde sme z V4 najlepší a najhorší. Priemery eurozóny a EÚ sú označené ako celky, poradie sa počíta len medzi krajinami V4.
+
+**Životná úroveň:** HDP na obyvateľa v PPS (EÚ = 100, rad od 1995), minimálna mzda (stav v januári, od 1999), medián disponibilného príjmu a miera rizika chudoby (EU-SILC, od 2005), zamestnanosť 20–64 (od 2009), spolu s infláciou a nezamestnanosťou. Graf: stĺpce minimálnej mzdy zafarbené podľa vlády a čiara dobiehania EÚ. Karty vlád ukazujú stav na začiatku a na konci rovnakého rozpätia rokov ako pri dlhu. Eurostatov rad čistých príjmov (earn_nt_net) sme po kontrole vyradili: v roku 2024 má označený zlom radu (+30 % za rok), takže by roky neboli porovnateľné; skript ho zámerne nesťahuje a kontrola dát stráži, aby sa nevrátil.
+
+Skript `fetch-public-finance.mjs` má všeobecný dekóder JSON-stat (viac krajín v jednom volaní) a HDP na obyvateľa berie v parite kúpnej sily (jednotka PC_EU27_2020_HAB_MPPS_CP), nie v bežných eurách. Overené na 375 px: prepínač sa zalomí do dvoch radov, karty rebríčkov 335 px, bez pretečenia.
+
 ## 18. 9. 2026 — logá strán v záložke Strany a pri vládach (vetva hospodarenie, Claude)
 
 Dodatok v ten istý deň: logo je v pravom hornom rohu karty vo výške 72 px (na mobile 60 px), šírka podľa tvaru značky do 150 px, aby široké wordmarky neboli miniatúrne v štvorci. Pribudli logá KÚ (symbol z webu smekonzervativci.sk) a Strany vidieka (SVG z webu strany); ĽSNS nemá funkčný web — kotlebovci.sk neodpovedá a pôvodná doména naseslovensko.net patrí inému majiteľovi (stránka o online kasínach) — preto je jej logo z Wikimedia Commons, čo je uvedené v registri lôg aj v O dátach. Logo má všetkých 16 sledovaných subjektov. Overené na 375 px: karty 335 px široké, bez prekrytia skratky a loga, bez horizontálneho pretečenia.
