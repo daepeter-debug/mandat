@@ -63,5 +63,21 @@
     "source": "https://stranazaludi.sk/wp-content/uploads/2023/04/ZA-LUDI-logo.webp",
     "verified": "2026-09-12",
     "src": "/logos/zaludi.webp"
+  },
+  "ku": {
+    "src": "/logos/ku.png",
+    "source": "https://smekonzervativci.sk/wp-content/uploads/2026/03/cropped-Logoa.png",
+    "verified": "2026-09-18"
+  },
+  "lsns": {
+    "src": "/logos/lsns.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Kotleba-%C4%BDSNS_New_Logo.png",
+    "verified": "2026-09-18",
+    "note": "Wikimedia Commons; strana nemá funkčný web (kotlebovci.sk neodpovedá, naseslovensko.net má iného majiteľa)."
+  },
+  "vidiek": {
+    "src": "/logos/vidiek.svg",
+    "source": "https://stranavidieka.sk/wp-content/uploads/2025/08/strana_vidieka_horizont.svg",
+    "verified": "2026-09-18"
   }
 }

@@ -2,6 +2,8 @@
 
 ## 18. 9. 2026 — logá strán v záložke Strany a pri vládach (vetva hospodarenie, Claude)
 
+Dodatok v ten istý deň: logo je v pravom hornom rohu karty vo výške 72 px (na mobile 60 px), šírka podľa tvaru značky do 150 px, aby široké wordmarky neboli miniatúrne v štvorci. Pribudli logá KÚ (symbol z webu smekonzervativci.sk) a Strany vidieka (SVG z webu strany); ĽSNS nemá funkčný web — kotlebovci.sk neodpovedá a pôvodná doména naseslovensko.net patrí inému majiteľovi (stránka o online kasínach) — preto je jej logo z Wikimedia Commons, čo je uvedené v registri lôg aj v O dátach. Logo má všetkých 16 sledovaných subjektov. Overené na 375 px: karty 335 px široké, bez prekrytia skratky a loga, bez horizontálneho pretečenia.
+
 Karty strán v záložke Strany majú v monograme logo strany namiesto farebnej bodky (rovnaké súbory a zdroje ako bočná lišta, kredit v O dátach); bodka ostáva pri stranách bez loga (KÚ, ĽSNS, Strana vidieka). V Hospodárení má každá vláda koaličné strany ako riadok štítkov: logo, ak strana existuje dodnes (OĽANO nesie logo dnešného Hnutia Slovensko), inak monogram vo farbe z registra neaktívnych strán; zloženie vlád je v `cabinets` štruktúrované a kontrola dát overuje, že každý odkaz vedie na existujúcu stranu s logom alebo do registra neaktívnych.
 
 ## 18. 9. 2026 — Hospodárenie: saldo a dlh po rokoch a po vládach (vetva hospodarenie, Claude)

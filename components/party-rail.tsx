@@ -11,7 +11,7 @@ const ranked = parties.filter(p=>currentAggregate.values[p.id]?.value>1).sort((a
 const logoMap:Record<string,{src:string;source:string;verified:string}>=logos;
 
 export function PartyLogoSources() {
-  return <section className="party-logo-sources"><h2>Logá politických strán</h2><p>Identifikačné logá preberáme z webov jednotlivých subjektov. Zobrazujeme ich v pôvodných farbách a pomeroch; ich použitie nevyjadruje podporu strany. Zdrojová kontrola: 12. 9. 2026.</p><div>{ranked.map(p=><a key={p.id} href={logoMap[p.id]?.source} target="_blank" rel="noopener noreferrer"><Image src={logoMap[p.id].src} alt="" width={34} height={34} unoptimized/><span>{p.short}</span><ArrowUpRight size={14}/><span className="sr-only"> (nová karta)</span></a>)}</div></section>;
+  return <section className="party-logo-sources"><h2>Logá politických strán</h2><p>Identifikačné logá preberáme z webov jednotlivých subjektov; logo ĽSNS je z Wikimedia Commons, lebo strana nemá funkčný web. Zobrazujeme ich v pôvodných farbách a pomeroch; ich použitie nevyjadruje podporu strany. Zdrojová kontrola: 12. 9. 2026.</p><div>{ranked.map(p=><a key={p.id} href={logoMap[p.id]?.source} target="_blank" rel="noopener noreferrer"><Image src={logoMap[p.id].src} alt="" width={34} height={34} unoptimized/><span>{p.short}</span><ArrowUpRight size={14}/><span className="sr-only"> (nová karta)</span></a>)}</div></section>;
 }
 
 export default function PartyRail({selected,onSelect,onMethod}:{selected:string|null;onSelect:(party:Party)=>void;onMethod:()=>void}) {
