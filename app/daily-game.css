@@ -94,3 +94,26 @@
   .game-rules { margin-top: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .game-chamber circle, .game-party { transition: none; } }
+
+/* Mobil: celá herná plocha na jednu obrazovku (375 × 812) — nadpis s prepínačom v jednom rade, menší polkruh, nižšie kartičky. */
+@media (max-width: 760px) {
+  .daily-game { padding-top: 10px; }
+  .game-heading { flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .game-heading p { display: none; }
+  .game-heading h1 { font-size: 24px; margin: 0; white-space: nowrap; }
+  .game-mode { width: auto; padding: 3px; }
+  .game-mode button { flex: none; min-height: 36px; padding: 6px 9px; font-size: 12px; }
+  .game-board { padding: 12px; }
+  .game-board-meta { font-size: 10px; }
+  .game-chamber { width: 210px; margin: 8px auto 10px; }
+  .game-seat-count strong { font-size: 30px; }
+  .game-seat-count span { font-size: 9.5px; margin-top: 2px; }
+  .game-party-grid { gap: 6px; }
+  .game-party { min-height: 54px; padding: 8px; gap: 6px; }
+  .game-party-label b { font-size: 13.5px; }
+  .game-party > strong { font-size: 21px; }
+  .game-actions { margin-top: 10px; }
+  .game-submit { min-height: 44px; }
+  .game-feedback { min-height: 30px; margin-top: 8px; font-size: 11.5px; line-height: 1.4; }
+  .game-success { padding-top: 12px; }
+}
