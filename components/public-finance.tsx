@@ -1,8 +1,23 @@
 "use client";
 import { lazy, Suspense } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, eventsForYear, financeEvents, financeFetched, financeSources, financeYears, latestFinanceYear, leadingCabinet, maastricht, primaryBalance, yearShares, type CabinetSummary, type FinanceYear } from '@/lib/public-finance';
-import { date } from '@/lib/polls';
+import Image from 'next/image';
+import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, eventsForYear, financeEvents, financeFetched, financeSources, financeYears, latestFinanceYear, leadingCabinet, maastricht, partiesLabel, primaryBalance, yearShares, type Cabinet, type CabinetSummary, type FinanceYear } from '@/lib/public-finance';
+import { inactiveParties } from '@/lib/government-tenure-inactive';
+import { date, parties } from '@/lib/polls';
+import logos from '@/lib/party-logos.json';
+
+const logoMap: Record<string, { src: string }> = logos;
+// Logo, keď strana existuje dodnes (OĽANO nesie logo dnešného Hnutia Slovensko); inak monogram vo farbe z registra neaktívnych strán.
+function CabinetParties({ cabinet }: { cabinet: Cabinet }) {
+  if (!cabinet.parties.length) return <p className="finance-parties finance-parties-none">{partiesLabel(cabinet)}</p>;
+  return <ul className="finance-parties" aria-label="Koaličné strany">{cabinet.parties.map(p => {
+    const logo = p.party ? logoMap[p.party] : undefined;
+    const name = p.party ? parties.find(x => x.id === p.party)?.name : p.inactive ? inactiveParties.find(x => x.id === p.inactive)?.name : undefined;
+    const color = p.inactive ? inactiveParties.find(x => x.id === p.inactive)?.color : undefined;
+    return <li key={p.short} title={name}>{logo ? <Image src={logo.src} alt="" width={22} height={22} unoptimized/> : <i style={color ? { background: color } : undefined} aria-hidden="true">{p.short.replace(/[^A-ZĽŠČŽÁÉÍÓÚÝŤĎŇ]/g, '').slice(0, 2)}</i>}<span>{p.short}</span></li>;
+  })}</ul>;
+}
 
 const FinanceChart = lazy(() => import('@/components/finance-chart'));
 
@@ -65,7 +80,7 @@ function CabinetCard({ s }: { s: CabinetSummary }) {
   const yearsLabel = s.years.map(y => y.share < 0.995 ? `${y.year} (${pct(y.share)})` : String(y.year)).join(' · ');
   const events = [...new Set(s.years.filter(y => y.share >= 0.3).flatMap(y => eventsForYear(y.year)))];
   return <article className="finance-cabinet" style={{ '--cab': c.color } as React.CSSProperties}>
-    <header><h3>{c.name}</h3><p>{c.pm} · {c.parties}</p><p>{date(c.start)} – {c.end ? date(c.end) : 'úraduje'} · v dátach {num(s.weight, 1)} r. ({yearsLabel})</p></header>
+    <header><h3>{c.name}</h3><p>{c.pm} · {date(c.start)} – {c.end ? date(c.end) : 'úraduje'}</p><CabinetParties cabinet={c}/><p>V dátach {num(s.weight, 1)} r. ({yearsLabel})</p></header>
     <dl>
       <div><dt>Priemerné saldo</dt><dd className={tone(s.avgDeficitPct)}>{num(s.avgDeficitPct)} % HDP</dd></div>
       <div><dt>Súčet salda</dt><dd className={tone(s.deficitSumMeur)}>{bn(s.deficitSumMeur)} mld €<small>podiel podľa dní vo funkcii</small></dd></div>
@@ -108,6 +123,7 @@ function Method() {
     <ul>{financeSources.map(s => <li key={s.url + s.name}><a href={s.url} target="_blank" rel="noopener noreferrer">{s.name} <ArrowUpRight size={11}/><span className="sr-only"> (nová karta)</span></a>{s.note && <> — {s.note}</>}</li>)}</ul>
     <h3>Ako priraďujeme roky vládam</h3>
     <p>Rok, v ktorom sa vlády striedali, delíme medzi ne podľa dní vo funkcii; deň výmeny patrí novej vláde. Priemerné saldo, súčet salda aj zmena dlhu za vládu sú vážené týmto podielom. Je to jednoduché a kontrolovateľné pravidlo, nie súd o tom, kto za čo môže: rozpočet na daný rok schvaľuje spravidla predchádzajúca vláda, veľká časť výdavkov je daná zákonmi a krízové roky (bankové sanácie 1999–2000, finančná kríza 2009, pandémia 2020–2021, energetická kríza 2022–2023) zasahujú bez ohľadu na to, kto vládne. V tabuľke po rokoch preto ostáva pri každom čísle aj kontext.</p>
+    <p>Pri každej vláde uvádzame koaličné strany v čase jej vymenovania. Logá sú dnešné logá strán z ich webov (zdroje sú v záložke O dátach); OĽANO nesie logo dnešného Hnutia Slovensko, ktoré je tou istou stranou. Strany, ktoré už neexistujú alebo sa zlúčili, majú namiesto loga monogram.</p>
     <h3>Čo je saldo bez úrokov</h3>
     <p>Primárne saldo je saldo bez zaplatených úrokov z dlhu. Hovorí, či štát hospodári vyrovnane ešte pred splácaním starých dlhov; ak je záporné, dlh rastie aj bez úrokov.</p>
     <h3>Dlhová brzda</h3>

@@ -308,6 +308,15 @@ for (const r of financeYears) {
   if (r.interestPct !== undefined) assert(primaryBalance(r) > r.deficitPct, `Saldo bez úrokov je vyššie než saldo: ${r.year}`);
 }
 for (let i = 1; i < cabinets.length; i++) assert.equal(cabinets[i].start, cabinets[i - 1].end, `Vlády na seba nadväzujú: ${cabinets[i].id}`);
+// Koaličné strany: odkaz na dnešnú stranu musí mať logo, odkaz na neaktívnu stranu musí byť v registri.
+const cabinetInactiveIds = new Set(inactiveParties.map(p => p.id));
+const partyLogos = JSON.parse(readFileSync(new URL('../lib/party-logos.json', import.meta.url), 'utf8'));
+for (const c of cabinets) for (const p of c.parties) {
+  assert(p.short.trim().length > 0 && !(p.party && p.inactive), `Strana vlády má skratku a jeden odkaz: ${c.id}`);
+  if (p.party) assert(partyIds.has(p.party) && partyLogos[p.party]?.src, `Strana vlády s logom: ${c.id} / ${p.short}`);
+  if (p.inactive) assert(cabinetInactiveIds.has(p.inactive), `Neaktívna strana vlády je v registri: ${c.id} / ${p.short}`);
+}
+assert(cabinets.filter(c => c.parties.length === 0).every(c => c.id === 'odor'), 'Bez strán je len úradnícka vláda');
 assert.equal(cabinets[0].start, '1993-01-01', 'Prvá vláda od vzniku SR');
 assert.equal(cabinets.at(-1).end, null, 'Posledná vláda úraduje');
 const summaries = cabinetSummaries();

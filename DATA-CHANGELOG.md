@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — logá strán v záložke Strany a pri vládach (vetva hospodarenie, Claude)
+
+Karty strán v záložke Strany majú v monograme logo strany namiesto farebnej bodky (rovnaké súbory a zdroje ako bočná lišta, kredit v O dátach); bodka ostáva pri stranách bez loga (KÚ, ĽSNS, Strana vidieka). V Hospodárení má každá vláda koaličné strany ako riadok štítkov: logo, ak strana existuje dodnes (OĽANO nesie logo dnešného Hnutia Slovensko), inak monogram vo farbe z registra neaktívnych strán; zloženie vlád je v `cabinets` štruktúrované a kontrola dát overuje, že každý odkaz vedie na existujúcu stranu s logom alebo do registra neaktívnych.
+
 ## 18. 9. 2026 — Hospodárenie: saldo a dlh po rokoch a po vládach (vetva hospodarenie, Claude)
 
 Nová záložka Hospodárenie (`?v=finance`, pohľad `hv=years|governments`) ukazuje, koľko verejná správa každý rok minula nad svoje príjmy a koľko dlhu sa nazbieralo: saldo a hrubý maastrichtský dlh (v % HDP aj v €), saldo bez úrokov, úroky, príjmy a výdavky verejnej správy, dlh na obyvateľa, reálny rast HDP, nezamestnanosť a inflácia. Rad 1995–2025.

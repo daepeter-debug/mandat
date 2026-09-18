@@ -358,3 +358,14 @@ html .lab-input-row input[type=number]{width:68px}
 .finance-method a{color:#3c5d44;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;gap:3px}
 @media(max-width:900px){.finance-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-rank li{grid-template-columns:96px minmax(0,1fr) 62px}}
 @media(max-width:600px){.finance-kpis{gap:8px}.finance-kpis dd{font-size:19px}.finance-chart{height:260px}.finance-cabinets{grid-template-columns:1fr}.finance-table{font-size:12px}.finance-switch{display:flex}.finance-switch button{flex:1}}
+
+/* Koaličné strany na karte vlády: logo dnešnej strany alebo monogram vo farbe neaktívnej strany. */
+.finance-parties{list-style:none;margin:8px 0 6px;padding:0;display:flex;flex-wrap:wrap;gap:6px 8px}
+.finance-parties li{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:3px 9px 3px 4px;font-size:11.5px;font-weight:600;color:var(--mag-ink);background:#fff;line-height:1}
+.finance-parties li img{width:22px;height:22px;object-fit:contain;border-radius:50%;background:#fff;flex:none}
+.finance-parties li i{width:22px;height:22px;border-radius:50%;background:#8a8f99;color:#fff;font-style:normal;font-size:9px;font-weight:700;letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.finance-parties-none{margin:8px 0 6px;font-size:12px;color:var(--text-2);font-style:italic}
+
+/* Karty strán: logo v monograme (záložka Strany). */
+.party-card .party-monogram{padding:4px 11px 4px 6px;gap:9px}
+.party-card .party-monogram img{width:28px;height:28px;object-fit:contain;border-radius:5px;background:#fff;flex:none}
