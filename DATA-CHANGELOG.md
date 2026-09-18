@@ -1,5 +1,15 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — Šutaj Eštok a Karas z fotoarchívu Rady EÚ (vetva fotky-commons, Claude)
+
+Chýbajúce portréty sme hľadali mimo Wikimedia Commons. Matúš Šutaj Eštok má fotografiu z fotoarchívu Rady Európskej únie (newsroom.consilium.europa.eu, zasadnutie Rady pre spravodlivosť a vnútro, december 2023, originál 6240 × 4160). Rada EÚ dovoľuje reprodukciu obsahu, ak je uvedený zdroj, neskreslí sa pôvodný význam a každá zmena je označená — kredit preto znie „© Európska únia, 2023" a poznámka výslovne uvádza, že ide o výrez redakcie. Commons tieto súbory odmieta (v júni 2026 navrhol na vymazanie aj staršiu Eštokovu fotografiu), lebo podmienka o neskreslení nedovoľuje ľubovoľné odvodené diela; pre naše použitie — neupravený portrétový výrez s kreditom — podmienky spĺňame.
+
+Z rovnakého archívu je teraz aj Viliam Karas (Rada pre spravodlivosť, december 2022, originál 3817 × 2545). Nahradil snímku z televíznej relácie na YouTube (630 × 770), ktorá bola najslabšou fotografiou v celom výbere.
+
+Michal Šipoš a Zoroslav Kollár zostávajú pri monograme. Prehľadali sme Wikimedia Commons (hľadanie, kategórie aj text stránok súborov), Flickr s filtrom licencií Creative Commons, agregátor Openverse, fotoarchív Rady EÚ a oficiálne portréty Európskeho parlamentu — ani jeden z nich nemá voľne použiteľnú fotografiu. Videá pod licenciou CC BY, ktoré YouTube k menám ponúka, pochádzajú od kanálov bez preukázateľných práv k záberom, preto sme z nich snímku nebrali.
+
+Spolu je v `public/people` 63 súborov WebP (480 KB) pre 21 osobností.
+
 ## 17. 9. 2026 — fotografie osobností z Wikimedia Commons (vetva fotky-commons, Claude)
 
 Portréty v profiloch strán už nepochádzajú z webov strán (tie mali „všetky práva vyhradené“, SNS výslovne vyžaduje súhlas), ale z Wikimedia Commons. Pre 23 osobností sme cez Wikidata (vlastnosť P18) a Commons API dohľadali súbor, autora, licenciu a rok vzniku a skontrolovali stránku súboru: VRT tiket pri Šimečkovej fotografii od PS je potvrdený, Rašiho fotografiu sme vymenili za CC0 portrét z roku 2024, Gubíkov portrét je náš výrez z konferenčnej fotografie (CC BY 4.0). Použitých je 20 fotografií: Creative Commons (BY, BY-SA, CC0), voľné dielo vlády USA (Kaliňák, Naď) a oficiálne portréty Európskeho parlamentu (Uhrík, Mazurek) pod podmienkami ďalšieho použitia EÚ.

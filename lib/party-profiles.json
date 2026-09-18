@@ -174,14 +174,14 @@
         "name": "Matúš Šutaj Eštok",
         "role": "Predseda HLAS-u",
         "bio": "Vedie stranu a jej užšie predsedníctvo.",
-        "imageSource": "",
+        "imageSource": "https://newsroom.consilium.europa.eu/permalink/p176346",
         "source": "https://strana-hlas.sk/o-nas/predsednictvo/",
-        "photo": "",
-        "imageAuthor": "",
-        "imageLicense": "",
-        "imageLicenseUrl": "",
-        "imageYear": "",
-        "imageNote": "Fotografie na Wikimedia Commons pochádzajú z webu Rady EÚ a sú navrhnuté na vymazanie pre nejasnú licenciu, preto ich nepoužívame."
+        "photo": "/people/estok-2x.webp",
+        "imageAuthor": "Rada Európskej únie",
+        "imageLicense": "© EÚ – reprodukcia s uvedením zdroja",
+        "imageLicenseUrl": "https://www.consilium.europa.eu/en/about-site/copyright/",
+        "imageYear": "2023",
+        "imageNote": "Výrez redakcie Mandátu z fotografie zo zasadnutia Rady pre spravodlivosť a vnútro; © Európska únia, 2023."
       },
       {
         "id": "rasi",
@@ -254,14 +254,14 @@
         "name": "Viliam Karas",
         "role": "Podpredseda KDH",
         "bio": "Právnik a bývalý minister spravodlivosti. Venuje sa témam právneho štátu.",
-        "imageSource": "https://commons.wikimedia.org/wiki/File:Viliam_Karas,_June_2025.png",
+        "imageSource": "https://newsroom.consilium.europa.eu/permalink/p152847",
         "source": "https://kdh.sk/karas-nikto-nesmie-byt-imunny-pred-spravodlivostou/",
         "photo": "/people/karas-2x.webp",
-        "imageAuthor": "TV JOJ (relácia Politika 24)",
-        "imageLicense": "CC BY 3.0",
-        "imageLicenseUrl": "https://creativecommons.org/licenses/by/3.0/",
-        "imageYear": "2025",
-        "imageNote": "Snímka z relácie zverejnenej na YouTube pod licenciou CC BY."
+        "imageAuthor": "Rada Európskej únie",
+        "imageLicense": "© EÚ – reprodukcia s uvedením zdroja",
+        "imageLicenseUrl": "https://www.consilium.europa.eu/en/about-site/copyright/",
+        "imageYear": "2022",
+        "imageNote": "Výrez redakcie Mandátu z fotografie zo zasadnutia Rady pre spravodlivosť a vnútro; © Európska únia, 2022. Nahradil snímku z televíznej relácie."
       }
     ]
   },
