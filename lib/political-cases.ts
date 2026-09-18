@@ -11,6 +11,8 @@ export type CaseInput = {
 };
 export type PoliticalCase = CaseInput & { severity:number; severityWhy:string };
 
+export { casesEnabled } from './features.ts';
+
 export const casesChecked='2026-09-13';
 export const caseStatuses:Record<CaseStatus,string>={
   report:'Zistenia investigatívy',

@@ -2,7 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 import { archive, parties } from "@/lib/polls";
-import { politicalCases } from "@/lib/political-cases";
+import { casesEnabled } from "@/lib/features";
 
 /*
   Rozcestník pre mobil (do 760 px): Prehľad končí aktuálnymi kartami a odtiaľto sa ide klikom do
@@ -11,9 +11,9 @@ import { politicalCases } from "@/lib/political-cases";
 */
 export default function OverviewDirectory({ onNavigate }: { onNavigate: (view: string) => void }) {
   const tiles = [
+    ...(casesEnabled ? [{ view: "cases", title: "Kauzy", text: "Register prípadov so závažnosťou" }] : []),
     { view: "polls", title: "Prieskumy", text: `Trend podpory a archív ${archive.length} meraní` },
     { view: "parties", title: "Strany", text: `${parties.length} profilov, ľudia a dokumenty` },
-    { view: "cases", title: "Kauzy", text: `Register ${politicalCases.length} prípadov so závažnosťou` },
     { view: "model", title: "Vlastný model", text: "Posuňte percentá a zostavte koalíciu" },
     { view: "data", title: "Dátový prehľad", text: "Dva polkruhy, bloky a scenáre agentúr" },
     { view: "programmes", title: "Programy", text: "Archív 2023 a aktuálne návrhy" },

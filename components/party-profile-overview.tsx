@@ -4,8 +4,6 @@ import { ArrowUpRight, ChevronDown, Landmark } from 'lucide-react';
 import { partyProfiles, peopleImagesChecked, peopleWithPhoto, peopleWithoutPhoto, type Personality } from '@/lib/party-profiles';
 import { date } from '@/lib/polls';
 import { formatTenureDate, governmentTenure, tenureAsOf, tenureLabel, tenureMethodology } from '@/lib/government-tenure';
-import { casesForParty, caseStatuses, casesChecked, politicalCases } from '@/lib/political-cases';
-import { SeverityChip } from '@/components/political-cases';
 
 const photoSet=(photo:string)=>[1,2,3].map(n=>`${photo.replace(/-2x\.webp$/,'')}-${n}x.webp ${n}x`).join(', ');
 const initials=(name:string)=>{const parts=name.trim().split(/\s+/);return (parts[0][0]+(parts.length>1?parts[parts.length-1][0]:'')).toUpperCase();};
@@ -53,19 +51,6 @@ function PartyGovernmentTenure({partyId}:{partyId:string}) {
       <p className="tenure-foot">Súčet je prepočet dní na celé roky a mesiace, stav k {formatTenureDate(tenureAsOf)}. <a href={tenureMethodology.source} target="_blank" rel="noopener noreferrer">Metodika a história vlád <ArrowUpRight size={10}/></a></p>
     </div>
   </details>;
-}
-
-export function PartyCases({partyId,onCases}:{partyId:string;onCases?:(partyId:string)=>void}) {
-  const rows=casesForParty(partyId);
-  const counts=Object.entries(caseStatuses).map(([id,label])=>[label,rows.filter(c=>c.status===id).length] as const).filter(([,n])=>n>0);
-  return <section className="profile-cases" aria-labelledby="profile-cases-title">
-    <div className="profile-section-heading"><h2 id="profile-cases-title">Kauzy v registri</h2><span>{rows.length===0?'Pilotný register':rows.length===1?'1 prípad':`${rows.length} prípady`}</span></div>
-    {rows.length>0?<>
-      <p className="profile-cases-summary">{counts.map(([label,n])=>`${n}× ${label.toLowerCase()}`).join(' · ')} · najvyššia závažnosť {Math.max(...rows.map(c=>c.severity))} z 10.</p>
-      <ul className="profile-case-list">{rows.map(c=><li key={c.id}><SeverityChip value={c.severity} compact/><div><strong>{c.title}</strong><span>{caseStatuses[c.status]} · {c.period}</span></div><a href={c.source} target="_blank" rel="noopener noreferrer" aria-label={`Zdroj: ${c.sourceName}`}><ArrowUpRight size={13}/></a></li>)}</ul>
-    </>:<p className="profile-cases-empty">V pilotnom registri zatiaľ bez prípadu. Neznamená to, že strana kauzy nemá; register má {politicalCases.length} prípadov a dopĺňame ho ručne.</p>}
-    <p className="profile-cases-foot">Väzba na stranu znamená konkrétneho predstaviteľa alebo rezort, nie vinu celej strany. Závažnosť je redakčné hodnotenie podľa zverejnenej stupnice, kontrola zdrojov {date(casesChecked)}.{onCases&&<> <button className="profile-cases-link" onClick={()=>onCases(partyId)}>Otvoriť kauzy strany <ArrowUpRight size={12}/></button></>}</p>
-  </section>;
 }
 
 export default function PartyProfileOverview({partyId}:{partyId:string}) {

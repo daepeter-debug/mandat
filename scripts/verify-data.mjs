@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { politicalNews, newsChecked, filterNews } from '../lib/political-news.ts';
+import { casesEnabled } from '../lib/features.ts';
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
 import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies } from '../lib/polls.ts';
 import { programmes, positions } from '../lib/programmes.ts';
@@ -275,4 +276,17 @@ for (const prof of Object.values(profilesJson)) for (const person of prof.people
     assert(/^https:\/\/(commons\.wikimedia\.org\/wiki\/File:|newsroom\.consilium\.europa\.eu\/permalink\/p\d+$)/.test(person.imageSource), `Zdroj fotografie je Wikimedia Commons alebo newsroom Rady EÚ: ${person.id}`);
     assert(person.imageAuthor && person.imageLicense && person.imageLicenseUrl.startsWith('https://') && /^\d{4}$/.test(person.imageYear), `Kredit fotografie je úplný: ${person.id}`);
   } else assert(person.imageNote, `Chýbajúca fotografia má uvedený dôvod: ${person.id}`);
+}
+
+// Vypnutý register káuz: dáta ostávajú platné, ale v rozhraní naň nesmie viesť odkaz.
+if (!casesEnabled) {
+  const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
+  const directory = readFileSync(new URL('../components/overview-directory.tsx', import.meta.url), 'utf8');
+  assert(!/^import PoliticalCases from/m.test(page), 'Vypnutý register sa nesmie importovať staticky, inak sa pošle do prehliadača');
+  for (const [name, source] of [['app/page.tsx', page], ['components/overview-directory.tsx', directory]]) {
+    for (const match of source.matchAll(/"cases"/g)) {
+      const around = source.slice(Math.max(0, match.index - 140), match.index + 140);
+      if (!around.includes('casesEnabled')) assert.fail(`Odkaz na vypnutý register káuz v ${name}: …${around.slice(100, 180).trim()}…`);
+    }
+  }
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { ArrowUpRight, Search } from 'lucide-react';
-import { politicalCases, caseStatuses, casesChecked, severityScale, severityBand, partyCaseSummaries, type PoliticalCase } from '@/lib/political-cases';
+import { politicalCases, caseStatuses, casesChecked, casesForParty, severityScale, severityBand, partyCaseSummaries, type PoliticalCase } from '@/lib/political-cases';
 import { parties, date } from '@/lib/polls';
 const normalize=(s:string)=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 const PAGE_SIZE=10;
@@ -91,5 +91,18 @@ export default function PoliticalCases({onParty,party='all',onPartyChange}:{onPa
     <div className="case-list">{visibleRows.map(c=><CaseCard key={c.id} c={c} onParty={onParty}/>)}</div>
     {compactList&&visibleCount<rows.length&&<button className="case-more" type="button" onClick={()=>setVisibleCount(count=>Math.min(count+PAGE_SIZE,rows.length))}>Zobraziť ďalšie prípady <span>{visibleRows.length} z {rows.length}</span></button>}
     {!rows.length&&<div className="news-empty"><h2>V tomto výbere zatiaľ nemáme prípad.</h2><p>Nejde o potvrdenie, že strana nemá kauzy. Register postupne dopĺňame.</p><button onClick={()=>{changeParty('all');setStatus('all');setQuery('');setVisibleCount(PAGE_SIZE);}}>Zrušiť filtre</button></div>}
+  </section>;
+}
+
+export function PartyCases({partyId,onCases}:{partyId:string;onCases?:(partyId:string)=>void}) {
+  const rows=casesForParty(partyId);
+  const counts=Object.entries(caseStatuses).map(([id,label])=>[label,rows.filter(c=>c.status===id).length] as const).filter(([,n])=>n>0);
+  return <section className="profile-cases" aria-labelledby="profile-cases-title">
+    <div className="profile-section-heading"><h2 id="profile-cases-title">Kauzy v registri</h2><span>{rows.length===0?'Pilotný register':rows.length===1?'1 prípad':`${rows.length} prípady`}</span></div>
+    {rows.length>0?<>
+      <p className="profile-cases-summary">{counts.map(([label,n])=>`${n}× ${label.toLowerCase()}`).join(' · ')} · najvyššia závažnosť {Math.max(...rows.map(c=>c.severity))} z 10.</p>
+      <ul className="profile-case-list">{rows.map(c=><li key={c.id}><SeverityChip value={c.severity} compact/><div><strong>{c.title}</strong><span>{caseStatuses[c.status]} · {c.period}</span></div><a href={c.source} target="_blank" rel="noopener noreferrer" aria-label={`Zdroj: ${c.sourceName}`}><ArrowUpRight size={13}/></a></li>)}</ul>
+    </>:<p className="profile-cases-empty">V pilotnom registri zatiaľ bez prípadu. Neznamená to, že strana kauzy nemá; register má {politicalCases.length} prípadov a dopĺňame ho ručne.</p>}
+    <p className="profile-cases-foot">Väzba na stranu znamená konkrétneho predstaviteľa alebo rezort, nie vinu celej strany. Závažnosť je redakčné hodnotenie podľa zverejnenej stupnice, kontrola zdrojov {date(casesChecked)}.{onCases&&<> <button className="profile-cases-link" onClick={()=>onCases(partyId)}>Otvoriť kauzy strany <ArrowUpRight size={12}/></button></>}</p>
   </section>;
 }

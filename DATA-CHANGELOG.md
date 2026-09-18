@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — register káuz vypnutý (vetva kauzy-vypnute, Claude)
+
+Sekcia Kauzy sa nikde nezobrazuje: zmizla záložka v navigácii, dlaždica v mobilnom rozcestníku aj blok „Kauzy v registri" v profile strany. Adresa `?v=cases` otvorí Prehľad a odkaz z profilu na register je neaktívny.
+
+Nič sa nemazalo. Register 42 prípadov, výpočet závažnosti aj kontroly dát ostávajú v repozitári nedotknuté a naďalej ich preveruje `verify-data`. Vypína ich jediný prepínač `casesEnabled` v novom module `lib/features.ts`; prepnutím na `true` sa všetko vráti tam, kde to bolo.
+
+Prepínač je zámerne v module bez dát, lebo register aj jeho komponenty sa teraz načítavajú dynamicky. Kým je vypnutý, prehliadač ich vôbec nedostane: hlavný balík stránky klesol zo 417 na 356 KB a texty káuz sú v samostatnom súbore, o ktorý stránka nikdy nepožiada. Komponent `PartyCases` sa preto presunul z `components/party-profile-overview.tsx` do `components/political-cases.tsx`, aby profil strany register neimportoval. Kontrola dát stráži, že na vypnutú sekciu nevedie odkaz ani statický import.
+
 ## 18. 9. 2026 — Šutaj Eštok a Karas z fotoarchívu Rady EÚ (vetva fotky-commons, Claude)
 
 Chýbajúce portréty sme hľadali mimo Wikimedia Commons. Matúš Šutaj Eštok má fotografiu z fotoarchívu Rady Európskej únie (newsroom.consilium.europa.eu, zasadnutie Rady pre spravodlivosť a vnútro, december 2023, originál 6240 × 4160). Rada EÚ dovoľuje reprodukciu obsahu, ak je uvedený zdroj, neskreslí sa pôvodný význam a každá zmena je označená — kredit preto znie „© Európska únia, 2023" a poznámka výslovne uvádza, že ide o výrez redakcie. Commons tieto súbory odmieta (v júni 2026 navrhol na vymazanie aj staršiu Eštokovu fotografiu), lebo podmienka o neskreslení nedovoľuje ľubovoľné odvodené diela; pre naše použitie — neupravený portrétový výrez s kreditom — podmienky spĺňame.
