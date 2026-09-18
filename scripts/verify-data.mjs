@@ -11,7 +11,8 @@ import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../li
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
 import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
-import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats } from '../lib/parliament.ts';
+import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes } from '../lib/parliament.ts';
+import { averageWage, eligibleFunding, fundingForParty, fundingTotal, subjectFunding } from '../lib/party-funding.ts';
 import { governmentTenure, governmentTenureSources, periodDays, tenureAsOf, tenureDays, tenureDuration, tenureLabel } from '../lib/government-tenure.ts';
 
 const partyIds = new Set(parties.map(p => p.id));
@@ -336,3 +337,17 @@ for (const field of ['deficitPct', 'debtPct', 'gdpGrowth', 'inflation', 'unemplo
   assert(financeCompare.indicators[field]?.year >= 2023, `Porovnanie ${field} nie je staršie než 2023`);
 }
 assert.equal(debtBrake.upperLimit(2017), 60); assert.equal(debtBrake.upperLimit(2018), 59); assert.equal(debtBrake.upperLimit(2025), 52); assert.equal(debtBrake.upperLimit(2027), 50); assert.equal(debtBrake.upperLimit(2030), 50);
+
+// Prepadnuté hlasy: podiel pod hranicou a cena mandátu pri účasti 2023
+const wastedFixture = wastedVotes(scenarioFromPoll({ ...latest, values: { ps: 45, smer: 45, dem: 4.9 } }));
+assert.equal(wastedFixture.wastedShare, 4.9, 'Prepadnuté hlasy = podiel subjektov pod hranicou');
+assert(wastedFixture.votesPerSeat > 17000 && wastedFixture.votesPerSeat < 18500, 'Cena mandátu pri 90 % kvalifikovaných hlasov ≈ 17,8 tis.');
+assert(wastedFixture.wastedVotes > 140000 && wastedFixture.wastedVotes < 150000, 'Prepadnuté hlasy v absolútnom počte');
+// Peniaze od štátu: 9 subjektov nad 3 %, SMER okolo 23 mil. €, spolu okolo 93 mil. € za obdobie
+assert.equal(averageWage.eur, 1304, 'Priemerná mzda 2022 podľa ŠÚ SR');
+assert.equal(eligibleFunding.length, 9, 'Deväť subjektov s viac ako 3 % v roku 2023');
+assert(subjectFunding.filter(f => !f.eligible).every(f => f.total === 0), 'Pod hranicou nie je nárok');
+const smerFunding = subjectFunding.find(f => f.subject.partyId === 'smer');
+assert(smerFunding.total > 22e6 && smerFunding.total < 24e6, 'SMER: nárok ~23 mil. € za obdobie');
+assert(fundingTotal > 85e6 && fundingTotal < 100e6, 'Spolu ~93 mil. € pre všetky subjekty');
+assert.equal(fundingForParty('smer').kind, 'party'); assert.equal(fundingForParty('ku').kind, 'coalition'); assert.equal(fundingForParty('rodina').kind, 'below'); assert.equal(fundingForParty('pnp').kind, 'absent');

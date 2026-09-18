@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { ArrowUpRight, ChevronDown, Landmark } from 'lucide-react';
 import { partyProfiles, peopleImagesChecked, peopleWithPhoto, peopleWithoutPhoto, type Personality } from '@/lib/party-profiles';
-import { date } from '@/lib/polls';
+import { date, fmt } from '@/lib/polls';
+import { averageWage, fundingChecked, fundingForParty, fundingLaw, fundingThresholdPct } from '@/lib/party-funding';
 import { formatTenureDate, governmentTenure, tenureAsOf, tenureLabel, tenureMethodology } from '@/lib/government-tenure';
 
 const photoSet=(photo:string)=>[1,2,3].map(n=>`${photo.replace(/-2x\.webp$/,'')}-${n}x.webp ${n}x`).join(', ');
@@ -24,6 +25,28 @@ export function PersonPhotoSources() {
     {without.length>0&&<ul className="photo-sources-missing" aria-label="Osobnosti bez fotografie">{without.map(p=><li key={p.id}><strong>{p.name}</strong> — {p.imageNote}</li>)}</ul>}
   </section>;
 }
+const eur = (v: number) => v >= 1e6 ? `${(v / 1e6).toLocaleString('sk-SK', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mil. €` : `${Math.round(v).toLocaleString('sk-SK')} €`;
+// Nárok zo zákona z výsledkov 2023: za hlasy, na činnosť a na mandát; koalícia má nárok spoločný.
+function PartyFunding({partyId}:{partyId:string}) {
+  const view=fundingForParty(partyId);
+  const f=view.kind==='party'||view.kind==='coalition'||view.kind==='below'?view.funding:null;
+  return <section className="profile-funding" aria-labelledby="profile-funding-title">
+    <div className="profile-section-heading"><h2 id="profile-funding-title">Peniaze od štátu 2023–2027</h2><span>Nárok zo zákona</span></div>
+    {view.kind==='absent'&&<p className="profile-funding-empty">Strana v roku 2023 nekandidovala, nárok na štátne príspevky za toto volebné obdobie nemá.</p>}
+    {view.kind==='below'&&f&&<p className="profile-funding-empty">Bez nároku: {fmt(f.subject.pct)} % hlasov v roku 2023 je pod hranicou {fundingThresholdPct} %, od ktorej štát prispieva.</p>}
+    {(view.kind==='party'||view.kind==='coalition')&&f&&<>
+      {view.kind==='coalition'&&<p className="profile-funding-note">Nárok patrí volebnej koalícii {view.label} (vo výsledkoch „{f.subject.short}“). Ako si ho strany delia, určuje ich dohoda; príspevok na mandát patrí strane, za ktorú bol mandát získaný.</p>}
+      <dl className="profile-funding-grid">
+        <div><dt>Za hlasy</dt><dd>{eur(f.forVotes)}<small>jednorazovo · {f.subject.votes.toLocaleString('sk-SK')} hlasov × {f.perVote.toLocaleString('sk-SK',{minimumFractionDigits:2})} €</small></dd></div>
+        <div><dt>Na činnosť</dt><dd>{eur(f.forActivity)}<small>rovnaká suma v 48 mesačných podieloch</small></dd></div>
+        <div><dt>Na mandát</dt><dd>{eur(f.mandatePerYear)} ročne<small>{f.subject.seats} kresiel · za obdobie ≈ {eur(f.mandateTerm)}</small></dd></div>
+        <div><dt>Spolu za obdobie</dt><dd><b>{eur(f.total)}</b><small>≈ {eur(f.total/48)} mesačne</small></dd></div>
+      </dl>
+    </>}
+    <p className="profile-editorial-note">Nárok podľa <a href={fundingLaw.url} target="_blank" rel="noopener noreferrer">zákona č. 85/2005 Z. z. <ArrowUpRight size={10}/></a> z oficiálnych výsledkov volieb 2023 a priemernej mzdy za rok {averageWage.year} ({averageWage.eur.toLocaleString('sk-SK')} €, <a href={averageWage.source} target="_blank" rel="noopener noreferrer">{averageWage.sourceName} <ArrowUpRight size={10}/></a>). Skutočne vyplatené sumy môžu byť nižšie: podmienkou je odovzdaná výročná správa, pri koalícii dohoda o delení, pri predčasných voľbách sa obdobie skráti. Kontrola {date(fundingChecked)}.</p>
+  </section>;
+}
+
 export function PartyTags({partyId}:{partyId:string}) {
   const profile=partyProfiles[partyId];
   return profile?<ul className="party-tags" aria-label="Zameranie strany">{profile.tags.map(tag=><li key={tag}>{tag}</li>)}</ul>:null;
@@ -58,6 +81,7 @@ export default function PartyProfileOverview({partyId}:{partyId:string}) {
   if(!profile)return <div className="profile-overview"><section className="profile-summary"><h2>O strane</h2><p>Medailón a aktuálne vedenie tejto strany ešte nemáme overené. Dostupné merania a programové dokumenty nájdete nižšie.</p></section></div>;
   return <div className="profile-overview">
     <section className="profile-summary" aria-label="Predstavenie strany"><div className="profile-meta-row"><PartyTags partyId={partyId}/><PartyGovernmentTenure partyId={partyId}/></div><h2>Čím sa profiluje</h2><p>{profile.summary}</p><a className="profile-source" href={profile.source} target="_blank" rel="noopener noreferrer">Podklad k zameraniu <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><p className="profile-editorial-note">Redakčné zhrnutie uvedených podkladov. Deklarované priority nie sú hodnotením výsledkov ani úplnou politologickou klasifikáciou.</p></section>
+    <PartyFunding partyId={partyId}/>
     <section className="profile-people" aria-labelledby="profile-people-title"><div className="profile-section-heading"><h2 id="profile-people-title">Ľudia za stranou</h2><span>{profile.people.length===1?'Prvý medailón':'Výber osobností'}</span></div><div className="person-list">{profile.people.map(person=><article className="person-item" key={person.id}><Portrait person={person}/><div><h3>{person.name}</h3><span className="person-role">{person.role}</span><p>{person.bio}</p><div className="person-sources"><a href={person.source} target="_blank" rel="noopener noreferrer">Zdroj profilu <ArrowUpRight size={11}/></a>{person.photo?<a className="person-credit" href={person.imageSource} target="_blank" rel="noopener noreferrer" aria-label={`Fotografia na Wikimedia Commons: ${photoCredit(person)}`}>Foto: {photoCredit(person)} <ArrowUpRight size={11}/></a>:<span className="person-credit-missing">Bez voľne licencovanej fotografie</span>}</div></div></article>)}</div><p className="profile-editorial-note">Kontrola podkladov {date(profile.verified)}. Výber nie je rebríček popularity ani kandidátna listina pre voľby 2027.</p></section>
   </div>;
 }

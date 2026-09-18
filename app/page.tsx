@@ -32,7 +32,7 @@ import PoliticalNewsFeed from "@/components/news-room";
 import { newsById, newsChecked } from "@/lib/political-news";
 import PollAggregator from "@/components/poll-aggregator";
 import { blocs, blocSeats, optionalPartners, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from "@/lib/blocs";
-import { election2023, seated2023, scenarioFromPoll } from "@/lib/parliament";
+import { election2023, seated2023, scenarioFromPoll, wastedVotes } from "@/lib/parliament";
 import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, rank, difference, dataVerified, type Poll, type Party } from "@/lib/polls";
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
@@ -163,6 +163,7 @@ export default function Home() {
   const blocs2023 = blocSeats(officialSeats, blocExtras);
   const blocsScenario = blocSeats(scenario.rows, blocExtras);
   const showElection = ui.spread === ELECTION_VIEW;
+  const wasted = wastedVotes(scenario);
   const snapshots = primaryAgencies.map(a=>agencySeries(a,1)[0]).filter((p):p is Poll=>p!==undefined);
   const filtered = archive.filter(p=>(agency==="all" || p.agency===agency) && normalize(`${p.agency} ${p.month} ${p.published} ${p.client}`).includes(normalize(query)));
   const visibleParties = [...parties].sort((a,b)=>a.name.localeCompare(b.name,"sk")).filter(p=>normalize(`${p.name} ${p.short} ${partyProfiles[p.id]?.people.map(person=>person.name).join(" ")??""}`).includes(normalize(partyQuery)));
@@ -233,7 +234,7 @@ export default function Home() {
               {showElection
                 ? <div className="scenario-notice"><p><strong>Oficiálny výsledok, nie scenár.</strong> Ide o rozdelenie mandátov po voľbách 2023 podľa Štatistického úradu SR, nie o aktuálne zloženie poslaneckých klubov. Zmeny členstva poslancov po voľbách tu neevidujeme.</p><p>Pre porovnanie s prieskumom prepnite vyššie na niektorú agentúru.</p><button className="text-button" onClick={()=>changeView("method")}>Ako počítame kreslá <ArrowRight size={16}/></button></div>
                 : <><div className="scenario-notice"><p><strong>Scenár, nie predpoveď.</strong> Orientačný prepočet podľa princípu § 68 zákona 180/2014 z publikovaných percent. Koalície nie sú známe; každý uvedený subjekt považujeme za samostatnú stranu s hranicou 5 %.</p><p>Neprepísaná podpora: <b>{fmt(untranscribed)} %</b>. Iné: <b>{scenario.otherShare === null ? "neuvedené samostatne" : `${fmt(scenario.otherShare)} %`}</b>. Zvyšok do 100 % je dopočet a môže zahŕňať zaokrúhlenie; do scenára nevstupuje.</p><button className="text-button" onClick={()=>changeView("method")}>Ako počítame kreslá <ArrowRight size={16}/></button></div>
-              <div className="below-threshold"><h3>Bez mandátu v tomto scenári</h3><ul>{scenario.belowThreshold.map(s=><li key={s.id}><span>{s.short}</span><b>{fmt(s.share)} %</b></li>)}</ul>{scenario.belowThreshold.length===0&&<p>Všetky prepísané subjekty získali kreslá.</p>}</div></>}
+              <div className="below-threshold"><h3>Bez mandátu v tomto scenári</h3><ul>{scenario.belowThreshold.map(s=><li key={s.id}><span>{s.short}</span><b>{fmt(s.share)} %</b></li>)}</ul>{scenario.belowThreshold.length===0&&<p>Všetky prepísané subjekty získali kreslá.</p>}<p className="wasted-votes"><b>{fmt(wasted.wastedShare)} %</b> hlasov bez zastúpenia · pri účasti ako v roku 2023 ≈ <b>{wasted.wastedVotes.toLocaleString("sk-SK")}</b> voličov{wasted.votesPerSeat!==null&&<> · jedno kreslo ≈ <b>{wasted.votesPerSeat.toLocaleString("sk-SK")}</b> hlasov</>}</p></div></>}
             </div>
           </section>
           <p className="hemicycle-order-note">Kreslá sú zoradené zľava doprava podľa ich počtu, nie podľa politickej osi. Jeden bod predstavuje jedno kreslo.</p>

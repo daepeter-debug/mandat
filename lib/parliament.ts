@@ -143,3 +143,12 @@ export function hemicycleSeats(total: number, rows = 6, innerRadius = 0.45): Sea
   });
   return points.sort((a, b) => b.angle - a.angle);
 }
+
+/** Prepadnuté hlasy a „cena mandátu“ v scenári: podiel hlasov subjektov pod hranicou a koľko platných hlasov
+ *  pripadá na jedno kreslo pri účasti ako vo voľbách 2023. Nezaradená podpora (iné strany) do výpočtu nevstupuje. */
+export function wastedVotes(scenario: Scenario, turnoutVotes = validVotes2023) {
+  const wastedShare = Math.round(scenario.belowThreshold.reduce((a, r) => a + r.share, 0) * 10) / 10;
+  const qualifyingShare = scenario.allocation.qualifyingShare;
+  const votesPerSeat = qualifyingShare > 0 ? Math.round(turnoutVotes * qualifyingShare / 100 / scenario.allocation.total) : null;
+  return { wastedShare, wastedVotes: Math.round(turnoutVotes * wastedShare / 100), votesPerSeat, turnoutVotes };
+}

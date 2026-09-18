@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — prepadnuté hlasy, cena mandátu a peniaze od štátu pre strany (vetva hlasy-a-peniaze, Claude)
+
+**Prepadnuté hlasy a cena mandátu.** V Dátovom prehľade pod zoznamom subjektov bez mandátu a vo Vlastnom modeli v popise polkruhu pribudla veta: koľko percent hlasov by v scenári ostalo bez zastúpenia, koľko je to voličov pri účasti ako vo voľbách 2023 (2 967 896 platných hlasov) a koľko hlasov „stojí“ jedno kreslo (platné hlasy kvalifikovaných subjektov ÷ 150). Výpočet je v `lib/parliament.ts` (`wastedVotes`); nezaradená podpora iných strán doň nevstupuje.
+
+**Peniaze od štátu 2023–2027.** V profile každej strany je blok s nárokom podľa zákona č. 85/2005 Z. z. (§ 25–28) z oficiálnych výsledkov 2023 a priemernej mzdy za rok 2022 (1 304 € podľa ŠÚ SR): príspevok za hlasy (1 % priemernej mzdy za hlas, jednorazovo, len nad 3 %), na činnosť (rovnaká suma v 48 mesačných podieloch) a na mandát (ročne 30-násobok mzdy za prvých 20 kresiel a 20-násobok za ďalšie, ≈ 48 mesiacov). Logika je v `lib/party-funding.ts`. Deväť subjektov má nárok, spolu ≈ 92,9 mil. € za obdobie (SMER 23,2, PS 18,3, HLAS 15,2, koalícia OĽANO a priatelia 9,4, KDH 7,2, SaS 6,6, SNS 5,9, Republika 3,7, Aliancia 3,4 mil. €). Koalícia OĽANO a priatelia (Hnutie Slovensko, KÚ, ZA ĽUDÍ) má nárok spoločný a v profiloch týchto strán sa ukazuje s vysvetlením; SME RODINA a Demokrati sú pod 3 %, Právo na pravdu a Strana vidieka v roku 2023 nekandidovali. Blok výslovne uvádza, že ide o nárok zo zákona, nie o vyplatené sumy (podmienkou je výročná správa, koaličná dohoda, skrátené obdobie). Kontrola dát overuje 9 oprávnených subjektov, SMER ~23 mil., súčet 85–100 mil. a typy nároku pri KÚ (koalícia), SME RODINA (pod hranicou) a Práve na pravdu (nekandidovala).
+
 ## 18. 9. 2026 — Hospodárenie: životná úroveň a porovnanie s EÚ (vetva porovnanie, Claude)
 
 Záložka Hospodárenie má štyri pohľady: Po rokoch, Po vládach, Životná úroveň a EÚ a susedia (adresa `hv=living` / `hv=compare`). Pôvodné dva pohľady ostali bez zmeny.
