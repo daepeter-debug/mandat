@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — motto na titulnej strane (vetva motto, Claude)
+
+Pod zásadami v úvodníku Prehľadu je tichý citát: „Demokracia je diskusia. Ale pravá diskusia je možná len tam, kde si ľudia navzájom dôverujú a poctivo hľadajú pravdu." — Tomáš Garrigue Masaryk. Zdroj je primárny a overený: Karel Čapek, Hovory s T. G. Masarykem, kapitola Demokracie (Wikizdroje), s odkazom pri citáte; doslovný originál („Řekl jsem jednou, že demokracie je diskuse…") je v atribúte odkazu a poznámka uvádza „preklad z češtiny, skrátené". Zámerne nie pod logom — tam by súperil s podtitulom a na mobile s prvým číslom. Odmietnuté boli rozšírené, ale falošne pripisované citáty (Perikles, Platón, Jefferson). Dáta citátu sú v `lib/quote.ts`.
+
 ## 18. 9. 2026 — prepadnuté hlasy, cena mandátu a peniaze od štátu pre strany (vetva hlasy-a-peniaze, Claude)
 
 **Prepadnuté hlasy a cena mandátu.** V Dátovom prehľade pod zoznamom subjektov bez mandátu a vo Vlastnom modeli v popise polkruhu pribudla veta: koľko percent hlasov by v scenári ostalo bez zastúpenia, koľko je to voličov pri účasti ako vo voľbách 2023 (2 967 896 platných hlasov) a koľko hlasov „stojí“ jedno kreslo (platné hlasy kvalifikovaných subjektov ÷ 150). Výpočet je v `lib/parliament.ts` (`wastedVotes`); nezaradená podpora iných strán doň nevstupuje.

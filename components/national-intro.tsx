@@ -6,6 +6,7 @@ import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
 import ResponsibilityScale from "@/components/responsibility-scale";
+import { epigraph } from "@/lib/quote";
 import { edition, signed, signedInt } from "@/lib/edition";
 import { date } from "@/lib/polls";
 
@@ -71,6 +72,7 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, on
       </ul>
       <div className="national-actions"><button className="mag-button" onClick={explore}>Preskúmať prieskumy <ArrowDown size={17}/></button><button className="mag-text-link" onClick={()=>onNavigate("model")}>Zostaviť scenár <ArrowUpRight size={17}/></button></div>
       <div className="national-principles"><span>Nezávisle</span><span>So zdrojmi</span><span>Bez reklamy</span></div>
+      <figure className="edition-epigraph"><blockquote lang="sk"><p>„{epigraph.text}“</p></blockquote><figcaption>{epigraph.author} · <a href={epigraph.url} target="_blank" rel="noopener noreferrer" title={epigraph.original}>{epigraph.source}</a> · {epigraph.note}</figcaption></figure>
     <aside className="election-countdown" aria-labelledby="countdown-title">
       <div className="election-countdown-head"><h2 id="countdown-title">Voľby 2027</h2>
         <svg className="slovakia-mark" width="104" height="52" viewBox="0 0 580 285" role="img" aria-label="Malá mapa Slovenska v národných farbách">
