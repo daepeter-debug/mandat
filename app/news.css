@@ -366,6 +366,8 @@ html .lab-input-row input[type=number]{width:68px}
 .finance-parties li i{width:22px;height:22px;border-radius:50%;background:#8a8f99;color:#fff;font-style:normal;font-size:9px;font-weight:700;letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .finance-parties-none{margin:8px 0 6px;font-size:12px;color:var(--text-2);font-style:italic}
 
-/* Karty strán: logo v monograme (záložka Strany). */
-.party-card .party-monogram{padding:4px 11px 4px 6px;gap:9px}
-.party-card .party-monogram img{width:28px;height:28px;object-fit:contain;border-radius:5px;background:#fff;flex:none}
+/* Karty strán (záložka Strany): logo v pravom hornom rohu karty, monogram so skratkou vľavo. */
+.party-card-top{align-items:flex-start}
+.party-card-logo{width:60px;height:60px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:10px;background:#fff;padding:5px;margin:-8px -8px 0 12px;flex:none}
+.party-card-logo img{width:100%;height:100%;object-fit:contain}
+@media(max-width:600px){.party-card-logo{width:52px;height:52px;margin:-6px -6px 0 10px}}
