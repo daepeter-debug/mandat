@@ -2,6 +2,8 @@
 
 ## 18. 9. 2026 — motto na titulnej strane (vetva motto, Claude)
 
+Dodatok: na Petrovo želanie je motto presunuté priamo pod názov webu v hlavičke (na každej stránke), bez odkazu na zdroj a bez poznámky, aby nezaberalo miesto — ostal len text a meno autora (na mobile len text, 11,5 px, hlavička rastie na ~105 px). Zdroj, doslovný originál a poznámka o skrátení ostávajú v `lib/quote.ts` a v tomto zázname; originál je v atribúte title. Z úvodníka Prehľadu je citát odstránený.
+
 Pod zásadami v úvodníku Prehľadu je tichý citát: „Demokracia je diskusia. Ale pravá diskusia je možná len tam, kde si ľudia navzájom dôverujú a poctivo hľadajú pravdu." — Tomáš Garrigue Masaryk. Zdroj je primárny a overený: Karel Čapek, Hovory s T. G. Masarykem, kapitola Demokracie (Wikizdroje), s odkazom pri citáte; doslovný originál („Řekl jsem jednou, že demokracie je diskuse…") je v atribúte odkazu a poznámka uvádza „preklad z češtiny, skrátené". Zámerne nie pod logom — tam by súperil s podtitulom a na mobile s prvým číslom. Odmietnuté boli rozšírené, ale falošne pripisované citáty (Perikles, Platón, Jefferson). Dáta citátu sú v `lib/quote.ts`.
 
 ## 18. 9. 2026 — prepadnuté hlasy, cena mandátu a peniaze od štátu pre strany (vetva hlasy-a-peniaze, Claude)

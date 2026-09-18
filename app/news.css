@@ -401,10 +401,13 @@ html .lab-input-row input[type=number]{width:68px}
 .wasted-votes{margin:10px 0 0;font-size:12px;line-height:1.6;color:var(--text-2);border-top:1px solid var(--border);padding-top:9px}
 .wasted-votes b{color:var(--mag-ink);font-variant-numeric:tabular-nums}
 
-/* Motto na titulnej strane: tichý riadok pod zásadami, nesúperí s titulkom ani s číslami. */
-.edition-epigraph{margin:22px 0 0;padding:14px 0 0;border-top:1px solid var(--border);max-width:62ch}
-.edition-epigraph blockquote{margin:0}
-.edition-epigraph p{margin:0;font-size:14px;line-height:1.6;font-style:italic;color:var(--text-2)}
-.edition-epigraph figcaption{margin-top:6px;font-size:11px;color:var(--text-3);line-height:1.5}
-.edition-epigraph figcaption a{color:inherit;text-decoration:underline;text-underline-offset:3px}
-@media(max-width:760px){.edition-epigraph{margin-top:16px;padding-top:12px}.edition-epigraph p{font-size:13px}}
+
+/* Motto pod názvom webu: názov a podtitul v jednom rade, pod nimi jeden riadok citátu; hlavička rastie podľa obsahu. */
+.editorial-shell .site-header{height:auto;min-height:90px;padding-top:12px;padding-bottom:12px;align-items:center}
+.brand-block{display:flex;flex-direction:column;gap:6px;min-width:0;margin-right:auto}
+.brand-row{display:flex;align-items:center;min-width:0}
+.editorial-shell .site-header .brand{position:static;color:var(--mag-ink);font-size:38px;letter-spacing:-.04em}
+.brand-motto{margin:0;font-size:13px;line-height:1.45;font-style:italic;color:var(--text-2);max-width:74ch}
+.brand-motto span{font-style:normal;color:var(--text-3);white-space:nowrap}
+@media(max-width:760px){.editorial-shell .site-header{height:auto;min-height:77px;padding-top:10px;padding-bottom:10px;gap:12px}.editorial-shell .site-header .brand{font-size:32px}.brand-block{gap:4px}.brand-motto{font-size:11.5px;line-height:1.4;max-width:34ch}.brand-motto span{display:none}.editorial-shell .header-status{flex:none}.editorial-shell .header-status>span,.editorial-shell .header-status b{white-space:nowrap}}
+@media print{.brand-motto{display:none}}

@@ -29,6 +29,7 @@ const ArchiveChart = lazy(() => import("@/components/archive-chart"));
 // Hospodárenie štátu má vlastný graf a tabuľky; načíta sa až pri otvorení záložky.
 const PublicFinance = lazy(() => import("@/components/public-finance"));
 import PoliticalNewsFeed from "@/components/news-room";
+import { epigraph } from "@/lib/quote";
 import { newsById, newsChecked } from "@/lib/political-news";
 import PollAggregator from "@/components/poll-aggregator";
 import { blocs, blocSeats, optionalPartners, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from "@/lib/blocs";
@@ -211,7 +212,7 @@ export default function Home() {
   return <div className="site-shell editorial-shell with-party-rail">
     <a className="skip-link" href="#main">Preskočiť na obsah</a>
     <PartyRail selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMethod={()=>{update({party:null,view:"method"},true);window.scrollTo({top:0,behavior:"instant"});}}/>
-    <header className="site-header"><button className="brand" onClick={()=>changeView("overview")} aria-label="Mandát — úvod"><span className="brand-symbol" aria-hidden="true"><i/><i/><i/></span>mandát<span>.</span></button><span className="edition-header">Nezávislý prehľad slovenskej politiky</span><div className="header-status"><span>Údaje overené</span><b>{verified}</b></div></header>
+    <header className="site-header"><div className="brand-block"><div className="brand-row"><button className="brand" onClick={()=>changeView("overview")} aria-label="Mandát — úvod"><span className="brand-symbol" aria-hidden="true"><i/><i/><i/></span>mandát<span>.</span></button><span className="edition-header">Nezávislý prehľad slovenskej politiky</span></div><p className="brand-motto" title={epigraph.source}>„{epigraph.text}“ <span>— {epigraph.author}</span></p></div><div className="header-status"><span>Údaje overené</span><b>{verified}</b></div></header>
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">
