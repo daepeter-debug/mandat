@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { politicalNews, newsChecked, filterNews } from '../lib/political-news.ts';
 import { casesEnabled } from '../lib/features.ts';
+import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, financeYears, latestFinanceYear, primaryBalance, yearShares } from '../lib/public-finance.ts';
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
 import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies } from '../lib/polls.ts';
 import { programmes, positions } from '../lib/programmes.ts';
@@ -290,3 +291,26 @@ if (!casesEnabled) {
     }
   }
 }
+
+// Hospodárenie: súvislý rad rokov, hodnoty v rozumných medziach, vlády bez medzier a podiely roka = 1.
+assert(financeYears.length >= 30 && financeYears[0].year === 1995, 'Rad verejných financií začína rokom 1995');
+for (let i = 1; i < financeYears.length; i++) assert.equal(financeYears[i].year, financeYears[i - 1].year + 1, 'Roky idú bez medzery');
+assert(latestFinanceYear.year >= 2025, 'Posledný rok hospodárenia nie je starší než 2025');
+for (const r of financeYears) {
+  assert(r.deficitPct > -15 && r.deficitPct < 5 && r.debtPct > 0 && r.debtPct < 90, `Saldo a dlh v medziach: ${r.year}`);
+  assert(Math.sign(r.deficitPct) === Math.sign(r.deficitMeur), `Saldo v % a v € má rovnaké znamienko: ${r.year}`);
+  // Pred eurom (2009) Eurostat prepočítava dlh z korún kurzom ku koncu roka a HDP priemerným kurzom, preto voľnejšia medza.
+  if (r.gdpMeur) assert(Math.abs(r.debtMeur / r.gdpMeur * 100 - r.debtPct) < (r.year >= 2009 ? 0.6 : 3.5), `Dlh v € sedí s dlhom v % HDP: ${r.year}`);
+  if (r.gdpMeur) assert(Math.abs(r.deficitMeur / r.gdpMeur * 100 - r.deficitPct) < 0.35, `Saldo v € sedí so saldom v % HDP: ${r.year}`);
+  const shares = yearShares(r.year);
+  assert(Math.abs(shares.reduce((a, s) => a + s.share, 0) - 1) < 1e-9 && shares.length >= 1 && shares.length <= 3, `Podiely vlád v roku dávajú 1: ${r.year}`);
+  if (r.year >= 1996) assert(debtPerCapita(r) > 500 && debtPerCapita(r) < 40000, `Dlh na obyvateľa v medziach: ${r.year}`);
+  if (r.interestPct !== undefined) assert(primaryBalance(r) > r.deficitPct, `Saldo bez úrokov je vyššie než saldo: ${r.year}`);
+}
+for (let i = 1; i < cabinets.length; i++) assert.equal(cabinets[i].start, cabinets[i - 1].end, `Vlády na seba nadväzujú: ${cabinets[i].id}`);
+assert.equal(cabinets[0].start, '1993-01-01', 'Prvá vláda od vzniku SR');
+assert.equal(cabinets.at(-1).end, null, 'Posledná vláda úraduje');
+const summaries = cabinetSummaries();
+assert(Math.abs(summaries.reduce((a, s) => a + s.weight, 0) - financeYears.length) < 0.05, 'Súčet podielov vlád = počet rokov v dátach');
+assert(summaries.filter(s => s.years.length === 0).every(s => s.cabinet.end && s.cabinet.end < '1995-01-01'), 'Bez dát sú len vlády pred rokom 1995');
+assert.equal(debtBrake.upperLimit(2017), 60); assert.equal(debtBrake.upperLimit(2018), 59); assert.equal(debtBrake.upperLimit(2025), 52); assert.equal(debtBrake.upperLimit(2027), 50); assert.equal(debtBrake.upperLimit(2030), 50);

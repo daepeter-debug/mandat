@@ -23,6 +23,8 @@ import { partyProfiles } from "@/lib/party-profiles";
 import PartyRail, { PartyLogoSources, PartyStrip } from "@/components/party-rail";
 // Graf Dátového prehľadu (Recharts) sa načíta až pri otvorení záložky s grafom.
 const ArchiveChart = lazy(() => import("@/components/archive-chart"));
+// Hospodárenie štátu má vlastný graf a tabuľky; načíta sa až pri otvorení záložky.
+const PublicFinance = lazy(() => import("@/components/public-finance"));
 import PoliticalNewsFeed from "@/components/news-room";
 import { newsById, newsChecked } from "@/lib/political-news";
 import PollAggregator from "@/components/poll-aggregator";
@@ -32,7 +34,7 @@ import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, 
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
 const primaryAgencies = ["AKO","FOCUS","INFOSTAT","IPSOS","NMS"];
-const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"method",label:"O dátach"}];
+const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},{id:"finance",label:"Hospodárenie"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"method",label:"O dátach"}];
 const viewIds = views.map(v=>v.id);
 const periods = ["3","5","9"];
 const defaultActive = ["ps","smer","rep","slovensko","sas"];
@@ -42,12 +44,12 @@ const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^
 /* Stav rozhrania v URL: záložka (v), agentúra prehľadu (a), obdobie (p), graf/tabuľka (m),
    filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;parliament:string;news:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;news:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
 const parliamentViews = ["model","volby2023"];
 const ELECTION_VIEW = "volby2023";
 // Dátový prehľad má jednu grafiku parlamentu; prepínač vyberá, čo zobrazuje.
 const spreadOptions = [ELECTION_VIEW, ...primaryAgencies];
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,parliament:"model",news:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null};
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",news:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
@@ -63,6 +65,7 @@ function parseSearch(search:string):UiState {
     legend: s.get("l")===null ? defaults.legend : s.get("l")!.split(",").filter(id=>partyIds.has(id)),
     blocs: (s.get("b") ?? "").split(",").filter(id=>optionalIds.includes(id)),
     caseParty: pick("kp", v=>partyIds.has(v)),
+    finance: pick("hv", v=>v==="years"||v==="governments") ?? defaults.finance,
     parliament: pick("pn", v=>parliamentViews.includes(v)) ?? defaults.parliament,
     news: pick("sp", v=>newsById(v)!==null),
     agency: pick("f", v=>v==="all"||agencies.includes(v)) ?? defaults.agency,
@@ -81,6 +84,7 @@ function serialize(state:UiState) {
   if(state.legend.join(",")!==defaults.legend.join(",")) s.set("l",state.legend.join(","));
   if(state.blocs.length) s.set("b",state.blocs.join(","));
   if(state.caseParty) s.set("kp",state.caseParty);
+  if(state.finance!==defaults.finance) s.set("hv",state.finance);
   if(state.parliament!==defaults.parliament) s.set("pn",state.parliament);
   if(state.news) s.set("sp",state.news);
   if(state.spread!==state.trendAgency) s.set("hs",state.spread);
@@ -209,6 +213,7 @@ export default function Home() {
       <main id="main">
         <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})}/></TabsContent>
+        <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>
         {casesEnabled&&<TabsContent value="cases"><Suspense fallback={<p className="chart-loading">Načítavame register…</p>}><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></Suspense></TabsContent>}
         <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>
         <TabsContent value="data">

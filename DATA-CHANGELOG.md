@@ -1,5 +1,15 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — Hospodárenie: saldo a dlh po rokoch a po vládach (vetva hospodarenie, Claude)
+
+Nová záložka Hospodárenie (`?v=finance`, pohľad `hv=years|governments`) ukazuje, koľko verejná správa každý rok minula nad svoje príjmy a koľko dlhu sa nazbieralo: saldo a hrubý maastrichtský dlh (v % HDP aj v €), saldo bez úrokov, úroky, príjmy a výdavky verejnej správy, dlh na obyvateľa, reálny rast HDP, nezamestnanosť a inflácia. Rad 1995–2025.
+
+Zdroj je jeden: Eurostat (verejné API bez kľúča), ktorý zverejňuje údaje Štatistického úradu SR podľa ESA 2010 — datasety gov_10dd_edpt1 (notifikácia deficitu a dlhu, apríl 2026), gov_10a_main, nama_10_gdp, une_rt_a a une_rt_a_h (nezamestnanosť pred 2009 z historického radu), prc_hicp_aind, demo_pjan. Skript `scripts/fetch-public-finance.mjs` ich stiahne a zapíše do `lib/public-finance.data.ts` aj s dátumami aktualizácie; logika je v `lib/public-finance.ts`.
+
+Vlády od vzniku SR sú v `cabinets` (dátumy podľa histórie vlád na vlada.gov.sk). Rok, v ktorom sa vlády striedali, sa medzi ne delí podľa dní vo funkcii (deň výmeny patrí novej vláde); priemerné saldo, súčet salda a zmena dlhu za vládu sú vážené týmto podielom. Pravidlo aj jeho hranice (rozpočet schvaľuje predchádzajúca vláda, krízové roky) sú vysvetlené priamo na stránke a krízové roky majú v tabuľke kontext (bankové sanácie 1999–2000, euro a finančná kríza 2009, pandémia 2020–2021, energetická kríza 2022–2023).
+
+Dlhová brzda: horný limit podľa ústavného zákona č. 493/2011 Z. z. (60 % HDP, od 2018 o 1 p. b. ročne nižší až po 50 % v 2027) je v grafe ako prerušovaná čiara a v KPI ako odstup dlhu od limitu; sankčné pásma sú opísané zjednodušene s odkazom na zákon a RRZ. Kontrola dát overuje súvislosť rokov, medze hodnôt, súlad dlhu v € a v % HDP, nadväznosť vlád a to, že podiely roka dávajú 1.
+
 ## 18. 9. 2026 — register káuz vypnutý (vetva kauzy-vypnute, Claude)
 
 Sekcia Kauzy sa nikde nezobrazuje: zmizla záložka v navigácii, dlaždica v mobilnom rozcestníku aj blok „Kauzy v registri" v profile strany. Adresa `?v=cases` otvorí Prehľad a odkaz z profilu na register je neaktívny.

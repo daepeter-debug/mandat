@@ -14,6 +14,7 @@ export default function OverviewDirectory({ onNavigate }: { onNavigate: (view: s
     ...(casesEnabled ? [{ view: "cases", title: "Kauzy", text: "Register prípadov so závažnosťou" }] : []),
     { view: "polls", title: "Prieskumy", text: `Trend podpory a archív ${archive.length} meraní` },
     { view: "parties", title: "Strany", text: `${parties.length} profilov, ľudia a dokumenty` },
+    { view: "finance", title: "Hospodárenie", text: "Deficit a dlh po rokoch a po vládach" },
     { view: "model", title: "Vlastný model", text: "Posuňte percentá a zostavte koalíciu" },
     { view: "data", title: "Dátový prehľad", text: "Dva polkruhy, bloky a scenáre agentúr" },
     { view: "programmes", title: "Programy", text: "Archív 2023 a aktuálne návrhy" },
