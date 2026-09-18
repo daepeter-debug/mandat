@@ -19,6 +19,7 @@ export default function OverviewDirectory({ onNavigate }: { onNavigate: (view: s
     { view: "data", title: "Dátový prehľad", text: "Dva polkruhy, bloky a scenáre agentúr" },
     { view: "programmes", title: "Programy", text: "Archív 2023 a aktuálne návrhy" },
     { view: "news", title: "Správy", text: "Podstatné udalosti so zdrojmi" },
+    { view: "game", title: "Denná hra", text: "Zostav najtesnejšiu väčšinu zo 150 kresiel" },
     { view: "method", title: "O dátach", text: "Zdroje, metodika a hranice dát" },
   ];
   return <nav className="overview-directory" aria-labelledby="overview-directory-title">

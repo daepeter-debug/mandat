@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 18. 9. 2026 — Denná väčšina: denný hlavolam (vetva denna-hra, Codex + Claude, zatiaľ LEN LOKÁLNE)
+
+Codex rozpracoval hru „Denná väčšina“ (lib/daily-game.ts, components/daily-game.tsx, app/daily-game.css) a narazil na limit; Claude ju dokončil na vetve `denna-hra`, ktorá sa nenasadzuje, kým ju Peter neskontroluje. Pravidlá: šesť fiktívnych strán so 150 kreslami, nájsť koalíciu s aspoň 76 kreslami, najviac tri strany, jedna dvojica spolu nejde, zastúpené školstvo aj zdravotníctvo — vyhráva najtesnejšia možná väčšina. Zadanie je rovnaké pre všetkých podľa slovenského dátumu (deterministický generátor, 2000 pokusov, vždy práve jedno riešenie z troch strán s cieľom ≤ 87 kresiel); stres-test 400 dní dopredu neprešiel ani raz na záložný hlavolam. Tréning dá nové zadanie, výsledky a posledných 7 dní sa ukladajú len v prehliadači, zdieľanie neprezradí riešenie.
+
+Dokončenie: fiktívna strana „Most“ premenovaná na „Kotva“ (Most–Híd je skutočná strana), záložný hlavolam opravený (pôvodný dával 75 kresiel, nie väčšinu) a strážený kontrolou dát, stav hry sa aktualizuje funkčne a ukladá v efekte (rýchle ťuknutia sa nestrácali len náhodou), záložka „Denná hra“ (`?v=game`) pred O dátach, dlaždica v mobilnom rozcestníku, komponent načítaný dynamicky (15 KB). Kontrola dát overuje pre vybrané dátumy 150 kresiel, jediné riešenie, determinizmus a fiktívne mená. Na mobile 375 px sa herná plocha nezmestí na jednu obrazovku bez posunu (hlavička + navigácia + nadpis zaberú 369 px) — na zváženie pri kontrole.
+
 ## 18. 9. 2026 — motto na titulnej strane (vetva motto, Claude)
 
 Dodatok: na Petrovo želanie je motto presunuté priamo pod názov webu v hlavičke (na každej stránke), bez odkazu na zdroj a bez poznámky, aby nezaberalo miesto — ostal len text a meno autora (na mobile len text, 11,5 px, hlavička rastie na ~105 px). Zdroj, doslovný originál a poznámka o skrátení ostávajú v `lib/quote.ts` a v tomto zázname; originál je v atribúte title. Z úvodníka Prehľadu je citát odstránený.

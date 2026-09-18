@@ -13,6 +13,7 @@ import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure
 import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
 import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes } from '../lib/parliament.ts';
 import { averageWage, eligibleFunding, fundingForParty, fundingTotal, subjectFunding } from '../lib/party-funding.ts';
+import { createPuzzle, evaluate, fallbackPuzzle, gameParties, previousDay, readSave } from '../lib/daily-game.ts';
 import { governmentTenure, governmentTenureSources, periodDays, tenureAsOf, tenureDays, tenureDuration, tenureLabel } from '../lib/government-tenure.ts';
 
 const partyIds = new Set(parties.map(p => p.id));
@@ -351,3 +352,18 @@ const smerFunding = subjectFunding.find(f => f.subject.partyId === 'smer');
 assert(smerFunding.total > 22e6 && smerFunding.total < 24e6, 'SMER: nárok ~23 mil. € za obdobie');
 assert(fundingTotal > 85e6 && fundingTotal < 100e6, 'Spolu ~93 mil. € pre všetky subjekty');
 assert.equal(fundingForParty('smer').kind, 'party'); assert.equal(fundingForParty('ku').kind, 'coalition'); assert.equal(fundingForParty('rodina').kind, 'below'); assert.equal(fundingForParty('pnp').kind, 'absent');
+
+// Denná hra: 150 kresiel, jediné najtesnejšie riešenie z troch strán, deterministické zadanie, fiktívne mená
+for (const id of ['2026-09-18', '2026-09-19', '2026-10-01', '2026-12-31', 'training:test']) {
+  const p = createPuzzle(id);
+  assert.equal(p.seats.reduce((a, b) => a + b, 0), 150, `Hra: 150 kresiel (${id})`);
+  assert(p.solutions.length === 1 && p.solutions[0].length === 3 && p.target >= 76 && p.target <= 87, `Hra: jediné riešenie z troch strán (${id})`);
+  assert(evaluate(p, p.solutions[0]).won && !evaluate(p, []).won, `Hra: riešenie vyhráva, prázdny výber nie (${id})`);
+  assert.deepEqual(createPuzzle(id), p, `Hra: rovnaké zadanie pre všetkých (${id})`);
+}
+assert(evaluate(fallbackPuzzle, fallbackPuzzle.solutions[0]).won, 'Hra: záložný hlavolam je riešiteľný');
+assert.equal(new Set(gameParties.map(p => p.name)).size, 6);
+assert(gameParties.every(p => !/^(Most|Smer|Hlas|SNS|KDH|SaS|Sieť|Aliancia|Republika)$/i.test(p.name)), 'Hra: fiktívne mená nekolidujú so skutočnými stranami');
+assert.equal(previousDay('2026-09-18', 1), '2026-09-17');
+const sanitized = readSave({ selected: [0, 0, 9, 'x'], attempts: -5, hints: 99, solved: true }, createPuzzle('2026-09-18'));
+assert.deepEqual(sanitized.selected, [0]); assert.equal(sanitized.attempts, 0); assert.equal(sanitized.hints, 3); assert.equal(sanitized.solved, false, 'Hra: „vyriešené“ platí len s vyhrávajúcim výberom');

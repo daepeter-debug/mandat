@@ -28,6 +28,8 @@ const partyLogoMap:Record<string,{src:string}> = partyLogos;
 const ArchiveChart = lazy(() => import("@/components/archive-chart"));
 // Hospodárenie štátu má vlastný graf a tabuľky; načíta sa až pri otvorení záložky.
 const PublicFinance = lazy(() => import("@/components/public-finance"));
+// Denná hra (fiktívny hlavolam) sa načíta až pri otvorení záložky.
+const DailyGame = lazy(() => import("@/components/daily-game"));
 import PoliticalNewsFeed from "@/components/news-room";
 import { epigraph } from "@/lib/quote";
 import { newsById, newsChecked } from "@/lib/political-news";
@@ -38,7 +40,7 @@ import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, 
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
 const primaryAgencies = ["AKO","FOCUS","INFOSTAT","IPSOS","NMS"];
-const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},{id:"finance",label:"Hospodárenie"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"method",label:"O dátach"}];
+const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},{id:"finance",label:"Hospodárenie"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"game",label:"Denná hra"},{id:"method",label:"O dátach"}];
 const viewIds = views.map(v=>v.id);
 const periods = ["3","5","9"];
 const defaultActive = ["ps","smer","rep","slovensko","sas"];
@@ -218,6 +220,7 @@ export default function Home() {
       <main id="main">
         <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})}/></TabsContent>
+        <TabsContent value="game"><Suspense fallback={<p className="chart-loading">Načítavame hru…</p>}><DailyGame/></Suspense></TabsContent>
         <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>
         {casesEnabled&&<TabsContent value="cases"><Suspense fallback={<p className="chart-loading">Načítavame register…</p>}><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></Suspense></TabsContent>}
         <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>
