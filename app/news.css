@@ -418,6 +418,6 @@ html .lab-input-row input[type=number]{width:68px}
 @media(max-width:760px){.parliament-now-switches{flex-direction:column;gap:5px}.parliament-now-switches .parliament-now-switch{width:100%}}
 
 /* Karta strany: historický výsledok volieb 2023 pod číslami z prieskumu — menší a svetlejší než agentúra. */
-.party-card-history{margin:4px 0 0;font-size:11.5px;line-height:1.5;color:var(--text-3);opacity:.85}
-.party-card-history b{font-weight:600;font-variant-numeric:tabular-nums}
+.party-card-history{margin:7px 0 0;padding:5px 9px;border-radius:6px;background:#f1f4ec;font-size:12.5px;line-height:1.5;color:var(--text-2)}
+.party-card-history b{font-weight:600;font-variant-numeric:tabular-nums;color:var(--mag-ink)}
 .party-card-history span{font-style:italic}

@@ -2,6 +2,8 @@
 
 ## 19. 9. 2026 — karta strany ukazuje aj výsledok volieb 2023 (vetva vysledok-2023, Claude)
 
+Dodatok: riadok je jemne podfarbený (svetlá šalviová plocha so zaoblením) a písmo zväčšené na 12,5 px, teda na úroveň riadka s agentúrou; percentá a kreslá sú v tmavšej farbe textu. Pôvodné svetlé 11,5 px bolo na karte ťažko čitateľné.
+
 V záložke Strany je pod číslami z prieskumu nový riadok s výsledkom subjektu vo voľbách 2023: percentá a počet kresiel, menším a svetlejším písmom než hodnota agentúry (11,5 px, `--text-3`), aby dopĺňal kontext a nesúťažil s aktuálnym číslom.
 
 Tri prípady rieši funkcia `result2023` v `lib/parliament.ts`. Strana, ktorá kandidovala sama, má vlastný výsledok (SMER 22,9 % · 42 kresiel, REPUBLIKA 4,75 % · bez kresla). Hnutie Slovensko, Kresťanská únia a ZA ĽUDÍ kandidovali v koalícii OĽANO a priatelia, preto majú spoločný výsledok 8,9 % · 16 kresiel a riadok to výslovne píše — historický rad nepremosťujeme potichu. Právo na pravdu a Strana vidieka v roku 2023 nekandidovali, uvedie sa „nekandidovala“.
