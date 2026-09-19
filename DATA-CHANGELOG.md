@@ -2,6 +2,8 @@
 
 ## 19. 9. 2026 — správy za týždeň 15.–18. 9. (vetva spravy-19, Claude)
 
+Dodatok po druhom kole rešerše (Denník N, SME, Pravda, TASR/Teraz, STVR, ta3, Noviny.sk, Aktuality): pribudli štyri správy, ktoré v prvom výbere chýbali — poradenská firma ministra obrany a platby od skupiny Michala Strnada (16. 9.), dvakrát neotvorená schôdza o odvolávaní ministra vnútra pre neuznášaniaschopnosť, presunutá na 17. novembra (17. 9.), Tarabovo vyhlásenie, že koalícia bude mať menej ako 77 poslancov a že pôjde do parlamentu ako nezaradený (17. 9.), a odvolanie zmeny grafikonu s vrátením zastávok expresu na Považí počas komunálnej kampane (18. 9.). Výber má 30 správ, za posledných sedem dní 18.
+
 Doplnených deväť správ od poslednej aktualizácie (14. 9.), kontrola zdrojov posunutá na 19. 9. Výber má 26 položiek, za posledných sedem dní ich je 14.
 
 Týždeň: otvorenie jesennej schôdze s vyše 300 bodmi (15. 9.), doručenie návrhu na odvolanie Tarabu prezidentovi a jeho odklad do návratu z USA (15. 9.), schválenie vyslania až 101 vojakov na východné krídlo NATO hlasmi koalície aj opozície (17. 9.), posun ústavnej zmeny o skrátení volebného obdobia referendom do druhého čítania (17. 9.), premiérovo spochybnenie článku 5 a reakcie prezidenta, Čaputovej a opozície (18. 9.), zrušená cesta na Ukrajinu a deklarácia Karpatskej osmičky bez neho (18. 9.), menovania v štátnej OKTE podľa Denníka N (18. 9.) a zastavenie spaľovne pri Dudinciach (18. 9.).
