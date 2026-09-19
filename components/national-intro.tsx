@@ -23,7 +23,7 @@ const subscribeDay = (notify: () => void) => {
 const currentDay = () => new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/Bratislava",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 const serverDay = () => "";
 
-export default function NationalIntro({ onNavigate, parliament, onParliament, onOpenNews }: { onNavigate: (view: string) => void; parliament: string; onParliament: (value: string) => void; onOpenNews: (id: string) => void }) {
+export default function NationalIntro({ onNavigate, parliament, onParliament, parliamentPartners, onParliamentPartners, onOpenNews }: { onNavigate: (view: string) => void; parliament: string; onParliament: (value: string) => void; parliamentPartners: boolean; onParliamentPartners: (value: boolean) => void; onOpenNews: (id: string) => void }) {
   const uid = useId().replace(/:/g, "");
   const today = useSyncExternalStore(subscribeDay, currentDay, serverDay);
   const [year, month] = today.split("-").map(Number);
@@ -85,7 +85,7 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, on
     </aside>
     </div>
     <ResponsibilityScale onNavigate={onNavigate}/>
-    <ParliamentNow onNavigate={onNavigate} view={parliament} onView={onParliament}/>
+    <ParliamentNow onNavigate={onNavigate} view={parliament} onView={onParliament} partners={parliamentPartners} onPartners={onParliamentPartners}/>
     <PoliticalNewsFeed compact onOpen={()=>onNavigate('news')} onOpenNews={onOpenNews}/>
   </section>;
 }

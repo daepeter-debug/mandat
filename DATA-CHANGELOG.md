@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 19. 9. 2026 — karta parlamentu má prepínač partnerov (vetva parlament-partneri, Claude)
+
+Karta „Parlament podľa prieskumov“ na úvodnej strane má druhý prepínač: **Dnešné bloky | S partnermi**. Pri zapnutom variante sa REPUBLIKA pripočíta ku koalícii a Hnutie Slovensko (Matovič) k opozícii, presne ako to robí titulok vydania a Dátový prehľad. V scenári z Modelu Mandát sa tým bloky menia zo 48 a 64 na **70 a 80** a „ostatní“ klesnú na nulu; pri voľbách 2023 zostáva koalícia na 79 (Republika mandáty nemala) a opozícia rastie z 55 na 71 o koalíciu OĽANO a priatelia.
+
+Popisky blokov používajú rovnaké slovné tvary ako titulok vydania — „Koalícia s Republikou“ a „Opozícia s Matovičom“ (`partnerWording` v `lib/edition.ts`) — takže web hovorí o partneroch všade rovnako. Poznámka pod kartou pri zapnutom variante výslovne uvádza, že ide o redakčný predpoklad, nie o dohodu strán; pri vypnutom variante upozorňuje na prepínač. Stav je v adrese ako `pp=1`, takže sa dá zdieľať aj obnoviť, a do popisu pre čítačku obrazovky sa premieta tiež.
+
+Kontrola dát overuje, že variant s partnermi zvýši koalíciu presne o kreslá REPUBLIKY, opozíciu o kreslá Hnutia Slovensko, že súčet ostáva 150 a že „ostatným“ ubudne.
+
 ## 19. 9. 2026 — správy za týždeň 15.–18. 9. (vetva spravy-19, Claude)
 
 Dodatok po druhom kole rešerše (Denník N, SME, Pravda, TASR/Teraz, STVR, ta3, Noviny.sk, Aktuality): pribudli štyri správy, ktoré v prvom výbere chýbali — poradenská firma ministra obrany a platby od skupiny Michala Strnada (16. 9.), dvakrát neotvorená schôdza o odvolávaní ministra vnútra pre neuznášaniaschopnosť, presunutá na 17. novembra (17. 9.), Tarabovo vyhlásenie, že koalícia bude mať menej ako 77 poslancov a že pôjde do parlamentu ako nezaradený (17. 9.), a odvolanie zmeny grafikonu s vrátením zastávok expresu na Považí počas komunálnej kampane (18. 9.). Výber má 30 správ, za posledných sedem dní 18.

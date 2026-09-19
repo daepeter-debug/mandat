@@ -50,12 +50,12 @@ const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^
 /* Stav rozhrania v URL: záložka (v), agentúra prehľadu (a), obdobie (p), graf/tabuľka (m),
    filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;news:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;parliamentPartners:boolean;news:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
 const parliamentViews = ["model","volby2023"];
 const ELECTION_VIEW = "volby2023";
 // Dátový prehľad má jednu grafiku parlamentu; prepínač vyberá, čo zobrazuje.
 const spreadOptions = [ELECTION_VIEW, ...primaryAgencies];
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",news:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null};
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",parliamentPartners:false,news:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
@@ -73,6 +73,7 @@ function parseSearch(search:string):UiState {
     caseParty: pick("kp", v=>partyIds.has(v)),
     finance: pick("hv", v=>["years","governments","living","compare"].includes(v)) ?? defaults.finance,
     parliament: pick("pn", v=>parliamentViews.includes(v)) ?? defaults.parliament,
+    parliamentPartners: pick("pp", v=>v==="1") !== null,
     news: pick("sp", v=>newsById(v)!==null),
     agency: pick("f", v=>v==="all"||agencies.includes(v)) ?? defaults.agency,
     query: (s.get("q") ?? "").slice(0,80),
@@ -92,6 +93,7 @@ function serialize(state:UiState) {
   if(state.caseParty) s.set("kp",state.caseParty);
   if(state.finance!==defaults.finance) s.set("hv",state.finance);
   if(state.parliament!==defaults.parliament) s.set("pn",state.parliament);
+  if(state.parliamentPartners) s.set("pp","1");
   if(state.news) s.set("sp",state.news);
   if(state.spread!==state.trendAgency) s.set("hs",state.spread);
   if(state.agency!==defaults.agency) s.set("f",state.agency);
@@ -218,7 +220,7 @@ export default function Home() {
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">
-        <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
+        <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="game"><Suspense fallback={<p className="chart-loading">Načítavame hru…</p>}><DailyGame/></Suspense></TabsContent>
         <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>

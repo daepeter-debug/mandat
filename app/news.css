@@ -411,3 +411,8 @@ html .lab-input-row input[type=number]{width:68px}
 .brand-motto span{font-style:normal;color:var(--text-3);white-space:nowrap}
 @media(max-width:760px){.editorial-shell .site-header{height:auto;min-height:77px;padding-top:10px;padding-bottom:10px;gap:12px}.editorial-shell .site-header .brand{font-size:32px}.brand-block{gap:4px}.brand-motto{font-size:11.5px;line-height:1.4;max-width:34ch}.brand-motto span{display:none}.editorial-shell .header-status{flex:none}.editorial-shell .header-status>span,.editorial-shell .header-status b{white-space:nowrap}}
 @media print{.brand-motto{display:none}}
+
+/* Karta parlamentu: dva prepínače (zdroj a partneri) vedľa seba, na mobile pod sebou. */
+.parliament-now-switches{display:flex;flex-wrap:wrap;gap:6px}
+.parliament-now-switches .parliament-now-switch{margin-top:0}
+@media(max-width:760px){.parliament-now-switches{flex-direction:column;gap:5px}.parliament-now-switches .parliament-now-switch{width:100%}}

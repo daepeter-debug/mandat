@@ -6,7 +6,7 @@ import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, financeCompare, f
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
 import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies } from '../lib/polls.ts';
 import { programmes, positions } from '../lib/programmes.ts';
-import { aggregateAt, aggregateAgencies, aggregateLastDate, aggregatePolls, currentAggregate } from '../lib/aggregate.ts';
+import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, aggregatePolls, currentAggregate } from '../lib/aggregate.ts';
 import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../lib/blocs.ts';
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
@@ -368,3 +368,12 @@ assert(gameParties.every(p => !/^(Most|Smer|Hlas|SNS|KDH|SaS|Sieť|Aliancia|Repu
 assert.equal(previousDay('2026-09-18', 1), '2026-09-17');
 const sanitized = readSave({ selected: [0, 0, 9, 'x'], attempts: -5, hints: 99, solved: true }, createPuzzle('2026-09-18'));
 assert.deepEqual(sanitized.selected, [0]); assert.equal(sanitized.attempts, 0); assert.equal(sanitized.hints, 3); assert.equal(sanitized.solved, false, 'Hra: „vyriešené“ platí len s vyhrávajúcim výberom');
+
+// Karta parlamentu: partneri v karte parlamentu menia bloky presne o kreslá REPUBLIKY a Hnutia Slovensko.
+const modelRows = scenarioFromPoll(aggregateAsPoll()).rows.map(r => ({ id: r.id, short: r.short, color: r.color, seats: r.seats }));
+const plainBlocs = blocSeats(modelRows), partnerBlocs = blocSeats(modelRows, optionalIds);
+const modelSeatsOf = id => modelRows.find(r => r.id === id)?.seats ?? 0;
+assert.equal(partnerBlocs.coalition.seats, plainBlocs.coalition.seats + modelSeatsOf("rep"), "S partnermi: koalícia rastie o kreslá REPUBLIKY");
+assert.equal(partnerBlocs.opposition.seats, plainBlocs.opposition.seats + modelSeatsOf("slovensko"), "S partnermi: opozícia rastie o kreslá Hnutia Slovensko");
+assert.equal(partnerBlocs.coalition.seats + partnerBlocs.opposition.seats + partnerBlocs.others.seats, 150, "S partnermi ostáva 150 kresiel");
+assert(partnerBlocs.others.seats < plainBlocs.others.seats, "S partnermi ubudne z ostatných");

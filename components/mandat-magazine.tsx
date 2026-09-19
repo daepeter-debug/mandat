@@ -18,7 +18,7 @@ export function AgencyPicker({value,onChange}:{value:string;onChange:(value:stri
   return <div className="mag-agencies" role="group" aria-label="Vybrať agentúru">{agencies.map(a=><button key={a} aria-pressed={value===a} onClick={()=>onChange(a)}>{a}{value===a&&<Check size={14}/>}</button>)}</div>;
 }
 
-export function MandatMagazine({poll,onAgency,onNavigate,parliament,onParliament,onOpenNews}:{poll:Poll;onAgency:(a:string)=>void;onNavigate:(v:string)=>void;parliament:string;onParliament:(v:string)=>void;onOpenNews:(id:string)=>void}) {
+export function MandatMagazine({poll,onAgency,onNavigate,parliament,onParliament,parliamentPartners,onParliamentPartners,onOpenNews}:{poll:Poll;onAgency:(a:string)=>void;onNavigate:(v:string)=>void;parliament:string;onParliament:(v:string)=>void;parliamentPartners:boolean;onParliamentPartners:(v:boolean)=>void;onOpenNews:(id:string)=>void}) {
   const modelPoll=aggregateAsPoll();
   const scenario=scenarioFromPoll(modelPoll);
   const [selected,setSelected]=useState<string[]>([]);
@@ -27,7 +27,7 @@ export function MandatMagazine({poll,onAgency,onNavigate,parliament,onParliament
   const small=rows.filter(p=>poll.values[p.id]<5);
   const large=rows.filter(p=>poll.values[p.id]>=5);
   return <div className="magazine">
-    <NationalIntro onNavigate={onNavigate} parliament={parliament} onParliament={onParliament} onOpenNews={onOpenNews}/>
+    <NationalIntro onNavigate={onNavigate} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews}/>
     <OverviewDirectory onNavigate={onNavigate}/>
     <div className="mag-edition"><span>Slovensko · volebné prieskumy</span><span>{archive.length} meraní v archíve</span><button onClick={()=>onNavigate("method")}>Ako pracujeme so zdrojmi <ArrowUpRight size={16}/></button></div>
     <PollAggregator onMethod={()=>onNavigate("method")}/>
