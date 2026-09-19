@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 19. 9. 2026 — karta strany ukazuje aj výsledok volieb 2023 (vetva vysledok-2023, Claude)
+
+V záložke Strany je pod číslami z prieskumu nový riadok s výsledkom subjektu vo voľbách 2023: percentá a počet kresiel, menším a svetlejším písmom než hodnota agentúry (11,5 px, `--text-3`), aby dopĺňal kontext a nesúťažil s aktuálnym číslom.
+
+Tri prípady rieši funkcia `result2023` v `lib/parliament.ts`. Strana, ktorá kandidovala sama, má vlastný výsledok (SMER 22,9 % · 42 kresiel, REPUBLIKA 4,75 % · bez kresla). Hnutie Slovensko, Kresťanská únia a ZA ĽUDÍ kandidovali v koalícii OĽANO a priatelia, preto majú spoločný výsledok 8,9 % · 16 kresiel a riadok to výslovne píše — historický rad nepremosťujeme potichu. Právo na pravdu a Strana vidieka v roku 2023 nekandidovali, uvedie sa „nekandidovala“.
+
+Kontrola dát overuje, že každá dnešná strana má jeden z troch stavov, že hodnoty sú v medziach a že koaliční členovia zdieľajú ten istý výsledok.
+
 ## 19. 9. 2026 — karta parlamentu má prepínač partnerov (vetva parlament-partneri, Claude)
 
 Karta „Parlament podľa prieskumov“ na úvodnej strane má druhý prepínač: **Dnešné bloky | S partnermi**. Pri zapnutom variante sa REPUBLIKA pripočíta ku koalícii a Hnutie Slovensko (Matovič) k opozícii, presne ako to robí titulok vydania a Dátový prehľad. V scenári z Modelu Mandát sa tým bloky menia zo 48 a 64 na **70 a 80** a „ostatní“ klesnú na nulu; pri voľbách 2023 zostáva koalícia na 79 (Republika mandáty nemala) a opozícia rastie z 55 na 71 o koalíciu OĽANO a priatelia.

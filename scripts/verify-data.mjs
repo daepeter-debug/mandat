@@ -11,7 +11,7 @@ import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../li
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
 import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
-import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes } from '../lib/parliament.ts';
+import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes, result2023, coalition2023 } from '../lib/parliament.ts';
 import { averageWage, eligibleFunding, fundingForParty, fundingTotal, subjectFunding } from '../lib/party-funding.ts';
 import { createPuzzle, evaluate, fallbackPuzzle, gameParties, previousDay, readSave } from '../lib/daily-game.ts';
 import { governmentTenure, governmentTenureSources, periodDays, tenureAsOf, tenureDays, tenureDuration, tenureLabel } from '../lib/government-tenure.ts';
@@ -377,3 +377,16 @@ assert.equal(partnerBlocs.coalition.seats, plainBlocs.coalition.seats + modelSea
 assert.equal(partnerBlocs.opposition.seats, plainBlocs.opposition.seats + modelSeatsOf("slovensko"), "S partnermi: opozícia rastie o kreslá Hnutia Slovensko");
 assert.equal(partnerBlocs.coalition.seats + partnerBlocs.opposition.seats + partnerBlocs.others.seats, 150, "S partnermi ostáva 150 kresiel");
 assert(partnerBlocs.others.seats < plainBlocs.others.seats, "S partnermi ubudne z ostatných");
+
+// Výsledok 2023 v karte strany: vlastná kandidátka, koalícia alebo neúčasť — každá dnešná strana má odpoveď.
+for (const party of parties) {
+  const r = result2023(party.id);
+  assert(['party', 'coalition', 'absent'].includes(r.kind), `Výsledok 2023 má typ: ${party.id}`);
+  if (r.kind !== 'absent') assert(r.pct >= 0 && r.pct <= 100 && Number.isInteger(r.seats) && r.seats >= 0, `Výsledok 2023 v medziach: ${party.id}`);
+}
+assert.deepEqual(result2023('smer'), { kind: 'party', pct: 22.94, seats: 42 });
+assert.deepEqual(result2023('rep'), { kind: 'party', pct: 4.75, seats: 0 });
+assert.deepEqual(result2023('slovensko'), { kind: 'coalition', pct: 8.89, seats: 16, label: coalition2023.label });
+assert.deepEqual(result2023('ku'), result2023('slovensko'), 'Kresťanská únia zdieľa výsledok koalície');
+assert.equal(result2023('pnp').kind, 'absent', 'Právo na pravdu v roku 2023 nekandidovalo');
+assert.equal(result2023('vidiek').kind, 'absent', 'Strana vidieka v roku 2023 nekandidovala');

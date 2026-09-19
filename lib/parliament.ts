@@ -152,3 +152,25 @@ export function wastedVotes(scenario: Scenario, turnoutVotes = validVotes2023) {
   const votesPerSeat = qualifyingShare > 0 ? Math.round(turnoutVotes * qualifyingShare / 100 / scenario.allocation.total) : null;
   return { wastedShare, wastedVotes: Math.round(turnoutVotes * wastedShare / 100), votesPerSeat, turnoutVotes };
 }
+
+/*
+  Výsledok dnešnej strany vo voľbách 2023. Tri prípady: kandidovala sama, kandidovala v koalícii
+  (vtedy je výsledok spoločný a uvádzame to), alebo do volieb nešla. Hnutie Slovensko je nástupca
+  OĽANO, Kresťanská únia a ZA ĽUDÍ boli súčasťou tej istej koalície — historický rad preto
+  nepremosťujeme automaticky, ale vždy pomenujeme, o čí výsledok ide.
+*/
+export const coalition2023 = { number: 5, label: "OĽANO a priatelia", parties: ["slovensko", "ku", "zaludi"] };
+export type Result2023 =
+  | { kind: "party"; pct: number; seats: number }
+  | { kind: "coalition"; pct: number; seats: number; label: string }
+  | { kind: "absent" };
+
+export function result2023(partyId: string): Result2023 {
+  const own = election2023.subjects.find(s => s.partyId === partyId);
+  if (own) return { kind: "party", pct: own.pct, seats: own.seats };
+  if (coalition2023.parties.includes(partyId)) {
+    const c = election2023.subjects.find(s => s.number === coalition2023.number);
+    if (c) return { kind: "coalition", pct: c.pct, seats: c.seats, label: coalition2023.label };
+  }
+  return { kind: "absent" };
+}

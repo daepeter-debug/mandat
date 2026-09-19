@@ -24,6 +24,14 @@ import PartyRail, { PartyLogoSources, PartyStrip } from "@/components/party-rail
 import Image from "next/image";
 import partyLogos from "@/lib/party-logos.json";
 const partyLogoMap:Record<string,{src:string}> = partyLogos;
+// Historický kontext v karte strany: ako subjekt dopadol vo voľbách 2023.
+function Result2023Line({partyId}:{partyId:string}) {
+  const r = result2023(partyId);
+  const seats = (n:number) => n === 0 ? "bez kresla" : n === 1 ? "1 kreslo" : n < 5 ? `${n} kreslá` : `${n} kresiel`;
+  return <p className="party-card-history">Voľby 2023: {r.kind === "absent"
+    ? <b>nekandidovala</b>
+    : <><b>{fmt(r.pct)} %</b> · {seats(r.seats)}{r.kind === "coalition" && <> <span>v koalícii {r.label}</span></>}</>}</p>;
+}
 // Graf Dátového prehľadu (Recharts) sa načíta až pri otvorení záložky s grafom.
 const ArchiveChart = lazy(() => import("@/components/archive-chart"));
 // Hospodárenie štátu má vlastný graf a tabuľky; načíta sa až pri otvorení záložky.
@@ -35,7 +43,7 @@ import { epigraph } from "@/lib/quote";
 import { newsById, newsChecked } from "@/lib/political-news";
 import PollAggregator from "@/components/poll-aggregator";
 import { blocs, blocSeats, optionalPartners, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from "@/lib/blocs";
-import { election2023, seated2023, scenarioFromPoll, wastedVotes } from "@/lib/parliament";
+import { election2023, seated2023, scenarioFromPoll, wastedVotes, result2023 } from "@/lib/parliament";
 import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, rank, difference, dataVerified, type Poll, type Party } from "@/lib/polls";
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
@@ -278,7 +286,7 @@ export default function Home() {
         <TabsContent value="parties">
           <section className="intro"><div><h1>Strany a ich profily</h1><p className="intro-description">Zameranie, ľudia a programy. Spoznajte strany za číslami a overte si, odkiaľ informácie pochádzajú.</p></div></section>
           <div className="archive-toolbar"><label className="search-field"><Search size={18}/><Input value={partyQuery} onChange={e=>setPartyQuery(e.target.value)} placeholder="Strana, skratka alebo osobnosť" aria-label="Hľadať politickú stranu" autoComplete="off" spellCheck={false} enterKeyHint="search"/></label><span className="result-count" role="status">{visibleParties.length} {visibleParties.length===1?"subjekt":visibleParties.length>=2&&visibleParties.length<=4?"subjekty":"subjektov"} · abecedné poradie</span></div>
-          <h2 className="sr-only">Zoznam politických subjektov</h2><div className="party-grid">{visibleParties.map(p=><article className="party-card" key={p.id}><div className="party-card-top"><span className="party-monogram"><i style={{background:p.color}} aria-hidden="true"/>{p.short}</span>{partyLogoMap[p.id]&&<span className="party-card-logo"><Image src={partyLogoMap[p.id].src} alt="" width={52} height={52} unoptimized/></span>}</div><button className="party-card-action" onClick={()=>setParty(p)}><h3>{p.name}</h3><span>Pozrieť profil <ArrowRight size={16}/></span></button><PartyTags partyId={p.id}/>{partyProfiles[p.id]&&<p className="party-card-summary">{partyProfiles[p.id].summary}</p>}<div className="party-card-stat"><div><span>Model Mandát · vážený priemer</span><strong>{currentAggregate.values[p.id]===undefined?"—":`${fmt(currentAggregate.values[p.id].value)} %`}</strong></div><p className="party-card-second">{current.agency} · {current.month.toLowerCase()} 2026: <b>{current.values[p.id]===undefined?"—":`${fmt(current.values[p.id])} %`}</b></p><Source poll={current}/></div>{currentAggregate.values[p.id]===undefined&&<p className="missing-caption">Subjekt zatiaľ nie je v agregáte; jednotlivé merania sú v archíve.</p>}</article>)}</div>
+          <h2 className="sr-only">Zoznam politických subjektov</h2><div className="party-grid">{visibleParties.map(p=><article className="party-card" key={p.id}><div className="party-card-top"><span className="party-monogram"><i style={{background:p.color}} aria-hidden="true"/>{p.short}</span>{partyLogoMap[p.id]&&<span className="party-card-logo"><Image src={partyLogoMap[p.id].src} alt="" width={52} height={52} unoptimized/></span>}</div><button className="party-card-action" onClick={()=>setParty(p)}><h3>{p.name}</h3><span>Pozrieť profil <ArrowRight size={16}/></span></button><PartyTags partyId={p.id}/>{partyProfiles[p.id]&&<p className="party-card-summary">{partyProfiles[p.id].summary}</p>}<div className="party-card-stat"><div><span>Model Mandát · vážený priemer</span><strong>{currentAggregate.values[p.id]===undefined?"—":`${fmt(currentAggregate.values[p.id].value)} %`}</strong></div><p className="party-card-second">{current.agency} · {current.month.toLowerCase()} 2026: <b>{current.values[p.id]===undefined?"—":`${fmt(current.values[p.id])} %`}</b></p><Result2023Line partyId={p.id}/><Source poll={current}/></div>{currentAggregate.values[p.id]===undefined&&<p className="missing-caption">Subjekt zatiaľ nie je v agregáte; jednotlivé merania sú v archíve.</p>}</article>)}</div>
           {visibleParties.length===0&&<div className="empty-state"><Search size={30}/><h3>Stranu sme v tomto výbere nenašli</h3><button className="text-button" onClick={()=>setPartyQuery("")}>Zobraziť všetky subjekty <ArrowRight size={16}/></button></div>}
           <div className="context-strip roadmap"><BookOpen size={25}/><div><h3>Od preferencií k programom</h3><p>V profiloch už nájdete prvé overené programové dokumenty. Historické verzie sú označené rokom. Medailóny osobností majú vlastné zdroje; kandidátne listiny do volieb 2027 zatiaľ neuvádzame.</p></div></div>
         </TabsContent>
