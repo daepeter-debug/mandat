@@ -1,0 +1,97 @@
+/* Do decembra — hra o malom meste. Nadväzuje na štýl Dennej väčšiny (game-heading, game-mode, game-week), scéna má vlastnú paletu. */
+.december { max-width: 1060px; margin: 0 auto; padding: 30px 0 16px; color: var(--mag-ink, #20392f); }
+.december .game-heading { align-items: flex-start; }
+.december-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, 1fr); gap: 32px; align-items: start; }
+.december-board { position: sticky; top: 16px; }
+.december-status { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.december-status > span { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; }
+.december-status b { font-size: 22px; font-weight: 550; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1; }
+.december-status small { font-size: 12px; color: #4f6057; }
+.december-coins { color: #7a5a12; }
+.december-coins b { animation: december-pop .45s ease-out; display: inline-block; }
+.december-coins.is-debt { color: #a8332a; }
+.december-town { display: block; width: 100%; height: auto; }
+.december-board { background: linear-gradient(180deg, #faf7ef 0%, #f3efe4 100%); border: 1px solid #e6e0d2; border-radius: 18px; padding: 14px 14px 12px; }
+.december-town * { transition: fill .7s ease, opacity .5s ease, stop-color .7s ease; }
+.december-town .dt-appear { animation: december-appear .6s cubic-bezier(.2, .9, .3, 1.2); transform-box: fill-box; transform-origin: 50% 100%; }
+.december-meters { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.december-meters li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px 8px; padding: 10px 12px; background: #fffefa; border: 1px solid #e6e0d2; border-radius: 10px; font-size: 13px; }
+.december-meters li > svg { color: var(--bar, #3f6b4b); }
+.december-meters li.is-low > svg, .december-meters li.is-low b { color: #a8332a; }
+.december-meters b { font-size: 17px; font-weight: 550; font-variant-numeric: tabular-nums; }
+.december-meters b small { font-size: 11px; color: #4f6057; font-weight: 400; }
+.december-bar { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; height: 8px; }
+.december-bar > i { display: block; border-radius: 2px; background: #e3e6dd; transition: background-color .45s ease; }
+.december-bar > i.is-on { background: var(--bar, #3f6b4b); }
+.december-meters li:nth-child(1) { --bar: #2f5fb8; }
+.december-meters li:nth-child(2) { --bar: #2e7d5b; }
+.december-meters li:nth-child(3) { --bar: #d39a1e; }
+.december-meters li.is-low .december-bar > i.is-on { background: #c25046; }
+.december-warning { margin: 12px 0 0; padding: 10px 12px; border-radius: 8px; background: #fbe9e6; color: #7f261f; font-size: 13px; line-height: 1.5; }
+.december-panel { display: flex; flex-direction: column; gap: 18px; }
+.december-event, .december-postcard { background: #fffefa; border: 1px solid #e6e0d2; border-radius: 16px; padding: 22px; }
+.december-kicker { margin: 0 0 10px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #4f6057; }
+.december-event h2, .december-postcard h2 { margin: 0 0 8px; font-size: clamp(24px, 2.6vw, 30px); font-weight: 550; letter-spacing: -.03em; line-height: 1.15; color: #1f3554; }
+.december-event > p, .december-postcard > p { margin: 0; color: #4f6057; line-height: 1.55; font-size: 15px; }
+.december-options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.december-option { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; min-height: 64px; padding: 12px 14px 12px 16px; border-radius: 12px; border: 1.5px solid #1f3554; background: #fffefa; color: #1f3554; text-align: left; cursor: pointer; touch-action: manipulation; transition: transform .12s ease, background-color .15s ease, box-shadow .15s ease; }
+.december-option.is-primary { background: #1f3554; color: #fffefa; }
+.december-option:hover { box-shadow: 0 6px 16px -10px rgba(31, 53, 84, .6); }
+.december-option:active { transform: scale(.985); }
+.december-option-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.december-option-text b { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.december-option-text small { font-size: 12.5px; line-height: 1.4; opacity: .85; }
+.december-cost { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; padding: 6px 10px; border-radius: 999px; background: #f6e7bd; color: #6b4d0d; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.is-primary .december-cost { background: #f0b429; color: #1f3554; }
+.december-cost.is-free { background: #e5e8df; color: #4f6057; }
+.is-primary .december-cost.is-free { background: rgba(255, 255, 255, .18); color: #fffefa; }
+.december-cost.is-gain { background: #dcf59b; color: #20392f; }
+.december-pending { list-style: none; margin: 16px 0 0; padding: 10px 12px; border-radius: 8px; background: #f4f6f0; font-size: 12.5px; line-height: 1.5; color: #4f6057; }
+.december-pending li::before { content: "⏳ "; }
+.december-income { margin: 12px 0 0; font-size: 12.5px; color: #4f6057; }
+.december-postcard-frame { position: relative; padding: 12px 12px 34px; background: #fffefa; border: 1px solid #d9dfd4; border-radius: 6px; box-shadow: 0 14px 30px -18px rgba(31, 53, 84, .6); transform: rotate(-1.2deg); margin: 4px 6px 22px; }
+.december-postcard-frame .december-town { border-radius: 4px; box-shadow: none; }
+.december-stamp { position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 52px; height: 60px; background: #fffefa; border: 2px dashed #1f3554; color: #1f3554; border-radius: 3px; transform: rotate(6deg); font-variant-numeric: tabular-nums; }
+.december-stamp b { font-size: 20px; font-weight: 600; line-height: 1; }
+.december-stamp small { font-size: 10px; }
+.december-postcard-greeting { position: absolute; left: 18px; bottom: 8px; margin: 0; font-style: italic; font-size: 15px; color: #1f3554; letter-spacing: .01em; }
+.december-stars { display: flex; gap: 4px; color: #d3d8cf; margin-bottom: 8px; }
+.december-stars .is-on { color: #f0b429; fill: #f0b429; }
+.december-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.december-actions button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; border-radius: 8px; border: 1px solid #d9dfd4; background: #fffefa; font-size: 14px; cursor: pointer; }
+.december-actions .december-primary { background: #1f3554; color: #fffefa; border-color: #1f3554; }
+.december-postcard textarea { width: 100%; min-height: 96px; margin-top: 12px; padding: 10px; font: inherit; font-size: 13px; border: 1px solid #d9dfd4; border-radius: 8px; background: #f4f6f0; }
+.december-tomorrow { margin: 14px 0 0; font-size: 12.5px; color: #4f6057; line-height: 1.5; }
+.december-log summary, .december-about summary { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
+.december-log ol { list-style: none; margin: 4px 0 0; padding: 0; }
+.december-log li { display: grid; grid-template-columns: 84px 1fr; gap: 2px 12px; padding: 9px 0; border-bottom: 1px solid #e5e8df; font-size: 13px; }
+.december-log li span { color: #4f6057; grid-row: span 2; }
+.december-log li b { font-weight: 550; }
+.december-log li small { color: #4f6057; }
+.december-about ul { margin: 6px 0 10px; padding-left: 18px; font-size: 13px; line-height: 1.6; color: #2e4038; }
+.december-about li + li { margin-top: 4px; }
+.december-about p { margin: 0; font-size: 12px; color: #4f6057; line-height: 1.6; }
+.december-restart { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; font-size: 13px; color: #4f6057; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.december :is(button, summary, textarea):focus-visible { outline: 3px solid #306e59; outline-offset: 3px; }
+@keyframes december-pop { 0% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes december-appear { 0% { opacity: 0; transform: translateY(6px) scale(.86); } 100% { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .december *, .december *::before { transition: none !important; animation: none !important; } }
+@media (max-width: 900px) {
+  .december-layout { grid-template-columns: 1fr; gap: 20px; }
+  .december-board { position: static; }
+}
+@media (max-width: 760px) {
+  .december { padding: 18px 0 12px; }
+  .december .game-heading { flex-direction: column; gap: 14px; margin-bottom: 18px; }
+  .december .game-mode { width: 100%; }
+  .december .game-mode button { flex: 1; }
+  .december-meters { gap: 8px; }
+  .december-meters li { padding: 8px 8px; font-size: 12px; gap: 5px 6px; }
+  .december-meters b { font-size: 15px; }
+  .december-meters b small { display: none; }
+  .december-board { padding: 12px 10px 10px; }
+  .december-event, .december-postcard { padding: 18px 16px; border-radius: 14px; }
+  .december-option { min-height: 60px; padding: 10px 12px 10px 14px; }
+  .december-option-text b { font-size: 16px; }
+  .december-postcard-frame { margin: 2px 2px 20px; padding: 10px 10px 30px; }
+}

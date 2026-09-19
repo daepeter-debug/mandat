@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 19. 9. 2026 — Herňa a nová hra Do decembra (vetva herna-do-decembra, Codex + Claude)
+
+Záložka Denná hra sa mení na **Herňu** s výberom hier; výber je v adrese (`g=majority`, `g=december`). Denná väčšina ostáva bez zmeny logiky aj uložených hier.
+
+Nová hra **Do decembra**: fiktívne mesto Mandátovce, dvanásť mesačných správ s dvoma možnosťami, rozpočet v minciach (+1 mesačne), tri oblasti Školy, Zdravie a Doprava na stupnici 0–10, odložené účty, dlh s úspornými opatreniami a pohľadnica s hviezdami na konci. Denná sezóna je pre všetkých rovnaká; generátor prijme len sezónu, ktorá sa dá dohrať na tri hviezdy a zároveň sa v nej dá padnúť. Scéna mesta je izometrická dioráma kreslená v SVG podľa Codexovho konceptu (drevená doska, škola, radnica s vežou, poliklinika, rieka s mostom) a reaguje na rozhodnutia aj na ročné obdobie. Tridsať správ je fiktívnych; hra nehodnotí skutočné obce ani strany. Podrobnosti v `GAMES.md`.
+
+Codexov koncept (vygenerovaný obrázok) sa v rozhraní nepoužíva — obsahoval vlastné texty a nemohol by reagovať na rozhodnutia; slúžil ako zadanie smeru.
+
 ## 19. 9. 2026 — karta strany ukazuje aj výsledok volieb 2023 (vetva vysledok-2023, Claude)
 
 Dodatok: riadok je jemne podfarbený a písmo zväčšené na 12,5 px, teda na úroveň riadka s agentúrou. Plocha používa rovnakú svetlomodrú ako skratka strany v hlavičke karty (token `--secondary`), aby sa farby v záložke Strany neštiepili; čísla sú v tmavomodrej `--secondary-foreground`. Pôvodné svetlé 11,5 px bez plochy bolo na karte ťažko čitateľné, prvá verzia plochy bola šalviová.

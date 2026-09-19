@@ -390,3 +390,33 @@ assert.deepEqual(result2023('slovensko'), { kind: 'coalition', pct: 8.89, seats:
 assert.deepEqual(result2023('ku'), result2023('slovensko'), 'Kresťanská únia zdieľa výsledok koalície');
 assert.equal(result2023('pnp').kind, 'absent', 'Právo na pravdu v roku 2023 nekandidovalo');
 assert.equal(result2023('vidiek').kind, 'absent', 'Strana vidieka v roku 2023 nekandidovala');
+
+// Do decembra: každá správa má lacnú možnosť, odložené účty stihnú prísť do decembra, každý mesiac má z čoho vyberať
+// a sezóny z dátumov sú férové (dá sa dohrať na tri hviezdy, dá sa aj padnúť) bez záložného plánu.
+{
+  const dg = await import('../lib/december-game.ts');
+  const ids = new Set();
+  for (const e of dg.EVENTS) {
+    assert(!ids.has(e.id), `Do decembra: duplicitná správa ${e.id}`); ids.add(e.id);
+    assert(e.options.length === 2 && e.months.length > 0, `Do decembra: ${e.id} má dve možnosti a mesiace`);
+    assert(e.options.some(o => o.cost <= 1), `Do decembra: ${e.id} nemá lacnú možnosť`);
+    for (const o of e.options) {
+      assert(o.label.length <= 26 && o.hint.length <= 60, `Do decembra: ${e.id} má text pre mobil (${o.label.length}/${o.hint.length})`);
+      for (const value of Object.values(o.effect ?? {})) assert(Math.abs(value) <= 3, `Do decembra: ${e.id} mení oblasť najviac o 3`);
+      if (o.later) assert(Math.max(...e.months) + o.later.after <= 11, `Do decembra: odložený účet ${e.id} by prišiel po decembri`);
+      if (o.hint.includes('{month}')) assert(!!o.later, `Do decembra: ${e.id} spomína mesiac bez odloženého účtu`);
+    }
+  }
+  for (let m = 0; m < 12; m++) assert(dg.EVENTS.filter(e => e.months.includes(m)).length >= 8, `Do decembra: mesiac ${m + 1} má aspoň 8 správ`);
+  assert(dg.survey(dg.fallbackPlan).best === 3, 'Do decembra: záložná sezóna sa dá dohrať na tri hviezdy');
+  for (let i = 0; i < 14; i++) {
+    const day = new Date(Date.UTC(2026, 8, 19 + i)).toISOString().slice(0, 10);
+    const plan = dg.createSeason(day);
+    assert(!plan.fallback, `Do decembra: sezóna ${day} nepotrebuje záložný plán`);
+    const first = dg.replay(plan, Array(12).fill(0)), second = dg.replay(plan, Array(12).fill(1));
+    assert(first.ended && second.ended, `Do decembra: sezóna ${day} sa dá dohrať oboma krajnými cestami`);
+    assert(JSON.stringify(dg.replay(plan, [0, 1, 1, 0])) === JSON.stringify(dg.replay(plan, [0, 1, 1, 0])), 'Do decembra: prehratie je deterministické');
+  }
+  const bad = dg.readSave({ choices: [0, 1, 2, 'x', 1], stars: 7 });
+  assert(bad.choices.length === 3 && bad.stars === null, 'Do decembra: uložená hra sa čistí');
+}
