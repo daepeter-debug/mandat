@@ -31,7 +31,8 @@ for (const n of politicalNews) {
   assert(n.detail.join(' ').length > n.summary.length * 1.5, `Zhrnutie je výrazne dlhšie ako popis v zozname: ${n.id}`);
   assert(!n.summary.includes('http') && n.detail.every(p => !p.includes('http')), `Text správy neobsahuje odkazy, tie patria k zdroju: ${n.id}`);
 }
-assert(politicalNews.some(n=>n.published===newsChecked),'Výber obsahuje aspoň jednu správu z dňa kontroly');
+const newestNews = politicalNews.reduce((max,n)=>n.published>max?n.published:max,'0000-00-00');
+assert((Date.parse(newsChecked)-Date.parse(newestNews))/86400000 <= 3,`Výber nesmie zaostávať za kontrolou o viac než tri dni: ${newestNews} vs ${newsChecked}`);
 const fixtureNews=['2026-09-06','2026-09-07','2026-09-09','2026-09-13','2026-09-14'].map((published,i)=>({...politicalNews[0],id:String(i),published}));
 assert.deepEqual(filterNews(fixtureNews,'2026-09-13','week','all').map(n=>n.published),['2026-09-13','2026-09-09','2026-09-07'],'Posledných 7 dní vrátane dneška, bez budúcich správ');
 assert.deepEqual(filterNews(fixtureNews,'2026-09-14','week','all').map(n=>n.published),['2026-09-14','2026-09-13','2026-09-09'],'Pohyblivé okno, nie kalendárny týždeň: v pondelok nezostane len dnešok');

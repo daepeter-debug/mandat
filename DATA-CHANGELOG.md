@@ -1,5 +1,15 @@
 # Evidencia údajov a rozsahu
 
+## 19. 9. 2026 — správy za týždeň 15.–18. 9. (vetva spravy-19, Claude)
+
+Doplnených deväť správ od poslednej aktualizácie (14. 9.), kontrola zdrojov posunutá na 19. 9. Výber má 26 položiek, za posledných sedem dní ich je 14.
+
+Týždeň: otvorenie jesennej schôdze s vyše 300 bodmi (15. 9.), doručenie návrhu na odvolanie Tarabu prezidentovi a jeho odklad do návratu z USA (15. 9.), schválenie vyslania až 101 vojakov na východné krídlo NATO hlasmi koalície aj opozície (17. 9.), posun ústavnej zmeny o skrátení volebného obdobia referendom do druhého čítania (17. 9.), premiérovo spochybnenie článku 5 a reakcie prezidenta, Čaputovej a opozície (18. 9.), zrušená cesta na Ukrajinu a deklarácia Karpatskej osmičky bez neho (18. 9.), menovania v štátnej OKTE podľa Denníka N (18. 9.) a zastavenie spaľovne pri Dudinciach (18. 9.).
+
+Každá správa má krátky popis do zoznamu a vlastné zhrnutie v troch odsekoch, ktoré otvára titulok; zdroj je jeden konkrétny článok a odkaz naň je až v zhrnutí. Pri menovaniach v OKTE je výslovne uvedené, že ide o zistenia redakcie Denníka N bez overenia z druhého zdroja.
+
+Kontrola dát: pravidlo „aspoň jedna správa z dňa kontroly“ nahradené pravidlom, že najnovšia správa nesmie zaostávať za dňom kontroly o viac než tri dni. Kontrola môže prebehnúť ráno, keď ešte nové správy nevyšli; zaostávanie výberu však zachytí.
+
 ## 18. 9. 2026 — Denná väčšina: denný hlavolam (vetva denna-hra, Codex + Claude)
 
 Codex rozpracoval hru „Denná väčšina“ (lib/daily-game.ts, components/daily-game.tsx, app/daily-game.css) a narazil na limit; Claude ju dokončil na vetve `denna-hra`; po Petrovej kontrole lokálnej verzie nasadená. Pravidlá: šesť fiktívnych strán so 150 kreslami, nájsť koalíciu s aspoň 76 kreslami, najviac tri strany, jedna dvojica spolu nejde, zastúpené školstvo aj zdravotníctvo — vyhráva najtesnejšia možná väčšina. Zadanie je rovnaké pre všetkých podľa slovenského dátumu (deterministický generátor, 2000 pokusov, vždy práve jedno riešenie z troch strán s cieľom ≤ 87 kresiel); stres-test 400 dní dopredu neprešiel ani raz na záložný hlavolam. Tréning dá nové zadanie, výsledky a posledných 7 dní sa ukladajú len v prehliadači, zdieľanie neprezradí riešenie.
