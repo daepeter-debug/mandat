@@ -1,0 +1,9 @@
+{
+  "tool": "image_gen.imagegen",
+  "date": "2026-09-20",
+  "asset": "public/images/games/town-seasons-v2.webp",
+  "conversion": "Lossy WebP quality 90 via scripts/prepare-game-art.mjs; source in research/town-seasons-v2-source.png",
+  "source": "exec-36313b19-1cfb-4ecf-bee2-0ac73a11accd.png",
+  "reference": "exec-8b71bc12-8fed-47ca-a70e-f34d2b2e391a.png",
+  "prompt": "Generate a finished production game asset, NOT an interface. Use this reference only for the gorgeous detailed Central European miniature-town architecture/material/lighting. Remove all UI and all lettering. Single landscape 3:2 image, exactly FOUR equally-sized quadrants as a seamless 2x2 atlas, no gutters, labels or borders. Each quadrant is exactly the SAME beautiful carved wood and ceramic miniature town, camera and building layout. School on left, clocktower town hall center back, clinic right, warm windows, terracotta roof tiles, cobbled square, river and FULLY INTACT pristine small wooden bridge foreground. No broken bridge boards. TOP LEFT winter snow; TOP RIGHT spring blossom; BOTTOM LEFT rich summer foliage; BOTTOM RIGHT golden-orange autumn. Match original reference's sophisticated tactile handcrafted realism, dense beautiful town details, warm light and little evergreens, not flat geometric SVG or low poly. Entire small town visible, a little breathing room. Premium polished mobile game scenery. No people or text or numbers or signage anywhere. The bridge MUST be continuous without any missing planks. Four scene quadrants must align perfectly on the halfway lines."
+}

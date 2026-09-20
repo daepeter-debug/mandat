@@ -3,7 +3,7 @@
 import { lazy, Suspense, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { hemicycleSeats } from "@/lib/parliament";
-import DecemberTown from "@/components/december-town";
+import DecemberTown from "@/components/december-town-art";
 import "@/app/games-room.css";
 
 /*
@@ -44,7 +44,7 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
         </article>
         <article className="games-entry games-december">
           <div className="games-town"><DecemberTown month={11} flags={["bridge-fixed", "playground", "market", "tree", "bus", "led"]} decorative/></div>
-          <div className="games-entry-body"><h2>Do decembra</h2><div className="games-entry-meta"><span>Malé mesto, veľké rozhodnutia</span><span>5–8 min</span></div><p>Postaraj sa o Mandátovce. Dvanásť mesačných správ, dve možnosti pri každej — a rozpočet, ktorý nestačí na všetko.</p><p className="games-entry-detail">Denná sezóna rovnaká pre všetkých + tréning.</p><button type="button" className="games-play" data-game="december" onClick={() => open("december")}>Zahrať si <ArrowRight size={17} aria-hidden="true"/></button></div>
+          <div className="games-entry-body"><h2>Do decembra</h2><div className="games-entry-meta"><span>Malé mesto, veľké rozhodnutia</span><span>5–8 min</span></div><p>Postaraj sa o Mandátovce. Dvanásť mesačných správ, tri možnosti pri každej — a rozpočet, ktorý nestačí na všetko.</p><p className="games-entry-detail">Denná sezóna rovnaká pre všetkých + tréning.</p><button type="button" className="games-play" data-game="december" onClick={() => open("december")}>Zahrať si <ArrowRight size={17} aria-hidden="true"/></button></div>
         </article>
       </div>
       <p className="games-room-footnote">Fiktívne situácie, priestor na vlastné rozhodnutia. Hry nehodnotia skutočné politické strany ani obce.</p>

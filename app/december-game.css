@@ -13,7 +13,7 @@
 .december-town { display: block; width: 100%; height: auto; }
 .december-board { background: linear-gradient(180deg, #faf7ef 0%, #f3efe4 100%); border: 1px solid #e6e0d2; border-radius: 18px; padding: 14px 14px 12px; }
 .december-town * { transition: fill .7s ease, opacity .5s ease, stop-color .7s ease; }
-.december-town .dt-appear { animation: december-appear .6s cubic-bezier(.2, .9, .3, 1.2); transform-box: fill-box; transform-origin: 50% 100%; }
+.december-town .dt-appear { animation: december-appear .6s ease-out; transform-box: fill-box; transform-origin: 50% 100%; }
 .december-meters { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .december-meters li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px 8px; padding: 10px 12px; background: #fffefa; border: 1px solid #e6e0d2; border-radius: 10px; font-size: 13px; }
 .december-meters li > svg { color: var(--bar, #3f6b4b); }
@@ -36,7 +36,7 @@
 .december-options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 .december-option { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; min-height: 64px; padding: 12px 14px 12px 16px; border-radius: 12px; border: 1.5px solid #1f3554; background: #fffefa; color: #1f3554; text-align: left; cursor: pointer; touch-action: manipulation; transition: transform .12s ease, background-color .15s ease, box-shadow .15s ease; }
 .december-option.is-primary { background: #1f3554; color: #fffefa; }
-.december-option:hover { box-shadow: 0 6px 16px -10px rgba(31, 53, 84, .6); }
+.december-option:hover { background: #edf2e6; border-color: #306e59; }
 .december-option:active { transform: scale(.985); }
 .december-option-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .december-option-text b { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
@@ -47,7 +47,9 @@
 .is-primary .december-cost.is-free { background: rgba(255, 255, 255, .18); color: #fffefa; }
 .december-cost.is-gain { background: #dcf59b; color: #20392f; }
 .december-pending { list-style: none; margin: 16px 0 0; padding: 10px 12px; border-radius: 8px; background: #f4f6f0; font-size: 12.5px; line-height: 1.5; color: #4f6057; }
-.december-pending li::before { content: "⏳ "; }
+.december-pending li + li { margin-top: 6px; }
+.december-maintenance { font-size: 13px; line-height: 1.5; background: #f7ecd1; color: #705218; padding: 10px 12px; border-radius: 8px; margin-top: 12px; }
+.december-panel h2:focus { outline: none; }
 .december-income { margin: 12px 0 0; font-size: 12.5px; color: #4f6057; }
 .december-postcard-frame { position: relative; padding: 12px 12px 34px; background: #fffefa; border: 1px solid #d9dfd4; border-radius: 6px; box-shadow: 0 14px 30px -18px rgba(31, 53, 84, .6); transform: rotate(-1.2deg); margin: 4px 6px 22px; }
 .december-postcard-frame .december-town { border-radius: 4px; box-shadow: none; }

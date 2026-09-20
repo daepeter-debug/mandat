@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, CarFront, CircleHelp, Coins, GraduationCap, HeartPulse, RotateCcw, ScrollText, Share2, Star } from "lucide-react";
-import { createSeason, eventFor, EVENTS, grade, METERS, MONTHS, MONTHS_IN, previousDay, readSave, replay, slovakDay, type MeterId, type SeasonPlan } from "@/lib/december-game";
-import DecemberTown from "@/components/december-town";
+import { createSeason, eventFor, EVENTS, grade, METERS, MONTHS, MONTHS_IN, previousDay, readSave, replay, slovakDay, type Choice, type MeterId, type SeasonPlan } from "@/lib/december-game";
+import DecemberTown from "@/components/december-town-art";
 // Spoločné štýly hier (hlavička, prepínač režimu, týždenný pás, „Ako sa hrá“) sú v daily-game.css.
 import "@/app/daily-game.css";
 import "@/app/december-game.css";
 
 /*
-  Do decembra: dvanásť mestských správ, dve možnosti pri každej. Scéna hore reaguje na rozhodnutia,
+  Do decembra: dvanásť mestských správ, tri možnosti pri každej. Scéna hore reaguje na rozhodnutia,
   karta dole hovorí, čo sa práve deje. Denná sezóna je pre všetkých rovnaká a ukladá sa v prehliadači;
-  tréning má náhodné zrnko a neukladá sa. Formát ukladania: mandat:do-decembra:v1:<deň>.
+  tréning má náhodné zrnko a neukladá sa. Verzia 2 má nové pravidlá; staré uloženia neprepisuje.
 */
-const storageKey = (day: string) => `mandat:do-decembra:v1:${day}`;
+const storageKey = (day: string) => `mandat:do-decembra:v2:${day}`;
 const icons: Record<MeterId, typeof GraduationCap> = { schools: GraduationCap, health: HeartPulse, transport: CarFront };
 const loadChoices = (day: string) => { try { return readSave(JSON.parse(localStorage.getItem(storageKey(day)) ?? "null")).choices; } catch { return []; } };
 const loadHistory = (day: string) => {
@@ -41,7 +41,9 @@ export default function DecemberGame() {
 
 function Game({ day, id, training, onDaily, onTraining }: { day: string; id: string; training: boolean; onDaily: () => void; onTraining: () => void }) {
   const [plan] = useState<SeasonPlan>(() => createSeason(id));
-  const [choices, setChoices] = useState<(0 | 1)[]>(() => training ? [] : loadChoices(day));
+  const [choices, setChoices] = useState<Choice[]>(() => training ? [] : loadChoices(day));
+  const panel = useRef<HTMLDivElement>(null);
+  const nextInputAt = useRef(0);
   const [storageAvailable] = useState(() => { try { const k = "mandat:do-decembra:test"; localStorage.setItem(k, "1"); localStorage.removeItem(k); return true; } catch { return false; } });
   const [history] = useState(() => loadHistory(day));
   const [message, setMessage] = useState("");
@@ -54,7 +56,13 @@ function Game({ day, id, training, onDaily, onTraining }: { day: string; id: str
   }, [choices, day, training, storageAvailable, result]);
 
   const event = state.ended ? null : eventFor(plan, state);
-  const pick = (choice: 0 | 1) => setChoices(cs => cs.length < 12 ? [...cs, choice] : cs);
+  const pick = (choice: Choice, timestamp: number) => {
+    if (timestamp < nextInputAt.current || state.ended) return;
+    nextInputAt.current = timestamp + 500;
+    // Dvojklik nesmie spotrebovať aj rozhodnutie nasledujúceho mesiaca.
+    setChoices(cs => cs.length === state.log.length && cs.length < 12 && !state.ended ? [...cs, choice] : cs);
+    requestAnimationFrame(() => panel.current?.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true }));
+  };
   const reset = () => { setChoices([]); setMessage(""); setShareText(""); };
   const monthName = (m: number) => MONTHS_IN[Math.min(11, m)];
   const fillHint = (hint: string, month: number, after: number) => hint.replace("{month}", monthName(month + after).replace(/^./, c => c.toUpperCase()));
@@ -90,19 +98,19 @@ function Game({ day, id, training, onDaily, onTraining }: { day: string; id: str
         </ul>
         {state.coins < 0 && !state.ended && <p className="december-warning" role="status">Mesto je v dlhu: kým ho nesplatí, každý mesiac stráca 1 bod v každej oblasti.</p>}
       </div>
-      <div className="december-panel">
+      <div className="december-panel" ref={panel}>
         {event && !state.ended && <article className="december-event" aria-live="polite">
-          <p className="december-kicker">Mestské správy · {MONTHS[state.month]}</p>
-          <h2>{event.title}</h2>
+          <h2 tabIndex={-1}>{event.title}</h2>
           <p>{event.question}</p>
           <div className="december-options">
-            {event.options.map((o, i) => <button type="button" key={`${event.id}-${i}`} className={`december-option${i === 0 ? " is-primary" : ""}`} onClick={() => pick(i as 0 | 1)}>
+            {event.options.map((o, i) => <button type="button" key={`${event.id}-${i}`} className="december-option" onClick={e => pick(i as Choice, e.timeStamp)}>
               <span className="december-option-text"><b>{o.label}</b><small>{fillHint(o.hint, state.month, o.later?.after ?? 0)}</small></span>
               <span className={`december-cost${o.cost < 0 ? " is-gain" : o.cost === 0 ? " is-free" : ""}`}><Coins size={15} aria-hidden="true"/>{o.cost > 0 ? `−${o.cost}` : o.cost < 0 ? `+${-o.cost}` : "0"}</span>
             </button>)}
           </div>
+          {[2, 5, 8].includes(state.month) && <p className="december-maintenance">Budúci mesiac: opotrebovanie zníži všetky oblasti o 1 bod.</p>}
           {state.pending.length > 0 && <ul className="december-pending" aria-label="Odložené účty a odmeny">{state.pending.map((p, i) => <li key={i}>{monthName(p.due).replace(/^./, c => c.toUpperCase())}: {p.cost ? (p.cost > 0 ? `−${p.cost}` : `+${-p.cost}`) : "±0"} mincí · {p.note}</li>)}</ul>}
-          <p className="december-income">Príjem mesta: <b>+{state.income}</b> mincí mesačne{state.income !== 1 && " (upravený rozhodnutiami)"}.</p>
+          <p className="december-income">Mesačná bilancia: <b>{state.income >= 0 ? "+" : ""}{state.income}</b> mincí{state.income !== 1 && " (upravená rozhodnutiami)"}.</p>
         </article>}
         {state.ended && result && <article className="december-postcard">
           <div className={`december-postcard-frame stars-${result.stars}`}>
@@ -111,7 +119,7 @@ function Game({ day, id, training, onDaily, onTraining }: { day: string; id: str
             <p className="december-postcard-greeting">{state.ended.kind === "december" ? "Pozdrav z Mandátoviec" : "Posledný pozdrav z Mandátoviec"}</p>
           </div>
           <div className="december-stars" aria-label={`${result.stars} z 3 hviezd`}>{[0, 1, 2].map(i => <Star key={i} size={22} className={i < result.stars ? "is-on" : ""} aria-hidden="true"/>)}</div>
-          <h2>{result.title}</h2>
+          <h2 tabIndex={-1}>{result.title}</h2>
           <p>{result.text}</p>
           <div className="december-actions">
             {!training && <button type="button" className="december-primary" onClick={share}><Share2 size={16} aria-hidden="true"/> Zdieľať pohľadnicu</button>}
@@ -129,15 +137,17 @@ function Game({ day, id, training, onDaily, onTraining }: { day: string; id: str
         <details className="game-about december-about">
           <summary><CircleHelp size={16} aria-hidden="true"/> Ako sa hrá</summary>
           <ul>
-            <li>Každý mesiac príde jedna mestská správa s dvoma možnosťami. Jedna zväčša stojí mince, druhá stojí niečo iné.</li>
+            <li>Každý mesiac vyberáš z troch možností. Porovnaj cenu, účinok na služby a odložené záväzky — žiadna pozícia tlačidla neznamená správnu odpoveď.</li>
             <li>Mesto vyberá <b>+1 mincu</b> dane mesačne; rozhodnutia ho môžu zvýšiť aj znížiť. Odložené účty prídu v uvedenom mesiaci.</li>
             <li>Školy, Zdravie a Doprava sú na stupnici 0–10. Ak niektorá klesne na nulu, mesto to nezvládne a rok sa končí.</li>
             <li>Minúť viac, než máš, sa dá — v dlhu však mesto každý mesiac stráca bod v každej oblasti.</li>
-            <li>Tri hviezdy: všetky oblasti aspoň 7 a bez dlhu v decembri. Dve: všetky aspoň 5 a bez dlhu.</li>
+            <li>V apríli, júli a októbri opotrebovanie zníži všetky oblasti o 1 bod. Pred týmito mesiacmi zobrazíme upozornenie.</li>
+            <li>Tri hviezdy: všetky oblasti aspoň 7 a rezerva aspoň 3 mince v decembri. Dve: všetky aspoň 5 a bez dlhu.</li>
+            <li>Nová verzia má samostatnú históriu. Výsledky staršej verzie sa do nej neprenášajú.</li>
           </ul>
           <p>Fiktívne mesto, fiktívne správy. Hra nehodnotí skutočné obce ani strany; podobnosť s reálnym mostom je čisto štatistická.</p>
         </details>
-        {!training && <div className="game-week december-week"><h3>Tvojich posledných 7 dní</h3><div>{Array.from({ length: 7 }, (_, i) => previousDay(day, 6 - i)).map(date => { const stars = history.get(date) ?? (date === day ? result?.stars ?? null : null); return <span key={date} className={stars !== null ? "is-complete" : ""} title={`${date}: ${stars === null ? "nehrané" : `${stars} z 3 hviezd`}`}><small>{new Intl.DateTimeFormat("sk-SK", { weekday: "short" }).format(new Date(`${date}T12:00:00Z`))}</small><i>{stars === null ? date.slice(-2) : stars === 0 ? "×" : stars}</i></span>; })}</div><p>Číslo je počet hviezd, × je mesto, ktoré december nevidelo. {!storageAvailable && "Tento prehliadač neukladá rozohranú sezónu."}</p></div>}
+        {!training && <div className="game-week december-week"><h3>Tvojich posledných 7 dní</h3><div>{Array.from({ length: 7 }, (_, i) => previousDay(day, 6 - i)).map(date => { const stars = date === day ? result?.stars ?? null : history.get(date) ?? null; return <span key={date} className={stars !== null ? "is-complete" : ""} title={`${date}: ${stars === null ? "nehrané" : `${stars} z 3 hviezd`}`}><small>{new Intl.DateTimeFormat("sk-SK", { weekday: "short" }).format(new Date(`${date}T12:00:00Z`))}</small><i>{stars === null ? date.slice(-2) : stars === 0 ? "×" : stars}</i></span>; })}</div><p>Číslo je počet hviezd, × je mesto, ktoré december nevidelo. {!storageAvailable && "Tento prehliadač neukladá rozohranú sezónu."}</p></div>}
         {!state.ended && state.log.length > 0 && <button type="button" className="december-restart" onClick={reset}><RotateCcw size={14} aria-hidden="true"/> Začať sezónu odznova</button>}
       </div>
     </div>

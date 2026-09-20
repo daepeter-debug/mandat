@@ -1,0 +1,22 @@
+.town-art { position: relative; overflow: hidden; border-radius: 12px; }
+.town-art-scene { aspect-ratio: 3 / 2; background-image: url('/images/games/town-seasons-v2.webp'); background-size: 200% 200%; background-repeat: no-repeat; }
+.town-season-winter { background-position: 0 0; }
+.town-season-spring { background-position: 100% 0; }
+.town-season-summer { background-position: 0 100%; }
+.town-season-autumn { background-position: 100% 100%; }
+.town-marker { position: absolute; width: 44px; height: 44px; border: 1px solid #dacdb3; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #fffefa; color: #20392f; cursor: pointer; }
+.town-marker-school { top: 21%; left: 21%; }
+.town-marker-clinic { top: 45%; right: 12%; }
+.town-marker-bridge { top: 64%; left: 39%; }
+.town-marker.has-investment { background: #dcf59b; border-color: #4f6e45; }
+.town-marker span { position: absolute; top: -3px; right: -3px; background: #20392f; color: #fff; border-radius: 50%; width: 19px; height: 19px; font-size: 11px; display: grid; place-items: center; }
+.town-marker:hover { background: #e7efd9; }
+.town-marker:focus-visible { outline: 3px solid #306e59; outline-offset: 3px; }
+.town-detail { position: absolute; bottom: 33px; left: 10px; right: 10px; padding: 12px 14px; background: #fffefa; color: #20392f; border: 1px solid #dacdb3; border-radius: 12px; max-height: 65%; overflow-y: auto; z-index: 2; }
+.town-detail > div { display: flex; align-items: center; justify-content: space-between; }
+.town-detail button { min-width: 44px; min-height: 44px; display: grid; place-items: center; cursor: pointer; }
+.town-detail p, .town-detail ul { font-size: 13px; line-height: 1.6; margin: 0; padding: 0; list-style: none; }
+.town-detail li { display: flex; align-items: center; gap: 6px; }
+.town-caption { margin: 0; padding: 8px; text-align: center; font-size: 11px; line-height: 1.5; color: #4f6057; background: #faf7ef; }
+.games-town .town-art { width: 100%; height: 100%; }
+.games-town .town-art-scene { width: 100%; height: 100%; aspect-ratio: auto; }

@@ -398,7 +398,7 @@ assert.equal(result2023('vidiek').kind, 'absent', 'Strana vidieka v roku 2023 ne
   const ids = new Set();
   for (const e of dg.EVENTS) {
     assert(!ids.has(e.id), `Do decembra: duplicitná správa ${e.id}`); ids.add(e.id);
-    assert(e.options.length === 2 && e.months.length > 0, `Do decembra: ${e.id} má dve možnosti a mesiace`);
+    assert(e.options.length === 3 && e.months.length > 0, `Do decembra: ${e.id} má tri možnosti a mesiace`);
     assert(e.options.some(o => o.cost <= 1), `Do decembra: ${e.id} nemá lacnú možnosť`);
     for (const o of e.options) {
       assert(o.label.length <= 26 && o.hint.length <= 60, `Do decembra: ${e.id} má text pre mobil (${o.label.length}/${o.hint.length})`);
@@ -415,8 +415,26 @@ assert.equal(result2023('vidiek').kind, 'absent', 'Strana vidieka v roku 2023 ne
     assert(!plan.fallback, `Do decembra: sezóna ${day} nepotrebuje záložný plán`);
     const first = dg.replay(plan, Array(12).fill(0)), second = dg.replay(plan, Array(12).fill(1));
     assert(first.ended && second.ended, `Do decembra: sezóna ${day} sa dá dohrať oboma krajnými cestami`);
+    const path = dg.winningPath(plan);
+    assert(path && path.length === 12 && dg.grade(dg.replay(plan, path)).stars === 3, `Do decembra: overená víťazná cesta ${day}`);
+    for (const choice of [0, 1, 2]) assert(dg.grade(dg.replay(plan, Array(12).fill(choice))).stars < 3, `Do decembra: opakovanie ${choice} nevyhrá ${day}`);
     assert(JSON.stringify(dg.replay(plan, [0, 1, 1, 0])) === JSON.stringify(dg.replay(plan, [0, 1, 1, 0])), 'Do decembra: prehratie je deterministické');
   }
   const bad = dg.readSave({ choices: [0, 1, 2, 'x', 1], stars: 7 });
   assert(bad.choices.length === 3 && bad.stars === null, 'Do decembra: uložená hra sa čistí');
+  assert.deepEqual(bad.choices, [0, 1, 2], 'Do decembra: chybný ťah ukončí platný prefix, neposunie ďalšie mesiace');
+  const plan = dg.createSeason('2026-09-20');
+  const before = dg.start(plan);
+  const copy = JSON.stringify(before);
+  dg.choose(plan, before, 2);
+  assert.equal(JSON.stringify(before), copy, 'Do decembra: voľba nemení vstupný stav');
+  assert.equal(dg.choose(plan, before, 3), before, 'Do decembra: neplatná voľba sa ignoruje');
+  const result = dg.replay(plan, dg.winningPath(plan));
+  assert.equal(dg.choose(plan, result, 0), result, 'Do decembra: ukončená partia neprijíma ďalšie voľby');
+  const boundary = { ...dg.start(plan), month: 2, meters: { schools: 10, health: 10, transport: 10 }, coins: 100 };
+  const boundaryEvent = dg.eventFor(plan, boundary);
+  const option = boundaryEvent.options[0];
+  const april = dg.choose(plan, boundary, 0);
+  for (const {id} of dg.METERS) assert.equal(april.meters[id], Math.max(0, Math.min(10, 10 + (option.effect?.[id] ?? 0)) - 1), 'Do decembra: aprílové opotrebovanie');
+  assert.equal(dg.grade({ ...result, coins: 2 }).stars, 2, 'Do decembra: tri hviezdy vyžadujú rezervu');
 }

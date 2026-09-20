@@ -1,6 +1,6 @@
 /*
   Do decembra — fiktívne mesto Mandátovce, dvanásť mesiacov, dvanásť rozhodnutí.
-  Je to hra o rozpočte a prioritách: každý mesiac príde jedna mestská správa s dvoma možnosťami,
+  Je to hra o rozpočte a prioritách: každý mesiac príde jedna mestská správa s troma možnosťami,
   jedna zväčša stojí mince, druhá stojí niečo iné. Nehodnotí skutočné strany, obce ani ľudí.
   Rovnaký deň = rovnaká sezóna pre všetkých (zrnko z dátumu); tréning má náhodné zrnko.
 */
@@ -19,11 +19,12 @@ export type Effect = Partial<Record<MeterId, number>>;
 export type Flag = "bridge-fixed" | "bridge-temp" | "playground" | "gym-tarp" | "gym-roof" | "clinic-wing" | "ambulance" | "led" | "bus" | "fountain" | "market" | "tree" | "flood-wall" | "flooded" | "bike-path" | "trees" | "boiler" | "pool" | "path";
 export type Later = { after: number; cost?: number; effect?: Effect; add?: Flag[]; remove?: Flag[]; note: string };
 export type Option = { label: string; cost: number; hint: string; effect?: Effect; income?: number; add?: Flag[]; remove?: Flag[]; later?: Later };
-export type GameEvent = { id: string; title: string; question: string; months: number[]; requires?: Flag[]; forbids?: Flag[]; options: [Option, Option] };
+export type Choice = 0 | 1 | 2;
+export type GameEvent = { id: string; title: string; question: string; months: number[]; requires?: Flag[]; forbids?: Flag[]; options: [Option, Option, Option] };
 
 const ALL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 // V nápovede možnosti sa {month} nahradí mesiacom, keď príde odložený účet alebo odmena.
-export const EVENTS: GameEvent[] = [
+const BASE_EVENTS: (Omit<GameEvent, "options"> & { options: [Option, Option] })[] = [
   { id: "most", title: "Most má opäť vlastný názor na nosnosť.", question: "Opraviť hneď, alebo získať čas?", months: [1, 2, 3], forbids: ["bridge-fixed", "bridge-temp"], options: [
     { label: "Opraviť teraz", cost: 4, hint: "Doprava +2 · problém vyriešený", effect: { transport: 2 }, add: ["bridge-fixed"] },
     { label: "Dočasne zabezpečiť", cost: 1, hint: "Doprava −1 · {month} doplatíš 4 mince", effect: { transport: -1 }, add: ["bridge-temp"], later: { after: 4, cost: 4, effect: { transport: 1 }, add: ["bridge-fixed"], remove: ["bridge-temp"], note: "dokončenie mosta" } }] },
@@ -91,8 +92,8 @@ export const EVENTS: GameEvent[] = [
     { label: "Zaplatiť pokutu", cost: 2, hint: "Poriadok v účtoch · hotovo" },
     { label: "Odvolať sa", cost: 0, hint: "{month} prehráš a zaplatíš 3", later: { after: 2, cost: 3, note: "prehraté odvolanie" } }] },
   { id: "dar", title: "Rodák z Kanady poslal mestu dar: 4 mince.", question: "Kam ich dať?", months: ALL, options: [
-    { label: "Do školy", cost: -4, hint: "Školy +1 · +4 mince", effect: { schools: 1 } },
-    { label: "Do polikliniky", cost: -4, hint: "Zdravie +1 · +4 mince", effect: { health: 1 } }] },
+    { label: "Do školy", cost: -3, hint: "Školy +1 · 3 mince zostanú v rezerve", effect: { schools: 1 } },
+    { label: "Do polikliniky", cost: -3, hint: "Zdravie +1 · 3 mince zostanú v rezerve", effect: { health: 1 } }] },
   { id: "internet", title: "Škola nemá poriadny internet.", question: "Deti sťahujú úlohy cez mobil učiteľa.", months: ALL, options: [
     { label: "Optika do školy", cost: 2, hint: "Školy +1", effect: { schools: 1 } },
     { label: "Mobil učiteľa vydrží", cost: 0, hint: "Školy −1", effect: { schools: -1 } }] },
@@ -115,14 +116,59 @@ export const EVENTS: GameEvent[] = [
     { label: "Prispieť na techniku", cost: 2, hint: "Zdravie +1", effect: { health: 1 } },
     { label: "Vydrží ešte rok", cost: 0, hint: "Zdravie −1", effect: { health: -1 } }] },
 ];
+// Každá tretia cesta je autorská voľba, nie automatická kópia lacnej možnosti.
+const THIRD: Record<string, Option> = {
+  most: { label: "Obchádzka cez susedov", cost: 2, hint: "Doprava −1 · bez odloženého účtu", effect: { transport: -1 } },
+  sneh: { label: "Odhrnúť hlavné trasy", cost: 1, hint: "Doprava bez zmeny · Školy −1", effect: { schools: -1 } },
+  chripka: { label: "Výučba na diaľku", cost: 1, hint: "Zdravie +1 · Školy −1", effect: { health: 1, schools: -1 } },
+  kotol: { label: "Presunúť triedy", cost: 2, hint: "Školy bez zmeny · Doprava −1", effect: { transport: -1 } },
+  trhy: { label: "Komunitný jarmok", cost: 1, hint: "Zdravie +1 · Doprava −1", effect: { health: 1, transport: -1 }, add: ["market", "tree"] },
+  ihrisko: { label: "Otvoriť školský dvor", cost: 1, hint: "Školy +1 · Zdravie −1 (menej športových hodín)", effect: { schools: 1, health: -1 } },
+  lekar: { label: "Spoločná ambulancia", cost: 1, hint: "Zdravie bez zmeny · Doprava −1", effect: { transport: -1 } },
+  autobus: { label: "Školský mikrobus", cost: 1, hint: "Školy +1 · Doprava −1", effect: { schools: 1, transport: -1 }, add: ["bus"] },
+  cyklotrasa: { label: "Upraviť existujúcu cestu", cost: 1, hint: "Doprava +1 · Zdravie −1 (zmiešaná premávka)", effect: { transport: 1, health: -1 } },
+  vytlky: { label: "Opraviť úsek pri škole", cost: 1, hint: "Školy +1 · Doprava bez zmeny", effect: { schools: 1 } },
+  alej: { label: "Záchranný rez stromov", cost: 1, hint: "{month} Zdravie +2 · obnova potrebuje čas", later: { after: 1, effect: { health: 2 }, add: ["trees"], note: "obnova aleje" } },
+  povoden: { label: "Preventívna evakuácia", cost: 2, hint: "Zdravie +1 · Školy −1 · Doprava −1", effect: { health: 1, schools: -1, transport: -1 } },
+  horucavy: { label: "Otvoriť chladnú školu", cost: 0, hint: "Zdravie +1 · Školy −1", effect: { health: 1, schools: -1 } },
+  tabor: { label: "Denný tábor v škole", cost: 1, hint: "Školy bez zmeny · Zdravie +1", effect: { health: 1 } },
+  slavnosti: { label: "Prenajať námestie", cost: -1, hint: "+1 minca hneď · Doprava −1", effect: { transport: -1 } },
+  kupalisko: { label: "Kurzy v susednej obci", cost: 1, hint: "Školy +1 · Doprava −1", effect: { schools: 1, transport: -1 } },
+  ucitelka: { label: "Zdieľať učiteľa", cost: 2, hint: "Školy bez zmeny · Doprava −1", effect: { transport: -1 } },
+  kanaly: { label: "Zásah pri nemocnici", cost: 0, hint: "Zdravie +1 · Doprava −1", effect: { health: 1, transport: -1 } },
+  lampy: { label: "LED iba pri škole", cost: 1, hint: "Školy +1 · bez zvýšenia príjmu", effect: { schools: 1 } },
+  ultrazvuk: { label: "Prenájom prístroja", cost: 1, hint: "Zdravie +1 · príjem −1 mesačne", effect: { health: 1 }, income: -1 },
+  kamiony: { label: "Spoplatniť prejazd", cost: -2, hint: "+2 mince · Zdravie −1", effect: { health: -1 } },
+  audit: { label: "Doplniť doklady interne", cost: 1, hint: "Školy −1 · pracovníci riešia účty", effect: { schools: -1 } },
+  dar: { label: "Odložiť do rezervy", cost: -4, hint: "+4 mince · oblasti bez zmeny" },
+  internet: { label: "Zdieľané pripojenie", cost: 1, hint: "Školy bez zmeny · bez ďalších účtov" },
+  sanitka: { label: "Spoločná pohotovosť", cost: 1, hint: "Zdravie +1 · Doprava −1", effect: { health: 1, transport: -1 } },
+  chodnik: { label: "Dočasná školská ulica", cost: 1, hint: "Školy +1 · Doprava −1", effect: { schools: 1, transport: -1 } },
+  telocvicna: { label: "Zdieľať susednú halu", cost: 1, hint: "Školy bez zmeny · Doprava −1", effect: { transport: -1 } },
+  dusicky: { label: "Dobrovoľný sprievod", cost: 0, hint: "Zdravie bez zmeny · Doprava −1", effect: { transport: -1 } },
+  olympiada: { label: "Spolujazda s rodičmi", cost: 0, hint: "Školy +1 · Doprava −1", effect: { schools: 1, transport: -1 } },
+  hasici: { label: "Spoločná technika", cost: 1, hint: "Zdravie bez zmeny · Doprava −1", effect: { transport: -1 } },
+};
+export const EVENTS: GameEvent[] = BASE_EVENTS.map(event => ({ ...event,
+  // Plná investícia má vyššiu cenu, kompromis môže byť lepší pre konkrétny stav mesta.
+  options: [{ ...event.options[0], cost: event.options[0].cost >= 2 ? event.options[0].cost + 1 : event.options[0].cost }, event.options[1], THIRD[event.id]],
+}));
 const EVENTS_BY_MONTH = ALL.map(month => EVENTS.filter(e => e.months.includes(month)));
 
-export type TownState = { month: number; coins: number; income: number; meters: Record<MeterId, number>; flags: Flag[]; pending: (Later & { due: number })[]; log: { month: number; event: string; choice: 0 | 1 }[]; ended: { kind: "december" | "collapse"; month: number; meter?: MeterId } | null };
+export type TownState = { month: number; coins: number; income: number; meters: Record<MeterId, number>; flags: Flag[]; pending: (Later & { due: number })[]; log: { month: number; event: string; choice: Choice }[]; ended: { kind: "december" | "collapse"; month: number; meter?: MeterId } | null };
 export type SeasonPlan = { id: string; seed: string; startCoins: number; startMeters: Record<MeterId, number>; fallback?: boolean };
 export const INCOME = 1;
 
 function hash(text: string) { let seed = 2166136261; for (const char of text) seed = Math.imul(seed ^ char.charCodeAt(0), 16777619); return seed >>> 0; }
-function rng(text: string) { let s = hash(text) || 1; return () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) / 4294967296; }; }
+function rng(text: string) {
+  let seed = hash(text);
+  return () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let value = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    value ^= value + Math.imul(value ^ value >>> 7, 61 | value);
+    return ((value ^ value >>> 14) >>> 0) / 4294967296;
+  };
+}
 
 export function candidates(state: TownState) {
   const used = new Set(state.log.map(l => l.event));
@@ -145,8 +191,8 @@ function apply(s: TownState, effect?: Effect, add?: Flag[], remove?: Flag[]) {
 }
 const collapsed = (s: TownState) => METERS.find(m => s.meters[m.id] <= 0)?.id;
 
-export function choose(plan: SeasonPlan, state: TownState, choice: 0 | 1): TownState {
-  if (state.ended) return state;
+export function choose(plan: SeasonPlan, state: TownState, choice: Choice): TownState {
+  if (state.ended || ![0, 1, 2].includes(choice)) return state;
   const event = eventFor(plan, state);
   const option = event.options[choice];
   const s: TownState = { ...state, meters: { ...state.meters }, flags: [...state.flags], pending: [...state.pending], log: [...state.log, { month: state.month, event: event.id, choice }] };
@@ -163,12 +209,14 @@ export function choose(plan: SeasonPlan, state: TownState, choice: 0 | 1): TownS
   const due = s.pending.filter(p => p.due === s.month);
   s.pending = s.pending.filter(p => p.due !== s.month);
   for (const p of due) { s.coins -= p.cost ?? 0; apply(s, p.effect, p.add, p.remove); }
+  // Opotrebovanie je predvídateľné a viditeľné v pravidlách aj pri rozhodnutí.
+  if ([3, 6, 9].includes(s.month)) for (const m of METERS) s.meters[m.id] = clamp(s.meters[m.id] - 1);
   if (s.coins < 0) for (const m of METERS) s.meters[m.id] = clamp(s.meters[m.id] - 1);
   const dead2 = collapsed(s);
   if (dead2) return { ...s, ended: { kind: "collapse", month: s.month, meter: dead2 } };
   return s;
 }
-export function replay(plan: SeasonPlan, choices: (0 | 1)[]) {
+export function replay(plan: SeasonPlan, choices: Choice[]) {
   let s = start(plan);
   for (const c of choices) { if (s.ended) break; s = choose(plan, s, c); }
   return s;
@@ -181,43 +229,71 @@ export function grade(state: TownState): Grade {
     return { stars: 0, title: "Mesto to nezvládlo.", text: `${MONTHS_IN[state.ended.month].replace(/^./, c => c.toUpperCase())} klesla oblasť ${meter} na nulu. Skús inú postupnosť.` };
   }
   const low = Math.min(...METERS.map(m => state.meters[m.id]));
-  if (low >= 7 && state.coins >= 0) return { stars: 3, title: "Vzorové mesto.", text: "Všetky oblasti aspoň na 7 a bez dlhu. Sem sa chodí odpisovať." };
+  if (low >= 7 && state.coins >= 3) return { stars: 3, title: "Vzorové mesto.", text: "Všetky oblasti aspoň na 7 a rezerva aspoň 3 mince. Mesto je pripravené aj na ďalší rok." };
   if (low >= 5 && state.coins >= 0) return { stars: 2, title: "Stabilné mesto.", text: "Nič nespadlo, nikto neutiekol a účty sú zaplatené." };
   return { stars: 1, title: "Prežili sme.", text: state.coins < 0 ? "December prišiel, dlh ostal. Budúci rok bude o úsporách." : "December prišiel, no niektorá oblasť ledva dýcha." };
 }
 
-// Prehľad všetkých 4 096 ciest sezónou: sezóna je férová, keď sa dá dohrať na tri hviezdy a zároveň sa dá aj padnúť.
-export function survey(plan: SeasonPlan) {
-  let best = 0, collapses = 0, three = 0;
-  for (let mask = 0; mask < 4096; mask++) {
-    let s = start(plan);
-    for (let m = 0; m < 12 && !s.ended; m++) s = choose(plan, s, ((mask >> m) & 1) as 0 | 1);
-    const g = grade(s);
-    best = Math.max(best, g.stars);
-    if (g.stars === 3) three++;
-    if (s.ended?.kind === "collapse") collapses++;
+// Ohraničené hľadanie konkrétnej víťaznej cesty; nejde o vyčerpávajúci dôkaz všetkých ciest.
+// Na mobile neprechádzame 3^12 kombinácií pri každom otvorení hry.
+export function winningPath(plan: SeasonPlan): Choice[] | null {
+  let beam = [start(plan)];
+  const merit = (s: TownState) => Math.min(...Object.values(s.meters)) * 10 + Object.values(s.meters).reduce((a, b) => a + b, 0) * 2 + Math.min(s.coins, 16) * 1.3 + s.income * 3 - s.pending.reduce((a, p) => a + (p.cost ?? 0), 0);
+  for (let month = 0; month < 12; month++) {
+    const next = beam.flatMap(s => ([0, 1, 2] as Choice[]).map(c => choose(plan, s, c))).filter(s => s.ended?.kind !== "collapse");
+    const won = next.find(s => s.ended?.kind === "december" && grade(s).stars === 3);
+    if (won) return won.log.map(l => l.choice);
+    const unique = new Map<string, TownState>();
+    for (const s of next) {
+      const key = JSON.stringify([s.coins, s.income, s.meters, s.flags, s.pending, s.log.map(l => l.event)]);
+      if (!unique.has(key)) unique.set(key, s);
+    }
+    beam = [...unique.values()].sort((a, b) => merit(b) - merit(a)).slice(0, 96);
+    if (!beam.length) break;
   }
-  return { best, collapses, three };
+  return null;
 }
+export function survey(plan: SeasonPlan, samples = 256) {
+  let collapses = 0, three = 0, survives = 0;
+  const random = rng(`survey-v2:${plan.seed}`);
+  for (let path = 0; path < samples; path++) {
+    const s = replay(plan, Array.from({ length: 12 }, () => Math.floor(random() * 3) as Choice));
+    if (grade(s).stars === 3) three++;
+    if (s.ended?.kind === "collapse") collapses++; else survives++;
+  }
+  const solution = winningPath(plan);
+  return { best: solution ? 3 : 0, solution, collapses, survives, three, samples };
+}
+const planCache = new Map<string, SeasonPlan>();
 export function createSeason(id: string): SeasonPlan {
-  for (let trial = 0; trial < 40; trial++) {
+  const cached = planCache.get(id);
+  if (cached) return cached;
+  for (let trial = 0; trial < 24; trial++) {
     const seed = trial ? `${id}#${trial}` : id;
-    const r = rng(`mandatovce-v1:${seed}`);
-    const plan: SeasonPlan = { id, seed, startCoins: 8 + Math.floor(r() * 5), startMeters: { schools: 5 + Math.floor(r() * 3), health: 5 + Math.floor(r() * 3), transport: 5 + Math.floor(r() * 3) } };
-    const result = survey(plan);
-    if (result.best === 3 && result.collapses > 0 && result.three <= 2048) return plan;
+    const r = rng(`mandatovce-v2:${seed}`);
+    const plan: SeasonPlan = { id, seed, startCoins: 8 + Math.floor(r() * 3), startMeters: { schools: 6 + Math.floor(r() * 2), health: 6 + Math.floor(r() * 2), transport: 6 + Math.floor(r() * 2) } };
+    if (([0, 1, 2] as Choice[]).some(c => grade(replay(plan, Array(12).fill(c))).stars === 3)) continue;
+    if (winningPath(plan)) {
+      if (planCache.size >= 32) planCache.clear();
+      planCache.set(id, plan);
+      return plan;
+    }
   }
   return { ...fallbackPlan, id };
 }
 // Záložná sezóna pri vyčerpaní generátora; jej férovosť stráži verify-data.
-export const fallbackPlan: SeasonPlan = { id: "fallback", seed: "fallback", startCoins: 10, startMeters: { schools: 6, health: 6, transport: 6 }, fallback: true };
+export const fallbackPlan: SeasonPlan = { id: "fallback", seed: "2026-09-20#6", startCoins: 8, startMeters: { schools: 7, health: 6, transport: 7 }, fallback: true };
 
-export type DecemberSave = { choices: (0 | 1)[]; stars: number | null };
+export type DecemberSave = { choices: Choice[]; stars: number | null };
 export function readSave(value: unknown): DecemberSave {
   const empty: DecemberSave = { choices: [], stars: null };
   if (!value || typeof value !== "object") return empty;
   const s = value as Partial<DecemberSave>;
-  const choices = Array.isArray(s.choices) ? s.choices.filter((c): c is 0 | 1 => c === 0 || c === 1).slice(0, 12) : [];
+  const choices: Choice[] = [];
+  if (Array.isArray(s.choices)) for (const c of s.choices.slice(0, 12)) {
+    if (c !== 0 && c !== 1 && c !== 2) break;
+    choices.push(c);
+  }
   const stars = typeof s.stars === "number" && Number.isInteger(s.stars) && s.stars >= 0 && s.stars <= 3 ? s.stars : null;
   return { choices, stars };
 }
