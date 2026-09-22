@@ -13,9 +13,10 @@ import "@/app/games-room.css";
 */
 const DailyGame = lazy(() => import("@/components/daily-game"));
 const DecemberGame = lazy(() => import("@/components/december-game"));
+const RepublicGame = lazy(() => import("@/components/republic-game"));
 const seats = hemicycleSeats(150);
-export type GameId = "majority" | "december";
-export const gameIds: GameId[] = ["majority", "december"];
+export type GameId = "majority" | "december" | "republic";
+export const gameIds: GameId[] = ["majority", "december", "republic"];
 
 export default function GamesRoom({ game, onGame }: { game: GameId | null; onGame: (game: GameId | null) => void }) {
   const container = useRef<HTMLDivElement>(null);
@@ -34,7 +35,8 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
       <button type="button" className="games-back" onClick={() => open(null)}><ArrowLeft size={17} aria-hidden="true"/> Všetky hry</button>
       {game === "majority"
         ? <Suspense fallback={<p className="chart-loading" role="status">Načítavame Dennú väčšinu…</p>}><DailyGame/></Suspense>
-        : <Suspense fallback={<p className="chart-loading" role="status">Načítavame Mandátovce…</p>}><DecemberGame/></Suspense>}
+        : game === "december" ? <Suspense fallback={<p className="chart-loading" role="status">Načítavame Mandátovce…</p>}><DecemberGame/></Suspense>
+        : <Suspense fallback={<p className="chart-loading" role="status">Staviame Lipovú štvrť…</p>}><RepublicGame/></Suspense>}
     </> : <>
       <header className="games-room-heading"><h1>Herňa</h1><p>Na chvíľu vymeň prieskumy za vlastné ťahy. Dve hry, každá na pár minút, nová výzva každý deň.</p></header>
       <div className="games-collection">
@@ -45,6 +47,10 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
         <article className="games-entry games-december">
           <div className="games-town"><DecemberTown month={11} flags={["bridge-fixed", "playground", "market", "tree", "bus", "led"]} decorative/></div>
           <div className="games-entry-body"><h2>Do decembra</h2><div className="games-entry-meta"><span>Malé mesto, veľké rozhodnutia</span><span>5–8 min</span></div><p>Postaraj sa o Mandátovce. Dvanásť mesačných správ, tri možnosti pri každej — a rozpočet, ktorý nestačí na všetko.</p><p className="games-entry-detail">Denná sezóna rovnaká pre všetkých + tréning.</p><button type="button" className="games-play" data-game="december" onClick={() => open("december")}>Zahrať si <ArrowRight size={17} aria-hidden="true"/></button></div>
+        </article>
+        <article className="games-entry games-republic">
+          <div className="games-republic-art" aria-hidden="true"><i/><i/><i/><span><b>●</b><b>●</b><b>●</b></span></div>
+          <div className="games-entry-body"><h2>Malá republika</h2><div className="games-entry-meta"><span>Staviteľská logika</span><span>10–15 min</span></div><p>Vytvor vlastnú štvrť pri starej stanici. Cesty, služby, objavy a malý projekt na sedem dní.</p><p className="games-entry-detail">Bez účtu · mesto sa ukladá v tomto zariadení.</p><button type="button" className="games-play" data-game="republic" onClick={() => open("republic")}>Začať stavať <ArrowRight size={17} aria-hidden="true"/></button></div>
         </article>
       </div>
       <p className="games-room-footnote">Fiktívne situácie, priestor na vlastné rozhodnutia. Hry nehodnotia skutočné politické strany ani obce.</p>

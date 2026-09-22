@@ -16,6 +16,15 @@ Verzia 2 (20. 9. 2026): dvanásť mesiacov, každý mesiac jedna mestská správ
 - **Uloženie.** `mandat:do-decembra:v2:<deň>` = `{ choices: (0|1|2)[], stars }`; replay vytvorí stav podľa nových pravidiel. V1 sa nemení ani neprenáša, keďže rovnaké voľby už nemajú rovnaké následky. Pri neplatnej voľbe sa načíta iba platný prefix, aby sa neposunuli mesiace. Tréning sa neukladá.
 - **Pôvod.** ImageGen, referenčný návrh Codexu z 19. 9. 2026. Nový atlas je AI ilustrácia fiktívneho mesta, nie fotografia; nemá UI ani popisky. Presný generačný prompt a súbor pôvodu sú v `research/december-art-v2.json`. UI texty a tlačidlá sú samostatné HTML prvky.
 
+## Malá republika (`components/republic-game.tsx`, `lib/republic.ts`)
+
+Lokálna pokojná staviteľská hra v `?v=game&g=republic`. Hráč buduje Lipovú štvrť na mape 6 × 6; zapojenie ciest začína na námestí a služby majú dosah dve políčka. Prvá kapitola „Stanica znova žije“ má sedem denných krokov a tri rovnocenné podoby starej haly.
+
+- **Uloženie.** Stav je verziovaný a uložený iba v `localStorage` pod vlastným kľúčom. Účty a cloudové uloženie nie sú súčasťou tejto verzie.
+- **Denný rytmus.** Dátum používa časové pásmo Europe/Bratislava. Zásielky sa kumulujú najviac tri, tri objednávky sa otáčajú v pevnom sedemdňovom cykle a projekt povoľuje najviac jeden krok za deň.
+- **Zásielky.** Ponuka je stabilná aj po obnovení stránky. Bežná/neobvyklá/vzácna/epická trieda má podiel 60/25/12/3; nová dekorácia dá 8 mincí a 4 materiály, duplikát 2 materiály. Po finále si hráč zvolí ľubovoľnú dekoráciu.
+- **Vizuál a ovládanie.** Mapa je SVG postavené zo skutočného herného stavu, nie jeden ilustračný obrázok. Tlačidlá majú dotykové rozmery, klávesnicový fokus a pokojné live oznámenia o potvrdených zmenách.
+
 ## Overenie
 
 `node scripts/verify-data.mjs` stráži tri možnosti, lacnú voľbu, dĺžky textov, termíny, konkrétne víťazné cesty, neúspech opakovania jednej voľby, replay, nemennosť vstupu, opotrebovanie, rezervu a ignorovanie ťahov po konci. TypeScript, ESLint a dátové kontroly prešli pre V2. Pôvodná V1 bola vizuálne overená na 1280 a 375 px; toto NIE JE overenie V2. Lokálny Vite v Codexe zatiaľ blokuje `spawn EPERM`; vizuál V2 treba overiť pri funkčnom náhľade alebo po zostavení na Cloudflare. Používateľ autorizoval priame nasadenie po kontrolách.
