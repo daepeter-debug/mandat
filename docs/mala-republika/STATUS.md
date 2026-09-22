@@ -39,3 +39,14 @@ Pridaj dátum, presné dokončené funkcie, zmenené súbory/commit, spustené k
 - Pre úplný manuálny audit pred vydaním treba opakovať vizuálnu kontrolu na fyzickom 360/390 px mobile a s čítačkou obrazovky. Responzívne pravidlá, veľké dotykové ciele, fokus a live región sú už v implementácii.
 
 **Konkrétny ďalší krok:** používateľ otvorí lokálnu hru na mobile, vyskúša prvú dennú úlohu a potvrdí, či tempo a ekonomika siedmich návštev vyhovujú; potom sa rozhodne medzi doladením hry a priechodom B.
+
+## 22. 9. 2026 — kontrolný a opravný priechod (Astra → Claude)
+
+Astra začala opravný priechod (pravidlá odmien, presun až po potvrdení, rozlíšiteľná grafika budov, náhľad pred potvrdením, zoznam políčok, ochrana uloženia pri dvoch kartách) a skončila na limite s rozpracovanými súbormi, ktoré neprešli TypeScriptom. Claude priechod dokončil:
+
+- Opravené typy: odmena kroku sa odovzdáva ako dve čísla (`reward(s, step.reward[0], step.reward[1])`), zámok Web Locks má explicitný generický typ; odstránený nepoužitý import. `tsc --noEmit`, ESLint (app, components, lib, scripts), `verify-republic` (73 celých ciest kapitoly s bežnými zdrojmi, tri vetvy, dátumy, geometria, odmeny, uloženie, súbeh dvoch kariet) a `verify-data` prechádzajú.
+- Režim Cesty ostáva zapnutý aj po potvrdení políčka, aby sa dalo kresliť viac políčok za sebou; ukončí ho Escape, krížik alebo opätovné klepnutie na Cesty.
+- Overené v prehliadači na 1280 px aj 375 px: vstup z Herne (tretia karta), stavba parku cez Stavať → políčko → náhľad ceny a napojenia → Potvrdiť, dokončenie prvého kroku (+2/+1, ďalší krok až zajtra), otvorenie zásielky (tri karty bežnej triedy, výber, +8/+4, ponuka prežije zatvorenie dialógu), vyzdvihnutie objednávky Zapoj školu (+2/+1, druhýkrát zamknuté), detail domu → Presunúť s pôvodnou polohou až do potvrdenia, položenie cesty, prepínač Zoznam a políčka (36 políčok, 8 budov), zbierka s odomknutou lavičkou, obnovenie stránky so zachovaným stavom. Mobil: bez horizontálneho posunu stránky, akčné tlačidlá 48 px, katalóg 3 stĺpce, dialóg zásielky sa zmestí na šírku.
+- Hra je nasadená spolu s Herňou (odkaz `?v=game&g=republic`); ukladá sa len v prehliadači, účty nie sú súčasťou.
+
+**Konkrétny ďalší krok:** Peter si zahrá prvé dni na mobile; podľa pocitu z tempa sa rozhodne o priechode B (účty a cloudové uloženie podľa TERRA.md/TECH.md) alebo o ďalšom ladení obsahu (Luna).

@@ -4,6 +4,7 @@ import { lazy, Suspense, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { hemicycleSeats } from "@/lib/parliament";
 import DecemberTown from "@/components/december-town-art";
+import RepublicArt from "@/components/republic-art";
 import "@/app/games-room.css";
 
 /*
@@ -38,7 +39,7 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
         : game === "december" ? <Suspense fallback={<p className="chart-loading" role="status">Načítavame Mandátovce…</p>}><DecemberGame/></Suspense>
         : <Suspense fallback={<p className="chart-loading" role="status">Staviame Lipovú štvrť…</p>}><RepublicGame/></Suspense>}
     </> : <>
-      <header className="games-room-heading"><h1>Herňa</h1><p>Na chvíľu vymeň prieskumy za vlastné ťahy. Dve hry, každá na pár minút, nová výzva každý deň.</p></header>
+      <header className="games-room-heading"><h1>Herňa</h1><p>Na chvíľu vymeň prieskumy za vlastné ťahy. Tri hry, tri rôzne svety a dôvod vrátiť sa aj zajtra.</p></header>
       <div className="games-collection">
         <article className="games-entry games-majority">
           <div className="games-parliament" aria-hidden="true"><svg viewBox="-1.08 -1.08 2.16 1.2">{seats.map((seat, i) => <circle key={i} cx={seat.x} cy={seat.y} r="0.023" fill={i < 35 ? "#496bd1" : i < 76 ? "#dcf59b" : "#536e61"}/>)}</svg><span>76 <small>zo 150 kresiel</small></span></div>
@@ -49,7 +50,7 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
           <div className="games-entry-body"><h2>Do decembra</h2><div className="games-entry-meta"><span>Malé mesto, veľké rozhodnutia</span><span>5–8 min</span></div><p>Postaraj sa o Mandátovce. Dvanásť mesačných správ, tri možnosti pri každej — a rozpočet, ktorý nestačí na všetko.</p><p className="games-entry-detail">Denná sezóna rovnaká pre všetkých + tréning.</p><button type="button" className="games-play" data-game="december" onClick={() => open("december")}>Zahrať si <ArrowRight size={17} aria-hidden="true"/></button></div>
         </article>
         <article className="games-entry games-republic">
-          <div className="games-republic-art" aria-hidden="true"><i/><i/><i/><span><b>●</b><b>●</b><b>●</b></span></div>
+          <div className="games-republic-art" aria-hidden="true"><RepublicArt id="school"/><RepublicArt id="station" branch="museum"/><RepublicArt id="park"/></div>
           <div className="games-entry-body"><h2>Malá republika</h2><div className="games-entry-meta"><span>Staviteľská logika</span><span>10–15 min</span></div><p>Vytvor vlastnú štvrť pri starej stanici. Cesty, služby, objavy a malý projekt na sedem dní.</p><p className="games-entry-detail">Bez účtu · mesto sa ukladá v tomto zariadení.</p><button type="button" className="games-play" data-game="republic" onClick={() => open("republic")}>Začať stavať <ArrowRight size={17} aria-hidden="true"/></button></div>
         </article>
       </div>

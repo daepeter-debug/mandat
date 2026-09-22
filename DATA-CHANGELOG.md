@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 22. 9. 2026 — tretia hra Herne: Malá republika (Codex Terra/Astra + Claude)
+
+Herňa má tretiu kartu **Malá republika** (`?v=game&g=republic`): pokojná staviteľská hra na mape 6 × 6 s fiktívnou Lipovou štvrťou. Cesty začínajú na námestí, služby majú dosah dve políčka, dva zdroje (mince a materiál) bez dlhu, zásielky s dekoráciami štyroch tried (60/25/12/3 %), tri denné objednávky v pevnom sedemdňovom cykle a kapitola „Stanica znova žije“ so siedmimi krokmi (jeden denne) a tromi rovnocennými podobami starej haly. Postavy Eva, Milan a Nina sú fiktívne; hra nehodnotí skutočné obce ani strany.
+
+Hru navrhol a implementoval Codex (návrh Astra, prototyp Terra, opravný priechod Astra) podľa balíka v `docs/mala-republika/`; Claude dokončil prerušený opravný priechod (typy, režim ciest), overil hru v prehliadači na desktope aj mobile a nasadil ju. Stav sa ukladá iba v prehliadači (`mandat:republic:v1:guest`) s verziou, revíziou a ochranou pred prepísaním z druhej karty; pri poškodenom uložení hra ponúkne stiahnutie zálohy namiesto tichého prepísania. Kontrola `scripts/verify-republic.mjs` prehrá 73 celých ciest kapitoly s bežnými zdrojmi. Podrobný stav je v `docs/mala-republika/STATUS.md`, pravidlá v `GAMES.md`.
+
 ## 19. 9. 2026 — Herňa a nová hra Do decembra (vetva herna-do-decembra, Codex + Claude)
 
 Záložka Denná hra sa mení na **Herňu** s výberom hier; výber je v adrese (`g=majority`, `g=december`). Denná väčšina ostáva bez zmeny logiky aj uložených hier.
