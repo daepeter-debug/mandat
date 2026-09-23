@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Strany: porovnanie vedľa seba (Claude)
+
+Na stránke Strany pribudlo porovnanie dvoch alebo troch strán (`components/party-compare.tsx`, načítava sa až pri otvorení stránky). Pre každú stranu: dnešná podpora v Modeli Mandát s pásmom a stavom pri hranici 5 %, orientačné kreslá s rozpätím, zmena za 30 dní, výsledok volieb 2023 (pri OĽANO a priateľoch ako koalícia), čas vo vláde od roku 1993 (rovnaký výpočet ako Zodpovednosť, bez predchodcov), nárok na štátne príspevky 2023–2027, kto je na čele a počet overených programových dokumentov s najnovším. Predvolene sú vybrané tri najsilnejšie strany; výber je v adrese (`?v=parties&porovnaj=ps,smer,slovensko`). Na mobile sú hodnoty v stĺpcoch pod názvom riadku. Z úvodu stránky Strany vedie na porovnanie odkaz.
+
 ## 23. 9. 2026 — Strany: koľko dostanú od štátu (Claude)
 
 Nárok na štátne príspevky bol doteraz len v profile každej strany. Na stránke Strany pribudol spoločný prehľad za volebné obdobie 2023–2027 (`components/party-money.tsx`, výpočet `lib/party-funding.ts` sa nemenil): spolu 92,9 mil. € pre 9 subjektov nad 3 %, 26,08 € za hlas (13,04 € jednorazovo a rovnako na činnosť), 39 120 € ročne za každý z prvých 20 mandátov a asi 35 € na voliča strany v parlamente. Stĺpec pri každom subjekte delí sumu na príspevok za hlasy, na činnosť a na mandáty; pri strane je aj suma na voliča (strany bez mandátu 26 €). Poznámka uvádza najtesnejší subjekt pod hranicou nároku a koľko hlasov mu chýbalo. Ide o nárok zo zákona, nie o skutočne vyplatené sumy.
