@@ -5,7 +5,6 @@ import { ArrowDown, ArrowUpRight, CalendarDays } from "lucide-react";
 import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
-import ResponsibilityScale from "@/components/responsibility-scale";
 import { edition, signed, signedInt } from "@/lib/edition";
 import { date } from "@/lib/polls";
 
@@ -84,7 +83,6 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, pa
       <details className="election-explanation"><summary>O odpočte a zdrojoch</summary><p>Odpočítavame kalendárne mesiace do septembra 2027, nie dni do vyhlásených volieb. Ide o orientačný horizont riadnych volieb. Po overení oficiálneho termínu môžeme zobraziť presné odpočítavanie.</p><a href="https://www.minv.sk/?volby-nrsr" target="_blank" rel="noopener noreferrer">Voľby do NR SR · Ministerstvo vnútra <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noopener noreferrer">Obrys mapy · Natural Earth <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><p>Mapa je grafický motív. Farby nezobrazujú regionálnu podporu strán.</p></details>
     </aside>
     </div>
-    <ResponsibilityScale onNavigate={onNavigate}/>
     <ParliamentNow onNavigate={onNavigate} view={parliament} onView={onParliament} partners={parliamentPartners} onPartners={onParliamentPartners}/>
     <PoliticalNewsFeed compact onOpen={()=>onNavigate('news')} onOpenNews={onOpenNews}/>
   </section>;

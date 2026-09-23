@@ -36,6 +36,8 @@ function Result2023Line({partyId}:{partyId:string}) {
 const ArchiveChart = lazy(() => import("@/components/archive-chart"));
 // Hospodárenie štátu má vlastný graf a tabuľky; načíta sa až pri otvorení záložky.
 const PublicFinance = lazy(() => import("@/components/public-finance"));
+// Zodpovednosť za stav krajiny (čas strán vo vláde od 1993) má vlastnú záložku; načíta sa pri otvorení.
+const ResponsibilityPage = lazy(() => import("@/components/responsibility-page"));
 // Herňa (výber hier) sa načíta až pri otvorení záložky; samotné hry ešte o krok neskôr.
 const GamesRoom = lazy(() => import("@/components/games-room"));
 import { gameIds, type GameId } from "@/components/games-room";
@@ -49,7 +51,7 @@ import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, 
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
 const primaryAgencies = ["AKO","FOCUS","INFOSTAT","IPSOS","NMS"];
-const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},{id:"finance",label:"Hospodárenie"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"game",label:"Herňa"},{id:"method",label:"O dátach"}];
+const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},{id:"finance",label:"Hospodárenie"},{id:"responsibility",label:"Zodpovednosť"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"game",label:"Herňa"},{id:"method",label:"O dátach"}];
 const viewIds = views.map(v=>v.id);
 const periods = ["3","5","9"];
 const defaultActive = ["ps","smer","rep","slovensko","sas"];
@@ -234,6 +236,7 @@ export default function Home() {
         <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="game"><Suspense fallback={<p className="chart-loading">Načítavame herňu…</p>}><GamesRoom game={ui.game} onGame={g=>update({game:g})}/></Suspense></TabsContent>
+        <TabsContent value="responsibility"><Suspense fallback={<p className="chart-loading">Načítavame prehľad vlád…</p>}><ResponsibilityPage onParty={id=>setParty(parties.find(p=>p.id===id)??null)} onFinance={()=>{update({view:"finance",finance:"governments"},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense></TabsContent>
         <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>
         {casesEnabled&&<TabsContent value="cases"><Suspense fallback={<p className="chart-loading">Načítavame register…</p>}><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></Suspense></TabsContent>}
         <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>

@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Zodpovednosť za stav krajiny ako samostatná záložka (vetva zodpovednost-sekcia, Claude)
+
+Karta „Zodpovednosť za stav krajiny“ odišla z úvodnej strany do vlastnej záložky **Zodpovednosť** (`?v=responsibility`, za Hospodárením; na mobile aj dlaždica v rozcestníku). Úvod má teraz úvodník, parlament a správy: od 1700 px v troch stĺpcoch, užšie parlament pod úvodníkom.
+
+Sekcia ukazuje rovnaké údaje ako karta, len rozvinuté: päť kľúčových čísel (najdlhšie vo vláde SNS 47 % v šiestich vládach, najdlhšie na čele vlády SMER 44 %, 14 vlád a 9 premiérov, šesť dnešných strán nikdy nevládlo a majú spolu 38 % v Modeli Mandát, súčasná vláda), časovú os všetkých vlád od 1. 1. 1993 s pásom pre každú dnešnú aj zaniknutú stranu (plná farba = premiér zo strany; na mobile sa os posúva a názvy strán ostávajú na mieste), škálu zodpovednosti s logami (dnešné strany otvárajú profil, zaniknuté majú osud strany), zoznam vlád s premiérom, obdobím, trvaním a koalíciou (neskorší vstup Demokratov a Strany vidieka do kabinetu je odlíšený) s odkazom na hospodárenie vlád, a metodiku s poznámkami a zdrojmi pri každom období. Údaje sa nemenili (stav k 13. 9. 2026); vlády sa presunuli do `lib/cabinets.ts`, aby sekcia nenačítavala dáta Eurostatu. Kontrola dát overuje aj vlády, v ktorých strany sedeli, a príznak premiéra.
+
 ## 23. 9. 2026 — Malá republika: nová grafika stolovej diorámy (vetva republika-grafika, Claude)
 
 Peter chcel grafiku aspoň na úrovni Astry. Pôvodné kúsky boli ploché šikmé tvary bez spoločnej perspektívy; teraz sú všetky budovy, ozdoby aj mapa prekreslené v jednej izometrii s mapou, zo spoločných stavebníc (kvádre, sedlové a valbové strechy s radmi škridiel, rizality, komíny a vežičky z hrebeňa, okná s teplým svetlom, hodiny, stromy). Každý z 12 typov budov a 12 ozdôb má vlastnú siluetu, dom tri podoby a stanica štyri stavy (stará so zatlčenými oknami a dierou v streche, múzeum, tržnica v hale, komunitná hala; po otvorení girlandy). Mapa je drevená doska so zeminou, les za štvrťou, železnica s priecestím pri stanici, potok vpredu a vyrytý názov štvrte na hrane dosky. Odznaky napojenia sa ukazujú len pri budovách (ozdoby cestu nepotrebujú). Herné pravidlá, uloženie ani ovládanie sa nemenili; kontrola `verify-republic` (73 ciest) prechádza.

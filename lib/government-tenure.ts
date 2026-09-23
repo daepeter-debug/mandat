@@ -152,12 +152,17 @@ function monthWord(value: number) {
   return 'mesiacov';
 }
 
-export function tenureLabel(entry: GovernmentTenure, asOf = tenureAsOf) {
-  const { days, years, months } = tenureDuration(entry, asOf);
+/** Dĺžka v rokoch a mesiacoch slovom, napríklad „2 roky 10 mesiacov“. */
+export function durationLabel(days: number) {
+  const totalMonths = Math.floor(days / 30.436875), years = Math.floor(totalMonths / 12), months = totalMonths % 12;
   if (days === 0) return 'bez účasti';
-  if (years === 0) return `${months} ${monthWord(months)}`;
+  if (years === 0) return `${Math.max(1, months)} ${monthWord(Math.max(1, months))}`;
   if (months === 0) return `${years} ${yearWord(years)}`;
   return `${years} ${yearWord(years)} ${months} ${monthWord(months)}`;
+}
+
+export function tenureLabel(entry: GovernmentTenure, asOf = tenureAsOf) {
+  return durationLabel(tenureDays(entry, asOf));
 }
 
 export function formatTenureDate(value: string) {

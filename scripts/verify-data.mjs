@@ -9,6 +9,7 @@ import { programmes, positions } from '../lib/programmes.ts';
 import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, aggregatePolls, currentAggregate } from '../lib/aggregate.ts';
 import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../lib/blocs.ts';
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
+import { durationLabel } from '../lib/government-tenure.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
 import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
 import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes, result2023, coalition2023 } from '../lib/parliament.ts';
@@ -253,6 +254,16 @@ const sdku = inactiveRows.find(r => r.id === 'sdku');
 assert(sdku.led === sdku.days && sdku.tier === 'čiastočná', 'SDKÚ viedla vládu vždy, keď v nej bola');
 assert(inactiveRows.find(r => r.id === 'siet').days < 200 && inactiveRows.find(r => r.id === 'du').days < 300, 'Krátke účasti Siete a DÚ');
 assert(responsibilityGroups(inactiveRows).flatMap(g => g.rows).length === inactiveRows.length, 'Skupiny škály pokrývajú aj neaktívne strany');
+
+// Sekcia Zodpovednosť: vlády, v ktorých strana sedela, a obdobia s premiérom zo strany
+for (const r of [...resp, ...inactiveRows]) {
+  assert.equal(r.cabinets.length > 0, r.days > 0, `Strana s účasťou má aspoň jednu vládu a bez účasti žiadnu: ${r.id}`);
+  assert(r.periods.every(p => typeof p.led === 'boolean'), `Obdobie má príznak premiéra: ${r.id}`);
+}
+assert.deepEqual(resp.find(r => r.id === 'sns').cabinets.map(c => c.id), ['meciar2', 'meciar3', 'fico1', 'fico3', 'pellegrini', 'fico4'], 'SNS sedela v šiestich vládach');
+assert.deepEqual(resp.find(r => r.id === 'kdh').cabinets.map(c => c.id), ['moravcik', 'dzurinda1', 'dzurinda2', 'radicova'], 'KDH vrátane vlády Dzurinda I cez SDK');
+assert(resp.find(r => r.id === 'smer').periods.every(p => p.led) && resp.find(r => r.id === 'sns').periods.every(p => !p.led), 'Premiér zo SMER-u, nikdy zo SNS');
+assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durationLabel(1035)], ['bez účasti', '1 mesiac', '1 rok', '2 roky 10 mesiacov'], 'Dĺžka slovom');
 
 // Titulná strana: hlavná správa z Modelu Mandát a zmeny za 30 dní
 assert.equal(edition.now.coalition + edition.now.opposition + edition.now.others, 150, 'Kreslá blokov dnes dávajú 150');

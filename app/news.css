@@ -1,7 +1,7 @@
 /* A compact news column and reading pages in Mandát's existing paper palette. */
 /* Úvod: úvodník, karty Zodpovednosť a Parlament dnes, panel správ. Od 1700 px jeden rad štyroch stĺpcov, pod tým úvodník cez dva stĺpce s kartami pod ním a správami vpravo. */
-.editorial-shell.with-party-rail .national-intro{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(340px,440px);grid-template-areas:"copy copy news" "resp parliament news";gap:24px;align-items:stretch;padding:32px 0}
-@media(min-width:1700px){.editorial-shell.with-party-rail .national-intro{grid-template-columns:minmax(0,1.12fr) minmax(0,.92fr) minmax(0,.86fr) minmax(0,1.1fr);grid-template-areas:"copy resp parliament news";align-items:stretch}.with-party-rail .national-copy h1{font-size:clamp(28px,2vw,38px)}}
+.editorial-shell.with-party-rail .national-intro{grid-template-columns:minmax(0,1fr) minmax(340px,440px);grid-template-areas:"copy news" "parliament news";gap:24px;align-items:stretch;padding:32px 0}
+@media(min-width:1700px){.editorial-shell.with-party-rail .national-intro{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"copy parliament news";align-items:stretch}.with-party-rail .national-copy h1{font-size:clamp(28px,2vw,38px)}}
 .national-copy{grid-area:copy;min-width:0}
 .news-digest{grid-area:news;align-self:stretch;display:flex;flex-direction:column}
 .news-digest .news-scroll{flex:1 1 0px;height:0;min-height:220px}
@@ -156,59 +156,19 @@
 .news-digest :focus-visible,.news-page :focus-visible,.cases-page :focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 @media(hover:hover){.news-entry h3 button:hover{text-decoration:underline;text-underline-offset:3px}.news-open:hover{color:var(--primary)}.case-party-tags button:hover{background:#dce7d3}}
 /* Zodpovednosť za stav krajiny: teplý pergamenový odtieň (história), Parlament dnes chladný šalviový (inštitúcia), správy zelené. */
-.responsibility{grid-area:resp;--card-muted:#5f5b47;--card-line:#dbd3ba;min-width:0;padding:16px 18px 14px;background:#f3efe2;border:1px solid #dfd7bf;border-radius:12px;display:flex;flex-direction:column;gap:9px}
-.responsibility-content{display:flex;flex:1;flex-direction:column;gap:9px;min-width:0}
-.responsibility-mobile-summary,.responsibility-toggle{display:none}
-.responsibility-head{display:flex;justify-content:space-between;align-items:baseline;gap:6px 10px;flex-wrap:wrap}
-.responsibility-head h2{font-size:17px;font-weight:550;letter-spacing:-.02em;margin:0;color:var(--mag-ink)}
-.responsibility-head span{font-size:11px;color:var(--card-muted);white-space:nowrap}
-.responsibility-group{display:grid;gap:5px}
-.responsibility-group+.responsibility-group{padding-top:7px;border-top:1px solid var(--card-line)}
-.responsibility-group h3{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0;font-size:10px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--card-muted)}
-.responsibility-group h3 small{font-size:10px;font-weight:500;letter-spacing:0;text-transform:none}
-.responsibility-list{list-style:none;margin:0;padding:0;display:grid;gap:5px}
-.responsibility-list li{display:grid;grid-template-columns:minmax(84px,auto) minmax(0,1fr) auto;gap:0 8px;align-items:center;min-height:18px}
-.responsibility-name{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;letter-spacing:.02em;color:var(--mag-ink);white-space:nowrap}
-.responsibility-name i{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-.responsibility-bar{position:relative;display:block;height:8px;background:#e4ddc7;border-radius:3px;overflow:hidden}
-.responsibility-bar i,.responsibility-bar b{position:absolute;left:0;top:0;bottom:0;border-radius:3px;min-width:2px}
-.responsibility-value{display:inline-flex;align-items:baseline;justify-content:flex-end;gap:6px;font-variant-numeric:tabular-nums}
-.responsibility-value b{font-size:12.5px;font-weight:600;letter-spacing:-.02em;color:var(--mag-ink);min-width:40px;text-align:right}
-.responsibility-value small{font-size:10px;color:var(--card-muted);min-width:34px;text-align:right}
-.responsibility-inactive{padding-top:7px;border-top:1px solid var(--card-line)}
-.responsibility-inactive summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none;cursor:pointer;min-height:24px;font-size:10px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--card-muted)}
-.responsibility-inactive summary::-webkit-details-marker{display:none}
-.responsibility-inactive summary>span{display:inline-flex;align-items:center;gap:6px}
-.responsibility-inactive summary>span::before{content:"";width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor;transition:transform .15s}
-.responsibility-inactive[open] summary>span::before{transform:rotate(180deg)}
-.responsibility-inactive summary b{font-size:9.5px;font-weight:650;letter-spacing:0;background:#e4ddc7;border-radius:8px;padding:1px 6px;color:var(--mag-ink)}
-.responsibility-inactive summary small{font-size:10px;font-weight:500;letter-spacing:0;text-transform:none}
-.responsibility-inactive-body{display:grid;gap:7px;margin-top:7px;max-height:250px;overflow-y:auto;overscroll-behavior:contain;padding-right:6px;scrollbar-width:thin;scrollbar-color:#c9bf9f #f3efe2}
-.responsibility-inactive-body .responsibility-group:first-child{padding-top:0;border-top:0}
-.responsibility-inactive-note{font-size:10px;line-height:1.5;color:var(--card-muted);margin:0;padding-top:7px;border-top:1px solid var(--card-line)}
-.responsibility-never{font-size:10.5px;line-height:1.5;color:var(--card-muted);margin:0;padding-top:7px;border-top:1px solid var(--card-line)}
-.responsibility-never b{font-size:10px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
-.responsibility-never abbr{text-decoration:none;cursor:help}
-.responsibility-legend{margin:0;font-size:10px;line-height:1.5;color:var(--card-muted)}
-.responsibility-legend i{display:inline-block;width:14px;height:8px;border-radius:2px;background:#5f5b47;margin-right:5px;vertical-align:middle}
-.responsibility-legend .is-coalition{opacity:.38}
-.responsibility-legend .is-led{margin-left:10px}
-.responsibility-note{font-size:10.5px;line-height:1.6;color:var(--card-muted);margin:auto 0 0}
-.responsibility-note a,.responsibility-note button{display:inline-flex;align-items:center;gap:2px;background:none;border:0;padding:0;font:inherit;font-weight:600;color:var(--mag-ink);text-decoration:underline;text-underline-offset:2px;cursor:pointer;min-height:24px}
-@media(max-width:1200px){.editorial-shell.with-party-rail .national-intro{gap:20px;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(300px,380px)}.news-digest{padding:15px 15px 0}.news-digest .news-heading{flex-wrap:wrap}.editorial-shell .nav-tabs{gap:20px}.editorial-shell .nav-tabs [role=tab]{font-size:12px}}
-@media(max-width:960px){.editorial-shell.with-party-rail .national-intro{grid-template-columns:1fr;grid-template-areas:"copy" "news" "parliament" "resp";gap:22px}.parliament-now,.responsibility{max-width:none}.news-digest{align-self:start;display:block}.news-digest .news-scroll{flex:none;height:auto;min-height:0;max-height:240px}.news-digest .news-heading{flex-wrap:nowrap}.news-digest .news-scroll{max-height:240px}.cases-intro{grid-template-columns:1fr;gap:12px}.case-entry{grid-template-columns:145px minmax(0,1fr);gap:20px}}
-@media(max-width:600px){.editorial-shell.with-party-rail .national-intro{padding:25px 0}.national-copy>.election-countdown{margin-top:20px;grid-template-columns:100px 1fr;gap:3px 14px}.news-digest .news-scroll{max-height:250px}.news-heading{flex-wrap:wrap;gap:12px}.news-heading h1,.news-heading h2{font-size:31px}.news-entry h3{font-size:19px}.news-entry p{font-size:13px}.news-filters{gap:12px}.case-filters>label:not(.case-search){flex:1;min-width:0;display:grid;gap:4px}.case-filters .case-search{flex-basis:100%}.case-entry{grid-template-columns:1fr;gap:15px}.case-status-column{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 13px}.case-severity{padding:5px 9px}.case-copy h2{font-size:23px}.news-source,.case-party-tags button{min-height:36px}.news-digest .news-source{min-height:32px}.news-checked{font-size:10px}.responsibility{padding:16px}.responsibility-mobile-summary{display:block;margin:2px 0 0;font-size:12px;line-height:1.55;color:var(--card-muted)}.responsibility-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:8px 0;background:none;border:0;border-top:1px solid var(--card-line);color:var(--mag-ink);font:inherit;font-size:12px;font-weight:600;cursor:pointer}.responsibility-toggle svg{transition:transform .18s ease}.responsibility-toggle[aria-expanded=true] svg{transform:rotate(180deg)}.responsibility-content:not(.is-expanded){display:none}}
+@media(max-width:1200px){.editorial-shell.with-party-rail .national-intro{gap:20px;grid-template-columns:minmax(0,1fr) minmax(300px,380px)}.news-digest{padding:15px 15px 0}.news-digest .news-heading{flex-wrap:wrap}.editorial-shell .nav-tabs{gap:20px}.editorial-shell .nav-tabs [role=tab]{font-size:12px}}
+@media(max-width:960px){.editorial-shell.with-party-rail .national-intro{grid-template-columns:1fr;grid-template-areas:"copy" "news" "parliament";gap:22px}.parliament-now,.news-digest{align-self:start;display:block}.news-digest .news-scroll{flex:none;height:auto;min-height:0;max-height:240px}.news-digest .news-heading{flex-wrap:nowrap}.news-digest .news-scroll{max-height:240px}.cases-intro{grid-template-columns:1fr;gap:12px}.case-entry{grid-template-columns:145px minmax(0,1fr);gap:20px}}
+@media(max-width:600px){.editorial-shell.with-party-rail .national-intro{padding:25px 0}.national-copy>.election-countdown{margin-top:20px;grid-template-columns:100px 1fr;gap:3px 14px}.news-digest .news-scroll{max-height:250px}.news-heading{flex-wrap:wrap;gap:12px}.news-heading h1,.news-heading h2{font-size:31px}.news-entry h3{font-size:19px}.news-entry p{font-size:13px}.news-filters{gap:12px}.case-filters>label:not(.case-search){flex:1;min-width:0;display:grid;gap:4px}.case-filters .case-search{flex-basis:100%}.case-entry{grid-template-columns:1fr;gap:15px}.case-status-column{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 13px}.case-severity{padding:5px 9px}.case-copy h2{font-size:23px}.news-source,.case-party-tags button{min-height:36px}.news-digest .news-source{min-height:32px}.news-checked{font-size:10px}}
 
 .case-more,.archive-more{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;min-height:50px;margin-top:14px;padding:10px 14px;border:1px solid var(--border);border-radius:7px;background:var(--card);color:var(--mag-ink);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 .case-more span,.archive-more span{color:var(--text-3);font-size:11px;font-weight:500;font-variant-numeric:tabular-nums}
 @media(hover:hover){.case-more:hover,.archive-more:hover{border-color:#9fb3a5;background:#f8faf5}}
 @media(max-width:600px){.case-filters>label:not(.case-search){flex:1 1 100%}.case-filters select{width:100%;min-width:0;max-width:100%}}
-@media(max-width:1100px){.editorial-shell.with-party-rail .national-intro{grid-template-columns:1fr;grid-template-areas:"copy" "news" "parliament" "resp";gap:22px}.parliament-now,.responsibility{max-width:none}.news-digest{align-self:start;display:block}.news-digest .news-scroll{flex:none;height:auto;min-height:0;max-height:240px}.news-digest .news-heading{flex-wrap:nowrap}}
-@media(max-width:600px){.cases-intro summary,.case-copy summary,.case-party-tags button,.news-source,.news-digest .news-source,.responsibility-inactive summary,.responsibility-note a,.responsibility-note button,.profile-cases-link{min-height:44px}}
+@media(max-width:1100px){.editorial-shell.with-party-rail .national-intro{grid-template-columns:1fr;grid-template-areas:"copy" "news" "parliament";gap:22px}.parliament-now,.news-digest{align-self:start;display:block}.news-digest .news-scroll{flex:none;height:auto;min-height:0;max-height:240px}.news-digest .news-heading{flex-wrap:nowrap}}
+@media(max-width:600px){.cases-intro summary,.case-copy summary,.case-party-tags button,.news-source,.news-digest .news-source,.profile-cases-link{min-height:44px}}
 
 /* Mobil (vetva mobil): typografické minimum 12 px v kartách úvodu a panel správ skrátený na dve správy bez vnútorného posúvania. */
 @media(max-width:600px){
-.responsibility-head span,.responsibility-name{font-size:12px}.responsibility-value b{font-size:14px;min-width:46px}.responsibility-value small{font-size:11.5px;min-width:42px}.responsibility-group h3,.responsibility-group h3 small{font-size:11px}.responsibility-legend,.responsibility-never,.responsibility-note,.responsibility-inactive-note{font-size:12px}.responsibility-never b,.responsibility-inactive summary{font-size:11px}.responsibility-inactive summary small{font-size:11.5px}.responsibility-list{gap:7px}.responsibility-list li{gap:0 10px;min-height:22px}
 .parliament-now-head span,.parliament-now-blocs dt,.parliament-now-note{font-size:12px}.parliament-now-list{font-size:13px}
 .news-checked,.news-digest .news-checked,.news-digest .news-entry-meta,.news-digest .news-entry-meta>span,.news-digest .news-source{font-size:11.5px}
 .news-digest .news-scroll{max-height:none;overflow:visible;padding-right:0}.news-digest .news-scroll>.news-entry:nth-child(n+4){display:none}
@@ -276,9 +236,6 @@ html .lab-input-row input[type=number]{width:68px}
 /* Podlaha drobného písma na desktope: rovnaké minimum ako na mobile, karty sú dosť široké. */
 @media(min-width:761px){
 .news-digest .news-entry-meta,.news-digest .news-entry-meta>span,.news-digest .news-checked,.news-checked{font-size:12px}
-.responsibility-value small{font-size:11.5px;min-width:44px}
-.responsibility-never,.responsibility-legend,.responsibility-note,.responsibility-inactive-note{font-size:11.5px}
-.responsibility-name,.responsibility-head span{font-size:11.5px}
 .party-rail-value small{font-size:11px}
 .party-monogram,.party-card-top span{font-size:12px}
 }
