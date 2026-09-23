@@ -7,4 +7,6 @@
 .listen-text{display:grid;text-align:left;font-size:13px;font-weight:650;line-height:1.2}
 .listen-text small{font-size:11px;font-weight:500;color:var(--text-3)}
 .listen-button[aria-pressed=true] .listen-icon{background:#2f6b3f}
-@media(prefers-reduced-motion:reduce){.listen-button::before{transition:none}}
+.listen-button[aria-busy=true] .listen-icon svg{animation:listen-spin .9s linear infinite}
+@keyframes listen-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.listen-button::before{transition:none}.listen-button[aria-busy=true] .listen-icon svg{animation:none}}

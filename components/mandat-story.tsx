@@ -13,6 +13,7 @@ import { isBirthYear } from "@/lib/your-slovakia";
 import { storyCardImage } from "@/components/story-image";
 import storyAudio from "@/lib/audio/story.json";
 import { voiceItem } from "@/lib/voice";
+import { audioBlobUrl, unlockAudio } from "@/lib/audio-play";
 import "@/app/story.css";
 
 /*
@@ -145,23 +146,31 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
   const after = (run: () => void) => { close(); window.setTimeout(run, 60); };
   const drag = (dy: number) => cardRef.current?.style.setProperty("--drag", `${Math.max(0, dy)}px`);
   const say = (text: string) => { setToast(text); window.setTimeout(() => setToast(""), 2600); };
-  // Hlas: prvé spustenie musí byť po ťuknutí (prehliadače inak zvuk nepustia); potom hrá každá karta sama.
+  // Hlas: prvé spustenie musí byť po ťuknutí (prehliadače inak zvuk nepustia) — prvok sa odomkne hneď v ťuknutí
+  // a všetky karty sa stiahnu dopredu (lib/audio-play: blob: adresy kvôli Safari); potom hrá každá karta sama.
   function toggleVoice() {
     const next = !voiceOn;
     setVoiceOn(next);
     if (!next) { voice.current?.pause(); return; }
-    const a = voice.current ?? (voice.current = new Audio());
-    a.src = audioSlides[slide.id]?.src ?? "";
-    a.currentTime = 0;
-    void a.play().catch(() => setVoiceOn(false));
+    unlockAudio(voice.current ?? (voice.current = new Audio()));
+    for (const s of slides) { const src = audioSlides[s.id]?.src; if (src) void audioBlobUrl(src).catch(() => {}); }
     track("story", "voice");
   }
   useEffect(() => {
     const a = voice.current;
     if (!voiceOn || !a) return;
     const src = audioSlides[slide.id]?.src;
-    if (src && !a.src.endsWith(src)) { a.src = src; a.currentTime = 0; }
-    if (paused || hold || sharing) a.pause(); else void a.play().catch(() => {});
+    if (!src) { a.pause(); return; }
+    const stopped = paused || hold || sharing;
+    if (a.dataset.loaded === src) { if (stopped) a.pause(); else void a.play().catch(() => {}); return; }
+    let live = true;
+    a.pause();
+    void audioBlobUrl(src).then(url => {
+      if (!live) return;
+      a.src = url; a.dataset.loaded = src; a.currentTime = 0;
+      if (!stopped) void a.play().catch(e => { if ((e as Error).name === "NotAllowedError") setVoiceOn(false); });
+    }).catch(() => {});
+    return () => { live = false; };
   }, [voiceOn, slide.id, paused, hold, sharing]);
   useEffect(() => () => voice.current?.pause(), []);
   const duration = voiceOn ? Math.max(slide.ms, (audioSlides[slide.id]?.ms ?? 0) + 700) : slide.ms;
