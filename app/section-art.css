@@ -1,0 +1,21 @@
+/* Ilustrácia v hlavičke sekcie (components/section-art.tsx): text vľavo, obrázok vpravo; na úzkom displeji pod textom. */
+.section-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,44%);gap:18px 40px;align-items:center}
+.section-hero>.news-heading{flex-direction:column;gap:16px}
+.section-hero>.news-heading .news-selection{align-self:flex-start}
+.section-hero>.games-room-heading,.section-hero>.intro{margin:0;padding:0}
+/* odsadenia, ktoré mali pôvodné hlavičky, nesie obal */
+.section-hero:has(>.intro){padding:18px 0 32px}
+.section-hero:has(>.games-room-heading){margin-bottom:28px}
+.section-art{margin:0;min-width:0}
+.section-art img{display:block;width:100%;height:auto;aspect-ratio:1280/714;border-radius:10px;background:#efe8d9;box-shadow:0 1px 2px #20392f14,0 14px 30px -18px #20392f59}
+.section-art figcaption{margin-top:7px;font-size:11px;line-height:1.4;color:var(--text-3);text-align:right}
+@media(max-width:760px){.section-hero:has(>.intro){padding:9px 0 26px}.section-hero:has(>.games-room-heading){margin-bottom:20px}}
+@media(max-width:900px){
+  .section-hero{grid-template-columns:1fr}
+  .section-art{max-width:620px}
+  .section-art figcaption{text-align:left}
+}
+/* Vlastný model: nadpis s textom vľavo, ilustrácia vpravo */
+.lab-intro:has(>.section-art){grid-template-columns:minmax(0,1fr) minmax(300px,44%);gap:24px 40px}
+.lab-intro:has(>.section-art) h1{margin-bottom:22px}
+@media(max-width:900px){.lab-intro:has(>.section-art){grid-template-columns:1fr}}

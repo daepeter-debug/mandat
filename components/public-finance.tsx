@@ -6,6 +6,7 @@ import { cabinets, cabinetSummaries, compareV4, debtBrake, debtPerCapita, events
 import { inactiveParties } from '@/lib/government-tenure-inactive';
 import { date, parties } from '@/lib/polls';
 import logos from '@/lib/party-logos.json';
+import SectionArt from '@/components/section-art';
 
 const FinanceChart = lazy(() => import('@/components/finance-chart'));
 const LivingChart = lazy(() => import('@/components/living-chart'));
@@ -279,7 +280,7 @@ export default function PublicFinance({ view, onView }: { view: string; onView: 
   const first = financeYears[0], last = latestFinanceYear;
   const financeViews = active === 'years' || active === 'governments';
   return <section className="finance-page" aria-labelledby="finance-title">
-    <header className="news-heading"><div><h1 id="finance-title">Ako hospodári štát.</h1><p>Koľko verejná správa každý rok minie nad svoje príjmy, koľko dlhu sa nazbieralo, ako sa žije a ako sme na tom oproti susedom. Roky {first.year}–{last.year} podľa Eurostatu a Štatistického úradu SR.</p></div><span className="news-selection">Eurostat · údaje k {date(financeFetched)}</span></header>
+    <div className="section-hero"><header className="news-heading"><div><h1 id="finance-title">Ako hospodári štát.</h1><p>Koľko verejná správa každý rok minie nad svoje príjmy, koľko dlhu sa nazbieralo, ako sa žije a ako sme na tom oproti susedom. Roky {first.year}–{last.year} podľa Eurostatu a Štatistického úradu SR.</p></div><span className="news-selection">Eurostat · údaje k {date(financeFetched)}</span></header><SectionArt name="hospodarenie"/></div>
     <div className="finance-switch" role="group" aria-label="Pohľad na hospodárenie">
       {views.map(([id, label]) => <button key={id} type="button" aria-pressed={active === id} onClick={() => onView(id)}>{label}</button>)}
     </div>

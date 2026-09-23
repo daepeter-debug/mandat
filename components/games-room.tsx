@@ -6,6 +6,7 @@ import { hemicycleSeats } from "@/lib/parliament";
 import DecemberTown from "@/components/december-town-art";
 import RepublicArt from "@/components/republic-art";
 import "@/app/games-room.css";
+import SectionArt from "@/components/section-art";
 
 /*
   Herňa: jedna záložka, viac hier. Výber hry je v adrese (g=majority | g=december), aby sa dal
@@ -39,7 +40,7 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
         : game === "december" ? <Suspense fallback={<p className="chart-loading" role="status">Načítavame Mandátovce…</p>}><DecemberGame/></Suspense>
         : <Suspense fallback={<p className="chart-loading" role="status">Staviame Lipovú štvrť…</p>}><RepublicGame/></Suspense>}
     </> : <>
-      <header className="games-room-heading"><h1>Herňa</h1><p>Na chvíľu vymeň prieskumy za vlastné ťahy. Tri hry, tri rôzne svety a dôvod vrátiť sa aj zajtra.</p></header>
+      <div className="section-hero"><header className="games-room-heading"><h1>Herňa</h1><p>Na chvíľu vymeň prieskumy za vlastné ťahy. Tri hry, tri rôzne svety a dôvod vrátiť sa aj zajtra.</p></header><SectionArt name="mala-republika"/></div>
       <div className="games-collection">
         <article className="games-entry games-majority">
           <div className="games-parliament" aria-hidden="true"><svg viewBox="-1.08 -1.08 2.16 1.2">{seats.map((seat, i) => <circle key={i} cx={seat.x} cy={seat.y} r="0.023" fill={i < 35 ? "#496bd1" : i < 76 ? "#dcf59b" : "#536e61"}/>)}</svg><span>76 <small>zo 150 kresiel</small></span></div>

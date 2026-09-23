@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — ilustrácie v hlavičkách sekcií (vetva ilustracie-ai, Claude)
+
+Päť sekcií dostalo v hlavičke ilustráciu v štýle ručne robenej stolovej diorámy: Zodpovednosť (model parlamentnej sály), Hospodárenie (domy na minciach v účtovnej knihe), Prieskumy (stĺpcový graf z drevených kociek na námestí), Vlastný model (škola s volebnou miestnosťou) a Herňa (Malá republika). Obrázky vytvoril Peter v Higgsfield (Nano Banana Pro, bezplatný plán); pri Malej republike boli referenciou naša herná grafika a štýlová dioráma. Na obrázkoch nie sú skutoční ľudia, strany, logá ani vlajky. Vodoznak Higgsfield ostáva a pod každým obrázkom je popis „Ilustrácia vytvorená pomocou AI“. Originály v plnej veľkosti sú mimo repa (`outputs/higgsfield`); na web idú WebP varianty 720 a 1280 px (`public/images/illustrations`, 23–99 kB). Komponent `components/section-art.tsx`: na počítači je obrázok vpravo od nadpisu, na mobile pod ním.
+
 ## 23. 9. 2026 — nové logo: polkruh parlamentu (vetva logo-polkruh, Claude)
 
 Šikmé stĺpčeky v logu pripomínali značku Tatra banky, čo sa pre nezávislý politický web nehodí. Nové logo je malý polkruh jedenástich kresiel, tmavá väčšina šiestich a svetlá menšina piatich, teda motív polkruhu 150 kresiel z webu. Je v hlavičke aj v pätičke (`components/brand-mark.tsx`); ikona webu (`public/favicon.svg`) má zjednodušený polkruh s ôsmimi kreslami, aby bol čitateľný aj pri 16 px. Pätička má farbu hlavičky namiesto starej modrej.

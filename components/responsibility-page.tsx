@@ -10,6 +10,7 @@ import { currentAggregate } from "@/lib/aggregate";
 import { fmt } from "@/lib/polls";
 import logos from "@/lib/party-logos.json";
 import "@/app/responsibility.css";
+import SectionArt from "@/components/section-art";
 
 /*
   Sekcia Zodpovednosť za stav krajiny: koľko času strávila každá strana vo vláde od 1. 1. 1993,
@@ -179,7 +180,7 @@ export default function ResponsibilityPage({ onParty, onFinance }: { onParty: (i
   const never = rows.filter(r => r.days === 0).sort((x, y) => (currentAggregate.values[y.id]?.value ?? -1) - (currentAggregate.values[x.id]?.value ?? -1));
   const maxShare = Math.max(...rows.map(r => r.share), ...inactive.map(r => r.share));
   return <section className="resp-page" aria-labelledby="resp-title">
-    <header className="news-heading"><div><h1 id="resp-title">Kto nesie zodpovednosť za stav krajiny.</h1><p>Koľko času strávila každá strana vo vláde od vzniku samostatného Slovenska 1. 1. 1993, v ktorých vládach sedela a kedy mala premiéra. Meriame čas pri moci, nie výsledky vládnutia.</p></div><span className="news-selection">Údaje k {formatTenureDate(tenureAsOf)}</span></header>
+    <div className="section-hero"><header className="news-heading"><div><h1 id="resp-title">Kto nesie zodpovednosť za stav krajiny.</h1><p>Koľko času strávila každá strana vo vláde od vzniku samostatného Slovenska 1. 1. 1993, v ktorých vládach sedela a kedy mala premiéra. Meriame čas pri moci, nie výsledky vládnutia.</p></div><span className="news-selection">Údaje k {formatTenureDate(tenureAsOf)}</span></header><SectionArt name="zodpovednost"/></div>
     <Kpis rows={rows}/>
     <section className="resp-block" aria-labelledby="resp-timeline-title">
       <div className="resp-block-head"><div><h2 id="resp-timeline-title">{Math.floor(responsibilityTotalDays / 365.25)} rokov vlád na jednej osi</h2><p>Každý riadok je strana, každý pás jedno obdobie vo vláde. Svetlé pozadie oddeľuje jednotlivé vlády. Presné dátumy sú pri páse a v zozname vlád nižšie.</p></div></div>
