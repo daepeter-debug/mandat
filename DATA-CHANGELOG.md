@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — nové logo: polkruh parlamentu (vetva logo-polkruh, Claude)
+
+Šikmé stĺpčeky v logu pripomínali značku Tatra banky, čo sa pre nezávislý politický web nehodí. Nové logo je malý polkruh jedenástich kresiel, tmavá väčšina šiestich a svetlá menšina piatich, teda motív polkruhu 150 kresiel z webu. Je v hlavičke aj v pätičke (`components/brand-mark.tsx`); ikona webu (`public/favicon.svg`) má zjednodušený polkruh s ôsmimi kreslami, aby bol čitateľný aj pri 16 px. Pätička má farbu hlavičky namiesto starej modrej.
+
 ## 23. 9. 2026 — Zodpovednosť za stav krajiny ako samostatná záložka (vetva zodpovednost-sekcia, Claude)
 
 Karta „Zodpovednosť za stav krajiny“ odišla z úvodnej strany do vlastnej záložky **Zodpovednosť** (`?v=responsibility`, za Hospodárením; na mobile aj dlaždica v rozcestníku). Úvod má teraz úvodník, parlament a správy: od 1700 px v troch stĺpcoch, užšie parlament pod úvodníkom.

@@ -3,7 +3,8 @@
 ::selection{background:var(--mag-lime);color:var(--mag-ink)}
 .editorial-shell .site-header{margin:0;height:90px;padding:0 max(5vw,24px);background:var(--mag-paper);border-bottom:1px solid var(--border)}
 .editorial-shell .site-header>.brand{position:static;color:var(--mag-ink);font-size:38px;letter-spacing:-.04em}
-.editorial-shell .brand-symbol i{background:var(--mag-ink)}
+.editorial-shell .brand-mark{--brand-rest:#a9bf98}
+.editorial-shell footer .brand{color:var(--mag-ink)}
 .editorial-shell .brand>span:last-child{color:var(--mag-ink)}
 .editorial-shell .edition-header{margin-right:auto;margin-left:30px;max-width:220px;line-height:1.4}
 .editorial-shell .header-status b{color:var(--foreground)}
