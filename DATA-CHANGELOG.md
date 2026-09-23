@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Malá republika: nová grafika stolovej diorámy (vetva republika-grafika, Claude)
+
+Peter chcel grafiku aspoň na úrovni Astry. Pôvodné kúsky boli ploché šikmé tvary bez spoločnej perspektívy; teraz sú všetky budovy, ozdoby aj mapa prekreslené v jednej izometrii s mapou, zo spoločných stavebníc (kvádre, sedlové a valbové strechy s radmi škridiel, rizality, komíny a vežičky z hrebeňa, okná s teplým svetlom, hodiny, stromy). Každý z 12 typov budov a 12 ozdôb má vlastnú siluetu, dom tri podoby a stanica štyri stavy (stará so zatlčenými oknami a dierou v streche, múzeum, tržnica v hale, komunitná hala; po otvorení girlandy). Mapa je drevená doska so zeminou, les za štvrťou, železnica s priecestím pri stanici, potok vpredu a vyrytý názov štvrte na hrane dosky. Odznaky napojenia sa ukazujú len pri budovách (ozdoby cestu nepotrebujú). Herné pravidlá, uloženie ani ovládanie sa nemenili; kontrola `verify-republic` (73 ciest) prechádza.
+
 ## 22. 9. 2026 — tretia hra Herne: Malá republika (Codex Terra/Astra + Claude)
 
 Herňa má tretiu kartu **Malá republika** (`?v=game&g=republic`): pokojná staviteľská hra na mape 6 × 6 s fiktívnou Lipovou štvrťou. Cesty začínajú na námestí, služby majú dosah dve políčka, dva zdroje (mince a materiál) bez dlhu, zásielky s dekoráciami štyroch tried (60/25/12/3 %), tri denné objednávky v pevnom sedemdňovom cykle a kapitola „Stanica znova žije“ so siedmimi krokmi (jeden denne) a tromi rovnocennými podobami starej haly. Postavy Eva, Milan a Nina sú fiktívne; hra nehodnotí skutočné obce ani strany.

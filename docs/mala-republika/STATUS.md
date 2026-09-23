@@ -50,3 +50,18 @@ Astra začala opravný priechod (pravidlá odmien, presun až po potvrdení, roz
 - Hra je nasadená spolu s Herňou (odkaz `?v=game&g=republic`); ukladá sa len v prehliadači, účty nie sú súčasťou.
 
 **Konkrétny ďalší krok:** Peter si zahrá prvé dni na mobile; podľa pocitu z tempa sa rozhodne o priechode B (účty a cloudové uloženie podľa TERRA.md/TECH.md) alebo o ďalšom ladení obsahu (Luna).
+
+## 23. 9. 2026 — grafika stolovej diorámy (Claude Opus 5.5)
+
+- Prekreslené všetky kúsky v `components/republic-art.tsx` v rovnakej izometrii ako mapa (políčko 86 × 48 px). Spoločné stavebnice: `Box`, `GableX/GableY/Hip` s radmi škridiel alebo drážkami plechu, `Bay` (predstavaný štít napojený úžľabím), `Stack` (komín, vežička z hrebeňa), `Win/Door/Arch/Clock`, `Tree/Bush/Lamp`. Svetlo zľava hore, plochy otočené k svetlu majú odtieň `hi`.
+- Budovy: dom v troch podobách (podľa `instanceId`), škola s rizalitom, hodinami a zvonicou, knižnica so stĺporadím, kultúrny dom s mozaikou a plagátovým stĺpom, ambulancia s červeným krížom, tržnica so stánkami, hrazdená dielňa s plechovou strechou a drevom, park, záhrada s hriadkami a plotom, radnica s vežou a medenou helmicou, námestie s fontánou, stanica v štyroch stavoch so zasklenou strieškou. 12 ozdôb nakreslených nanovo (napr. otvorený hudobný pavilón, jedna mohutná lipa, kamenná slávnostná brána).
+- `components/republic-map.tsx`: drevená doska so zeminou a vyrytým názvom štvrte, les na zadných okrajoch, železnica s podvalmi, priecestím (keď vedie cesta z F3) a návestidlom, potok vpredu, pestrá lúka, mäkké svetlo. Odznak napojenia len pri budovách. Viewbox `-6 16 572 386`, okno mapy má pomer strán dosky.
+- `RepublicArt` kreslí kúsok na vlastnom podstavci; výrez je tesnejší (okrem radnice), takže karty v katalógu a v dialógoch sú väčšie. Karta hry v Herni má kúsky väčšie a posadené na spodok.
+- `TownPiece` je `memo`, nepoužíva goniometriu ani `Math.hypot`; všetky súradnice sa zaokrúhľujú na 0,1 px.
+
+### Overenie
+
+- `node scripts/verify-republic.mjs` — PASS (73 ciest, uloženie). `node scripts/verify-data.mjs` — PASS. `tsc --noEmit` — PASS. ESLint (app, components, lib, scripts) — PASS. `npm run build` — PASS (herný balík 51 kB, gzip 17,6 kB).
+- V prehliadači: plná štvrť so všetkými 24 typmi kúskov aj začiatočná štvrť na 800 px a 375 px (mobil bez vodorovného posunu), katalóg Stavať, dialóg zásielky, pohľadnica stanice, karta v Herni. Plná mapa má okolo 2 400 SVG prvkov.
+
+**Konkrétny ďalší krok:** Peter si pozrie štvrť na mobile; ak sa páči, zlúčiť vetvu `republika-grafika` do main (nasadenie).
