@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type PointerEvent } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import { ArrowDownRight, ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, Share2, X } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, Share2, Volume2, VolumeX, X } from "lucide-react";
 import { MAJORITY } from "@/lib/blocs";
 import { edition, signed } from "@/lib/edition";
 import { date, fmt } from "@/lib/polls";
@@ -11,6 +11,7 @@ import { track } from "@/lib/track";
 import { currentSeatUncertainty, inRuns } from "@/lib/uncertainty";
 import { isBirthYear } from "@/lib/your-slovakia";
 import { storyCardImage } from "@/components/story-image";
+import storyAudio from "@/lib/story-audio.json";
 import "@/app/story.css";
 
 /*
@@ -21,6 +22,10 @@ import "@/app/story.css";
   Dáta: lib/story-data.ts (rovnaké čísla ako na úvode).
 */
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// Nahrávky kariet (scripts/build-audio.mjs, neurálny hlas ElevenLabs). Tlačidlo sa ukáže, len ak sú pre toto vydanie všetky.
+type AudioSlide = { src: string; ms: number };
+const audioSlides = storyAudio.slides as Record<string, AudioSlide | undefined>;
+const hasVoice = storyAudio.edition === edition.asOf && slides.every(s => audioSlides[s.id]);
 
 function Count({ value, digits = 0 }: { value: number; digits?: number }) {
   const [shown, setShown] = useState(() => reducedMotion() ? value : 0);
@@ -128,6 +133,8 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
   const [hold, setHold] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [toast, setToast] = useState("");
+  const [voiceOn, setVoiceOn] = useState(false);
+  const voice = useRef<HTMLAudioElement | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
   const slide = slides[index];
@@ -138,6 +145,26 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
   const after = (run: () => void) => { close(); window.setTimeout(run, 60); };
   const drag = (dy: number) => cardRef.current?.style.setProperty("--drag", `${Math.max(0, dy)}px`);
   const say = (text: string) => { setToast(text); window.setTimeout(() => setToast(""), 2600); };
+  // Hlas: prvé spustenie musí byť po ťuknutí (prehliadače inak zvuk nepustia); potom hrá každá karta sama.
+  function toggleVoice() {
+    const next = !voiceOn;
+    setVoiceOn(next);
+    if (!next) { voice.current?.pause(); return; }
+    const a = voice.current ?? (voice.current = new Audio());
+    a.src = audioSlides[slide.id]?.src ?? "";
+    a.currentTime = 0;
+    void a.play().catch(() => setVoiceOn(false));
+    track("story", "voice");
+  }
+  useEffect(() => {
+    const a = voice.current;
+    if (!voiceOn || !a) return;
+    const src = audioSlides[slide.id]?.src;
+    if (src && !a.src.endsWith(src)) { a.src = src; a.currentTime = 0; }
+    if (paused || hold || sharing) a.pause(); else void a.play().catch(() => {});
+  }, [voiceOn, slide.id, paused, hold, sharing]);
+  useEffect(() => () => voice.current?.pause(), []);
+  const duration = voiceOn ? Math.max(slide.ms, (audioSlides[slide.id]?.ms ?? 0) + 700) : slide.ms;
 
   // Karta ako obrázok 1080 × 1920: na mobile systémové zdieľanie (Instagram, správy…), inak stiahnutie.
   async function share() {
@@ -195,7 +222,7 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="story-overlay"/>
       <DialogPrimitive.Content className="story" ref={cardRef} data-morph={morph ? "" : undefined} onKeyDown={onKeyDown} aria-describedby="story-help"
-        style={{ "--story-bg": slide.bg, "--dur": `${slide.ms}ms`, "--play": paused || hold || sharing ? "paused" : "running" } as CSSProperties}>
+        style={{ "--story-bg": slide.bg, "--dur": `${duration}ms`, "--play": paused || hold || sharing ? "paused" : "running" } as CSSProperties}>
         <DialogPrimitive.Title className="sr-only">Mandát za minútu</DialogPrimitive.Title>
         <p id="story-help" className="sr-only">Šesť kariet s hlavnými číslami. Šípkami vľavo a vpravo prechádzate kartami, medzerníkom zastavíte, Esc zavrie. Tlačidlo Zdieľať uloží kartu ako obrázok.</p>
         <div className="story-top">
@@ -204,7 +231,8 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
           </i>)}</div>
           <div className="story-bar">
             <span className="story-brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#f5f4ee"><circle cx="10" cy="43" r="4.6"/><circle cx="16.4" cy="27.4" r="4.6"/><circle cx="32" cy="21" r="4.6"/><circle cx="21" cy="43" r="4.6"/><circle cx="32" cy="32" r="4.6"/></g><g fill="#9dbb86"><circle cx="47.6" cy="27.4" r="4.6"/><circle cx="54" cy="43" r="4.6"/><circle cx="43" cy="43" r="4.6"/></g></svg>
-              <span><b>Mandát za minútu</b><small>{index + 1}/{slides.length} · {slide.label}</small></span></span>
+              <span><b>Mandát za minútu</b><small>{index + 1}/{slides.length} · {slide.label}{voiceOn ? " · hlas AI" : ""}</small></span></span>
+            {hasVoice && <button type="button" onClick={toggleVoice} aria-pressed={voiceOn} aria-label={voiceOn ? "Vypnúť hlas" : "Vypočuj si (hlas vytvorený pomocou AI)"} title={storyAudio.credit}>{voiceOn ? <Volume2 size={18}/> : <VolumeX size={18}/>}</button>}
             <button type="button" onClick={share} disabled={sharing} aria-label="Zdieľať kartu ako obrázok" title="Uložiť alebo zdieľať kartu ako obrázok"><Share2 size={18}/></button>
             <button type="button" onClick={() => setPaused(v => !v)} aria-label={paused ? "Pokračovať" : "Zastaviť"}>{paused ? <Play size={18}/> : <Pause size={18}/>}</button>
             <DialogPrimitive.Close className="story-close" aria-label="Zavrieť"><X size={20}/></DialogPrimitive.Close>
@@ -219,7 +247,7 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
         <p className="story-toast" role="status">{toast}</p>
         <div className="story-foot">
           <button type="button" onClick={prev} disabled={index === 0} aria-label="Predchádzajúca karta"><ChevronLeft size={20}/></button>
-          <span>{slide.id === "debt" ? "Eurostat, odhad Mandátu" : slide.id === "you" ? "Mandát · nezávislý projekt bez reklamy" : `Model Mandát k ${date(edition.asOf)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`}</span>
+          <span>{slide.id === "debt" ? "Eurostat, odhad Mandátu" : slide.id === "you" ? "Mandát · nezávislý projekt bez reklamy" : `Model Mandát k ${date(edition.asOf)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`}{voiceOn ? ` · ${storyAudio.credit}` : ""}</span>
           <button type="button" onClick={last ? close : next} aria-label={last ? "Zavrieť" : "Ďalšia karta"}>{last ? <X size={20}/> : <ChevronRight size={20}/>}</button>
         </div>
       </DialogPrimitive.Content>

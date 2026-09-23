@@ -317,6 +317,14 @@ assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durat
   assert.deepEqual(gltf.asset.extras.seats, now.seats, '3D parlament je zastaraný — spusti: node scripts/build-parliament-glb.mjs');
   assert.equal(gltf.nodes.filter(n => n.name.startsWith('kreslo ')).length, 150, '3D parlament: 150 kresiel');
 }
+// Hlas v Mandáte za minútu: nahrávky nie sú povinné (tlačidlo sa bez nich neukáže); pri zastaraných len upozorníme.
+{
+  const audio = JSON.parse(readFileSync(new URL('../lib/story-audio.json', import.meta.url), 'utf8'));
+  const { narrationEdition } = await import('../lib/story-narration.ts');
+  const ids = Object.keys(audio.slides ?? {});
+  if (ids.length && audio.edition !== narrationEdition) console.warn(`Upozornenie: nahrávky Mandátu za minútu sú z vydania ${audio.edition}, aktuálne je ${narrationEdition} — node scripts/build-audio.mjs`);
+  for (const id of ids) assert.ok(existsSync(new URL(`../public${audio.slides[id].src}`, import.meta.url)), `Hlas: chýba súbor ${audio.slides[id].src}`);
+}
 // RSS: každé meranie z archívu je jedna položka s vlastným guid a odkazom na detail; XML znaky sú ošetrené.
 {
   const { buildPollsFeed, feedPolls } = await import('../lib/rss.ts');

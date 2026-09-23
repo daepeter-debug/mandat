@@ -1,5 +1,17 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — príprava hlasu pre Mandát za minútu (Claude)
+
+Mandát za minútu je pripravený na predčítanie neurálnym hlasom ElevenLabs. Texty kariet (`lib/story-narration.ts`) vychádzajú z tých istých dát ako karty a čísla aj skratky strán sú rozpísané do slov, aby ich hlas prečítal správne po slovensky: „devätnásť celých tri percenta“, „Progresívne Slovensko“ namiesto „PS“, správne tvary „Demokrati majú“. Šesť kariet má spolu asi 1 255 znakov.
+
+Skript `scripts/build-audio.mjs` pracuje takto:
+- Kľúč berie len z premennej prostredia `ELEVENLABS_API_KEY`.
+- `--dry-run` ukáže texty bez volania API.
+- `--voices` vypíše dostupné hlasy.
+- Bez prepínača vygeneruje nahrávky len pre zmenené karty (`public/audio/pribeh`, zoznam v `lib/story-audio.json`). Pred generovaním skontroluje zostatok kreditov.
+
+V príbehu pribudne tlačidlo „Vypočuj si“, len čo budú nahrávky pre aktuálne vydanie. Zvuk hrá ku každej karte a karta čaká, kým sa dočíta. Hlas je označený „Hlas: ElevenLabs (AI)“. `verify-data` upozorní, ak sú nahrávky zo staršieho vydania.
+
 ## 23. 9. 2026 — plávajúca spodná navigácia a bezpečné zóny iPhonu (Claude)
 
 Spodná navigácia na mobile už nie je prilepená k spodnému okraju. Je to plávajúca lišta s oblými rohmi, 10 px od okrajov a nad pásikom na zatvorenie aplikácie, polopriehľadná. Aktívnu sekciu označuje zvýraznenie, ktoré sa pri prepnutí posunie. Keď čitateľ skroluje nadol, lišta sa zmenší na ikony; pri pohybe nahor alebo na konci stránky sa znova rozbalí.
