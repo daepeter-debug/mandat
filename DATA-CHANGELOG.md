@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Hospodárenie na mobile: zoznam rokov namiesto širokej tabuľky (Claude)
+
+Tabuľka rokov v Hospodárení má 13 stĺpcov; na telefóne bolo bez posunu do strany vidno len rok a vládu, čísla boli skryté vpravo. Na mobile ju nahrádza zoznam (`components/finance-years-mobile.tsx`): pri každom roku vláda, ktorá ho odvládla najdlhšie, udalosť roka, stĺpček salda (tmavočervený pri deficite nad 3 % HDP), dlh v % HDP a na obyvateľa a nezamestnanosť. Predvolene posledných 10 rokov, tlačidlom všetky od roku 1995. Na počítači ostáva úplná tabuľka.
+
 ## 23. 9. 2026 — Prieskumy na mobile: kompaktné karty archívu (Claude)
 
 Na mobile mala každá položka archívu meraní vysokú kartu (asi 530 px) len s metadátami a samotný výsledok nebolo vidieť; stránka Prieskumy mala na telefóne vyše 23 000 px. Na mobile teraz namiesto tabuľky ukazujeme kompaktné karty (`components/archive-cards.tsx`, asi 200 px): agentúra a mesiac, zber a vzorka v jednom riadku, štyri najsilnejšie strany ako mini stĺpce a pod tým pôvodná správa a detail merania. Na počítači ostáva tabuľka bez zmeny. Stránka je na mobile asi o dve tretiny kratšia.
