@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 26 súborov (9b1b068486) — needitovať ručne. Pravidiel: 1240, prefarbených: 988. */
+/* Generované scripts/build-dark.mjs z 27 súborov (07628fc763) — needitovať ručne. Pravidiel: 1246, prefarbených: 988. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2091,6 +2091,13 @@ html[data-theme="dark"] .studio-time .studio-play[aria-pressed=true] {
         color: #bccac2
     }
 }
+html[data-theme="dark"] .party-sheet-logo {
+    background: #fffefa;
+    box-shadow: 0 0 0 1px #d6dfcf
+}
+html[data-theme="dark"] .party-sheet-logo>span {
+    color: var(--party-color)
+}
 html[data-theme="dark"] .parliament-now {
     background: #1f2523;
     border: 1px solid #3f4a46
@@ -2798,6 +2805,18 @@ html[data-theme="dark"] .party-card-history b {
         outline: 2px solid #77a998;
         outline-offset: 2px
     }
+}
+html[data-theme="dark"] .national-aurora {
+    mask: linear-gradient(180deg,#000 0,#000 72%,transparent)
+}
+html[data-theme="dark"] .national-aurora i:nth-child(1) {
+    background: radial-gradient(closest-side,var(--aurora-a),transparent)
+}
+html[data-theme="dark"] .national-aurora i:nth-child(2) {
+    background: radial-gradient(closest-side,var(--aurora-b),transparent)
+}
+html[data-theme="dark"] .national-aurora i:nth-child(3) {
+    background: radial-gradient(closest-side,var(--aurora-c),transparent)
 }
 html[data-theme="dark"] .cl-hemi circle {
     fill: #c0d9ce

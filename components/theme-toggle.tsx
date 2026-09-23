@@ -50,7 +50,8 @@ export function setTheme(dark: boolean, origin?: { x: number; y: number }) {
     root.animate({ clipPath: [`circle(0px at ${origin.x}px ${origin.y}px)`, `circle(${radius}px at ${origin.x}px ${origin.y}px)`] },
       { duration: 520, easing: "cubic-bezier(.2,.7,.2,1)", pseudoElement: "::view-transition-new(root)" });
   }).catch(() => {});
-  transition.finished.finally(() => root.classList.remove("vt-theme"));
+  transition.updateCallbackDone.catch(() => {});
+  transition.finished.catch(() => {}).finally(() => root.classList.remove("vt-theme"));
 }
 
 export default function ThemeToggle({ className = "" }: { className?: string }) {

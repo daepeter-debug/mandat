@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — živé pozadie úvodu a plynulé „preletenie“ (Claude)
+
+**Živé pozadie úvodu.** Za titulkom vydania sa pomaly prelievajú tri mäkké farebné škvrny vo farbách Mandátu (limetková, mätová, piesková), nie vo farbách strán. Animuje sa len poloha a veľkosť, bez rozmazávania, takže to nezaťaží ani slabší telefón. Tmavý režim má vlastné, hlbšie odtiene. Pri „obmedziť pohyb“ a pri tlači pozadie stojí. Kontrast textu sa nezmenil.
+
+**Preletenie.** Keď čitateľ ťukne na stranu v páse strán, v bočnom paneli alebo na karte strany, jej logo plynulo preletí do hlavičky profilu a profil zároveň vkĺzne zboku. Hlavička profilu má nové logo strany. Krúžok „Mandát za minútu“ sa pri otvorení roztiahne do karty príbehu a pri zatvorení sa do neho vráti. Používa sa View Transitions API (`lib/morph.ts`, štýly v `app/motion.css`). Bez podpory v prehliadači alebo pri „obmedziť pohyb“ sa profil aj príbeh otvoria ako doteraz.
+
 ## 23. 9. 2026 — rozptyl kresiel z 2 000 prepočtov (Claude)
 
 Neistotu kresiel ukazuje bodkový graf kvantilov. Každá z 20 bodiek zastupuje 100 z 2 000 prepočtov, teda 5 %. Rovnaké počty kresiel sa ukladajú na seba, takže je vidno, kde prepočty padali najčastejšie.

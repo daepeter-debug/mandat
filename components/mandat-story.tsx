@@ -122,7 +122,7 @@ function Slide({ id, onYear, onCoalition, onPolls }: { id: SlideId; onYear: (y: 
   </>;
 }
 
-export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: { open: boolean; onOpenChange: (open: boolean) => void; onYear: (year: number) => void; onNavigate: (view: string) => void }) {
+export default function MandatStory({ open, morph, onOpenChange, onYear, onNavigate }: { open: boolean; morph?: boolean; onOpenChange: (open: boolean) => void; onYear: (year: number) => void; onNavigate: (view: string) => void }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hold, setHold] = useState(false);
@@ -194,7 +194,7 @@ export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: 
   return <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="story-overlay"/>
-      <DialogPrimitive.Content className="story" ref={cardRef} onKeyDown={onKeyDown} aria-describedby="story-help"
+      <DialogPrimitive.Content className="story" ref={cardRef} data-morph={morph ? "" : undefined} onKeyDown={onKeyDown} aria-describedby="story-help"
         style={{ "--story-bg": slide.bg, "--dur": `${slide.ms}ms`, "--play": paused || hold || sharing ? "paused" : "running" } as CSSProperties}>
         <DialogPrimitive.Title className="sr-only">Mandát za minútu</DialogPrimitive.Title>
         <p id="story-help" className="sr-only">Šesť kariet s hlavnými číslami. Šípkami vľavo a vpravo prechádzate kartami, medzerníkom zastavíte, Esc zavrie. Tlačidlo Zdieľať uloží kartu ako obrázok.</p>

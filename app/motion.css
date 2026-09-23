@@ -16,3 +16,16 @@
 @keyframes vt-fade-out{to{opacity:0}}
 @keyframes vt-rise-in{from{opacity:0;transform:translateY(10px)}}
 @keyframes reveal-rise{from{opacity:.001;translate:0 22px}}
+/* „Preletenie“ (lib/morph.ts): logo strany → hlavička profilu, krúžok Mandátu za minútu → karta príbehu */
+@media screen and (prefers-reduced-motion:no-preference){
+  html.vt-party .party-sheet-logo{view-transition-name:party-logo}
+  html.vt-party .party-profile-sheet{view-transition-name:party-sheet}
+  html.vt-party::view-transition-old(root),html.vt-party::view-transition-new(root){animation:none}
+  html.vt-party::view-transition-new(party-sheet){animation:vt-sheet-in .42s cubic-bezier(.2,.7,.2,1) both}
+  html.vt-party::view-transition-group(party-logo){animation-duration:.46s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+  html.vt-story .story{view-transition-name:mandat-story}
+  html.vt-story::view-transition-group(mandat-story){animation-duration:.46s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+  html.vt-story::view-transition-old(mandat-story),html.vt-story::view-transition-new(mandat-story){animation-duration:.3s}
+}
+.party-profile-sheet[data-morph][data-state=open],.story[data-morph][data-state=open]{animation:none!important}
+@keyframes vt-sheet-in{from{transform:translateX(100%)}}

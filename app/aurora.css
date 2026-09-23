@@ -1,0 +1,23 @@
+/* Živé pozadie úvodu (components/national-intro.tsx): tri mäkké farebné škvrny vo farbách Mandátu (nie strán),
+   ktoré sa pomaly prelievajú. Len transform a opacity (bez filtra rozmazania), takže je to lacné aj na slabšom
+   telefóne. Pri „obmedziť pohyb“ a pri tlači stojí. Tmavý režim má vlastné, hlbšie odtiene (generátor ich necháva). */
+.national-copy{position:relative}
+.national-copy>:not(.national-aurora){position:relative;z-index:1}
+.national-aurora{--aurora-a:#dcf59b;--aurora-b:#a8d5b9;--aurora-c:#f3dfae;position:absolute;z-index:0;inset:-28px -24px auto;height:min(640px,calc(100% + 40px));overflow:hidden;border-radius:28px;pointer-events:none;
+  -webkit-mask:linear-gradient(180deg,#000 0,#000 72%,transparent);mask:linear-gradient(180deg,#000 0,#000 72%,transparent)}
+.national-aurora i{position:absolute;width:70%;aspect-ratio:1;border-radius:50%;opacity:.68;will-change:transform}
+.national-aurora i:nth-child(1){left:-18%;top:-30%;background:radial-gradient(closest-side,var(--aurora-a),transparent)}
+.national-aurora i:nth-child(2){right:-22%;top:-12%;background:radial-gradient(closest-side,var(--aurora-b),transparent)}
+.national-aurora i:nth-child(3){left:18%;top:34%;width:62%;background:radial-gradient(closest-side,var(--aurora-c),transparent);opacity:.45}
+html[data-theme="dark"] .national-aurora{--aurora-a:#2f6b3f;--aurora-b:#1f5a55;--aurora-c:#5a4a22}
+html[data-theme="dark"] .national-aurora i{opacity:.5}
+@media screen and (prefers-reduced-motion:no-preference){
+  .national-aurora i:nth-child(1){animation:aurora-a 22s ease-in-out infinite alternate}
+  .national-aurora i:nth-child(2){animation:aurora-b 27s ease-in-out infinite alternate}
+  .national-aurora i:nth-child(3){animation:aurora-c 31s ease-in-out infinite alternate}
+}
+@keyframes aurora-a{to{transform:translate(38%,22%) scale(1.25)}}
+@keyframes aurora-b{to{transform:translate(-32%,30%) scale(.85)}}
+@keyframes aurora-c{to{transform:translate(-26%,-34%) scale(1.3)}}
+@media(max-width:760px){.national-aurora{inset:-18px -20px auto;height:min(600px,calc(100% + 26px));border-radius:0}.national-aurora i{width:95%}.national-aurora i:nth-child(3){width:85%}}
+@media print{.national-aurora{display:none}}

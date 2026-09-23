@@ -326,3 +326,9 @@
   .party-card-stat>div:first-child::after{content:"";display:block;width:calc(64px * var(--support));min-width:3px;height:5px;border-radius:999px;background:var(--party)}
 }
 @media(max-width:760px){.editorial-shell .header-status>span{color:var(--text-3)}}
+/* logo strany v hlavičke profilu (cieľ „preletenia“ z pásu strán) */
+.party-profile-sheet [data-slot=sheet-header]{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;align-items:center}
+.party-profile-sheet [data-slot=sheet-header]>:not(.party-sheet-logo){grid-column:2}
+.party-sheet-logo{grid-row:1/span 2;display:grid;place-items:center;width:56px;height:56px;padding:6px;border-radius:12px;background:#fffefa;box-shadow:0 0 0 1px #d6dfcf;overflow:hidden}
+.party-sheet-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.party-sheet-logo>span{font-size:18px;font-weight:700;color:var(--party-color)}
