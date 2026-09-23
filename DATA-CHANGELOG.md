@@ -1,5 +1,20 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — rozptyl kresiel z 2 000 prepočtov (Claude)
+
+Neistotu kresiel ukazuje bodkový graf kvantilov. Každá z 20 bodiek zastupuje 100 z 2 000 prepočtov, teda 5 %. Rovnaké počty kresiel sa ukladajú na seba, takže je vidno, kde prepočty padali najčastejšie.
+- **Prieskumy, panel vybranej strany:** bodky pod „Kreslá, orientačne“. Pri stranách na hrane sú sivé bodky na nule, teda prepočty, v ktorých strana nepresiahla 5 %. DEMOKRATI majú v aktuálnom modeli 12 z 20 bodiek na nule a 8 na 9–10 kreslách.
+- **Parlament podľa prieskumov:** dva riadky bodiek (koalícia a opozícia, s partnermi aj bez nich) so zvislou čiarou väčšiny 76. Počty kresiel blokov sa pri prepnutí „Dnešné bloky / S partnermi“ plynulo pretočia; pri „obmedziť pohyb“ sa prepnú hneď.
+
+Hodnoty bodiek sú kvantily 2,5 %, 7,5 % … 97,5 % z tej istej deterministickej simulácie (`lib/uncertainty.ts`). `verify-data` kontroluje ich počet, poradie a súlad s rozpätím 10–90 %.
+
+Návrhy z iného modelu boli posúdené a väčšina zamietnutá:
+- **Porušili by neutralitu:** neónová žiara vo farbe vedúcej strany, pulz okolo loga rastúcej strany a konfety pri väčšine.
+- **Zhoršili by čitateľnosť alebo výkon na mobile:** 3D polkruh, sklenené karty, glitch efekty, zvuky, paralax, kinetické písmo a hmla v WebGL.
+- **Kolidoval by s dolnou navigáciou:** trvalý vysúvací panel.
+
+Z návrhov ostal bodkový rozptyl namiesto hmly a pretáčanie čísel.
+
 ## 23. 9. 2026 — Kam idú tvoje dane (Claude)
 
 V Hospodárení pribudla záložka **Tvoje dane**. Po zadaní hrubej mesačnej mzdy (pole, posuvník alebo rýchla voľba minimálna 915 €, priemerná 1 524 €, 2 500 €, 5 000 €) ukáže:

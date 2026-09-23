@@ -22,8 +22,10 @@ export const thresholdHints: Record<ThresholdStatus, string> = {
 };
 
 export const SIMULATIONS = 2000;
-export type SeatRange = { low: number; high: number; entry: number; first: number };
-export type BlocRange = { low: number; high: number; entry: number; majority: number };
+/** dots: bodkový graf kvantilov — 20 hodnôt, každá zastupuje 5 % prepočtov (kvantily 2,5 %, 7,5 % … 97,5 %). */
+export const DOTS = 20;
+export type SeatRange = { low: number; high: number; entry: number; first: number; dots: number[] };
+export type BlocRange = { low: number; high: number; entry: number; majority: number; dots: number[] };
 export type SeatUncertainty = {
   simulations: number;
   parties: Record<string, SeatRange>;
@@ -48,6 +50,7 @@ function range(values: number[], majority?: boolean): BlocRange {
     low: quantile(sorted, 0.1), high: quantile(sorted, 0.9),
     entry: values.filter(v => v > 0).length / values.length,
     majority: majority ? values.filter(v => v >= MAJORITY).length / values.length : 0,
+    dots: Array.from({ length: DOTS }, (_, i) => quantile(sorted, (i + 0.5) / DOTS)),
   };
 }
 
@@ -75,7 +78,7 @@ export function seatUncertainty(point: AggregatePoint = currentAggregate, n = SI
   }
   return {
     simulations: n,
-    parties: Object.fromEntries(Object.entries(seats).map(([id, list]) => { const { low, high, entry } = range(list); return [id, { low, high, entry, first: firsts[id] / n }]; })),
+    parties: Object.fromEntries(Object.entries(seats).map(([id, list]) => { const { low, high, entry, dots } = range(list); return [id, { low, high, entry, first: firsts[id] / n, dots }]; })),
     blocs: { coalition: range(bloc.coalition, true), opposition: range(bloc.opposition, true), coalitionWith: range(bloc.coalitionWith, true), oppositionWith: range(bloc.oppositionWith, true) },
   };
 }

@@ -7,6 +7,7 @@ import { partnerWording } from "@/lib/edition";
 import { aggregateAsPoll, aggregateLastDate, aggregatePolls } from "@/lib/aggregate";
 import { date } from "@/lib/polls";
 import { currentSeatUncertainty } from "@/lib/uncertainty";
+import SeatDots, { RollNumber } from "@/components/seat-dots";
 
 /*
   Karta s dvoma pohľadmi na 150 kresiel v rovnakej vizuálnej logike (koalícia vľavo, ostatní v strede,
@@ -67,10 +68,11 @@ export default function ParliamentNow({ onNavigate, view, onView, partners, onPa
       {points.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r={0.036} fill={colours[i]?.color ?? "var(--border)"}/>)}
     </svg>
     <dl className="parliament-now-blocs">
-      <div><dt>{coalitionLabel}</dt><dd>{summary.coalition.seats}</dd>{coalitionRange && <small>rozpätie {coalitionRange.low}–{coalitionRange.high}</small>}</div>
+      <div><dt>{coalitionLabel}</dt><dd><RollNumber value={summary.coalition.seats}/></dd>{coalitionRange && <small>rozpätie {coalitionRange.low}–{coalitionRange.high}</small>}</div>
       <div className="parliament-now-majority"><dt>Väčšina</dt><dd>{MAJORITY}</dd></div>
-      <div><dt>{oppositionLabel}</dt><dd>{summary.opposition.seats}</dd>{oppositionRange && <small>rozpätie {oppositionRange.low}–{oppositionRange.high}</small>}</div>
+      <div><dt>{oppositionLabel}</dt><dd><RollNumber value={summary.opposition.seats}/></dd>{oppositionRange && <small>rozpätie {oppositionRange.low}–{oppositionRange.high}</small>}</div>
     </dl>
+    {coalitionRange && oppositionRange && <SeatDots rows={[{ key: "coalition", label: coalitionLabel, tone: "coalition", dots: coalitionRange.dots }, { key: "opposition", label: oppositionLabel, tone: "opposition", dots: oppositionRange.dots }]} line={{ value: MAJORITY, label: `väčšina ${MAJORITY}` }} caption="Kreslá blokov v prepočtoch v rámci pásiem neistoty."/>}
     <ul className="parliament-now-list">
       {groups.map(([name, members]) => members.length > 0 && <li key={name}><span>{name === "Koalícia" ? coalitionLabel : name === "Opozícia" ? oppositionLabel : name}</span>{members.map(m => <span key={m.id} className="parliament-now-party"><i style={{ background: m.color }} aria-hidden="true"/>{m.short} <b>{m.seats}</b></span>)}</li>)}
     </ul>
