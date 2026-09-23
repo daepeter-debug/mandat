@@ -31,7 +31,7 @@ Nevytvárať armádu pomocných agentov, nové varianty dizajnu ani všeobecnú 
 
 - Git root je `outputs/web`, nie nadradený pracovný priečinok. Posledný lokálny commit pri príprave `7483b87`; pracovný strom bol čistý a lokálna evidencia vetiev ukazovala main zhodné s origin/main. V tejto príprave nebol robený fetch ani overenie online nasadenia.
 - React 19 + TypeScript, Vinext 1.0.0-beta.5 / Vite 8, Node >=22.13, Cloudflare Worker `mandat-preview`. Neprepisovať na nový framework.
-- `components/games-room.tsx`: Herňa, lazy importy hier, GameId majority/december. `app/page.tsx`: URL parser berie gameIds, parameter `g` a záložku `v=game`.
+- `components/games-room.tsx`: Herňa, lazy importy hier, GameId majority/december. `components/mandat-app.tsx` (predtým `app/page.tsx`): URL parser berie gameIds, parameter `g` a záložku `v=game`.
 - Nová cesta: `/?v=game&g=republic`. Pridať tretiu kartu a explicitné vetvenie, inak aktuálny ternárny výraz zobrazí Do decembra pre každý nový identifikátor.
 - Aktuálne hry: `lib/daily-game.ts`, `lib/december-game.ts`, komponenty rovnakých názvov. Ukladajú do localStorage; ich kľúče ani pravidlá nemeníme.
 - `components/mandat-magazine.tsx`, export `ElectionLab`: percentá a výber partnerov dnes existujú len v useState. Výsledky kresiel sa počítajú z `lib/parliament.ts`.

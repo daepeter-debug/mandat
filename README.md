@@ -38,7 +38,8 @@ Každý výsledok má zdroj v `lib/polls.ts` alebo `lib/additional-polls.ts`. Po
 
 ## Súbory a ďalšia práca
 
-- `app/page.tsx`: zobrazenia a interakcie.
+- `app/page.tsx`: serverová stránka, náhľady pri zdieľaní podľa záložky (`lib/share-cards.ts`, obrázky `public/og` zo `scripts/build-og.mjs`).
+- `components/mandat-app.tsx`: zobrazenia a interakcie (stav v URL).
 - `app/globals.css`: vizuálny systém a mobilné rozloženie.
 - `app/magazine.css`, `components/mandat-magazine.tsx`: nový úvod, horný shell a model. Kontrola skutočného renderu a klikov zostáva otvorená pre nedostupnosť prehliadača v tejto relácii; build, typy a dáta boli overené.
 - `lib/polls.ts`: základné údaje a výpočty.

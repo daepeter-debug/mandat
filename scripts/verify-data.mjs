@@ -295,10 +295,10 @@ for (const prof of Object.values(profilesJson)) for (const person of prof.people
 
 // Vypnutý register káuz: dáta ostávajú platné, ale v rozhraní naň nesmie viesť odkaz.
 if (!casesEnabled) {
-  const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
+  const page = readFileSync(new URL('../components/mandat-app.tsx', import.meta.url), 'utf8');
   const directory = readFileSync(new URL('../components/overview-directory.tsx', import.meta.url), 'utf8');
   assert(!/^import PoliticalCases from/m.test(page), 'Vypnutý register sa nesmie importovať staticky, inak sa pošle do prehliadača');
-  for (const [name, source] of [['app/page.tsx', page], ['components/overview-directory.tsx', directory]]) {
+  for (const [name, source] of [['components/mandat-app.tsx', page], ['components/overview-directory.tsx', directory]]) {
     for (const match of source.matchAll(/"cases"/g)) {
       const around = source.slice(Math.max(0, match.index - 140), match.index + 140);
       if (!around.includes('casesEnabled')) assert.fail(`Odkaz na vypnutý register káuz v ${name}: …${around.slice(100, 180).trim()}…`);
