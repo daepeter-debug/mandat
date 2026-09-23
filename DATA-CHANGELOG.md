@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Prieskumy na mobile: kompaktné karty archívu (Claude)
+
+Na mobile mala každá položka archívu meraní vysokú kartu (asi 530 px) len s metadátami a samotný výsledok nebolo vidieť; stránka Prieskumy mala na telefóne vyše 23 000 px. Na mobile teraz namiesto tabuľky ukazujeme kompaktné karty (`components/archive-cards.tsx`, asi 200 px): agentúra a mesiac, zber a vzorka v jednom riadku, štyri najsilnejšie strany ako mini stĺpce a pod tým pôvodná správa a detail merania. Na počítači ostáva tabuľka bez zmeny. Stránka je na mobile asi o dve tretiny kratšia.
+
 ## 23. 9. 2026 — Úvod: pás najnovších meraní (Claude)
 
 Na vrchu úvodu pribudol tenký pás (`components/poll-ticker.tsx`) s posledným meraním každej agentúry a jej prvými tromi stranami, zoradený od najnovšieho. Plynulo beží, zastaví sa pod prstom alebo myšou a tlačidlom pauzy; pri nastavení „obmedziť pohyb“ stojí a dá sa posúvať prstom. Ťuknutie na meranie otvorí jeho detail v archíve. Na mobile nahrádza prehľad posledných meraní agentúr, ktorý je tam skrytý.
