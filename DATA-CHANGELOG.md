@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — presnosť agentúr vo voľbách 2023 (Claude)
+
+Na konci Prieskumov pribudla sekcia „Ako presne trafili agentúry v roku 2023“ (`components/poll-accuracy.tsx`, dáta `lib/poll-accuracy.ts`). Posledný prieskum pred moratóriom od šiestich agentúr (AKO pre JOJ 24, FOCUS pre TV Markíza, Ipsos pre Denník N, NMS, MEDIAN SK pre RTVS, SANEP pre TA3) porovnávame s oficiálnym výsledkom ŠÚ SR pri 11 subjektoch, ktoré uvádzali všetky. Čísla sú prepísané z tlačových správ agentúr (AKO, FOCUS, Ipsos, NMS) a z médií, pre ktoré prieskum robili (MEDIAN SK – STVR, SANEP – Pravda); pri každom je odkaz. Súhrn tabuľky na anglickej Wikipédii sme nepoužili, pri MEDIAN SK sa nezhodoval s pôvodným zdrojom.
+
+Výsledok: priemerná odchýlka na stranu od 1,33 b. (AKO) po 1,91 b. (NMS). AKO a NMS mali na prvom mieste PS, ostatné správne Smer. Všetky agentúry podcenili SMER (priemerne −3,3 b.) a ALIANCIU (−1,3) a precenili REPUBLIKU (+2,7) a SME RODINU (+2,5). Stránka dodáva, že prieskum nie je predpoveď a presnosť v jedných voľbách nehovorí všetko o presnosti dnes. Model Mandát sa tým nemení (váhy agentúr ostávajú rovnaké).
+
 ## 23. 9. 2026 — neistota Modelu Mandát zrozumiteľne (Claude)
 
 Pásmo neistoty, ktoré Model Mandát počítal pre každú stranu, bolo doteraz vidieť len v detaile strany. Teraz:

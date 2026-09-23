@@ -12,6 +12,7 @@ import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGro
 import { durationLabel } from '../lib/government-tenure.ts';
 import { isBirthYear, lifeSummary, priceFactor } from '../lib/your-slovakia.ts';
 import { seatUncertainty, thresholdStatus } from '../lib/uncertainty.ts';
+import { accuracyElection, accuracyParties, accuracyRanking, finalPolls2023, result2023Share, systematicErrors } from '../lib/poll-accuracy.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
 import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
 import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes, result2023, coalition2023 } from '../lib/parliament.ts';
@@ -266,6 +267,21 @@ assert.deepEqual(resp.find(r => r.id === 'sns').cabinets.map(c => c.id), ['mecia
 assert.deepEqual(resp.find(r => r.id === 'kdh').cabinets.map(c => c.id), ['moravcik', 'dzurinda1', 'dzurinda2', 'radicova'], 'KDH vrátane vlády Dzurinda I cez SDK');
 assert(resp.find(r => r.id === 'smer').periods.every(p => p.led) && resp.find(r => r.id === 'sns').periods.every(p => !p.led), 'Premiér zo SMER-u, nikdy zo SNS');
 assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durationLabel(1035)], ['bez účasti', '1 mesiac', '1 rok', '2 roky 10 mesiacov'], 'Dĺžka slovom');
+
+// Presnosť agentúr 2023: úplné prieskumy pred voľbami, výsledok z oficiálnych dát a súhlasný výpočet odchýlky.
+{
+  assert.equal(new Set(finalPolls2023.map(p => p.agency)).size, finalPolls2023.length, 'Presnosť 2023: jedna agentúra = jeden prieskum');
+  for (const poll of finalPolls2023) {
+    assert.ok(poll.end < accuracyElection.date && poll.start <= poll.end && /^https:\/\//.test(poll.source), `Presnosť 2023: dátumy a zdroj ${poll.agency}`);
+    for (const p of accuracyParties) assert.ok(poll.values[p.id] > 0 && poll.values[p.id] < 40, `Presnosť 2023: ${poll.agency} má hodnotu pre ${p.id}`);
+    assert.ok(Object.values(poll.values).reduce((a, b) => a + b, 0) <= 100, `Presnosť 2023: súčet ${poll.agency}`);
+  }
+  assert.deepEqual([result2023Share('smer'), result2023Share('olano'), result2023Share('rep')], [22.94, 8.89, 4.75], 'Presnosť 2023: výsledky z ŠÚ SR');
+  const ako = accuracyRanking().find(a => a.poll.agency === 'AKO');
+  const manual = accuracyParties.reduce((s, p) => s + Math.abs(finalPolls2023.find(x => x.agency === 'AKO').values[p.id] - result2023Share(p.id)), 0) / accuracyParties.length;
+  assert.ok(Math.abs(ako.mae - manual) < 0.006 && ako.winnerRight === false, 'Presnosť 2023: odchýlka AKO a nesprávny víťaz (PS pred Smerom)');
+  assert.deepEqual(systematicErrors().filter(b => b.sameSign).map(b => b.id).sort(), ['aliancia', 'rep', 'rodina', 'smer'], 'Presnosť 2023: strany, pri ktorých sa mýlili všetky rovnako');
+}
 
 // Neistota: simulácia je deterministická, rozpätie obsahuje bodový odhad a stav pri 5 % zodpovedá simulácii.
 {
