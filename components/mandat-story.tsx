@@ -65,7 +65,9 @@ function Count({ value, digits = 0 }: { value: number; digits?: number }) {
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
   }, [value]);
-  return <>{shown.toLocaleString("sk-SK", { minimumFractionDigits: digits, maximumFractionDigits: digits })}</>;
+  const format = (v: number) => v.toLocaleString("sk-SK", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  // Čítačka obrazovky dostane hneď konečnú hodnotu, nie nabiehajúce číslo.
+  return <><span aria-hidden="true">{format(shown)}</span><span className="sr-only">{format(value)}</span></>;
 }
 
 function DebtSlide() {
