@@ -280,7 +280,7 @@
 /* Mobilný Prehľad: aktuálne karty, potom rozcestník; duplikované sekcie sú na mobile skryté a graf podpory je v záložke Prieskumy. */
 .overview-directory,.polls-aggregate-mobile{display:none}
 @media(max-width:760px){
-.magazine .mag-edition,.magazine .poll-studio,.magazine .mag-pulse,.magazine .mag-lab,.magazine .mag-explore{display:none}
+.magazine .mag-edition,.magazine .poll-studio,.magazine .mag-pulse,.magazine .mag-explore{display:none}
 .polls-aggregate-mobile{display:block;margin-bottom:8px}
 .polls-aggregate-mobile .aggregate{padding-top:0}
 .overview-directory{display:block;padding:6px 0 30px}

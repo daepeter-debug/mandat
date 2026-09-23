@@ -10,7 +10,6 @@ import PollAggregator from "@/components/poll-aggregator";
 import NationalIntro from "@/components/national-intro";
 import OverviewDirectory from "@/components/overview-directory";
 import SectionArt from "@/components/section-art";
-import QuickAnswers from "@/components/quick-answers";
 import CoalitionLab from "@/components/coalition-lab";
 
 const agencies = ["AKO", "FOCUS", "INFOSTAT", "IPSOS", "NMS"];
@@ -26,9 +25,7 @@ export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onPar
   const small=rows.filter(p=>poll.values[p.id]<5);
   const large=rows.filter(p=>poll.values[p.id]>=5);
   return <div className="magazine">
-    <NationalIntro onNavigate={onNavigate} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews}/>
-    <QuickAnswers onYear={onYear}/>
-    <OverviewDirectory onNavigate={onNavigate}/>
+    <NationalIntro onNavigate={onNavigate} onYear={onYear} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews}/>
     <div className="mag-edition"><span>Slovensko · volebné prieskumy</span><span>{archive.length} meraní v archíve</span><button onClick={()=>onNavigate("method")}>Ako pracujeme so zdrojmi <ArrowUpRight size={16}/></button></div>
     <PollAggregator onMethod={()=>onNavigate("method")}/>
     <section className="mag-pulse" aria-labelledby="pulse-title"><div className="mag-section-head"><div><h2 id="pulse-title">Posledné meranie každej agentúry</h2><p>Agregát je hlavný pohľad. Tu si môžete skontrolovať každú agentúru osobitne.</p></div><AgencyPicker value={poll.agency} onChange={onAgency}/></div><div className="mag-poll-meta"><b>{poll.agency} · {poll.month.toLowerCase()} {poll.end.slice(0,4)}</b><span>Zber {date(poll.start)} – {date(poll.end)} · n = {poll.sample?.toLocaleString("sk-SK")??"neuvedené"}</span></div>
@@ -37,6 +34,7 @@ export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onPar
       <div className="mag-poll-source"><Publication poll={poll}/><p>Zobrazujeme dostupné presné hodnoty nad 1 %. Chýbajúca hodnota nie je nula. Koalície majú odlišné volebné hranice.</p><button className="mag-text-link" onClick={()=>onNavigate("data")}>Trendy a všetky merania <ArrowRight size={18}/></button></div>
     </section>
     <CoalitionLab onNavigate={onNavigate}/>
+    <OverviewDirectory onNavigate={onNavigate}/>
     <section className="mag-explore"><h2>Ďalšie<br/>pohľady</h2><div>{[{title:"Prieskumy v čase",text:"Od jedného čísla k dlhšiemu príbehu. Porovnajte merania a ich zdroje.",view:"polls"},{title:"Politické strany",text:"Podpora, jednotlivé merania a dokumenty na jednom mieste.",view:"parties"},{title:"Čo majú v programe",text:"Aktuálne návrhy, porovnávač tém a jasne oddelený archív 2023.",view:"programmes"}].map(x=><button key={x.view} onClick={()=>onNavigate(x.view)}><span><b>{x.title}</b><span>{x.text}</span></span><ArrowUpRight size={26}/></button>)}</div></section>
   </div>;
 }

@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — mobilný úvod: rýchle odpovede vyššie, skladačka aj na mobile (Claude)
+
+Peter chce, aby mal mobil pri všetkých zmenách prednosť. Na mobile boli rýchle odpovede až asi 3 000 px pod vrchom stránky a koaličná skladačka bola skrytá (`.magazine .mag-lab{display:none}`). Rýchle odpovede sú teraz súčasťou mriežky úvodu (`components/national-intro.tsx`): na mobile a tablete hneď pod úvodnými číslami a kartou V skratke (asi 1 600 px), na počítači ostávajú na plnú šírku pod úvodom. Skladačka je na mobile viditeľná a kompaktná: nadpis na jeden až dva riadky, strany v dvoch stĺpcoch s dotykovými tlačidlami 46 px, polkruh na šírku obrazovky, štyri cesty k väčšine namiesto šiestich. Rozcestník „Ďalej na webe“ (len na mobile) je až za ňou.
+
 ## 23. 9. 2026 — rýchle hľadanie na celom webe (Claude)
 
 V hlavičke pribudlo tlačidlo Hľadať a skratky Ctrl+K, Cmd+K alebo „/“ (`components/site-search.tsx`, knižnica cmdk, ktorá už bola v závislostiach). Nájde nástroje (rýchle odpovede, koaličná skladačka, porovnanie strán, peniaze strán, Tvoje Slovensko, dlhové hodiny, presnosť agentúr, prepočet kresiel), strany (otvorí profil), sekcie, hry, agentúry (otvorí archív s filtrom) a vlády podľa názvu aj premiéra. Štvormiestny rok ponúkne „Čo zažil ročník…“. Hľadá bez diakritiky a prednosť má zhoda celého slova, potom začiatok slova; náhodná zhoda písmen sa neráta. Po výbere nástroja web prepne sekciu a doskroluje na miesto (ciele majú odstup od prilepenej navigácie).

@@ -74,7 +74,7 @@ export default function CoalitionLab({ onNavigate }: { onNavigate: (view: string
   }
 
   return <section className="mag-lab coalition-lab" id="koalicia">
-    <div className="mag-lab-copy"><h2>Zostavte<br/>vlastnú<br/><span>koalíciu.</span></h2><p>Vyberte ľubovoľné strany alebo jednu z ciest k väčšine. Zistite, koľko kresiel by spolu získali v scenári z Modelu Mandát.</p><button className="mag-button lime" onClick={() => onNavigate("model")}>Vyskúšať vlastný model <ArrowUpRight size={20}/></button><p className="mag-lab-disclaimer">Výber je čisto matematický. Nehovorí nič o ochote strán spolupracovať.</p></div>
+    <div className="mag-lab-copy"><h2>Zostavte <br/>vlastnú <br/><span>koalíciu.</span></h2><p>Vyberte ľubovoľné strany alebo jednu z ciest k väčšine. Zistite, koľko kresiel by spolu získali v scenári z Modelu Mandát.</p><button className="mag-button lime" onClick={() => onNavigate("model")}>Vyskúšať vlastný model <ArrowUpRight size={20}/></button><p className="mag-lab-disclaimer">Výber je čisto matematický. Nehovorí nič o ochote strán spolupracovať.</p></div>
     <div className="mag-lab-play">
       <div className={`cl-top ${reached ? "is-majority" : ""}`}>
         <div className="mag-coalition-count" role="status"><b key={reached ? "yes" : "no"}>{count}</b><span>zo 150 kresiel<br/>{selected.length === 0 ? "Začnite výberom strán" : reached ? <em className="cl-badge">Väčšina {MAJORITY} ✓</em> : `Do ${MAJORITY} chýba ${MAJORITY - count}`}</span></div>

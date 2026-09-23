@@ -76,3 +76,10 @@
   .qa-seats-legend b{font-size:24px}
   .qa-year input{width:150px}
 }
+
+/* Rýchle odpovede v mriežke úvodu: na počítači pod celým úvodom, na tablete a mobile hneď pod hlavným textom a číslami */
+.editorial-shell.with-party-rail .national-intro.has-qa{grid-template-areas:"copy news" "parliament news" "qa qa"}
+.national-intro.has-qa>.qa{grid-area:qa;margin:6px 0 0;min-width:0}
+@media(min-width:1700px){.editorial-shell.with-party-rail .national-intro.has-qa{grid-template-areas:"copy parliament news" "qa qa qa"}}
+@media(max-width:1100px){.editorial-shell.with-party-rail .national-intro.has-qa{grid-template-areas:"copy" "qa" "news" "parliament"}}
+@media(max-width:760px){.editorial-shell.with-party-rail .national-intro.has-qa{grid-template-areas:"copy" "qa" "parliament" "news"}.national-intro.has-qa>.qa{margin:0}}

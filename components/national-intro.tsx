@@ -6,6 +6,7 @@ import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
 import EditionBrief from "@/components/edition-brief";
+import QuickAnswers from "@/components/quick-answers";
 import { edition, signedInt } from "@/lib/edition";
 import { date } from "@/lib/polls";
 
@@ -23,7 +24,7 @@ const subscribeDay = (notify: () => void) => {
 const currentDay = () => new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/Bratislava",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 const serverDay = () => "";
 
-export default function NationalIntro({ onNavigate, parliament, onParliament, parliamentPartners, onParliamentPartners, onOpenNews }: { onNavigate: (view: string) => void; parliament: string; onParliament: (value: string) => void; parliamentPartners: boolean; onParliamentPartners: (value: boolean) => void; onOpenNews: (id: string) => void }) {
+export default function NationalIntro({ onNavigate, onYear, parliament, onParliament, parliamentPartners, onParliamentPartners, onOpenNews }: { onNavigate: (view: string) => void; onYear: (year: number) => void; parliament: string; onParliament: (value: string) => void; parliamentPartners: boolean; onParliamentPartners: (value: boolean) => void; onOpenNews: (id: string) => void }) {
   const uid = useId().replace(/:/g, "");
   const today = useSyncExternalStore(subscribeDay, currentDay, serverDay);
   const [year, month] = today.split("-").map(Number);
@@ -55,7 +56,7 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, pa
     target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
   };
 
-  return <section className="national-intro" aria-labelledby="national-title">
+  return <section className="national-intro has-qa" aria-labelledby="national-title">
     <div className="national-copy">
       <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát k {date(edition.asOf)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
       <h1 id="national-title">{headline}</h1>
@@ -79,6 +80,7 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, pa
       <details className="election-explanation"><summary>O odpočte a zdrojoch</summary><p>Odpočítavame kalendárne mesiace do septembra 2027, nie dni do vyhlásených volieb. Ide o orientačný horizont riadnych volieb. Po overení oficiálneho termínu môžeme zobraziť presné odpočítavanie.</p><a href="https://www.minv.sk/?volby-nrsr" target="_blank" rel="noopener noreferrer">Voľby do NR SR · Ministerstvo vnútra <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noopener noreferrer">Obrys mapy · Natural Earth <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><p>Mapa je grafický motív. Farby nezobrazujú regionálnu podporu strán.</p></details>
     </aside>
     </div>
+    <QuickAnswers onYear={onYear}/>
     <ParliamentNow onNavigate={onNavigate} view={parliament} onView={onParliament} partners={parliamentPartners} onPartners={onParliamentPartners}/>
     <PoliticalNewsFeed compact onOpen={()=>onNavigate('news')} onOpenNews={onOpenNews}/>
   </section>;
