@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — mobilná navigácia dole a kompaktná hlavička (Claude)
+
+Na telefóne bola horná lišta s 11 záložkami (viditeľné asi štyri) a hlavička s citátom zaberala 121 px; nadpis úvodu začínal až v dvoch tretinách prvej obrazovky. Na mobile (do 760 px) je teraz navigácia dole pri palci (`components/mobile-dock.tsx`): Prehľad, Prieskumy, Strany, Hospodárenie a Viac. Viac otvorí spodný panel so všetkými ostatnými sekciami ako dlaždicami s krátkym popisom a s hľadaním. Horná lišta záložiek je na mobile skrytá a citát v hlavičke tiež (hlavička má 77 px), takže nadpis úvodu je o 100 px vyššie. Prilepená lišta kresiel vo Vlastnom modeli a skoky z hľadania rátajú s novou výškou. Na počítači sa nič nemení.
+
 ## 23. 9. 2026 — Parlament v 3D a na stole (Claude)
 
 Pod polkruhom „Parlament podľa prieskumov“ pribudlo tlačidlo **Pozrieť v 3D a na stole**. Otvorí 3D model snemovne: 150 stoličiek vo farbách strán podľa scenára Modelu Mandát, v rovnakom poradí ako polkruh na webe (koalícia vľavo, opozícia vpravo), stupňovité rady a rečnícky pult. Model sa dá otáčať prstom a približovať. Na telefóne s rozšírenou realitou ho tlačidlo **Položiť na stôl** postaví cez kameru na stôl alebo podlahu:

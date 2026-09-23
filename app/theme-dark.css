@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 28 súborov (3224a153c8) — needitovať ručne. Pravidiel: 1259, prefarbených: 998. */
+/* Generované scripts/build-dark.mjs z 28 súborov (a2aa708068) — needitovať ručne. Pravidiel: 1260, prefarbených: 999. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3037,14 +3037,18 @@ html[data-theme="dark"] .minute-text small {
 }
 @media (max-width:760px) {
     html[data-theme="dark"] .mobile-dock {
-        border-top: 1px solid #42493c;
-        background: #262c29eb;
-        box-shadow: 0 -8px 24px #20392f12
+        border: 1px solid #97aba314;
+        background: #262c29d6;
+        box-shadow: 0 10px 30px #1a302429,0 1px 3px #1a30241f
+    }
+    html[data-theme="dark"] .mobile-dock-glider {
+        background: #272f1f;
+        box-shadow: inset 0 0 0 1px #2f6b3f1f
     }
     html[data-theme="dark"] .mobile-dock button {
         border: 0;
         background: none;
-        color: #b8c4b5
+        color: #bac6bc
     }
     html[data-theme="dark"] .mobile-dock button[aria-current=page] {
         color: #d1e7de
@@ -3052,12 +3056,9 @@ html[data-theme="dark"] .minute-text small {
     html[data-theme="dark"] .mobile-dock button[aria-current=page] svg {
         color: #b2e5c0
     }
-    html[data-theme="dark"] .mobile-dock button[aria-current=page]::before {
-        background: #2f6b3f
-    }
     html[data-theme="dark"] .mobile-dock button:focus-visible {
         outline: 2px solid #77a998;
-        outline-offset: -4px
+        outline-offset: -3px
     }
     html[data-theme="dark"] .mobile-more {
         background: #262c29 !important
@@ -3104,6 +3105,10 @@ html[data-theme="dark"] .minute-text small {
     html[data-theme="dark"] .app-install-help b {
         color: #d1e7de
     }
+}
+html[data-theme="dark"][data-theme="dark"] .mobile-dock-glider {
+    background: #34503f;
+    box-shadow: inset 0 0 0 1px #9dbb8633
 }
 html[data-theme="dark"] .fold-toggle {
     border: 0;

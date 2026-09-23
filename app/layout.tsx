@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./magazine.css";
 import "./news.css";
@@ -28,6 +28,10 @@ export const metadata: Metadata = {
 // Tmavý režim (voľba z prepínača) sa nastaví ešte pred prvým vykreslením, aby stránka neblikla. Výzva na inštaláciu
 // (beforeinstallprompt) môže prísť skôr, než sa načíta React — odloží sa pre tlačidlo „Pridať na plochu“.
 const themeScript = `try{if(localStorage.getItem("mandat-theme")==="dark"){document.documentElement.dataset.theme="dark";var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","${darkThemeColor}")}}catch(e){}window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__mandatInstall=e;window.dispatchEvent(new Event("mandat-install"))});`;
+
+// viewport-fit=cover: iPhone potom hlási bezpečné zóny (env(safe-area-inset-*)), takže plávajúca lišta sedí nad
+// pásikom na zatvorenie aplikácie aj nad spodnou lištou Safari.
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 const fonts = ["/fonts/ibm-plex-sans-latin-wght-normal.woff2", "/fonts/ibm-plex-sans-latin-ext-wght-normal.woff2"];
 

@@ -332,3 +332,7 @@
 .party-sheet-logo{grid-row:1/span 2;display:grid;place-items:center;width:56px;height:56px;padding:6px;border-radius:12px;background:#fffefa;box-shadow:0 0 0 1px #d6dfcf;overflow:hidden}
 .party-sheet-logo img{display:block;width:100%;height:100%;object-fit:contain}
 .party-sheet-logo>span{font-size:18px;font-weight:700;color:var(--party-color)}
+/* Bezpečné zóny (viewport-fit=cover): telefón na šírku s výrezom — bočný panel a obsah nevojdú pod výrez; */
+/* spodok profilov a detailov na mobile nekončí pod pásikom iPhonu. */
+@media(min-width:761px){.party-rail{width:calc(var(--party-rail-width) + env(safe-area-inset-left,0px));padding-left:env(safe-area-inset-left,0px)}.editorial-shell.with-party-rail{padding-left:calc(var(--party-rail-width) + env(safe-area-inset-left,0px));padding-right:env(safe-area-inset-right,0px)}}
+@media(max-width:760px){.detail-sheet .sheet-body{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))!important}.editorial-shell{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}}

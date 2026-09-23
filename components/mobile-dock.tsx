@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { BarChart3, BookOpen, CalendarRange, FileText, Gamepad2, Home, Landmark, LayoutGrid, Newspaper, PieChart, Scale, SlidersHorizontal, Users, Wallet } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import InstallApp from "@/components/app-install";
@@ -28,13 +28,40 @@ const details: Record<string, { icon: ReactNode; text: string }> = {
   method: { icon: <BookOpen/>, text: "Zdroje, metodika a hranice dát" },
 };
 
+// Pri čítaní (skrolovanie nadol) sa lišta zmenší na ikony, pri pohybe nahor alebo na konci stránky sa rozbalí.
+function useCompactOnScroll() {
+  const [compact, setCompact] = useState(false);
+  const last = useRef(0);
+  useEffect(() => {
+    last.current = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY, dy = y - last.current;
+        const atEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 40;
+        if (y < 80 || atEnd || dy < -6) setCompact(false);
+        else if (dy > 6) setCompact(true);
+        if (Math.abs(dy) > 6) last.current = y;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(frame); };
+  }, []);
+  return compact;
+}
+
 export default function MobileDock({ views, active, onView }: { views: { id: string; label: string }[]; active: string; onView: (id: string) => void }) {
   const [more, setMore] = useState(false);
+  const compact = useCompactOnScroll();
   const rest = views.filter(v => !primary.some(p => p.id === v.id));
   const inRest = rest.some(v => v.id === active);
+  const index = inRest || more ? primary.length : Math.max(0, primary.findIndex(p => p.id === active));
   const go = (id: string) => { setMore(false); onView(id); };
   return <>
-    <nav className="mobile-dock" aria-label="Hlavné sekcie">
+    <nav className={`mobile-dock${compact && !more ? " is-compact" : ""}`} aria-label="Hlavné sekcie" style={{ "--dock-index": index, "--dock-count": primary.length + 1 } as CSSProperties}>
+      <span className="mobile-dock-glider" aria-hidden="true"/>
       {primary.map(p => <button key={p.id} type="button" aria-current={active === p.id ? "page" : undefined} onClick={() => go(p.id)}>{p.icon}<span>{p.label}</span></button>)}
       <button type="button" aria-expanded={more} aria-current={inRest ? "page" : undefined} onClick={() => setMore(true)}><LayoutGrid/><span>Viac</span></button>
     </nav>
