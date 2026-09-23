@@ -3,6 +3,8 @@ import {useState} from "react";
 import {ArrowUpRight,BookOpen,FileText,Info,Check,Clock3} from "lucide-react";
 import {parties,date} from "@/lib/polls";
 import {programmes,programmeTopics,positions,statusLabel,type Programme} from "@/lib/programmes";
+import {MobileCollapse} from "@/components/mobile-fold";
+import "@/app/programmes-mobile.css";
 
 function DocumentLink({document}:{document:Programme}) {
   return <a className="document-open" href={document.url} target="_blank" rel="noopener noreferrer">Otvoriť pôvodný {document.format==="PDF"?"dokument":"zdroj"}<ArrowUpRight size={17}/><span className="sr-only"> v novej karte</span></a>;
@@ -41,7 +43,7 @@ export default function ProgrammeLibrary() {
     <section className="intro programme-hero"><div><h1>Programy strán <em>vtedy a dnes.</em></h1><p className="intro-description">Oddelený archív volieb 2023, priebežne overované nové návrhy a porovnanie konkrétnych tém bez predstierania, že každá strana už má hotový program 2027.</p></div><div className="programme-legend"><span><i className="current"/>Aktuálne návrhy</span><span><i className="archive"/>Archív 2023</span><p>Žiadny dokument tu neoznačíme ako program 2027, kým ho tak neoznačí samotná strana.</p></div></section>
     <ProgrammeMatrix/>
     <section className="programme-shelf"><div className="programme-shelf-head"><h2>Aktuálne návrhy a rozpracované programy</h2><p>{current.length} overených zdrojov · rôzny rozsah a stav rozpracovania</p></div><div className="programme-grid">{current.map(d=><ProgrammeCard key={d.url} document={d}/>)}</div></section>
-    <section className="programme-shelf archive-shelf"><div className="programme-shelf-head"><h2>Archív volieb 2023</h2><p>Historické dokumenty pre kontrolu a porovnanie. Nie sú prezentované ako dnešné sľuby.</p></div><div className="programme-grid">{archive.map(d=><ProgrammeCard key={d.url} document={d}/>)}</div></section>
+    <MobileCollapse label="Archív volieb 2023" hint={`${archive.length} dokumentov na kontrolu a porovnanie`}><section className="programme-shelf archive-shelf"><div className="programme-shelf-head"><h2>Archív volieb 2023</h2><p>Historické dokumenty pre kontrolu a porovnanie. Nie sú prezentované ako dnešné sľuby.</p></div><div className="programme-grid">{archive.map(d=><ProgrammeCard key={d.url} document={d}/>)}</div></section></MobileCollapse>
     <div className="program-coverage"><h3>Pokrytie rastie priebežne</h3><p>Aktuálny dokument zatiaľ chýba pri: {parties.filter(p=>!programmes.some(d=>d.partyId===p.id&&d.status!=="archive-2023")).map(p=>p.short).sort((a,b)=>a.localeCompare(b,"sk")).join(", ")}. Je to stav nášho archívu, nie tvrdenie, že tieto subjekty nemajú návrhy.</p></div>
   </>;
 }

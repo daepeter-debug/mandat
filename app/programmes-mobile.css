@@ -1,0 +1,13 @@
+/* Programy na mobile: kratšie karty dokumentov (components/programme-library.tsx) */
+@media(max-width:760px){
+  .programme-grid{gap:10px!important}
+  .programme-card{padding:14px!important;gap:6px!important}
+  .programme-card .programme-title h3{font-size:16px!important;line-height:1.3!important;margin:2px 0 0!important}
+  .programme-card .programme-description{margin:0!important;font-size:13px!important;line-height:1.5!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .programme-card .programme-topics{display:flex!important;flex-wrap:nowrap!important;gap:6px;overflow-x:auto;scrollbar-width:none;margin:2px 0!important}
+  .programme-card .programme-topics::-webkit-scrollbar{display:none}
+  .programme-card .programme-topics span{flex:none}
+  .programme-card .document-context,.programme-card .document-verified,.programme-card>.source-link{display:none!important}
+  .programme-card .document-open{min-height:44px}
+  .programme-shelf .mobile-collapse{margin-top:6px}
+}

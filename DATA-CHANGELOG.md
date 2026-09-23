@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Programy na mobile: kratšie karty, zbalený archív 2023 (Claude)
+
+Karta programového dokumentu mala na telefóne 550–650 px. Na mobile ukazuje len stranu, stav, názov, popis na tri riadky, témy v jednom posúvateľnom riadku a tlačidlo na pôvodný dokument (asi 300 px); poznámka ku kontextu a dátum overenia ostávajú na počítači a v dokumente. Archív volieb 2023 je na mobile zbalený do jedného riadku. Stránka Programy má na mobile asi 4 400 px namiesto 9 600.
+
 ## 23. 9. 2026 — O dátach na mobile: rozbaľovacie sekcie (Claude)
 
 Stránka O dátach mala na telefóne vyše 16 000 px. Na mobile (do 760 px) je teraz osem zásad metodiky rozbaľovacích: viditeľný je nadpis a text sa otvorí ťuknutím (prvá zásada je otvorená). Dlhé zoznamy (agentúry a pokrytie dát, logá strán, fotografie osobností, register zdrojov) sú zbalené do jedného riadku s popisom. Stránka má na mobile asi 2 100 px. Na počítači sa všetko zobrazuje rozbalené ako doteraz (`components/mobile-fold.tsx`).
