@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 22 súborov (9b12a39354) — needitovať ručne. Pravidiel: 1134, prefarbených: 935. */
+/* Generované scripts/build-dark.mjs z 24 súborov (c934eb0018) — needitovať ručne. Pravidiel: 1189, prefarbených: 944. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2984,6 +2984,35 @@ html[data-theme="dark"] .games-room :is(button,a):focus-visible {
 html[data-theme="dark"] .games-room-footnote {
     color: #bfcec6
 }
+html[data-theme="dark"] .minute-launch {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .minute-launch:hover {
+    border-color: #4d5548;
+    box-shadow: 0 6px 18px #20392f14
+}
+html[data-theme="dark"] .minute-launch:focus-visible {
+    outline: 3px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .minute-launch>svg {
+    color: #b2e5c0
+}
+html[data-theme="dark"] .minute-ring::before {
+    background: conic-gradient(from 200deg,#dcf59b,#415845,#2f6b3f,#9fd36e,#dcf59b)
+}
+html[data-theme="dark"] .minute-ring>span {
+    background: #20392f;
+    box-shadow: 0 0 0 2px #262c29
+}
+html[data-theme="dark"] .minute-launch.is-seen .minute-ring::before {
+    background: #30372b
+}
+html[data-theme="dark"] .minute-text small {
+    color: #bfcec6
+}
 @media (max-width:760px) {
     html[data-theme="dark"] .mobile-dock {
         border-top: 1px solid #42493c;
@@ -3960,6 +3989,167 @@ html[data-theme="dark"] .site-search [cmdk-empty] {
 html[data-theme="dark"] .site-search-foot {
     border-top: 1px solid #41463d;
     color: #bccac2
+}
+html[data-theme="dark"] .story-overlay {
+    background: #0a110ee6
+}
+html[data-theme="dark"] .story {
+    background: radial-gradient(120% 70% at 85% -10%,#ffffff1c,transparent 60%),radial-gradient(90% 60% at -10% 110%,#dcf59b17,transparent 55%),var(--story-bg, #183c31);
+    color: #f3f7ef;
+    outline: none
+}
+html[data-theme="dark"] .story button:focus-visible,html[data-theme="dark"] .story input:focus-visible {
+    outline: 2px solid #dcf59b;
+    outline-offset: 2px
+}
+@media (min-width:761px) {
+    html[data-theme="dark"] .story {
+        box-shadow: 0 40px 90px #000000a6
+    }
+}
+html[data-theme="dark"] .story-progress i {
+    background: #ffffff38
+}
+html[data-theme="dark"] .story-progress b {
+    background: #fff
+}
+html[data-theme="dark"] .story-brand svg {
+    background: #ffffff1a
+}
+html[data-theme="dark"] .story-brand small {
+    color: #c7d8cc
+}
+html[data-theme="dark"] .story-bar button {
+    border: 0;
+    background: none;
+    color: #f3f7ef
+}
+html[data-theme="dark"] .story-bar button:hover {
+    background: #ffffff1a
+}
+html[data-theme="dark"] .story-kicker {
+    color: #dcf59b
+}
+html[data-theme="dark"] .story-dot {
+    box-shadow: 0 0 0 2px #ffffff33
+}
+html[data-theme="dark"] .story-big small {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .story-text {
+    color: #dde9e0
+}
+html[data-theme="dark"] .story-text b {
+    color: #fff
+}
+html[data-theme="dark"] .story-fine {
+    color: #b8ccbf
+}
+html[data-theme="dark"] .story-bars i {
+    background: var(--c);
+    box-shadow: 0 0 0 1px #ffffff29
+}
+html[data-theme="dark"] .story-bars b {
+    color: #dde9e0
+}
+html[data-theme="dark"] .story-hemi circle {
+    fill: #ffffff30
+}
+html[data-theme="dark"] .story-hemi .is-c {
+    fill: #d98b7e
+}
+html[data-theme="dark"] .story-hemi .is-o {
+    fill: #8db6dc
+}
+html[data-theme="dark"] .story-vs span {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .story-vs .is-c b {
+    color: #f1b1a6
+}
+html[data-theme="dark"] .story-vs .is-o b {
+    color: #b3d3f0
+}
+html[data-theme="dark"] .story-vs em {
+    color: #b8ccbf
+}
+html[data-theme="dark"] .story-moves li {
+    background: #ffffff12
+}
+html[data-theme="dark"] .story-moves .is-up>svg {
+    background: #dcf59b;
+    color: #1d3a2c
+}
+html[data-theme="dark"] .story-moves .is-down>svg {
+    background: #f1b1a6;
+    color: #4a1d18
+}
+html[data-theme="dark"] .story-moves span small {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .story-moves strong small {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .story-moves .is-up strong {
+    color: #dcf59b
+}
+html[data-theme="dark"] .story-moves .is-down strong {
+    color: #f5b8ad
+}
+html[data-theme="dark"] .story-line-row>div {
+    background: #ffffff12
+}
+html[data-theme="dark"] .story-line-row s {
+    background: #dcf59b
+}
+html[data-theme="dark"] .story-line-row i {
+    background: color-mix(in oklab,var(--c) 60%,transparent)
+}
+html[data-theme="dark"] .story-line-row b {
+    background: var(--c);
+    box-shadow: 0 0 0 2px #fff
+}
+html[data-theme="dark"] .story-line-row.is-scale>div {
+    background: none;
+    color: #b8ccbf
+}
+html[data-theme="dark"] .story-facts li {
+    background: #ffffff12
+}
+html[data-theme="dark"] .story-facts span {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .story-year input {
+    border: 1px solid #ffffff45;
+    background: #ffffff14;
+    color: #fff
+}
+html[data-theme="dark"] .story-year input::placeholder {
+    color: #b8ccbf
+}
+html[data-theme="dark"] .story-year button {
+    border: 0;
+    background: #dcf59b;
+    color: #183c31
+}
+html[data-theme="dark"] .story-error {
+    color: #f5b8ad
+}
+html[data-theme="dark"] .story-links button {
+    border: 1px solid #ffffff45;
+    background: none;
+    color: #f3f7ef
+}
+html[data-theme="dark"] .story-links button:hover,html[data-theme="dark"] .story-foot button:hover:not(:disabled) {
+    background: #ffffff1f
+}
+html[data-theme="dark"] .story-foot {
+    color: #b8ccbf
+}
+html[data-theme="dark"] .story-foot button {
+    border: 0;
+    background: #ffffff14;
+    color: #f3f7ef
 }
 html[data-theme="dark"] .theme-toggle {
     border: 1px solid #41463d;

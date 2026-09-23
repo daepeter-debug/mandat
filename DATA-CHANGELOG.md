@@ -1,5 +1,24 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Mandát za minútu (Claude)
+
+Na úvode pribudlo tlačidlo „Mandát za minútu“ s farebným krúžkom, ako pri príbehoch na sociálnych sieťach. Otvorí šesť kariet s hlavnými číslami vydania:
+
+1. **Kto vedie:** pásmo neistoty, podiel prepočtov s prvým miestom a päť najsilnejších strán.
+2. **Kreslá dnes:** polkruh 150 kresiel podľa blokov s väčšinou 76.
+3. **Za posledný mesiac:** najväčší rast a pokles.
+4. **Na hrane 5 %:** číselná os s pásmami neistoty a podielom prepočtov nad 5 %.
+5. **Dlh štátu:** bežiaci odhad, prírastok za sekundu a dlh na obyvateľa.
+6. **A čo ty?:** rok narodenia otvorí Tvoje Slovensko, ďalej odkazy na skladačku koalície a prieskumy.
+
+Ovládanie:
+- Karty sa posúvajú samy (prúžky hore).
+- Ťuknutie vpravo alebo vľavo prejde na ďalšiu alebo predchádzajúcu kartu, podržanie zastaví, potiahnutie nadol zavrie.
+- Na klávesnici šípky, medzerník a Esc.
+- Pri „obmedziť pohyb“ sa karty samy neposúvajú a čísla nenabiehajú.
+
+Čísla sú tie isté ako na úvode: Model Mandát, simulácia neistoty a Eurostat. Keď si čitateľ príbeh vydania pozrie, krúžok zosivie a pri ďalšom vydaní sa znovu zafarbí. Na mobile príbeh zaberá celú obrazovku, na počítači je to karta v strede. Kód: `components/mandat-story.tsx` (načíta sa až pri otvorení) a `components/minute-launch.tsx`.
+
 ## 23. 9. 2026 — plynulé prechody a objavovanie pri skrolovaní (Claude)
 
 Prepnutie sekcie v hornej lište alebo v spodnej navigácii má krátky prechod: stará sekcia zmizne, nová sa zjemna zdvihne (View Transitions). Opätovné ťuknutie na aktívnu sekciu plynule vráti stránku na začiatok. Pri skrolovaní sa väčšie časti stránky (karty strán a programov, peniaze strán, presnosť prieskumov, dlhové hodiny, bloky Zodpovednosti a pod.) jemne objavia. Riadi to samotné skrolovanie, bez skriptu (`app/motion.css`). Pri nastavení „obmedziť pohyb“, pri tlači a v prehliadačoch bez podpory sa obsah zobrazí hneď a bez pohybu.

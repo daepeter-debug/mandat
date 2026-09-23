@@ -80,6 +80,9 @@ export function seatUncertainty(point: AggregatePoint = currentAggregate, n = SI
   };
 }
 
+// Podiel prepočtov slovom; krajné hodnoty nezaokrúhľujeme na „10 z 10“, aby to neznelo ako istota.
+export const inRuns = (share: number) => share >= 0.95 ? "takmer vo všetkých prepočtoch" : share <= 0.05 ? "takmer v žiadnom prepočte" : `v ${Math.round(share * 10)} z 10 prepočtov`;
+
 // Pre aktuálny agregát sa simulácia počíta raz, až keď ju niekto potrebuje.
 let cached: SeatUncertainty | null = null;
 export const currentSeatUncertainty = () => cached ??= seatUncertainty();

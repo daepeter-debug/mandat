@@ -7,7 +7,7 @@ import { MAJORITY } from "@/lib/blocs";
 import { edition } from "@/lib/edition";
 import { fmt, parties } from "@/lib/polls";
 import { systematicErrors } from "@/lib/poll-accuracy";
-import { currentSeatUncertainty, thresholdStatus } from "@/lib/uncertainty";
+import { currentSeatUncertainty, inRuns, thresholdStatus } from "@/lib/uncertainty";
 import "@/app/quick-answers.css";
 
 /*
@@ -17,9 +17,6 @@ import "@/app/quick-answers.css";
 const DebtAnswer = lazy(() => import("@/components/quick-debt"));
 const party = (id: string) => parties.find(p => p.id === id);
 const values = Object.values(currentAggregate.values).sort((a, b) => b.value - a.value);
-const tens = (share: number) => Math.round(share * 10);
-// Podiel prepočtov slovom; krajné hodnoty nezaokrúhľujeme na „10 z 10“, aby to neznelo ako istota.
-const inRuns = (share: number) => share >= 0.95 ? "takmer vo všetkých prepočtoch" : share <= 0.05 ? "takmer v žiadnom prepočte" : `v ${tens(share)} z 10 prepočtov`;
 const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 // Čísla nabehnú od nuly, keď čitateľ prepne otázku. Prvá odpoveď pri načítaní stránky sa ukáže hneď

@@ -7,6 +7,7 @@ import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
 import EditionBrief from "@/components/edition-brief";
 import QuickAnswers from "@/components/quick-answers";
+import MinuteLaunch from "@/components/minute-launch";
 import { edition, signedInt } from "@/lib/edition";
 import { date } from "@/lib/polls";
 
@@ -58,6 +59,7 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
 
   return <section className="national-intro has-qa" aria-labelledby="national-title">
     <div className="national-copy">
+      <MinuteLaunch onYear={onYear} onNavigate={onNavigate}/>
       <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát k {date(edition.asOf)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
       <h1 id="national-title">{headline}</h1>
       <p className="edition-lead">{lead}</p>
