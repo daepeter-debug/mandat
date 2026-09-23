@@ -141,6 +141,17 @@ const urlListeners = new Set<()=>void>();
 const subscribeUrl = (cb:()=>void) => { urlListeners.add(cb); window.addEventListener("popstate",cb); return () => { urlListeners.delete(cb); window.removeEventListener("popstate",cb); }; };
 const readSearch = () => window.location.search;
 const readServerSearch = () => "";
+// Prepnutie sekcie s plynulým prechodom (View Transitions, štýly v app/motion.css); bez podpory alebo pri obmedzení pohybu hneď.
+function withViewTransition(run:()=>void) {
+  if(!document.startViewTransition||window.matchMedia("(prefers-reduced-motion: reduce)").matches){run();return;}
+  const root=document.documentElement;
+  let done=false;
+  const go=()=>{if(done)return;done=true;flushSync(run);};
+  root.classList.add("vt-view");
+  const t=document.startViewTransition(go);
+  window.setTimeout(go,400);
+  t.finished.finally(()=>root.classList.remove("vt-view"));
+}
 function navigateTo(next:string, push:boolean) {
   if(next===window.location.search) return;
   const url = `${window.location.pathname}${next}`;
@@ -244,7 +255,7 @@ export default function MandatApp() {
     const list = tab?.parentElement;
     if (tab && list) list.scrollTo({ left: Math.max(0, tab.offsetLeft - (list.clientWidth - tab.offsetWidth) / 2), behavior: "auto" });
   }, [view]);
-  const changeView = (next:string) => {setView(next);window.scrollTo({top:0,behavior:"instant"});};
+  const changeView = (next:string) => {if(next===view){window.scrollTo({top:0,behavior:"smooth"});return;}withViewTransition(()=>{setView(next);window.scrollTo({top:0,behavior:"instant"});});};
   // Skok z vyhľadávania na konkrétne miesto: sekcia sa môže načítavať (lazy), preto skúšame chvíľu opakovane.
   const goAnchor = (next:string, elementId:string) => {
     if(view!==next) changeView(next);

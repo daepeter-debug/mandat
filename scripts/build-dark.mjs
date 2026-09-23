@@ -236,7 +236,7 @@ const colors = `// Generované scripts/build-dark.mjs — needitovať ručne.
 export const darkThemeColor = "${tokenDark['--background']}";
 `;
 if (process.argv.includes('--check')) {
-  const stale = [[OUT, text], [OUT_COLORS, colors]].filter(([f, want]) => (existsSync(f) ? readFileSync(f, 'utf8') : '') !== want).map(([f]) => f);
+  const stale = [[OUT, text], [OUT_COLORS, colors]].filter(([f, want]) => (existsSync(f) ? readFileSync(f, 'utf8').replace(/\r\n/g, '\n') : '') !== want).map(([f]) => f);
   if (stale.length) { console.error(`${stale.join(', ')} je zastaraný — spusti: node scripts/build-dark.mjs`); process.exit(1); }
   console.log(`${OUT} je aktuálny (${hash})`);
 } else {

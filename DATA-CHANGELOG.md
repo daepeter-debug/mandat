@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — plynulé prechody a objavovanie pri skrolovaní (Claude)
+
+Prepnutie sekcie v hornej lište alebo v spodnej navigácii má krátky prechod: stará sekcia zmizne, nová sa zjemna zdvihne (View Transitions). Opätovné ťuknutie na aktívnu sekciu plynule vráti stránku na začiatok. Pri skrolovaní sa väčšie časti stránky (karty strán a programov, peniaze strán, presnosť prieskumov, dlhové hodiny, bloky Zodpovednosti a pod.) jemne objavia. Riadi to samotné skrolovanie, bez skriptu (`app/motion.css`). Pri nastavení „obmedziť pohyb“, pri tlači a v prehliadačoch bez podpory sa obsah zobrazí hneď a bez pohybu.
+
 ## 23. 9. 2026 — tmavý režim a inštalácia na plochu (Claude)
 
 Tmavý režim je voliteľný. Predvolene ostáva svetlý, prepína sa ikonou v hlavičke (na mobile v paneli Viac) a voľba sa pamätá v prehliadači. Pri prepnutí sa nová farba rozleje v kruhu od tlačidla; pri nastavení „obmedziť pohyb“ sa prepne hneď. Tmavé štýly sa generujú skriptom `scripts/build-dark.mjs` z existujúcich štýlov (výstup `app/theme-dark.css`, kontrola `--check`), takže svetlý režim sa nemení. Svetlé plochy tmavnú, tmavý text svetlie. Farby strán, logá, ilustrácie a hry ostávajú, text vo farbe strany je zosvetlený. Kontrast textu bol overený skriptom na všetkých 11 sekciách, v paneloch aj vo vyhľadávaní.

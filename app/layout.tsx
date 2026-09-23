@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./magazine.css";
 import "./news.css";
+import "./motion.css";
 import "./theme-dark.css";
 import { darkThemeColor } from "@/lib/theme-colors";
 

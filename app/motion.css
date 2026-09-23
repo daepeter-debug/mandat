@@ -1,0 +1,18 @@
+/* Pohyb: prechod medzi sekciami (View Transitions, trieda vt-view počas prepnutia) a jemné objavovanie
+   častí stránky pri skrolovaní (scroll-driven animácie). Všetko len pri „bez obmedzenia pohybu“ a len na obrazovke;
+   prehliadače bez podpory zobrazia obsah hneď. */
+@media screen and (prefers-reduced-motion:no-preference){
+  html.vt-view::view-transition-old(root){animation:vt-fade-out .12s ease-in both}
+  html.vt-view::view-transition-new(root){animation:vt-rise-in .3s cubic-bezier(.2,.7,.2,1) both}
+  html.vt-view .mobile-dock{view-transition-name:mandat-dock}
+  html.vt-view::view-transition-group(mandat-dock){animation-duration:.2s}
+
+  @supports (animation-timeline:view()){
+    :is(.mag-explore,.mag-pulse,.parliament-spread,.seats-explainer,.party-money,.accuracy,.debt-clock,.finance-rank,.resp-block,.blocs,.coverage-section,.programme-shelf,.party-card,.programme-card,.archive-card){
+      animation:reveal-rise linear both;animation-timeline:view();animation-range:entry 0% entry 55%
+    }
+  }
+}
+@keyframes vt-fade-out{to{opacity:0}}
+@keyframes vt-rise-in{from{opacity:0;transform:translateY(10px)}}
+@keyframes reveal-rise{from{opacity:.001;translate:0 22px}}
