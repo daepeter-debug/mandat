@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — zdieľanie sekcie a odozva pri ťuknutí (Claude)
+
+Na ilustrácii v hlavičke piatich sekcií pribudlo v pravom hornom rohu tlačidlo Zdieľať (na mobile len ikona; vodoznak ilustrácie ostáva vpravo dole). Na telefóne otvorí systémové zdieľanie s odkazom na sekciu, ktorý má vlastný náhľad; na počítači odkaz skopíruje. Tlačidlá v rýchlych odpovediach, skladačke, porovnaní strán a podobne sa na dotykových zariadeniach pri ťuknutí jemne zmenšia (pri „obmedziť pohyb“ nie).
+
 ## 23. 9. 2026 — mobilná navigácia dole a kompaktná hlavička (Claude)
 
 Na telefóne bola horná lišta s 11 záložkami (viditeľné asi štyri) a hlavička s citátom zaberala 121 px; nadpis úvodu začínal až v dvoch tretinách prvej obrazovky. Na mobile (do 760 px) je teraz navigácia dole pri palci (`components/mobile-dock.tsx`): Prehľad, Prieskumy, Strany, Hospodárenie a Viac. Viac otvorí spodný panel so všetkými ostatnými sekciami ako dlaždicami s krátkym popisom a s hľadaním. Horná lišta záložiek je na mobile skrytá a citát v hlavičke tiež (hlavička má 77 px), takže nadpis úvodu je o 100 px vyššie. Prilepená lišta kresiel vo Vlastnom modeli a skoky z hľadania rátajú s novou výškou. Na počítači sa nič nemení.
