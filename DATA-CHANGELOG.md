@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Zodpovednosť: vláda v číslach (Claude)
+
+Hospodárske zhrnutie vlád už bolo v Hospodárení (pohľad Po vládach). Aby čas pri moci a hospodárenie neboli oddelené, tabuľka „Vlády od roku 1993“ v Zodpovednosti má nový stĺpec V číslach: priemerné saldo za rok (% HDP, červené pod −3 %), dlh v % HDP pri prevzatí a odovzdaní a priemerná nezamestnanosť, s odkazom na detail v Hospodárení. Čísla sú z rovnakého výpočtu `cabinetSummary` (roky vážené dňami vo funkcii); vlády pred rokom 1995 majú poznámku, že údaje Eurostatu začínajú rokom 1995.
+
 ## 23. 9. 2026 — Strany: porovnanie vedľa seba (Claude)
 
 Na stránke Strany pribudlo porovnanie dvoch alebo troch strán (`components/party-compare.tsx`, načítava sa až pri otvorení stránky). Pre každú stranu: dnešná podpora v Modeli Mandát s pásmom a stavom pri hranici 5 %, orientačné kreslá s rozpätím, zmena za 30 dní, výsledok volieb 2023 (pri OĽANO a priateľoch ako koalícia), čas vo vláde od roku 1993 (rovnaký výpočet ako Zodpovednosť, bez predchodcov), nárok na štátne príspevky 2023–2027, kto je na čele a počet overených programových dokumentov s najnovším. Predvolene sú vybrané tri najsilnejšie strany; výber je v adrese (`?v=parties&porovnaj=ps,smer,slovensko`). Na mobile sú hodnoty v stĺpcoch pod názvom riadku. Z úvodu stránky Strany vedie na porovnanie odkaz.

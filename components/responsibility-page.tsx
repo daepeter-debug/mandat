@@ -8,6 +8,7 @@ import { inactiveTenureNote } from "@/lib/government-tenure-inactive";
 import { cabinetsServed, inactiveResponsibilityRows, RESPONSIBILITY_START, responsibilityGroups, responsibilityRows, responsibilityTiers, responsibilityTotalDays, type ResponsibilityRow } from "@/lib/responsibility";
 import { currentAggregate } from "@/lib/aggregate";
 import { fmt } from "@/lib/polls";
+import { cabinetSummary } from "@/lib/public-finance";
 import logos from "@/lib/party-logos.json";
 import "@/app/responsibility.css";
 import SectionArt from "@/components/section-art";
@@ -20,6 +21,9 @@ import YourSlovakia from "@/components/your-slovakia";
 */
 const logoMap: Record<string, { src: string }> = logos;
 const DAY = 86_400_000;
+// Vláda v číslach: to isté zhrnutie ako v Hospodárení → Po vládach (saldo a nezamestnanosť vážené dňami vo funkcii).
+const summaries = Object.fromEntries(cabinets.map(c => [c.id, cabinetSummary(c)]));
+const n1 = (v: number | null) => v === null ? "—" : v.toLocaleString("sk-SK", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const pct = (v: number) => v.toLocaleString("sk-SK", { maximumFractionDigits: v >= 10 ? 0 : 1 });
 const at = (iso: string | null) => Date.parse(`${iso ?? tenureAsOf}T00:00:00Z`);
 const q = (n: number) => Math.round(n * 10) / 10;
@@ -143,13 +147,14 @@ function Governments({ rows, onFinance }: { rows: ResponsibilityRow[]; onFinance
     <div className="resp-block-head"><div><h2 id="resp-govs-title">Vlády od roku 1993</h2><p>Od súčasnej po prvú vládu samostatnej SR. Koalícia je uvedená v čase vymenovania; strany, ktoré do kabinetu vstúpili neskôr, sú odlíšené.</p></div><button type="button" className="text-button" onClick={onFinance}>Ako tieto vlády hospodárili <ArrowRight size={16}/></button></div>
     <div className="resp-table-wrap" tabIndex={0} aria-label="Zoznam vlád; na úzkej obrazovke sa posúva vodorovne"><table className="resp-table">
       <caption className="sr-only">Vlády Slovenskej republiky od 1. 1. 1993</caption>
-      <thead><tr><th scope="col">Vláda</th><th scope="col">Premiér</th><th scope="col">Obdobie</th><th scope="col" className="num">Trvanie</th><th scope="col">Koalícia</th></tr></thead>
+      <thead><tr><th scope="col">Vláda</th><th scope="col">Premiér</th><th scope="col">Obdobie</th><th scope="col" className="num">Trvanie</th><th scope="col">Koalícia</th><th scope="col">V číslach<small>Eurostat, % HDP</small></th></tr></thead>
       <tbody>{[...cabinets].reverse().map(c => <tr key={c.id}>
         <th scope="row"><span className="resp-cab"><i style={{ background: c.color }} aria-hidden="true"/>{c.name}</span>{c.note && <small>{c.note}</small>}</th>
         <td>{c.pm}</td>
         <td className="resp-dates">{formatTenureDate(c.start)} – {c.end ? formatTenureDate(c.end) : "úraduje"}</td>
         <td className="num">{durationLabel(Math.round((at(c.end) - at(c.start)) / DAY))}</td>
         <td><Coalition cabinet={c} rows={rows}/></td>
+        <td className="resp-numbers">{summaries[c.id].years.length ? <><span>saldo <b className={(summaries[c.id].avgDeficitPct ?? 0) < -3 ? "is-bad" : ""}>{n1(summaries[c.id].avgDeficitPct)}</b> ročne</span><span>dlh <b>{n1(summaries[c.id].debtStartPct)} → {n1(summaries[c.id].debtEndPct)}</b></span><span>nezamestnanosť <b>{n1(summaries[c.id].avgUnemployment)} %</b></span><button type="button" onClick={onFinance}>detail</button></> : <span className="resp-muted">údaje Eurostatu od roku 1995</span>}</td>
       </tr>)}</tbody>
     </table></div>
   </section>;
