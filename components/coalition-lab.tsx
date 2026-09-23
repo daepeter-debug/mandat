@@ -73,7 +73,7 @@ export default function CoalitionLab({ onNavigate }: { onNavigate: (view: string
     setMessage("Obrázok je uložený medzi stiahnutými súbormi.");
   }
 
-  return <section className="mag-lab coalition-lab">
+  return <section className="mag-lab coalition-lab" id="koalicia">
     <div className="mag-lab-copy"><h2>Zostavte<br/>vlastnú<br/><span>koalíciu.</span></h2><p>Vyberte ľubovoľné strany alebo jednu z ciest k väčšine. Zistite, koľko kresiel by spolu získali v scenári z Modelu Mandát.</p><button className="mag-button lime" onClick={() => onNavigate("model")}>Vyskúšať vlastný model <ArrowUpRight size={20}/></button><p className="mag-lab-disclaimer">Výber je čisto matematický. Nehovorí nič o ochote strán spolupracovať.</p></div>
     <div className="mag-lab-play">
       <div className={`cl-top ${reached ? "is-majority" : ""}`}>

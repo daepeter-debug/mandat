@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — rýchle hľadanie na celom webe (Claude)
+
+V hlavičke pribudlo tlačidlo Hľadať a skratky Ctrl+K, Cmd+K alebo „/“ (`components/site-search.tsx`, knižnica cmdk, ktorá už bola v závislostiach). Nájde nástroje (rýchle odpovede, koaličná skladačka, porovnanie strán, peniaze strán, Tvoje Slovensko, dlhové hodiny, presnosť agentúr, prepočet kresiel), strany (otvorí profil), sekcie, hry, agentúry (otvorí archív s filtrom) a vlády podľa názvu aj premiéra. Štvormiestny rok ponúkne „Čo zažil ročník…“. Hľadá bez diakritiky a prednosť má zhoda celého slova, potom začiatok slova; náhodná zhoda písmen sa neráta. Po výbere nástroja web prepne sekciu a doskroluje na miesto (ciele majú odstup od prilepenej navigácie).
+
 ## 23. 9. 2026 — Úvod: koaličná skladačka s polkruhom a cestami k väčšine (Claude)
 
 Skladačka „Zostavte vlastnú koalíciu“ na úvode (`components/coalition-lab.tsx`) má namiesto pásika polkruh 150 kresiel, ktorý sa pri výbere vyfarbí vlnou zľava doprava; pri 76 kreslách číslo zasvieti a objaví sa štítok Väčšina. Pod stranami sú cesty k väčšine: najmenšie väčšinové kombinácie (súčet aspoň 76, bez ktorejkoľvek strany by väčšina padla; `lib/coalitions.ts`), a keď čitateľ vyberie strany, len tie, ktoré ich obsahujú. Kliknutím sa cesta vyberie. Výber sa dá uložiť ako obrázok 1200 × 630 (na mobile cez zdieľanie). Ostáva poznámka, že výber je čisto matematický a nehovorí nič o ochote strán spolupracovať.

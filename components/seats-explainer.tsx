@@ -36,7 +36,7 @@ export default function SeatsExplainer() {
   const votesPerSeat = Math.round(validVotes2023 * a.number / 100 / 100) * 100;
   const remainderSeats = rows.reduce((sum, r) => sum + r.extra, 0);
   const pick = (id: string) => { setFocus(id); setShare(currentAggregate.values[id].value); };
-  return <section className="seats-explainer" aria-labelledby={`${uid}-title`}>
+  return <section className="seats-explainer" id="ako-kresla" aria-labelledby={`${uid}-title`}>
     <div className="se-head"><h2 id={`${uid}-title`}>Ako sa z hlasov stanú kreslá</h2><p>Štyri kroky podľa volebného zákona na dnešnom Modeli Mandát. Posuňte podporu jednej strany a sledujte, čo s parlamentom urobí hranica 5 %.</p></div>
     <div className="se-control">
       <label htmlFor={`${uid}-party`}>Strana</label>
