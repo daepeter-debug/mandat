@@ -317,13 +317,22 @@ assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durat
   assert.deepEqual(gltf.asset.extras.seats, now.seats, '3D parlament je zastaraný — spusti: node scripts/build-parliament-glb.mjs');
   assert.equal(gltf.nodes.filter(n => n.name.startsWith('kreslo ')).length, 150, '3D parlament: 150 kresiel');
 }
-// Hlas v Mandáte za minútu: nahrávky nie sú povinné (tlačidlo sa bez nich neukáže); pri zastaraných len upozorníme.
+// Hlas (ElevenLabs): nahrávky nie sú povinné (tlačidlá sa bez nich neukážu), ale súbory musia existovať. Nahrávka s iným
+// textom alebo zo starého vydania len upozorní — web položky s vydaním skryje sám; nezmenený text prepečiatkuje import-audio --restamp.
 {
-  const audio = JSON.parse(readFileSync(new URL('../lib/story-audio.json', import.meta.url), 'utf8'));
-  const { narrationEdition } = await import('../lib/story-narration.ts');
-  const ids = Object.keys(audio.slides ?? {});
-  if (ids.length && audio.edition !== narrationEdition) console.warn(`Upozornenie: nahrávky Mandátu za minútu sú z vydania ${audio.edition}, aktuálne je ${narrationEdition} — node scripts/build-audio.mjs`);
-  for (const id of ids) assert.ok(existsSync(new URL(`../public${audio.slides[id].src}`, import.meta.url)), `Hlas: chýba súbor ${audio.slides[id].src}`);
+  const { audioSets, narrationEdition } = await import('../lib/narration.ts');
+  const { createHash } = await import('node:crypto');
+  const sets = audioSets(JSON.parse(readFileSync(new URL('../lib/party-profiles.json', import.meta.url), 'utf8')));
+  for (const set of Object.keys(sets)) {
+    const audio = JSON.parse(readFileSync(new URL(`../lib/audio/${set}.json`, import.meta.url), 'utf8'));
+    for (const [id, item] of Object.entries(audio.items ?? {})) {
+      assert.ok(existsSync(new URL(`../public${item.src}`, import.meta.url)), `Hlas: chýba súbor ${item.src}`);
+      const text = sets[set].find(t => t.id === id)?.text;
+      const hash = text && createHash('sha1').update(`${audio.voice}|${audio.model}|${text}`).digest('hex').slice(0, 10);
+      if (hash !== item.hash) console.warn(`Upozornenie: nahrávka ${set}/${id} nesedí s aktuálnym textom — nahraj znova (node scripts/import-audio.mjs --sheet)`);
+      else if (item.edition && item.edition !== narrationEdition) console.warn(`Upozornenie: nahrávka ${set}/${id} je z vydania ${item.edition} — node scripts/import-audio.mjs --restamp`);
+    }
+  }
 }
 // RSS: každé meranie z archívu je jedna položka s vlastným guid a odkazom na detail; XML znaky sú ošetrené.
 {

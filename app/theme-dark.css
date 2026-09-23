@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 28 súborov (a2aa708068) — needitovať ručne. Pravidiel: 1260, prefarbených: 999. */
+/* Generované scripts/build-dark.mjs z 29 súborov (36159fc2b1) — needitovať ručne. Pravidiel: 1267, prefarbených: 1004. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3005,6 +3005,31 @@ html[data-theme="dark"] .games-room :is(button,a):focus-visible {
 }
 html[data-theme="dark"] .games-room-footnote {
     color: #bfcec6
+}
+html[data-theme="dark"] .listen-button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .listen-button::before {
+    background: #272f1f
+}
+html[data-theme="dark"] .listen-button:hover {
+    border-color: #4d5548
+}
+html[data-theme="dark"] .listen-button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .listen-icon {
+    background: #20392f;
+    color: #fff
+}
+html[data-theme="dark"] .listen-text small {
+    color: #bccac2
+}
+html[data-theme="dark"] .listen-button[aria-pressed=true] .listen-icon {
+    background: #2f6b3f
 }
 html[data-theme="dark"] .minute-launch {
     border: 1px solid #41463d;

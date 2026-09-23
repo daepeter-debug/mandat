@@ -1,0 +1,10 @@
+/* Tlačidlo „Vypočuj si“ (components/listen-button.tsx) */
+.listen-button{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:38px;margin:2px 0 10px;padding:3px 14px 3px 4px;overflow:hidden;border:1px solid var(--border);border-radius:999px;background:#fffefa;font:inherit;color:var(--mag-ink);cursor:pointer;-webkit-tap-highlight-color:transparent;isolation:isolate}
+.listen-button::before{content:"";position:absolute;inset:0;z-index:-1;background:#e3eed8;transform:scaleX(var(--p,0));transform-origin:left;transition:transform .25s linear}
+.listen-button:hover{border-color:#b9c7b0}
+.listen-button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.listen-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#20392f;color:#fff}
+.listen-text{display:grid;text-align:left;font-size:13px;font-weight:650;line-height:1.2}
+.listen-text small{font-size:11px;font-weight:500;color:var(--text-3)}
+.listen-button[aria-pressed=true] .listen-icon{background:#2f6b3f}
+@media(prefers-reduced-motion:reduce){.listen-button::before{transition:none}}

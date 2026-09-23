@@ -11,7 +11,8 @@ import { track } from "@/lib/track";
 import { currentSeatUncertainty, inRuns } from "@/lib/uncertainty";
 import { isBirthYear } from "@/lib/your-slovakia";
 import { storyCardImage } from "@/components/story-image";
-import storyAudio from "@/lib/story-audio.json";
+import storyAudio from "@/lib/audio/story.json";
+import { voiceItem } from "@/lib/voice";
 import "@/app/story.css";
 
 /*
@@ -23,9 +24,8 @@ import "@/app/story.css";
 */
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 // Nahrávky kariet (scripts/build-audio.mjs, neurálny hlas ElevenLabs). Tlačidlo sa ukáže, len ak sú pre toto vydanie všetky.
-type AudioSlide = { src: string; ms: number };
-const audioSlides = storyAudio.slides as Record<string, AudioSlide | undefined>;
-const hasVoice = storyAudio.edition === edition.asOf && slides.every(s => audioSlides[s.id]);
+const audioSlides = Object.fromEntries(slides.map(s => [s.id, voiceItem(storyAudio, s.id)]));
+const hasVoice = slides.every(s => audioSlides[s.id]);
 
 function Count({ value, digits = 0 }: { value: number; digits?: number }) {
   const [shown, setShown] = useState(() => reducedMotion() ? value : 0);

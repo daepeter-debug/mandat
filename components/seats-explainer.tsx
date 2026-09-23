@@ -7,6 +7,10 @@ import { allocateSeats, validVotes2023 } from "@/lib/parliament";
 import { fmt, parties } from "@/lib/polls";
 import { thresholdStatus } from "@/lib/uncertainty";
 import "@/app/seats-explainer.css";
+import ListenButton from "@/components/listen-button";
+import seatsAudio from "@/lib/audio/seats.json";
+import { voiceItem } from "@/lib/voice";
+const seatsVoice = voiceItem(seatsAudio, "kroky");
 
 /*
   Ako sa z hlasov stanú kreslá (§ 68 zákona 180/2014 Z. z.), krok za krokom na dnešnom Modeli Mandát:
@@ -37,7 +41,7 @@ export default function SeatsExplainer() {
   const remainderSeats = rows.reduce((sum, r) => sum + r.extra, 0);
   const pick = (id: string) => { setFocus(id); setShare(currentAggregate.values[id].value); };
   return <section className="seats-explainer" id="ako-kresla" aria-labelledby={`${uid}-title`}>
-    <div className="se-head"><h2 id={`${uid}-title`}>Ako sa z hlasov stanú kreslá</h2><p>Štyri kroky podľa volebného zákona na dnešnom Modeli Mandát. Posuňte podporu jednej strany a sledujte, čo s parlamentom urobí hranica 5 %.</p></div>
+    <div className="se-head"><h2 id={`${uid}-title`}>Ako sa z hlasov stanú kreslá</h2><p>Štyri kroky podľa volebného zákona na dnešnom Modeli Mandát. Posuňte podporu jednej strany a sledujte, čo s parlamentom urobí hranica 5 %.</p><ListenButton id="kresla" src={seatsVoice?.src} ms={seatsVoice?.ms} label="Vypočuj si vysvetlenie" credit={seatsAudio.credit}/></div>
     <div className="se-control">
       <label htmlFor={`${uid}-party`}>Strana</label>
       <select id={`${uid}-party`} value={focus} onChange={e => pick(e.target.value)}>{base.map(v => <option key={v.partyId} value={v.partyId}>{nameOf(v.partyId)?.short ?? v.partyId}</option>)}</select>

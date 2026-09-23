@@ -1,5 +1,27 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — hlasové verzie: rýchle odpovede, kreslá, profily a import z webu ElevenLabs (Claude)
+
+Tlačidlo „Vypočuj si“ s ikonou reproduktora je pri týchto textoch:
+- Mandát za minútu (prepínač hlasu v príbehu);
+- šesť rýchlych odpovedí na úvode;
+- „Ako sa z hlasov stanú kreslá“;
+- „Čím sa profiluje“ v profile strany.
+
+Texty sú v `lib/narration.ts`. Čísla a názvy strán sú rozpísané do slov, aby ich slovenský hlas prečítal správne. Pribudol správny tvar percentuálnych bodov aj pri celom čísle. Hlas je slovenský „Adam – Young and Energetic“ (Voice Library, model Multilingual v2) a je označený „Hlas: ElevenLabs (AI)“.
+
+Na free pláne API nepustí hlasy z Voice Library (HTTP 402). Nahrávky sa preto vytvárajú na webe ElevenLabs a do projektu ich prenesie `scripts/import-audio.mjs`:
+- `--sheet` vypíše nahrávací hárok, teda poradie a presné texty.
+- `--history` stiahne nahrávky z histórie účtu podľa presnej zhody textu (kľúč musí mať oprávnenie History: Read).
+- `--from=<priečinok>` prevezme stiahnuté MP3 v poradí hárku. Pomer znakov a sekúnd kontroluje, či súbory nie sú prehodené.
+- `--restamp` len prepečiatkuje nezmenené texty po novom vydaní.
+
+Každá nahrávka nesie hash svojho textu. Texty s číslami z prieskumov nesú aj vydanie Modelu Mandát a po novom meraní ich web skryje, aby hlas nečítal staré čísla. Dlh a „Čo zažil môj ročník“ platia ďalej. `verify-data` upozorní na nahrávky so starým textom alebo vydaním. Dĺžka sa počíta z rámcov MP3.
+
+Opravy textov na kartách:
+- „Kto by dnes vyhral?“ upozorňuje len na strany, ktoré prieskumy v roku 2023 podcenili.
+- „Koľko hlasov prepadne?“ má správny tvar „N zo 100 hlasov by prepadlo“.
+
 ## 23. 9. 2026 — príprava hlasu pre Mandát za minútu (Claude)
 
 Mandát za minútu je pripravený na predčítanie neurálnym hlasom ElevenLabs. Texty kariet (`lib/story-narration.ts`) vychádzajú z tých istých dát ako karty a čísla aj skratky strán sú rozpísané do slov, aby ich hlas prečítal správne po slovensky: „devätnásť celých tri percenta“, „Progresívne Slovensko“ namiesto „PS“, správne tvary „Demokrati majú“. Šesť kariet má spolu asi 1 255 znakov.

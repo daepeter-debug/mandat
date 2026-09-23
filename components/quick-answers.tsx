@@ -2,17 +2,21 @@
 
 import { createContext, lazy, Suspense, useContext, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { ArrowRight, Crown, Landmark, Scale, Split, Users, Wallet } from "lucide-react";
+import ListenButton from "@/components/listen-button";
+import quickAudio from "@/lib/audio/quick.json";
 import { currentAggregate } from "@/lib/aggregate";
 import { MAJORITY } from "@/lib/blocs";
 import { edition } from "@/lib/edition";
 import { fmt, parties } from "@/lib/polls";
 import { systematicErrors } from "@/lib/poll-accuracy";
 import { currentSeatUncertainty, inRuns, thresholdStatus } from "@/lib/uncertainty";
+import { voiceItem } from "@/lib/voice";
 import "@/app/quick-answers.css";
 
 /*
   Rýchle odpovede na úvode: šesť otázok, každá odpoveď je jeden obrázok a jedna veta.
   Čísla sú z Modelu Mandát (lib/edition, lib/uncertainty), dlh z Eurostatu (načíta sa až pri otvorení).
+  Hlasová verzia každej odpovede: lib/narration.ts (quickNarrations) → lib/audio/quick.json.
 */
 const DebtAnswer = lazy(() => import("@/components/quick-debt"));
 const party = (id: string) => parties.find(p => p.id === id);
@@ -46,7 +50,7 @@ function Winner() {
   const u = currentSeatUncertainty().parties;
   const pa = party(a.partyId)!, pb = party(b.partyId)!;
   const fa = u[a.partyId]?.first ?? 0, fb = u[b.partyId]?.first ?? 0;
-  const bias = systematicErrors().filter(x => x.sameSign && Math.abs(x.mean) >= 2);
+  const under = systematicErrors().filter(x => x.sameSign && x.mean <= -2);
   return <div className="qa-card qa-duel" style={{ "--a": pa.color, "--b": pb.color } as CSSProperties}>
     <div className="qa-duel-sides">
       <span><b>{pa.short}</b><strong><CountUp value={a.value} digits={1} suffix=" %"/></strong></span>
@@ -55,7 +59,7 @@ function Winner() {
     </div>
     <div className="qa-tug" aria-hidden="true"><i className="qa-tug-a" style={{ width: `${fa / (fa + fb || 1) * 100}%` }}/><i className="qa-tug-b"/></div>
     <p className="qa-say">Prvé miesto v Modeli Mandát: <b>{pa.short} {inRuns(fa)}</b>{fb > 0.05 ? <>, {pb.short} {inRuns(fb)}</> : null}.</p>
-    {bias.length > 0 && <p className="qa-fine">Pozor: v roku 2023 prieskumy podcenili {bias.filter(x => x.mean < 0).map(x => x.short).join(" a ")} priemerne o {fmt(Math.abs(bias.find(x => x.mean < 0)?.mean ?? 0))} b.</p>}
+    {under.length > 0 && <p className="qa-fine">Pozor: v roku 2023 prieskumy podcenili {under.map(x => x.short).join(" a ")} priemerne o {fmt(Math.abs(under[0].mean))} b.</p>}
   </div>;
 }
 
@@ -94,10 +98,11 @@ function Edge() {
 function Wasted() {
   const below = values.filter(v => v.value < 5 && v.value >= 1);
   const share = below.reduce((a, v) => a + v.value, 0);
+  const part = share >= 18 && share <= 22 ? "každý piaty" : share >= 9 && share <= 11 ? "každý desiaty" : null;
   return <div className="qa-card qa-wasted">
     <div className="qa-big"><strong><CountUp value={share} digits={0} suffix=" %"/></strong><span>hlasov by dnes<br/>nemalo zástupcu</span></div>
     <div className="qa-stack" aria-hidden="true">{below.map(v => <i key={v.partyId} style={{ flexGrow: v.value, background: party(v.partyId)?.color }} title={`${party(v.partyId)?.short} ${fmt(v.value)} %`}/>)}<i className="qa-stack-rest" style={{ flexGrow: 100 - share }}/></div>
-    <p className="qa-say">Približne <b>{share >= 18 && share <= 22 ? "každý piaty" : share >= 9 && share <= 11 ? "každý desiaty" : `${Math.round(share)} zo 100`}</b> hlas by prepadol: {below.map(v => party(v.partyId)?.short).join(", ")}.</p>
+    <p className="qa-say">Približne <b>{part ?? `${Math.round(share)} zo 100`}</b> {part ? "hlas by prepadol" : "hlasov by prepadlo"}: {below.map(v => party(v.partyId)?.short).join(", ")}.</p>
   </div>;
 }
 
@@ -124,6 +129,7 @@ const questions: Question[] = [
 export default function QuickAnswers({ onYear }: { onYear: (year: number) => void }) {
   const [active, setActive] = useState("winner");
   const [switched, setSwitched] = useState(false);
+  const voice = voiceItem(quickAudio, active);
   return <section className="qa" aria-labelledby="qa-title">
     <h2 id="qa-title">Rýchle odpovede</h2>
     <div className="qa-questions" role="tablist" aria-label="Otázky">
@@ -136,6 +142,7 @@ export default function QuickAnswers({ onYear }: { onYear: (year: number) => voi
       {active === "wasted" && <Wasted/>}
       {active === "debt" && <Suspense fallback={<div className="qa-card qa-loading"/>}><DebtAnswer/></Suspense>}
       {active === "year" && <YourYear onYear={onYear}/>}
+      <ListenButton id={`rychla-${active}`} src={voice?.src} ms={voice?.ms} label="Vypočuj si odpoveď" credit={quickAudio.credit}/>
     </div></Animate.Provider>
   </section>;
 }

@@ -9,6 +9,7 @@
 .qa-questions button[aria-selected=true] svg{color:#cfe3b8}
 .qa-questions button:focus-visible,.qa-year button:focus-visible,.qa-year input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .qa-panel{animation:qa-in .35s ease-out}
+.qa-panel>.listen-button{margin:12px 0 0}
 .qa-card{position:relative;min-height:210px;padding:22px 24px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,#fff,#fbfcf8);box-shadow:0 1px 2px #20392f0d,0 18px 36px -28px #20392f59}
 .qa-loading{background:#f4f6f0}
 .qa-say{margin:16px 0 0;font-size:15.5px;line-height:1.55;color:var(--mag-ink);max-width:64ch}
