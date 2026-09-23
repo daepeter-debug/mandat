@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — O dátach na mobile: rozbaľovacie sekcie (Claude)
+
+Stránka O dátach mala na telefóne vyše 16 000 px. Na mobile (do 760 px) je teraz osem zásad metodiky rozbaľovacích: viditeľný je nadpis a text sa otvorí ťuknutím (prvá zásada je otvorená). Dlhé zoznamy (agentúry a pokrytie dát, logá strán, fotografie osobností, register zdrojov) sú zbalené do jedného riadku s popisom. Stránka má na mobile asi 2 100 px. Na počítači sa všetko zobrazuje rozbalené ako doteraz (`components/mobile-fold.tsx`).
+
 ## 23. 9. 2026 — Strany na mobile: kompaktný zoznam (Claude)
 
 Na telefóne mala každá strana kartu vysokú asi 515 px (štítky, popis, hodnoty a zdroj), zoznam 16 strán mal vyše 8 000 px. Na mobile je teraz každá strana riadok ako v aplikácii: logo (alebo skratka, ak logo nie je), názov a podpora v Modeli Mandát s mini stĺpcom vo farbe strany; ťuknutie kamkoľvek na riadok otvorí profil so všetkými detailmi. Zoznam má asi 1 240 px. Na počítači sú karty bez zmeny.
