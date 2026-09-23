@@ -295,6 +295,7 @@ assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durat
     if (status === 'out') assert.ok(r.entry <= 0.1, `Neistota: ${v.partyId} je pod hranicou, ale vstupuje v ${r.entry}`);
   }
   assert.ok(a.blocs.opposition.low <= a.blocs.opposition.high && a.blocs.coalitionWith.majority >= 0 && a.blocs.coalitionWith.majority <= 1, 'Neistota: bloky');
+  assert.ok(Math.abs(Object.values(a.parties).reduce((s, r) => s + r.first, 0) - 1) < 1e-9, 'Neistota: prvé miesto má v každom prepočte práve jedna strana');
 }
 
 // Tvoje Slovensko: vlády a premiéri za život, 18. narodeniny, hospodárske zmeny od roku 1995.

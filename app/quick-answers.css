@@ -1,0 +1,78 @@
+/* Úvod: rýchle odpovede (components/quick-answers.tsx) */
+.qa{margin:28px 0 34px}
+.qa>h2{margin:0 0 10px;font-size:12px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2)}
+.qa-questions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.qa-questions button{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 16px;border:1px solid var(--border);border-radius:999px;background:#fff;font:inherit;font-size:13.5px;font-weight:600;color:var(--mag-ink);cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.qa-questions button svg{color:#6f9460;flex:none}
+.qa-questions button:hover{background:#f3f6ee;border-color:#b9c7b0;transform:translateY(-1px)}
+.qa-questions button[aria-selected=true]{background:var(--mag-ink);border-color:var(--mag-ink);color:#fff}
+.qa-questions button[aria-selected=true] svg{color:#cfe3b8}
+.qa-questions button:focus-visible,.qa-year button:focus-visible,.qa-year input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.qa-panel{animation:qa-in .35s ease-out}
+.qa-card{position:relative;min-height:210px;padding:22px 24px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,#fff,#fbfcf8);box-shadow:0 1px 2px #20392f0d,0 18px 36px -28px #20392f59}
+.qa-loading{background:#f4f6f0}
+.qa-say{margin:16px 0 0;font-size:15.5px;line-height:1.55;color:var(--mag-ink);max-width:64ch}
+.qa-say b{font-weight:650}
+.qa-fine{margin:8px 0 0;font-size:12px;line-height:1.5;color:var(--text-3);max-width:80ch}
+@keyframes qa-in{from{opacity:0;transform:translateY(8px)}}
+@keyframes qa-reveal{from{clip-path:inset(0 100% 0 0)}}
+@keyframes qa-pop{from{opacity:0;transform:translate(-50%,-50%) scale(.4)}}
+
+/* súboj o prvé miesto */
+.qa-duel-sides{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:12px}
+.qa-duel-sides>span{display:grid;gap:2px}.qa-duel-sides>span:last-child{text-align:right}
+.qa-duel-sides b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+.qa-duel-sides strong{font-size:clamp(34px,5vw,52px);font-weight:650;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.qa-duel-sides>span:first-child strong{color:var(--a)}.qa-duel-sides>span:last-child strong{color:var(--b)}
+.qa-duel-sides em{display:grid;place-items:center;width:40px;height:40px;margin-bottom:6px;border-radius:50%;background:#f0f3ec;font-style:normal;font-size:12px;font-weight:700;color:var(--text-2)}
+.qa-tug{display:flex;height:16px;margin-top:16px;border-radius:999px;overflow:hidden;background:#edf0e8;animation:qa-reveal .8s cubic-bezier(.2,.8,.2,1)}
+.qa-tug-a{background:var(--a)}.qa-tug-b{flex:1;background:var(--b)}
+
+/* väčšina */
+.qa-seats{position:relative;display:flex;gap:3px;height:34px;animation:qa-reveal .8s cubic-bezier(.2,.8,.2,1)}
+.qa-seats i{border-radius:6px}.qa-seats-c{background:#9b4d44}.qa-seats-o{background:#d9dfd3}.qa-seats-p{background:#3f6b8f}
+.qa-seats s{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--mag-ink);border-radius:2px}
+.qa-seats-legend{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;margin-top:10px;font-size:12.5px;color:var(--text-2)}
+.qa-seats-legend span{display:grid}.qa-seats-legend span:last-child{text-align:right}
+.qa-seats-legend b{font-size:30px;font-weight:650;letter-spacing:-.02em;color:var(--mag-ink);font-variant-numeric:tabular-nums;line-height:1.1}
+.qa-seats-legend .qa-mid{align-self:end;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)}
+
+/* na hrane 5 % */
+.qa-line{position:relative;margin:0 70px 0 0}
+.qa-line-limit{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed #9aa996}
+.qa-line-limit em{position:absolute;top:0;left:6px;font-style:normal;font-size:11px;font-weight:700;color:var(--text-2);white-space:nowrap}
+.qa-line-row{position:absolute;left:0;right:0;height:14px}
+.qa-line-row i{position:absolute;top:3px;height:8px;border-radius:999px;background:var(--c);opacity:.3;animation:qa-reveal .7s ease-out}
+.qa-line-row b{position:absolute;top:7px;width:12px;height:12px;border-radius:50%;background:var(--c);transform:translate(-50%,-50%);box-shadow:0 0 0 2px #fff;animation:qa-pop .5s ease-out}
+.qa-line-row small{position:absolute;top:0;margin-left:8px;font-size:11.5px;font-weight:600;color:var(--mag-ink);white-space:nowrap;line-height:14px}
+.qa-line-row.is-edge i{opacity:.55}.qa-line-row.is-edge small{color:#8a5a12}
+
+/* prepadnuté hlasy a dlh */
+.qa-big{display:flex;align-items:flex-end;gap:14px}
+.qa-big strong{font-size:clamp(46px,7vw,72px);font-weight:650;letter-spacing:-.04em;line-height:.95;color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.qa-big span{padding-bottom:8px;font-size:13px;line-height:1.35;color:var(--text-2)}
+.qa-stack{display:flex;gap:2px;height:18px;margin-top:16px;border-radius:6px;overflow:hidden;animation:qa-reveal .8s cubic-bezier(.2,.8,.2,1)}
+.qa-stack i{display:block}.qa-stack-rest{background:#e7ece2}
+.qa-debt{background:linear-gradient(180deg,#20392f,#1a2f27);border-color:#20392f;color:#f5f4ee}
+.qa-debt .qa-big strong{color:#f5f4ee}.qa-debt .qa-big span{color:#bccbb4}
+.qa-debt .qa-say{color:#e6ecdf}.qa-debt .qa-say b{color:#fff}
+.qa-debt-person{margin-top:14px;display:inline-flex;padding:8px 14px;border-radius:999px;background:#ffffff14;font-size:14px;color:#dfe8d6}
+.qa-debt-person b{color:#fff;font-variant-numeric:tabular-nums}
+
+/* môj ročník */
+.qa-year label{display:block;margin-bottom:8px;font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
+.qa-year>div{display:flex;flex-wrap:wrap;gap:10px}
+.qa-year input{width:200px;height:56px;padding:0 16px;border:1px solid #c9d4c1;border-radius:10px;background:#fff;font:600 28px/1 "IBM Plex Sans Variable",sans-serif;color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.qa-year .mag-button{min-height:56px}
+.qa-year .mag-button:disabled{opacity:.45;cursor:default}
+
+@media(prefers-reduced-motion:reduce){.qa-panel,.qa-tug,.qa-seats,.qa-stack,.qa-line-row i,.qa-line-row b{animation:none}.qa-questions button{transition:none}}
+@media(max-width:760px){
+  .qa-questions{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;margin:0 -20px 12px;padding:0 20px 4px;scrollbar-width:none}
+  .qa-questions::-webkit-scrollbar{display:none}
+  .qa-questions button{flex:none;scroll-snap-align:start}
+  .qa-card{padding:18px 16px;min-height:0}
+  .qa-say{font-size:14.5px}
+  .qa-seats-legend b{font-size:24px}
+  .qa-year input{width:150px}
+}

@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Úvod: rýchle odpovede (Claude)
+
+Pod úvodným vydaním pribudol pás šiestich otázok (`components/quick-answers.tsx`). Každá odpoveď je jeden obrázok a jedna veta: kto by dnes vyhral (súboj prvých dvoch strán s ťahaným pásom podľa toho, v koľkých prepočtoch je strana prvá, a s upozornením, že v roku 2023 prieskumy podcenili Smer), či má niekto väčšinu (pás 150 kresiel so značkami 76), kto je na hrane 5 % (číselná os s pásmami strán), koľko hlasov by prepadlo, aký veľký je dlh (odhad beží po sekundách, dáta sa načítajú až pri otvorení) a čo zažil tvoj ročník (vedie do Tvojho Slovenska). Podiel prepočtov sa píše slovom („v 9 z 10“, pri krajných hodnotách „takmer vo všetkých“), aby to neznelo ako istota. Simulácia v `lib/uncertainty.ts` počíta aj prvé miesto. Čísla pri prepnutí otázky nabehnú od nuly; pri „obmedziť pohyb“ bez animácie.
+
 ## 23. 9. 2026 — Vlastný model: ako sa z hlasov stanú kreslá (Claude)
 
 Pod Vlastným modelom pribudlo vysvetlenie prepočtu hlasov na kreslá podľa § 68 zákona 180/2014 Z. z. v štyroch krokoch (hranica, republikové volebné číslo = hlasy postupujúcich strán / 151, celé kreslá, zvyšky) na dnešnom Modeli Mandát (`components/seats-explainer.tsx`, výpočet `allocateSeats` sa nemenil). Posuvník mení podporu jednej strany (predvolene strany na hrane 5 %, dnes Demokrati) a tabuľka ukazuje delenie volebným číslom, celé kreslá, zvyšok a zmenu kresiel každej strany oproti dnešku. Pri 5,2 % by Demokrati mali 9 kresiel a ostatné strany by stratili po jednom až dvoch. Uvádza sa aj, koľko hlasov „stojí“ jedno kreslo pri účasti ako v roku 2023.

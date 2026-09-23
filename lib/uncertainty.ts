@@ -22,8 +22,8 @@ export const thresholdHints: Record<ThresholdStatus, string> = {
 };
 
 export const SIMULATIONS = 2000;
-export type SeatRange = { low: number; high: number; entry: number };
-export type BlocRange = SeatRange & { majority: number };
+export type SeatRange = { low: number; high: number; entry: number; first: number };
+export type BlocRange = { low: number; high: number; entry: number; majority: number };
 export type SeatUncertainty = {
   simulations: number;
   parties: Record<string, SeatRange>;
@@ -56,10 +56,13 @@ export function seatUncertainty(point: AggregatePoint = currentAggregate, n = SI
   const gauss = () => { const u = 1 - random(), v = random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
   const values = Object.values(point.values);
   const seats: Record<string, number[]> = Object.fromEntries(values.map(v => [v.partyId, [] as number[]]));
+  const firsts: Record<string, number> = Object.fromEntries(values.map(v => [v.partyId, 0]));
   const bloc = { coalition: [] as number[], opposition: [] as number[], coalitionWith: [] as number[], oppositionWith: [] as number[] };
   for (let i = 0; i < n; i++) {
     const shares = values.map(v => ({ id: v.partyId, share: Math.max(0, v.value + gauss() * (v.upper - v.lower) / (2 * 1.96)), kind: 'party' as const }));
     const allocation = allocateSeats(shares);
+    // Prvé miesto = najviac hlasov v danom prepočte.
+    firsts[shares.reduce((best, s) => s.share > best.share ? s : best).id]++;
     const entries: SeatEntry[] = [];
     for (const v of values) {
       const s = allocation.seats[v.partyId] ?? 0;
@@ -72,7 +75,7 @@ export function seatUncertainty(point: AggregatePoint = currentAggregate, n = SI
   }
   return {
     simulations: n,
-    parties: Object.fromEntries(Object.entries(seats).map(([id, list]) => { const { low, high, entry } = range(list); return [id, { low, high, entry }]; })),
+    parties: Object.fromEntries(Object.entries(seats).map(([id, list]) => { const { low, high, entry } = range(list); return [id, { low, high, entry, first: firsts[id] / n }]; })),
     blocs: { coalition: range(bloc.coalition, true), opposition: range(bloc.opposition, true), coalitionWith: range(bloc.coalitionWith, true), oppositionWith: range(bloc.oppositionWith, true) },
   };
 }
