@@ -1,8 +1,17 @@
 # Evidencia údajov a rozsahu
 
-## 23. 9. 2026 — mobilná navigácia dole a kompaktná hlavička (Claude)
+## 23. 9. 2026 — plávajúca spodná navigácia a bezpečné zóny iPhonu (Claude)
 
-Na telefóne bola horná lišta s 11 záložkami (viditeľné asi štyri) a hlavička s citátom zaberala 121 px; nadpis úvodu začínal až v dvoch tretinách prvej obrazovky. Na mobile (do 760 px) je teraz navigácia dole pri palci (`components/mobile-dock.tsx`): Prehľad, Prieskumy, Strany, Hospodárenie a Viac. Viac otvorí spodný panel so všetkými ostatnými sekciami ako dlaždicami s krátkym popisom a s hľadaním. Horná lišta záložiek je na mobile skrytá a citát v hlavičke tiež (hlavička má 77 px), takže nadpis úvodu je o 100 px vyššie. Prilepená lišta kresiel vo Vlastnom modeli a skoky z hľadania rátajú s novou výškou. Na počítači sa nič nemení.
+Spodná navigácia na mobile už nie je prilepená k spodnému okraju. Je to plávajúca lišta s oblými rohmi, 10 px od okrajov a nad pásikom na zatvorenie aplikácie, polopriehľadná. Aktívnu sekciu označuje zvýraznenie, ktoré sa pri prepnutí posunie. Keď čitateľ skroluje nadol, lišta sa zmenší na ikony; pri pohybe nahor alebo na konci stránky sa znova rozbalí.
+
+Príčina problému na iPhone: stránke chýbalo `viewport-fit=cover`, preto iPhone nehlásil bezpečné zóny (`env(safe-area-inset-*)`). V nainštalovanej aplikácii tak lišta sedela pod pásikom a v Safari tesne pri jeho lište. Teraz to nastavenie `viewport` v `app/layout.tsx` má.
+
+S tým súvisia aj ďalšie úpravy:
+- Na telefóne na šírku bočný panel strán a obsah nevojdú pod výrez displeja.
+- Spodok profilov strán a detailov meraní nekončí pod pásikom iPhonu.
+- V nainštalovanej aplikácii je hlavička pod stavovým riadkom.
+- V tmavom režime má zvýraznenie vlastný odtieň.
+- Pri „obmedziť pohyb“ je lišta bez animácií.
 
 ## 23. 9. 2026 — Parlament v 3D a na stole (Claude)
 
