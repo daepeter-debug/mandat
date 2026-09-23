@@ -87,6 +87,9 @@
 .story-links{display:flex;flex-wrap:wrap;gap:8px}
 .story-links button{min-height:44px;padding:0 16px;border:1px solid #ffffff45;border-radius:999px;background:none;color:#f3f7ef;font-size:14px;font-weight:600;cursor:pointer}
 .story-links button:hover,.story-foot button:hover:not(:disabled){background:#ffffff1f}
+.story-toast{position:absolute;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));translate:-50% 0;max-width:calc(100% - 48px);margin:0;padding:10px 16px;border-radius:999px;background:#0b1510e6;color:#f3f7ef;font-size:13px;line-height:1.35;text-align:center;pointer-events:none}
+.story-toast:empty{display:none}
+.story-bar button:disabled{opacity:.5;cursor:progress}
 .story-foot{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;padding:6px 10px calc(10px + env(safe-area-inset-bottom,0px));font-size:11.5px;line-height:1.35;color:#b8ccbf;text-align:center}
 .story-foot button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:#ffffff14;color:#f3f7ef;cursor:pointer}
 .story-foot button:disabled{opacity:.35;cursor:default}

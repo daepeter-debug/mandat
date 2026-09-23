@@ -2,53 +2,24 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type PointerEvent } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import { ArrowDownRight, ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
-import { currentAggregate } from "@/lib/aggregate";
+import { ArrowDownRight, ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, Share2, X } from "lucide-react";
 import { MAJORITY } from "@/lib/blocs";
 import { edition, signed } from "@/lib/edition";
-import { hemicycleSeats } from "@/lib/parliament";
-import { date, fmt, parties } from "@/lib/polls";
-import { financeYears, latestFinanceYear } from "@/lib/public-finance";
+import { date, fmt } from "@/lib/polls";
+import { blocs, debtAt, debtLastMeur, debtPerSecond, debtYear, down, edge, leader, lowerFirst, majorityWinner, population, pollWordNew, ranked, seatPoints, seatSide, slides, storyParty, up, type SlideId } from "@/lib/story-data";
+import { track } from "@/lib/track";
 import { currentSeatUncertainty, inRuns } from "@/lib/uncertainty";
 import { isBirthYear } from "@/lib/your-slovakia";
+import { storyCardImage } from "@/components/story-image";
 import "@/app/story.css";
 
 /*
   „Mandát za minútu“: šesť kariet ako príbeh na sociálnych sieťach. Karta sa po pár sekundách sama posunie
   (prúžky hore), ťuknutie vpravo/vľavo = ďalšia/predchádzajúca, podržanie = pauza, potiahnutie dole = zavrieť,
   na klávesnici šípky, medzerník a Esc. Pri „obmedziť pohyb“ sa karty neposúvajú samy a čísla nenabiehajú.
-  Čísla sú tie isté ako na úvode: Model Mandát (lib/edition, lib/uncertainty) a Eurostat (lib/public-finance).
+  Tlačidlo Zdieľať uloží kartu ako obrázok 1080 × 1920 (components/story-image.ts); na mobile otvorí zdieľanie.
+  Dáta: lib/story-data.ts (rovnaké čísla ako na úvode).
 */
-const party = (id: string) => parties.find(p => p.id === id);
-const ranked = Object.values(currentAggregate.values).sort((a, b) => b.value - a.value);
-const leader = ranked[0];
-const up = edition.movers.find(m => m.delta > 0);
-const down = edition.movers.find(m => m.delta < 0);
-const edge = ranked.filter(v => v.lower < 5 && v.upper >= 5).slice(0, 4);
-const w = edition.withPartners;
-const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
-
-const lastYear = latestFinanceYear;
-const prevYear = financeYears.find(r => r.year === lastYear.year - 1);
-const perSecond = prevYear ? (lastYear.debtMeur - prevYear.debtMeur) * 1e6 / (365 * 86_400) : 0;
-const debtFrom = Date.UTC(lastYear.year + 1, 0, 1) - 3_600_000;
-const population = lastYear.population ?? 5_400_000;
-const debtAt = (t: number) => lastYear.debtMeur * 1e6 + Math.max(0, (t - debtFrom) / 1000) * perSecond;
-
-// Kreslá zoradené zľava doprava podľa uhla: koalícia vľavo, opozícia vpravo, ostatní v strede.
-const seatPoints = hemicycleSeats(150, 6).map(p => ({ ...p, a: Math.atan2(-p.y, p.x) })).sort((a, b) => b.a - a.a);
-const seatSide = (i: number) => i < w.coalition ? "c" : i >= 150 - w.opposition ? "o" : "n";
-
-type SlideId = "leader" | "seats" | "month" | "edge" | "debt" | "you";
-const slides: { id: SlideId; label: string; bg: string; ms: number }[] = [
-  { id: "leader", label: "Kto vedie", bg: "#183c31", ms: 6500 },
-  { id: "seats", label: "Kreslá dnes", bg: "#1b2b3b", ms: 7000 },
-  { id: "month", label: "Za posledný mesiac", bg: "#2a301c", ms: 6000 },
-  { id: "edge", label: "Na hrane 5 %", bg: "#34272b", ms: 7000 },
-  { id: "debt", label: "Dlh štátu", bg: "#20392f", ms: 6500 },
-  { id: "you", label: "A čo ty?", bg: "#183c31", ms: 9000 },
-];
-
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function Count({ value, digits = 0 }: { value: number; digits?: number }) {
@@ -80,14 +51,14 @@ function DebtSlide() {
   return <>
     <p className="story-big story-debt">{(debt / 1e9).toLocaleString("sk-SK", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}<small> mld. €</small></p>
     <ul className="story-facts">
-      <li><b>+{Math.round(perSecond).toLocaleString("sk-SK")} €</b><span>každú sekundu</span></li>
+      <li><b>+{Math.round(debtPerSecond).toLocaleString("sk-SK")} €</b><span>každú sekundu</span></li>
       <li><b>{Math.round(debt / population).toLocaleString("sk-SK")} €</b><span>na obyvateľa</span></li>
     </ul>
-    <p className="story-fine">Odhad tempom rastu dlhu v roku {lastYear.year}. Posledný údaj Eurostatu: {(lastYear.debtMeur / 1000).toLocaleString("sk-SK", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mld. € ku koncu roka {lastYear.year}.</p>
+    <p className="story-fine">Odhad tempom rastu dlhu v roku {debtYear}. Posledný údaj Eurostatu: {(debtLastMeur / 1000).toLocaleString("sk-SK", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mld. € ku koncu roka {debtYear}.</p>
   </>;
 }
 
-const Dot = ({ id }: { id: string }) => <i className="story-dot" style={{ background: party(id)?.color ?? "#8a968c" }} aria-hidden="true"/>;
+const Dot = ({ id }: { id: string }) => <i className="story-dot" style={{ background: storyParty(id)?.color ?? "#8a968c" }} aria-hidden="true"/>;
 
 function Slide({ id, onYear, onCoalition, onPolls }: { id: SlideId; onYear: (y: number) => void; onCoalition: () => void; onPolls: () => void }) {
   const u = currentSeatUncertainty();
@@ -97,21 +68,21 @@ function Slide({ id, onYear, onCoalition, onPolls }: { id: SlideId; onYear: (y: 
     const top = ranked.slice(0, 5);
     const max = Math.max(...top.map(v => v.upper));
     return <>
-      <p className="story-party"><Dot id={leader.partyId}/>{party(leader.partyId)?.short}</p>
+      <p className="story-party"><Dot id={leader.partyId}/>{storyParty(leader.partyId)?.short}</p>
       <p className="story-big"><Count value={leader.value} digits={1}/><small> %</small></p>
       <p className="story-text">Pásmo neistoty {fmt(leader.lower)}–{fmt(leader.upper)} %. Prvé miesto {inRuns(u.parties[leader.partyId]?.first ?? 0)}.</p>
       <ol className="story-bars" aria-label="Päť strán s najvyššou podporou">
-        {top.map((v, i) => <li key={v.partyId} style={{ "--w": v.value / max, "--c": party(v.partyId)?.color, "--i": i } as CSSProperties}><span>{party(v.partyId)?.short}</span><i aria-hidden="true"/><b>{fmt(v.value)} %</b></li>)}
+        {top.map((v, i) => <li key={v.partyId} style={{ "--w": v.value / max, "--c": storyParty(v.partyId)?.color, "--i": i } as CSSProperties}><span>{storyParty(v.partyId)?.short}</span><i aria-hidden="true"/><b>{fmt(v.value)} %</b></li>)}
       </ol>
     </>;
   }
   if (id === "seats") {
-    const winner = w.opposition >= MAJORITY ? { label: w.oppositionLabel, share: u.blocs.oppositionWith.majority } : w.coalition >= MAJORITY ? { label: w.coalitionLabel, share: u.blocs.coalitionWith.majority } : null;
+    const winner = majorityWinner();
     return <>
-      <svg className="story-hemi" viewBox="-1.08 -1.08 2.16 1.16" role="img" aria-label={`${w.coalitionLabel} ${w.coalition} kresiel, ${lowerFirst(w.oppositionLabel)} ${w.opposition} kresiel, ostatní ${150 - w.coalition - w.opposition}.`}>
+      <svg className="story-hemi" viewBox="-1.08 -1.08 2.16 1.16" role="img" aria-label={`${blocs.coalitionLabel} ${blocs.coalition} kresiel, ${lowerFirst(blocs.oppositionLabel)} ${blocs.opposition} kresiel, ostatní ${150 - blocs.coalition - blocs.opposition}.`}>
         {seatPoints.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r={0.034} className={`is-${seatSide(i)}`} style={{ "--i": i } as CSSProperties}/>)}
       </svg>
-      <div className="story-vs"><span className="is-c"><b><Count value={w.coalition}/></b>{w.coalitionLabel}</span><em>väčšina {MAJORITY}</em><span className="is-o"><b><Count value={w.opposition}/></b>{w.oppositionLabel}</span></div>
+      <div className="story-vs"><span className="is-c"><b><Count value={blocs.coalition}/></b>{blocs.coalitionLabel}</span><em>väčšina {MAJORITY}</em><span className="is-o"><b><Count value={blocs.opposition}/></b>{blocs.oppositionLabel}</span></div>
       <p className="story-text">{winner ? <>Väčšinu by mala {lowerFirst(winner.label)}, {inRuns(winner.share)}.</> : <>Väčšinu by nemal ani jeden blok.</>}</p>
       <p className="story-fine">Republiku ku koalícii a Hnutie Slovensko k opozícii radíme ako redakčný predpoklad, nie dohodu strán.</p>
     </>;
@@ -121,16 +92,16 @@ function Slide({ id, onYear, onCoalition, onPolls }: { id: SlideId; onYear: (y: 
       {up && <li className="is-up"><ArrowUpRight aria-hidden="true"/><span><Dot id={up.id}/>{up.short}<small>teraz {fmt(up.value)} %</small></span><strong>{signed(up.delta)}<small> p. b.</small></strong></li>}
       {down && <li className="is-down"><ArrowDownRight aria-hidden="true"/><span><Dot id={down.id}/>{down.short}<small>teraz {fmt(down.value)} %</small></span><strong>{signed(down.delta)}<small> p. b.</small></strong></li>}
     </ul>
-    <p className="story-text">Najväčší rast a pokles v Modeli Mandát od {date(edition.monthAgo)}. Za ten čas pribudlo {edition.newPolls.length} {edition.newPolls.length === 1 ? "meranie" : edition.newPolls.length < 5 ? "merania" : "meraní"}.</p>
+    <p className="story-text">Najväčší rast a pokles v Modeli Mandát od {date(edition.monthAgo)}. Za ten čas pribudlo {edition.newPolls.length} {pollWordNew(edition.newPolls.length)}.</p>
   </>;
   if (id === "edge") return edge.length ? <>
     <div className="story-line" aria-hidden="true">
       <div className="story-line-row is-scale"><span/><div><span>0 %</span><span>5 %</span><span>10 %</span></div><em/></div>
-      {edge.map((v, i) => <div key={v.partyId} className="story-line-row" style={{ "--l": Math.max(0, v.lower) / 10, "--u": Math.min(10, v.upper) / 10, "--v": Math.min(10, v.value) / 10, "--c": party(v.partyId)?.color, "--i": i } as CSSProperties}>
-        <span>{party(v.partyId)?.short}</span><div><s/><i/><b/></div><em>{fmt(v.value)} %</em>
+      {edge.map((v, i) => <div key={v.partyId} className="story-line-row" style={{ "--l": Math.max(0, v.lower) / 10, "--u": Math.min(10, v.upper) / 10, "--v": Math.min(10, v.value) / 10, "--c": storyParty(v.partyId)?.color, "--i": i } as CSSProperties}>
+        <span>{storyParty(v.partyId)?.short}</span><div><s/><i/><b/></div><em>{fmt(v.value)} %</em>
       </div>)}
     </div>
-    <p className="story-text">{edge.map((v, i) => <span key={v.partyId}>{i > 0 && " · "}<b>{party(v.partyId)?.short}</b> nad 5 % {inRuns(u.parties[v.partyId]?.entry ?? 0)}</span>)}.</p>
+    <p className="story-text">{edge.map((v, i) => <span key={v.partyId}>{i > 0 && " · "}<b>{storyParty(v.partyId)?.short}</b> nad 5 % {inRuns(u.parties[v.partyId]?.entry ?? 0)}</span>)}.</p>
     <p className="story-fine">Pásmo neistoty týchto strán pretína hranicu 5 %. O vstupe do parlamentu rozhodnú voľby, nie prieskum.</p>
   </> : <p className="story-text">Pásmo žiadnej strany dnes nepretína hranicu 5 %.</p>;
   if (id === "debt") return <DebtSlide/>;
@@ -155,6 +126,8 @@ export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: 
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hold, setHold] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [toast, setToast] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
   const slide = slides[index];
@@ -164,6 +137,27 @@ export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: 
   const close = () => onOpenChange(false);
   const after = (run: () => void) => { close(); window.setTimeout(run, 60); };
   const drag = (dy: number) => cardRef.current?.style.setProperty("--drag", `${Math.max(0, dy)}px`);
+  const say = (text: string) => { setToast(text); window.setTimeout(() => setToast(""), 2600); };
+
+  // Karta ako obrázok 1080 × 1920: na mobile systémové zdieľanie (Instagram, správy…), inak stiahnutie.
+  async function share() {
+    if (sharing) return;
+    setSharing(true);
+    track("share", `pribeh-${slide.id}`);
+    try {
+      const blob = await storyCardImage(slide.id);
+      if (!blob) { say("Obrázok sa nepodarilo vytvoriť."); return; }
+      const file = new File([blob], `mandat-${slide.id}.png`, { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: `Mandát za minútu · ${slide.label}` }); } catch { /* zdieľanie zrušené */ }
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url; a.download = file.name; a.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      say("Obrázok karty je uložený medzi stiahnutými súbormi.");
+    } finally { setSharing(false); }
+  }
 
   function onPointerDown(e: PointerEvent) {
     if ((e.target as HTMLElement).closest("button,a,input,form,label")) return;
@@ -201,9 +195,9 @@ export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: 
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="story-overlay"/>
       <DialogPrimitive.Content className="story" ref={cardRef} onKeyDown={onKeyDown} aria-describedby="story-help"
-        style={{ "--story-bg": slide.bg, "--dur": `${slide.ms}ms`, "--play": paused || hold ? "paused" : "running" } as CSSProperties}>
+        style={{ "--story-bg": slide.bg, "--dur": `${slide.ms}ms`, "--play": paused || hold || sharing ? "paused" : "running" } as CSSProperties}>
         <DialogPrimitive.Title className="sr-only">Mandát za minútu</DialogPrimitive.Title>
-        <p id="story-help" className="sr-only">Šesť kariet s hlavnými číslami. Šípkami vľavo a vpravo prechádzate kartami, medzerníkom zastavíte, Esc zavrie.</p>
+        <p id="story-help" className="sr-only">Šesť kariet s hlavnými číslami. Šípkami vľavo a vpravo prechádzate kartami, medzerníkom zastavíte, Esc zavrie. Tlačidlo Zdieľať uloží kartu ako obrázok.</p>
         <div className="story-top">
           <div className="story-progress" aria-hidden="true">{slides.map((s, i) => <i key={s.id} className={i < index ? "is-done" : i === index ? "is-active" : undefined}>
             {i === index ? <b key={`run-${index}`} onAnimationEnd={() => { if (!last) next(); }}/> : <b/>}
@@ -211,6 +205,7 @@ export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: 
           <div className="story-bar">
             <span className="story-brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#f5f4ee"><circle cx="10" cy="43" r="4.6"/><circle cx="16.4" cy="27.4" r="4.6"/><circle cx="32" cy="21" r="4.6"/><circle cx="21" cy="43" r="4.6"/><circle cx="32" cy="32" r="4.6"/></g><g fill="#9dbb86"><circle cx="47.6" cy="27.4" r="4.6"/><circle cx="54" cy="43" r="4.6"/><circle cx="43" cy="43" r="4.6"/></g></svg>
               <span><b>Mandát za minútu</b><small>{index + 1}/{slides.length} · {slide.label}</small></span></span>
+            <button type="button" onClick={share} disabled={sharing} aria-label="Zdieľať kartu ako obrázok" title="Uložiť alebo zdieľať kartu ako obrázok"><Share2 size={18}/></button>
             <button type="button" onClick={() => setPaused(v => !v)} aria-label={paused ? "Pokračovať" : "Zastaviť"}>{paused ? <Play size={18}/> : <Pause size={18}/>}</button>
             <DialogPrimitive.Close className="story-close" aria-label="Zavrieť"><X size={20}/></DialogPrimitive.Close>
           </div>
@@ -221,6 +216,7 @@ export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: 
             <Slide id={slide.id} onYear={y => after(() => onYear(y))} onCoalition={() => after(() => document.getElementById("koalicia")?.scrollIntoView({ behavior: reducedMotion() ? "instant" : "smooth", block: "start" }))} onPolls={() => after(() => onNavigate("polls"))}/>
           </section>
         </div>
+        <p className="story-toast" role="status">{toast}</p>
         <div className="story-foot">
           <button type="button" onClick={prev} disabled={index === 0} aria-label="Predchádzajúca karta"><ChevronLeft size={20}/></button>
           <span>{slide.id === "debt" ? "Eurostat, odhad Mandátu" : slide.id === "you" ? "Mandát · nezávislý projekt bez reklamy" : `Model Mandát k ${date(edition.asOf)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`}</span>
@@ -230,4 +226,3 @@ export default function MandatStory({ open, onOpenChange, onYear, onNavigate }: 
     </DialogPrimitive.Portal>
   </DialogPrimitive.Root>;
 }
-

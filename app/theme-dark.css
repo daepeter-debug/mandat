@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 24 súborov (69a31314d8) — needitovať ručne. Pravidiel: 1180, prefarbených: 936. */
+/* Generované scripts/build-dark.mjs z 24 súborov (025c7dcfc5) — needitovať ručne. Pravidiel: 1181, prefarbených: 936. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -4130,6 +4130,10 @@ html[data-theme="dark"] .story-links button {
 }
 html[data-theme="dark"] .story-links button:hover,html[data-theme="dark"] .story-foot button:hover:not(:disabled) {
     background: #ffffff1f
+}
+html[data-theme="dark"] .story-toast {
+    background: #0b1510e6;
+    color: #f3f7ef
 }
 html[data-theme="dark"] .story-foot {
     color: #b8ccbf

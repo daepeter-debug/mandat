@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — karty Mandátu za minútu ako obrázok (Claude)
+
+V príbehu „Mandát za minútu“ pribudlo tlačidlo Zdieľať. Aktuálnu kartu uloží ako obrázok 1080 × 1920, teda vo formáte príbehov na Instagrame a pod. Na mobile otvorí systémové zdieľanie, na počítači obrázok stiahne. Kým sa obrázok pripravuje, príbeh stojí.
+
+Obrázok sa kreslí z rovnakých dát ako karta (`lib/story-data.ts`, `components/story-image.ts`). Nesie značku Mandátu, číslo karty, zdroj, dátum údajov a adresu webu. Dlh má uvedený čas stavu. Dôležitý obsah je mimo horného a dolného pásu, ktorý siete prekrývajú vlastným ovládaním.
+
 ## 23. 9. 2026 — anonymná štatistika používania (Claude)
 
 Mandát anonymne počíta, ktoré sekcie a funkcie sa používajú, bez cookies a bez tretích strán. Počíta tieto udalosti:
