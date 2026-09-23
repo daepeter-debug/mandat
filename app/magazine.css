@@ -325,3 +325,4 @@
   .party-card-stat strong{font-size:18px!important;line-height:1!important;font-variant-numeric:tabular-nums}
   .party-card-stat>div:first-child::after{content:"";display:block;width:calc(64px * var(--support));min-width:3px;height:5px;border-radius:999px;background:var(--party)}
 }
+@media(max-width:760px){.editorial-shell .header-status>span{color:var(--text-3)}}

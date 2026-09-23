@@ -8,6 +8,7 @@ import { date, parties } from '@/lib/polls';
 import logos from '@/lib/party-logos.json';
 import SectionArt from '@/components/section-art';
 import DebtClock from '@/components/debt-clock';
+import TaxReceipt from '@/components/tax-receipt';
 import FinanceYearsMobile from '@/components/finance-years-mobile';
 
 const FinanceChart = lazy(() => import('@/components/finance-chart'));
@@ -271,7 +272,7 @@ function Method() {
   </details>;
 }
 
-const views = [['years', 'Po rokoch'], ['governments', 'Po vládach'], ['living', 'Životná úroveň'], ['compare', 'EÚ a susedia']] as const;
+const views = [['years', 'Po rokoch'], ['taxes', 'Tvoje dane'], ['governments', 'Po vládach'], ['living', 'Životná úroveň'], ['compare', 'EÚ a susedia']] as const;
 
 export default function PublicFinance({ view, onView }: { view: string; onView: (view: string) => void }) {
   const active = views.some(v => v[0] === view) ? view : 'years';
@@ -295,6 +296,7 @@ export default function PublicFinance({ view, onView }: { view: string; onView: 
       </div>
       {active === 'governments' ? <CabinetsView/> : <><YearsTable/><FinanceYearsMobile/></>}
     </>}
+    {active === 'taxes' && <TaxReceipt/>}
     {active === 'living' && <LivingView/>}
     {active === 'compare' && <CompareView/>}
     <Method/>

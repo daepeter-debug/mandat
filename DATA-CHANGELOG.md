@@ -1,5 +1,25 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Kam idú tvoje dane (Claude)
+
+V Hospodárení pribudla záložka **Tvoje dane**. Po zadaní hrubej mesačnej mzdy (pole, posuvník alebo rýchla voľba minimálna 915 €, priemerná 1 524 €, 2 500 €, 5 000 €) ukáže:
+- čistú mzdu;
+- daň a odvody zamestnanca;
+- odvody zamestnávateľa;
+- podiel štátu na celkovej cene práce.
+
+Daňový bloček potom rozdelí všetko, čo štátu odvedie zamestnanec aj zamestnávateľ, podľa štruktúry výdavkov verejnej správy SR v roku 2024 (Eurostat, COFOG, gov_10a_exp; 61,8 mld. €). Zobrazuje sa mesačne alebo ročne, s riadkami „z toho dôchodky“ a „z toho úroky z dlhu“.
+
+Sadzby na rok 2026 pochádzajú z primárnych zdrojov:
+- **Finančná správa:** daň 19 / 25 / 30 / 35 %, nezdaniteľná časť 497,23 € mesačne a jej znižovanie pri vyšších príjmoch.
+- **Sociálna poisťovňa:** 9,4 % a 25,2 %, strop 16 764 €, zaokrúhľovanie po fondoch nadol.
+- **VšZP:** zdravotné poistenie 5 % a 11 %.
+- **MPSVR:** minimálna mzda 915 €.
+
+Výpočet platí pre zamestnanca bez detí a iných úľav a bez DPH v cenách. `verify-data` kontroluje, že čistá mzda a preddavok sa zhodujú s publikovanými príkladmi (915, 1 000, 1 200 a 1 500 €), strop dáva 1 575,81 € ako tabuľka Sociálnej poisťovne a bloček sa sčíta na celú sumu. Údaje obnoví `node scripts/fetch-cofog.mjs`.
+
+Rozdelenie je názorné priblíženie: odvody zo zákona smerujú najmä do poisťovní a výdavky boli vyššie než príjmy. Na mobile sú záložky Hospodárenia v zaoblenom obdĺžniku a „Údaje overené“ v hlavičke majú čitateľnú farbu.
+
 ## 23. 9. 2026 — karty Mandátu za minútu ako obrázok (Claude)
 
 V príbehu „Mandát za minútu“ pribudlo tlačidlo Zdieľať. Aktuálnu kartu uloží ako obrázok 1080 × 1920, teda vo formáte príbehov na Instagrame a pod. Na mobile otvorí systémové zdieľanie, na počítači obrázok stiahne. Kým sa obrázok pripravuje, príbeh stojí.

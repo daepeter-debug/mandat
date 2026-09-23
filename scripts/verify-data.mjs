@@ -283,6 +283,30 @@ assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durat
   assert.deepEqual(systematicErrors().filter(b => b.sameSign).map(b => b.id).sort(), ['aliancia', 'rep', 'rodina', 'smer'], 'Presnosť 2023: strany, pri ktorých sa mýlili všetky rovnako');
 }
 
+// Kam idú tvoje dane: čistá mzda 2026 sa zhoduje s publikovanými príkladmi (Finsider, sadzby FS SR, SP a VšZP),
+// strop sociálneho poistenia dáva 1 575,81 € ako tabuľka Sociálnej poisťovne a bloček sa sčíta na celú sumu.
+{
+  const { payroll, receiptRows, spendingAreas } = await import('../lib/tax-receipt.ts');
+  const { cofogData } = await import('../lib/cofog.data.ts');
+  const cases = [[915, 54.34, 728.90], [1000, 68.17, 787.83], [1200, 100.69, 926.51], [1500, 149.49, 1134.51]];
+  for (const [gross, tax, net] of cases) {
+    const p = payroll(gross);
+    assert.equal(p.tax, tax, `Dane: preddavok pri ${gross} €`);
+    assert.equal(p.net, net, `Dane: čistá mzda pri ${gross} €`);
+    assert.equal(Math.round((p.socialEmployee + p.healthEmployee) * 100), Math.round(gross * 14.4), `Dane: odvody zamestnanca pri ${gross} €`);
+  }
+  assert.equal(payroll(20000).socialEmployee, 1575.81, 'Dane: strop sociálneho poistenia (16 764 €)');
+  assert.equal(payroll(20000).allowance, 0, 'Dane: pri vysokom príjme nezdaniteľná časť zaniká');
+  assert.equal(payroll(1500).labourCost, 2043, 'Dane: cena práce pri 1 500 € (odvody zamestnávateľa 36,2 %)');
+  const latest = cofogData.rows.at(-1);
+  const sum = Object.entries(latest).filter(([k]) => /^GF[0-9]{2}$/.test(k)).reduce((s, [, v]) => s + v, 0);
+  assert.ok(Math.abs(sum - latest.TOTAL) < 1, 'Dane: funkcie COFOG sa sčítajú na výdavky spolu');
+  assert.ok(Math.abs(spendingAreas.reduce((s, a) => s + a.share, 0) - 1) < 1e-4, 'Dane: podiely oblastí dávajú 100 %');
+  for (const total of [0, 1, 517.32, 925, 14340.77]) {
+    const rows = receiptRows(total);
+    assert.equal(rows.reduce((s, r) => s + r.amount, 0), Math.round(total), `Dane: bloček sa sčíta na ${Math.round(total)} €`);
+  }
+}
 // RSS: každé meranie z archívu je jedna položka s vlastným guid a odkazom na detail; XML znaky sú ošetrené.
 {
   const { buildPollsFeed, feedPolls } = await import('../lib/rss.ts');

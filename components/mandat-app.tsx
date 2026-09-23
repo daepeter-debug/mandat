@@ -96,7 +96,7 @@ function parseSearch(search:string):UiState {
     legend: s.get("l")===null ? defaults.legend : s.get("l")!.split(",").filter(id=>partyIds.has(id)),
     blocs: (s.get("b") ?? "").split(",").filter(id=>optionalIds.includes(id)),
     caseParty: pick("kp", v=>partyIds.has(v)),
-    finance: pick("hv", v=>["years","governments","living","compare"].includes(v)) ?? defaults.finance,
+    finance: pick("hv", v=>["years","taxes","governments","living","compare"].includes(v)) ?? defaults.finance,
     parliament: pick("pn", v=>parliamentViews.includes(v)) ?? defaults.parliament,
     parliamentPartners: pick("pp", v=>v==="1") !== null,
     game: pick("g", v=>(gameIds as string[]).includes(v)) as GameId|null,

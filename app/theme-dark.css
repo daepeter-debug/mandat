@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 24 súborov (025c7dcfc5) — needitovať ručne. Pravidiel: 1181, prefarbených: 936. */
+/* Generované scripts/build-dark.mjs z 25 súborov (d55507b7ec) — needitovať ručne. Pravidiel: 1231, prefarbených: 980. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2087,6 +2087,9 @@ html[data-theme="dark"] .studio-time .studio-play[aria-pressed=true] {
     html[data-theme="dark"] .party-card-stat>div:first-child::after {
         background: var(--party)
     }
+    html[data-theme="dark"] .editorial-shell .header-status>span {
+        color: #bccac2
+    }
 }
 html[data-theme="dark"] .parliament-now {
     background: #1f2523;
@@ -4142,6 +4145,181 @@ html[data-theme="dark"] .story-foot button {
     border: 0;
     background: #ffffff14;
     color: #f3f7ef
+}
+html[data-theme="dark"] .tax-head h2 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-head p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-kicker {
+    color: #b2e5c0 !important
+}
+html[data-theme="dark"] .tax-input {
+    border: 1px solid #41463d;
+    background: #262c29
+}
+html[data-theme="dark"] .tax-input label {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-field {
+    border: 1px solid #41463d;
+    background: #262c29
+}
+html[data-theme="dark"] .tax-field:focus-within {
+    border-color: #79a986;
+    box-shadow: 0 0 0 3px #2f6b3f26
+}
+html[data-theme="dark"] .tax-field input {
+    border: 0;
+    background: none;
+    color: #d1e7de;
+    outline: none
+}
+html[data-theme="dark"] .tax-field span {
+    color: #bccac2
+}
+html[data-theme="dark"] .tax-slider {
+    background: none
+}
+html[data-theme="dark"] .tax-slider::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg,#2f6b3f var(--fill),#2b2f24 var(--fill))
+}
+html[data-theme="dark"] .tax-slider::-moz-range-track {
+    background: linear-gradient(90deg,#2f6b3f var(--fill),#2b2f24 var(--fill))
+}
+html[data-theme="dark"] .tax-slider::-webkit-slider-thumb {
+    border: 3px solid #2f3231;
+    background: #2f6b3f;
+    box-shadow: 0 1px 4px #0003
+}
+html[data-theme="dark"] .tax-slider::-moz-range-thumb {
+    border: 3px solid #2f3231;
+    background: #2f6b3f;
+    box-shadow: 0 1px 4px #0003
+}
+html[data-theme="dark"] .tax-slider:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 4px
+}
+html[data-theme="dark"] .tax-presets button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-presets button small {
+    color: #bccac2
+}
+html[data-theme="dark"] .tax-presets button[aria-pressed=true] {
+    border-color: #79a986;
+    background: #22261d;
+    box-shadow: inset 0 0 0 1px #2f6b3f
+}
+html[data-theme="dark"] .tax-presets button:focus-visible,html[data-theme="dark"] .tax-unit button:focus-visible,html[data-theme="dark"] .tax-more:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .tax-note {
+    color: #bccac2
+}
+html[data-theme="dark"] .tax-bar .is-net,html[data-theme="dark"] .tax-legend .is-net dt::before {
+    background: #2f6b3f
+}
+html[data-theme="dark"] .tax-bar .is-you,html[data-theme="dark"] .tax-legend .is-you dt::before {
+    background: #c0563f
+}
+html[data-theme="dark"] .tax-bar .is-firm,html[data-theme="dark"] .tax-legend .is-firm dt::before {
+    background: #d9a441
+}
+html[data-theme="dark"] .tax-legend dt {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-legend dd {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-total {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-total b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-bill {
+    border: 1px solid #41463d;
+    background: #262c29;
+    mask: radial-gradient(circle 7px at 50% 100%,#0000 98%,#000) 0 100%/18px 100% repeat-x
+}
+html[data-theme="dark"] .tax-bill-head h3 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-unit {
+    border: 1px solid #41463d;
+    background: #1f221c
+}
+html[data-theme="dark"] .tax-unit button {
+    border: 0;
+    background: none;
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-unit button[aria-pressed=true] {
+    background: #262c29;
+    color: #d1e7de;
+    box-shadow: 0 1px 3px #20392f26
+}
+html[data-theme="dark"] .tax-bill-intro {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-rows li {
+    border-top: 1px dashed #454c40
+}
+html[data-theme="dark"] .tax-area>i {
+    background: var(--c)
+}
+html[data-theme="dark"] .tax-area>span {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-area small {
+    color: #bccac2
+}
+html[data-theme="dark"] .tax-row-main>b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-row-bar {
+    background: #22251e
+}
+html[data-theme="dark"] .tax-row-bar s {
+    background: var(--c)
+}
+html[data-theme="dark"] .tax-sub {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-sub b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-more {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-bill-sum {
+    border-top: 2px solid #97aba3;
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-how {
+    border: 1px solid #41463d;
+    background: #262c29
+}
+html[data-theme="dark"] .tax-how summary {
+    color: #d1e7de
+}
+html[data-theme="dark"] .tax-how ul {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tax-sources {
+    color: #bccac2
+}
+html[data-theme="dark"] .tax-sources a {
+    color: #82adf4;
+    text-decoration: underline
 }
 html[data-theme="dark"] .theme-toggle {
     border: 1px solid #41463d;
