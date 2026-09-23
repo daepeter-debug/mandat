@@ -18,11 +18,9 @@
   .editorial-shell .brand-motto{display:none}
   /* prilepené lišty rátali s hornými záložkami (52 px); tie sú na mobile preč */
   .lab-sticky{top:0!important}
-  html :is(#qa-title,#koalicia,#porovnanie,#party-money-title,#you-title,#debt-clock-title,#accuracy-title,#ako-kresla,#resp-govs-title){scroll-margin-top:16px}
   .mobile-more{max-height:86vh;border-radius:18px 18px 0 0!important;padding:0 0 calc(12px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto;background:#fff!important}
-  .mobile-more-head{padding:18px 18px 6px!important}
+  .mobile-more-head{padding:18px 18px 10px!important}
   .mobile-more-head h2{font-size:17px;font-weight:650;color:var(--mag-ink)}
-  .mobile-more-search{display:flex;align-items:center;gap:10px;width:calc(100% - 32px);min-height:48px;margin:6px 16px 10px;padding:0 14px;border:1px solid var(--border);border-radius:12px;background:#f6f8f2;font:inherit;font-size:14px;color:var(--text-2);text-align:left;cursor:pointer}
   .mobile-more ul{list-style:none;margin:0;padding:0 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .mobile-more li button{display:grid;grid-template-columns:auto;justify-items:start;gap:4px;width:100%;min-height:92px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#fbfcf8;font:inherit;text-align:left;color:var(--mag-ink);cursor:pointer}
   .mobile-more li button svg{width:20px;height:20px;color:#2f6b3f}
@@ -32,6 +30,7 @@
   .mobile-more button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
   /* nastavenia pod dlaždicami: tmavý režim a inštalácia na plochu (components/app-install.tsx) */
   .mobile-more-settings{display:grid;gap:8px;margin:14px 12px 4px;padding-top:14px;border-top:1px solid var(--border)}
+  .mobile-more-settings:empty{display:none}
   .app-install-button{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 14px;border:1px solid var(--border);border-radius:12px;background:#fbfcf8;font:inherit;text-align:left;color:var(--mag-ink);cursor:pointer}
   .app-install-button svg{color:#2f6b3f;flex:none}
   .app-install-button span{display:grid;gap:1px;font-size:14px;font-weight:600}

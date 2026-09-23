@@ -51,11 +51,10 @@ export function setTheme(dark: boolean, origin?: { x: number; y: number }) {
   transition.finished.finally(() => root.classList.remove("vt-theme"));
 }
 
-export default function ThemeToggle({ className = "", label }: { className?: string; label?: boolean }) {
+export default function ThemeToggle({ className = "" }: { className?: string }) {
   const dark = useSyncExternalStore(subscribe, isDark, () => false);
-  return <button type="button" className={`theme-toggle ${className}`.trim()} aria-pressed={dark} aria-label={label ? undefined : "Tmavý režim"} title={dark ? "Prepnúť na svetlý režim" : "Prepnúť na tmavý režim"}
+  return <button type="button" className={`theme-toggle ${className}`.trim()} aria-pressed={dark} aria-label="Tmavý režim" title={dark ? "Prepnúť na svetlý režim" : "Prepnúť na tmavý režim"}
     onClick={e => { const r = e.currentTarget.getBoundingClientRect(); setTheme(!dark, { x: r.left + r.width / 2, y: r.top + r.height / 2 }); }}>
     {dark ? <Sun size={17} aria-hidden="true"/> : <Moon size={17} aria-hidden="true"/>}
-    {label && <span>Tmavý režim<i className="theme-switch" aria-hidden="true"/></span>}
   </button>;
 }

@@ -53,7 +53,6 @@ import SectionArt from "@/components/section-art";
 import PollAccuracy from "@/components/poll-accuracy";
 import PartyMoney from "@/components/party-money";
 import SeatsExplainer from "@/components/seats-explainer";
-import SiteSearch, { type SearchActions } from "@/components/site-search";
 import ThemeToggle from "@/components/theme-toggle";
 import { useServiceWorker } from "@/components/app-install";
 import PollTicker from "@/components/poll-ticker";
@@ -256,25 +255,10 @@ export default function MandatApp() {
     if (tab && list) list.scrollTo({ left: Math.max(0, tab.offsetLeft - (list.clientWidth - tab.offsetWidth) / 2), behavior: "auto" });
   }, [view]);
   const changeView = (next:string) => {if(next===view){window.scrollTo({top:0,behavior:"smooth"});return;}withViewTransition(()=>{setView(next);window.scrollTo({top:0,behavior:"instant"});});};
-  // Skok z vyhľadávania na konkrétne miesto: sekcia sa môže načítavať (lazy), preto skúšame chvíľu opakovane.
-  const goAnchor = (next:string, elementId:string) => {
-    if(view!==next) changeView(next);
-    let tries = 0;
-    const attempt = () => { const el = document.getElementById(elementId); if(el){ el.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",block:"start"}); return; } if(tries++<40) window.setTimeout(attempt,60); };
-    window.setTimeout(attempt,60);
-  };
-  const searchActions:SearchActions = {
-    view: id=>changeView(id),
-    party: id=>setParty(parties.find(p=>p.id===id)??null),
-    year: y=>{update({view:"responsibility",birthYear:y},true);window.scrollTo({top:0,behavior:"instant"});},
-    game: id=>{update({view:"game",game:id as GameId},true);window.scrollTo({top:0,behavior:"instant"});},
-    agency: a=>{update({view:"polls",agency:a},true);window.scrollTo({top:0,behavior:"instant"});},
-    anchor: goAnchor,
-  };
   return <div className="site-shell editorial-shell with-party-rail">
     <a className="skip-link" href="#main">Preskočiť na obsah</a>
     <PartyRail selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMethod={()=>{update({party:null,view:"method"},true);window.scrollTo({top:0,behavior:"instant"});}}/>
-    <header className="site-header"><div className="brand-block"><div className="brand-row"><button className="brand" onClick={()=>changeView("overview")} aria-label="Mandát — úvod"><BrandMark/>mandát<span>.</span></button><span className="edition-header">Nezávislý prehľad slovenskej politiky</span></div><p className="brand-motto" title={epigraph.source}>„{epigraph.text}“ <span>— {epigraph.author}</span></p></div><SiteSearch views={views} actions={searchActions}/><ThemeToggle/><div className="header-status"><span>Údaje overené</span><b>{verified}</b></div></header>
+    <header className="site-header"><div className="brand-block"><div className="brand-row"><button className="brand" onClick={()=>changeView("overview")} aria-label="Mandát — úvod"><BrandMark/>mandát<span>.</span></button><span className="edition-header">Nezávislý prehľad slovenskej politiky</span></div><p className="brand-motto" title={epigraph.source}>„{epigraph.text}“ <span>— {epigraph.author}</span></p></div><ThemeToggle/><div className="header-status"><span>Údaje overené</span><b>{verified}</b></div></header>
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">

@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 24 súborov (c934eb0018) — needitovať ručne. Pravidiel: 1189, prefarbených: 944. */
+/* Generované scripts/build-dark.mjs z 23 súborov (0e0c73b237) — needitovať ručne. Pravidiel: 1170, prefarbených: 928. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3043,11 +3043,6 @@ html[data-theme="dark"] .minute-text small {
     html[data-theme="dark"] .mobile-more-head h2 {
         color: #d1e7de
     }
-    html[data-theme="dark"] .mobile-more-search {
-        border: 1px solid #41463d;
-        background: #1a201d;
-        color: #bfcec6
-    }
     html[data-theme="dark"] .mobile-more li button {
         border: 1px solid #41463d;
         background: #171d1a;
@@ -3944,52 +3939,6 @@ html[data-theme="dark"] .section-share:focus-visible {
     outline: 2px solid #77a998;
     outline-offset: 2px
 }
-html[data-theme="dark"] .site-search-trigger {
-    border: 1px solid #41463d;
-    background: #262c29;
-    color: #bfcec6
-}
-html[data-theme="dark"] .site-search-trigger:hover {
-    border-color: #4d5548;
-    background: #191e1c
-}
-html[data-theme="dark"] .site-search-trigger:focus-visible {
-    outline: 2px solid #77a998;
-    outline-offset: 2px
-}
-html[data-theme="dark"] .site-search-trigger kbd,html[data-theme="dark"] .site-search-foot kbd {
-    border: 1px solid #41463d;
-    background: #1b211e;
-    color: #bccac2
-}
-html[data-theme="dark"] .site-search {
-    background: #262c29 !important
-}
-html[data-theme="dark"] .site-search [cmdk-input] {
-    color: #d1e7de
-}
-html[data-theme="dark"] .site-search [cmdk-group-heading] {
-    color: #bccac2
-}
-html[data-theme="dark"] .site-search [cmdk-item] {
-    color: #d1e7de
-}
-html[data-theme="dark"] .site-search [cmdk-item][data-selected=true] {
-    background: #22261d
-}
-html[data-theme="dark"] .site-search [cmdk-item] svg {
-    color: #accb9f
-}
-html[data-theme="dark"] .site-search-hint {
-    color: #bccac2
-}
-html[data-theme="dark"] .site-search [cmdk-empty] {
-    color: #bfcec6
-}
-html[data-theme="dark"] .site-search-foot {
-    border-top: 1px solid #41463d;
-    color: #bccac2
-}
 html[data-theme="dark"] .story-overlay {
     background: #0a110ee6
 }
@@ -4164,23 +4113,6 @@ html[data-theme="dark"] .theme-toggle:hover {
 html[data-theme="dark"] .theme-toggle:focus-visible {
     outline: 2px solid #77a998;
     outline-offset: 2px
-}
-html[data-theme="dark"] .theme-toggle.with-label {
-    background: #171d1a;
-    color: #d1e7de
-}
-html[data-theme="dark"] .theme-toggle.with-label svg {
-    color: #b2e5c0
-}
-html[data-theme="dark"] .theme-switch {
-    background: #cfd8c8
-}
-html[data-theme="dark"] .theme-switch::after {
-    background: #fff;
-    box-shadow: 0 1px 3px #0000003d
-}
-html[data-theme="dark"] .theme-toggle[aria-pressed=true] .theme-switch {
-    background: #3f8a5c
 }
 html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#e3e8df"],html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#E3E8DF"] {
     stroke: #40453d

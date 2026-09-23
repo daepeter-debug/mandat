@@ -17,7 +17,7 @@ const SKIP_FILES = new Set(['theme-dark.css', 'daily-game.css', 'december-game.c
 const FIRST = ['globals.css', 'magazine.css', 'news.css'];
 // Podklady pod logami, portrétmi a mapkou ostávajú presne ako vo svetlom režime (logá strán sú kreslené na svetlú):
 // triedy končiace na -logo (.party-card-logo, .party-rail-logo …), značky vlád, monogramy, obrázky log v zdrojoch.
-const KEEP_SELECTOR = /-logo(?![\w-])|resp-mark|person-portrait|monogram|party-logo-sources a (img|svg)|section-art img|slovakia-mark|theme-switch|\.story\b|\.story-|games-republic-art|games-town|games-parliament/;
+const KEEP_SELECTOR = /-logo(?![\w-])|resp-mark|person-portrait|monogram|party-logo-sources a (img|svg)|section-art img|slovakia-mark|\.story\b|\.story-|games-republic-art|games-town|games-parliament/;
 // SVG grafy s farbami v atribútoch (Recharts, časová os vlád): prefarbia sa cez selektory na atribút.
 const SVG_SOURCES = ['components/finance-chart.tsx', 'components/trend-chart.tsx', 'components/living-chart.tsx', 'components/archive-chart.tsx', 'components/responsibility-page.tsx'];
 const SVG_SCOPE = ':is([data-slot="chart"],.resp-timeline,.resp-timeline-names)';

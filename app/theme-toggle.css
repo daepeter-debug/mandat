@@ -1,20 +1,10 @@
-/* Prepínač tmavého režimu (components/theme-toggle.tsx) */
-.theme-toggle{display:inline-grid;place-items:center;width:38px;height:38px;flex:none;margin-right:18px;padding:0;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--text-2);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+/* Prepínač tmavého režimu v hlavičke (components/theme-toggle.tsx), na počítači aj na mobile */
+.theme-toggle{display:inline-grid;place-items:center;width:38px;height:38px;flex:none;margin-left:auto;margin-right:18px;padding:0;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--text-2);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
 .theme-toggle:hover{border-color:#b9c7b0;background:#f8faf5;color:var(--mag-ink)}
 .theme-toggle:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .theme-toggle svg{transition:transform .4s cubic-bezier(.2,.7,.2,1)}
 .theme-toggle:active svg{transform:rotate(-25deg) scale(.9)}
-.site-header .site-search-trigger{margin-right:8px}
-/* Variant s popisom (panel „Viac“ na mobile) */
-.theme-toggle.with-label{display:flex;align-items:center;justify-content:flex-start;gap:12px;width:100%;height:auto;min-height:52px;margin:0;padding:0 14px;border-radius:12px;background:#fbfcf8;color:var(--mag-ink);font:inherit;font-size:14px;font-weight:600;text-align:left}
-.theme-toggle.with-label svg{color:#2f6b3f}
-.theme-toggle.with-label span{display:flex;flex:1;justify-content:space-between;align-items:center;gap:10px}
-.theme-switch{position:relative;width:42px;height:24px;flex:none;border-radius:999px;background:#cfd8c8;transition:background .2s}
-.theme-switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0000003d;transition:transform .22s cubic-bezier(.2,.7,.2,1)}
-.theme-toggle[aria-pressed=true] .theme-switch{background:#3f8a5c}
-.theme-toggle[aria-pressed=true] .theme-switch::after{transform:translateX(18px)}
-/* Na mobile je prepínač v paneli „Viac“; hlavička ostáva pre značku, hľadanie a dátum overenia. */
-@media(max-width:760px){.site-header .theme-toggle{display:none}.site-header .site-search-trigger{margin-right:10px}}
+@media(max-width:760px){.theme-toggle{margin-right:10px}}
 /* Kruhové preliatie pri prepnutí: vlastná animácia namiesto predvoleného prelínania */
 html.vt-theme::view-transition-old(root),html.vt-theme::view-transition-new(root){animation:none;mix-blend-mode:normal}
-@media(prefers-reduced-motion:reduce){.theme-toggle svg,.theme-switch,.theme-switch::after{transition:none}}
+@media(prefers-reduced-motion:reduce){.theme-toggle svg{transition:none}}

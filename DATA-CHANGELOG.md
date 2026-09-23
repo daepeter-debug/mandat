@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — bez vyhľadávania, prepínač režimu v hlavičke (Claude)
+
+Rýchle hľadanie (lupa v hlavičke, klávesová skratka Ctrl+K a riadok v paneli Viac) bolo zrušené. Na mobile nefungovalo spoľahlivo a rozhadzovalo stránku. Na jeho mieste v hlavičke je teraz prepínač tmavého režimu, na mobile aj na počítači. Panel Viac obsahuje len sekcie a prípadne tlačidlo na inštaláciu na plochu.
+
 ## 23. 9. 2026 — Mandát za minútu (Claude)
 
 Na úvode pribudlo tlačidlo „Mandát za minútu“ s farebným krúžkom, ako pri príbehoch na sociálnych sieťach. Otvorí šesť kariet s hlavnými číslami vydania:
