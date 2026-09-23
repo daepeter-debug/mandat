@@ -1,0 +1,30 @@
+/* Úvod: koaličná skladačka s polkruhom a cestami k väčšine (components/coalition-lab.tsx) */
+.cl-top{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px 28px;margin-bottom:22px}
+.cl-hemi{width:100%;max-width:340px;justify-self:end;overflow:visible}
+.cl-hemi circle{fill:#3d5a4d;transition:fill .35s ease}
+.cl-hemi-line{stroke:var(--mag-lime);stroke-width:.012;stroke-dasharray:.03 .03;opacity:.7}
+.cl-top.is-majority .cl-hemi{filter:drop-shadow(0 0 .04px #dcf59b)}
+.cl-top.is-majority .mag-coalition-count>b{animation:cl-pulse .7s ease-out;color:var(--mag-lime)}
+.cl-badge{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--mag-lime);color:#1f3a30;font-style:normal;font-weight:650;animation:cl-in .4s ease-out}
+@keyframes cl-pulse{0%{transform:scale(1)}35%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes cl-in{from{opacity:0;transform:translateY(6px)}}
+.cl-paths{margin-top:22px}
+.cl-paths h3{margin:0 0 10px;font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:#c3d6c9}
+.cl-paths ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.cl-paths button{display:grid;grid-template-columns:120px minmax(0,1fr) 34px;align-items:center;gap:12px;width:100%;min-height:42px;padding:8px 12px;border:1px solid #3f6456;border-radius:8px;background:#ffffff08;color:#f3f8ed;font:inherit;font-size:12.5px;text-align:left;cursor:pointer;animation:cl-in .35s ease-out both}
+.cl-paths li:nth-child(2) button{animation-delay:.04s}.cl-paths li:nth-child(3) button{animation-delay:.08s}.cl-paths li:nth-child(4) button{animation-delay:.12s}.cl-paths li:nth-child(5) button{animation-delay:.16s}.cl-paths li:nth-child(6) button{animation-delay:.2s}
+.cl-paths button:hover{background:#2a5141}
+.cl-paths button:focus-visible,.cl-actions button:focus-visible{outline:2px solid var(--mag-lime);outline-offset:2px}
+.cl-path-bar{display:flex;gap:2px;height:10px;border-radius:3px;overflow:hidden}
+.cl-path-bar i{display:block}
+.cl-path-names{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cl-paths button b{text-align:right;font-variant-numeric:tabular-nums}
+.cl-none{margin:0;font-size:13px;line-height:1.55;color:#c3d6c9}
+.cl-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:18px}
+.cl-actions .cl-share,.cl-actions .cl-reset{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 14px;border-radius:999px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.cl-share{border:0;background:var(--mag-lime);color:#1f3a30}
+.cl-reset{border:1px solid #618274;background:transparent;color:#f3f8ed}
+.cl-actions [role=status]{font-size:12px;color:#c3d6c9}
+.cl-actions .mag-text-link{margin-left:auto}
+@media(prefers-reduced-motion:reduce){.cl-hemi circle{transition:none}.cl-top.is-majority .mag-coalition-count>b,.cl-badge,.cl-paths button{animation:none}}
+@media(max-width:1100px){.cl-top{grid-template-columns:1fr}.cl-hemi{justify-self:start;max-width:300px}.cl-paths button{grid-template-columns:90px minmax(0,1fr) 30px}}

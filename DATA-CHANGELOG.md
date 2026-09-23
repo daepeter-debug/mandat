@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Úvod: koaličná skladačka s polkruhom a cestami k väčšine (Claude)
+
+Skladačka „Zostavte vlastnú koalíciu“ na úvode (`components/coalition-lab.tsx`) má namiesto pásika polkruh 150 kresiel, ktorý sa pri výbere vyfarbí vlnou zľava doprava; pri 76 kreslách číslo zasvieti a objaví sa štítok Väčšina. Pod stranami sú cesty k väčšine: najmenšie väčšinové kombinácie (súčet aspoň 76, bez ktorejkoľvek strany by väčšina padla; `lib/coalitions.ts`), a keď čitateľ vyberie strany, len tie, ktoré ich obsahujú. Kliknutím sa cesta vyberie. Výber sa dá uložiť ako obrázok 1200 × 630 (na mobile cez zdieľanie). Ostáva poznámka, že výber je čisto matematický a nehovorí nič o ochote strán spolupracovať.
+
 ## 23. 9. 2026 — Úvod: rýchle odpovede (Claude)
 
 Pod úvodným vydaním pribudol pás šiestich otázok (`components/quick-answers.tsx`). Každá odpoveď je jeden obrázok a jedna veta: kto by dnes vyhral (súboj prvých dvoch strán s ťahaným pásom podľa toho, v koľkých prepočtoch je strana prvá, a s upozornením, že v roku 2023 prieskumy podcenili Smer), či má niekto väčšinu (pás 150 kresiel so značkami 76), kto je na hrane 5 % (číselná os s pásmami strán), koľko hlasov by prepadlo, aký veľký je dlh (odhad beží po sekundách, dáta sa načítajú až pri otvorení) a čo zažil tvoj ročník (vedie do Tvojho Slovenska). Podiel prepočtov sa píše slovom („v 9 z 10“, pri krajných hodnotách „takmer vo všetkých“), aby to neznelo ako istota. Simulácia v `lib/uncertainty.ts` počíta aj prvé miesto. Čísla pri prepnutí otázky nabehnú od nuly; pri „obmedziť pohyb“ bez animácie.

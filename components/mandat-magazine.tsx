@@ -3,7 +3,7 @@
 import { useState, type CSSProperties } from "react";
 import { ArrowRight, ArrowUpRight, Check, Plus, RotateCcw } from "lucide-react";
 import { archive, parties, rank, fmt, date, type Poll } from "@/lib/polls";
-import { aggregateAsPoll, aggregatePolls } from "@/lib/aggregate";
+import { aggregatePolls } from "@/lib/aggregate";
 import { scenarioFromPoll, wastedVotes } from "@/lib/parliament";
 import Hemicycle from "@/components/hemicycle";
 import PollAggregator from "@/components/poll-aggregator";
@@ -11,6 +11,7 @@ import NationalIntro from "@/components/national-intro";
 import OverviewDirectory from "@/components/overview-directory";
 import SectionArt from "@/components/section-art";
 import QuickAnswers from "@/components/quick-answers";
+import CoalitionLab from "@/components/coalition-lab";
 
 const agencies = ["AKO", "FOCUS", "INFOSTAT", "IPSOS", "NMS"];
 function Publication({poll}:{poll:Poll}) {
@@ -21,10 +22,6 @@ export function AgencyPicker({value,onChange}:{value:string;onChange:(value:stri
 }
 
 export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onParliament,parliamentPartners,onParliamentPartners,onOpenNews}:{poll:Poll;onAgency:(a:string)=>void;onNavigate:(v:string)=>void;onYear:(year:number)=>void;parliament:string;onParliament:(v:string)=>void;parliamentPartners:boolean;onParliamentPartners:(v:boolean)=>void;onOpenNews:(id:string)=>void}) {
-  const modelPoll=aggregateAsPoll();
-  const scenario=scenarioFromPoll(modelPoll);
-  const [selected,setSelected]=useState<string[]>([]);
-  const count=scenario.rows.filter(p=>selected.includes(p.id)).reduce((a,p)=>a+p.seats,0);
   const rows=rank(poll).filter(p=>poll.values[p.id]>1);
   const small=rows.filter(p=>poll.values[p.id]<5);
   const large=rows.filter(p=>poll.values[p.id]>=5);
@@ -39,7 +36,7 @@ export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onPar
       <div className="mag-threshold"><span>5 %</span><p>Hranica pre samostatnú stranu</p></div><div className="mag-small-parties" aria-label="Strany nad 1 % a pod 5 %">{small.map(p=><div key={p.id}><span>{p.short}</span><b>{fmt(poll.values[p.id])}<small> %</small></b></div>)}</div>
       <div className="mag-poll-source"><Publication poll={poll}/><p>Zobrazujeme dostupné presné hodnoty nad 1 %. Chýbajúca hodnota nie je nula. Koalície majú odlišné volebné hranice.</p><button className="mag-text-link" onClick={()=>onNavigate("data")}>Trendy a všetky merania <ArrowRight size={18}/></button></div>
     </section>
-    <section className="mag-lab"><div className="mag-lab-copy"><h2>Zostavte<br/>vlastnú<br/><span>koalíciu.</span></h2><p>Vyberte ľubovoľné strany. Zistite, koľko kresiel by spolu získali v scenári z Modelu Mandát.</p><button className="mag-button lime" onClick={()=>onNavigate("model")}>Vyskúšať vlastný model <ArrowUpRight size={20}/></button><p className="mag-lab-disclaimer">Výber je čisto matematický. Nehovorí nič o ochote strán spolupracovať.</p></div><div className="mag-lab-play"><div className="mag-coalition-count" role="status"><b>{count}</b><span>zo 150 kresiel<br/>{selected.length===0?"Začnite výberom strán":count>=76?"Dosiahnutých aspoň 76 kresiel":`Do 76 chýba ${76-count}`}</span></div><div className="mag-seat-strip" aria-hidden="true">{scenario.rows.map(p=><i key={p.id} style={{flex:p.seats,background:p.color,opacity:selected.includes(p.id)?1:.2}}/>)}</div><div className="mag-coalition-buttons">{scenario.rows.map(p=><button key={p.id} aria-pressed={selected.includes(p.id)} onClick={()=>setSelected(selected.includes(p.id)?selected.filter(id=>id!==p.id):[...selected,p.id])}>{selected.includes(p.id)?<Check size={17}/>:<Plus size={17}/>}<span>{p.short}</span><b>{p.seats}</b></button>)}</div><button className="mag-text-link" onClick={()=>onNavigate("method")}>Metodika agregátora <ArrowUpRight size={15}/></button></div></section>
+    <CoalitionLab onNavigate={onNavigate}/>
     <section className="mag-explore"><h2>Ďalšie<br/>pohľady</h2><div>{[{title:"Prieskumy v čase",text:"Od jedného čísla k dlhšiemu príbehu. Porovnajte merania a ich zdroje.",view:"polls"},{title:"Politické strany",text:"Podpora, jednotlivé merania a dokumenty na jednom mieste.",view:"parties"},{title:"Čo majú v programe",text:"Aktuálne návrhy, porovnávač tém a jasne oddelený archív 2023.",view:"programmes"}].map(x=><button key={x.view} onClick={()=>onNavigate(x.view)}><span><b>{x.title}</b><span>{x.text}</span></span><ArrowUpRight size={26}/></button>)}</div></section>
   </div>;
 }
