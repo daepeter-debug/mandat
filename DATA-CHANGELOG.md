@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Strany na mobile: kompaktný zoznam (Claude)
+
+Na telefóne mala každá strana kartu vysokú asi 515 px (štítky, popis, hodnoty a zdroj), zoznam 16 strán mal vyše 8 000 px. Na mobile je teraz každá strana riadok ako v aplikácii: logo (alebo skratka, ak logo nie je), názov a podpora v Modeli Mandát s mini stĺpcom vo farbe strany; ťuknutie kamkoľvek na riadok otvorí profil so všetkými detailmi. Zoznam má asi 1 240 px. Na počítači sú karty bez zmeny.
+
 ## 23. 9. 2026 — Zodpovednosť na mobile: vlády ako karty (Claude)
 
 Tabuľka „Vlády od roku 1993“ bola na telefóne široká 960 px a posúvala sa do strany. Na mobile je teraz každá vláda karta: názov a poznámka, premiér a trvanie vedľa seba, obdobie, koaličné strany a riadok V číslach (saldo, dlh pri prevzatí a odovzdaní, nezamestnanosť, odkaz na detail). Na počítači ostáva tabuľka.

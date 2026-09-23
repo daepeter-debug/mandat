@@ -303,3 +303,25 @@
 .studio-time .studio-play{margin-left:auto;padding:5px 10px;border:1px solid #c9d4c1;border-radius:999px;font-weight:600}
 .studio-time .studio-play+button{margin-left:0}
 .studio-time .studio-play[aria-pressed=true]{background:var(--mag-ink);border-color:var(--mag-ink);color:#fff}
+
+/* Mobil: zoznam strán ako kompaktné riadky (logo, názov, podpora s mini stĺpcom); ťuknutie otvorí profil s detailmi */
+@media(max-width:760px){
+  .party-grid{grid-template-columns:1fr!important;gap:8px}
+  .party-card{position:relative;display:grid!important;grid-template-columns:48px minmax(0,1fr) auto;grid-template-areas:"logo name stat";align-items:center;gap:0 12px;min-height:68px;padding:10px 14px!important}
+  .party-card-top{display:contents}
+  .party-card-logo{grid-area:logo;box-sizing:border-box;width:48px!important;min-width:0!important;max-width:none!important;height:48px!important;margin:0!important;padding:4px!important;display:grid;place-items:center;overflow:hidden}
+  .party-card-logo img{width:100%!important;height:100%!important;max-width:none!important;object-fit:contain}
+  .party-monogram{display:none!important}
+  .party-card-top:not(:has(.party-card-logo)) .party-monogram{grid-area:logo;display:grid!important;place-items:center;width:44px;height:44px;border-radius:10px;background:#f4f6f0;font-size:11px}
+  .party-card-top:not(:has(.party-card-logo)) .party-monogram i{display:none}
+  .party-card-action{grid-area:name;min-width:0;padding:0!important;text-align:left}
+  .party-card-action h3{margin:0!important;font-size:14.5px!important;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .party-card-action>span{display:none!important}
+  .party-card-action::after{content:"";position:absolute;inset:0;border-radius:inherit}
+  .party-card .party-tags,.party-card-summary,.party-card-second,.party-card .source-link,.party-card .missing-caption,.party-card-stat>*:not(div:first-child){display:none!important}
+  .party-card-stat{grid-area:stat;margin:0!important;padding:0!important;border:0!important}
+  .party-card-stat>div:first-child{display:grid!important;justify-items:end;gap:4px}
+  .party-card-stat>div:first-child>span{display:none}
+  .party-card-stat strong{font-size:18px!important;line-height:1!important;font-variant-numeric:tabular-nums}
+  .party-card-stat>div:first-child::after{content:"";display:block;width:calc(64px * var(--support));min-width:3px;height:5px;border-radius:999px;background:var(--party)}
+}
