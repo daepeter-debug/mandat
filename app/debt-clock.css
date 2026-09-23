@@ -1,0 +1,12 @@
+/* Dlhové hodiny v Hospodárení (components/debt-clock.tsx) */
+.debt-clock{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px 32px;align-items:center;margin:14px 0 18px;padding:20px 24px;border-radius:12px;background:#20392f;color:#f5f4ee}
+.debt-clock h2{display:flex;align-items:center;gap:10px;margin:0;font-size:12px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:#cfdcc4}
+.debt-clock h2 span{padding:2px 7px;border-radius:999px;background:#ffffff1f;font-size:10px;letter-spacing:.06em;color:#e6ecdf}
+.debt-clock-value{margin:8px 0 6px;font-size:clamp(28px,4.2vw,46px);font-weight:600;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.debt-clock-note{margin:0;font-size:12px;line-height:1.55;color:#bccbb4;max-width:62ch}
+.debt-clock-rates{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}
+.debt-clock-rates div{padding:10px 12px;border-radius:9px;background:#ffffff12}
+.debt-clock-rates dt{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#a9bf98}
+.debt-clock-rates dd{margin:3px 0 0;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:900px){.debt-clock{grid-template-columns:1fr}}
+@media(max-width:600px){.debt-clock{padding:16px}.debt-clock-rates dd{font-size:15px}}

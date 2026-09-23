@@ -7,6 +7,7 @@ import { inactiveParties } from '@/lib/government-tenure-inactive';
 import { date, parties } from '@/lib/polls';
 import logos from '@/lib/party-logos.json';
 import SectionArt from '@/components/section-art';
+import DebtClock from '@/components/debt-clock';
 
 const FinanceChart = lazy(() => import('@/components/finance-chart'));
 const LivingChart = lazy(() => import('@/components/living-chart'));
@@ -286,6 +287,7 @@ export default function PublicFinance({ view, onView }: { view: string; onView: 
     </div>
     {financeViews && <>
       <Kpis row={last}/>
+      <DebtClock/>
       <div className="finance-chart-wrap">
         <Suspense fallback={<p className="chart-loading">Načítavame graf…</p>}><FinanceChart rows={chartRows}/></Suspense>
         <ChartLegend line="dlh, % HDP (pravá os)" dash="horný limit dlhu (ústavný zákon)" note="stĺpce: saldo, % HDP · bodkovaná −3 %: maastrichtská hranica"/>

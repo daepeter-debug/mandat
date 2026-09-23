@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Dlhové hodiny v Hospodárení (Claude)
+
+Pod kartami Hospodárenia pribudol tmavý pás s odhadom dnešného dlhu verejnej správy, ktorý beží po sekundách, a s prepočtom na obyvateľa, sekundu a deň (`components/debt-clock.tsx`). Východisko je posledný údaj Eurostatu (dlh ku koncu roka 2025, 84,0 mld. €); ďalej sa ráta rovnomerne tempom, akým dlh rástol v roku 2025 (+6,2 mld. € za rok, asi 197 € za sekundu). Pás je výslovne označený ako odhad s vysvetlením, že skutočný dlh sa mení skokovo. Pri nastavení „obmedziť pohyb“ sa číslo mení raz za sekundu.
+
 ## 23. 9. 2026 — prvá fáza vylepšení: náhľady pri zdieľaní, V skratke, Tvoje Slovensko (vetva faza1, Claude)
 
 Po porovnaní s volbynrsr.sk sme sa rozhodli spraviť prehľadnejšie to, čo majú oba weby, a rozvíjať to, čo má len Mandát.
