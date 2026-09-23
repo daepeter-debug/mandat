@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — prehrávanie vývoja Modelu Mandát (Claude)
+
+Pri časovom posuvníku v prehľade „Ako sa mení podpora strán“ pribudlo tlačidlo Prehrať. Prejde týždenné body agregátu od začiatku obdobia (20. 1. 2026) po najnovší, v poradí strán sa stĺpce a pásma menia plynulo a na konci sa zobrazenie vráti k najnovším údajom. Zastaviť sa dá tlačidlom alebo posuvníkom; po zastavení pokračuje z rovnakého týždňa. Funguje v poradí aj v trende.
+
 ## 23. 9. 2026 — presnosť agentúr vo voľbách 2023 (Claude)
 
 Na konci Prieskumov pribudla sekcia „Ako presne trafili agentúry v roku 2023“ (`components/poll-accuracy.tsx`, dáta `lib/poll-accuracy.ts`). Posledný prieskum pred moratóriom od šiestich agentúr (AKO pre JOJ 24, FOCUS pre TV Markíza, Ipsos pre Denník N, NMS, MEDIAN SK pre RTVS, SANEP pre TA3) porovnávame s oficiálnym výsledkom ŠÚ SR pri 11 subjektoch, ktoré uvádzali všetky. Čísla sú prepísané z tlačových správ agentúr (AKO, FOCUS, Ipsos, NMS) a z médií, pre ktoré prieskum robili (MEDIAN SK – STVR, SANEP – Pravda); pri každom je odkaz. Súhrn tabuľky na anglickej Wikipédii sme nepoužili, pri MEDIAN SK sa nezhodoval s pôvodným zdrojom.

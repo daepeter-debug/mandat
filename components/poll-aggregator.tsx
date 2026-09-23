@@ -1,7 +1,7 @@
 "use client";
 
-import {lazy,Suspense,useId,useMemo,useState,type CSSProperties} from "react";
-import {ArrowRight,ArrowUpRight,Info,ChartNoAxesCombined,ListOrdered,RotateCcw} from "lucide-react";
+import {lazy,Suspense,useEffect,useId,useMemo,useState,type CSSProperties} from "react";
+import {ArrowRight,ArrowUpRight,Info,ChartNoAxesCombined,ListOrdered,Pause,Play,RotateCcw} from "lucide-react";
 import {aggregatePolls,aggregateSeries,currentAggregate,aggregateLastDate} from "@/lib/aggregate";
 import {parties,fmt,date} from "@/lib/polls";
 import {edition} from "@/lib/edition";
@@ -24,6 +24,7 @@ export default function PollAggregator({onMethod}:{onMethod:()=>void}) {
   const [showMonths,setShowMonths]=useState(true);
   const [pinned,setPinned]=useState<string|null>(null);
   const [hovered,setHovered]=useState<number|null>(null);
+  const [playing,setPlaying]=useState(false);
   const uid=useId().replace(/:/g,"");
   const focused=parties.find(p=>p.id===focus)??parties[0];
   const points=useMemo(()=>{
@@ -32,6 +33,18 @@ export default function PollAggregator({onMethod}:{onMethod:()=>void}) {
     return aggregateSeries.filter(p=>!period||timestamp(p.date)>=cutoff.getTime());
   },[period]);
   const pinnedIndex=pinned?points.findIndex(p=>p.date===pinned):-1;
+  // Prehrávanie: týždeň po týždni cez celé obdobie; na konci sa zastaví na najnovšom bode.
+  useEffect(()=>{
+    if(!playing)return;
+    const timer=window.setTimeout(()=>{
+      const next=pinnedIndex<0?0:pinnedIndex+1;
+      if(next>=points.length){setPlaying(false);setPinned(null);}
+      else setPinned(points[next].date);
+    },pinnedIndex<0?0:340);
+    return ()=>window.clearTimeout(timer);
+  },[playing,pinnedIndex,points]);
+  // Po zastavení pokračuje z rovnakého týždňa; z konca začne odznova.
+  const togglePlay=()=>{if(playing){setPlaying(false);return;}setHovered(null);if(pinnedIndex<0||pinnedIndex>=points.length-1)setPinned(null);setPlaying(true);};
   const index=hovered!==null&&hovered<points.length?hovered:pinnedIndex>=0?pinnedIndex:points.length-1;
   const point=points[index];
   const current=point.values[focus];
@@ -66,7 +79,7 @@ export default function PollAggregator({onMethod}:{onMethod:()=>void}) {
           {mode==="trend"?<div className="studio-plot" role="img" aria-label={`Trend: ${focused.name}. K ${date(point.date)} ${current?`${fmt(current.value)} percenta, orientačné modelové pásmo ${fmt(current.lower)} až ${fmt(current.upper)} percenta`:"bez údaja"}. Presné hodnoty sú aj v paneli strán a dostupné časovým posuvníkom.`}>
             <Suspense fallback={<div className="studio-plot-loading" aria-hidden="true"/>}><TrendChart uid={uid} data={data} ranked={ranked} chartParties={chartParties} focus={focus} focused={focused} points={points} point={point} current={current} monthTicks={monthTicks} monthlyPoints={monthlyPoints} yMin={yMin} yMax={yMax} showBand={showBand} showMonths={showMonths} onMove={moveToPoint} onLeave={()=>setHovered(null)} onPick={d=>{setPinned(d);setHovered(null);}}/></Suspense>
           </div>:<div className="studio-ranking" aria-label={`Poradie strán k ${date(point.date)}`}>{pointRanking.map((p,i)=>{const value=point.values[p.id].value;const maximum=Math.max(5,...pointRanking.map(party=>point.values[party.id].upper));return <div key={p.id} className={value<5?"studio-ranking-small":""}>{value<5&&i>0&&point.values[pointRanking[i-1].id].value>=5&&<div className="studio-ranking-threshold">Pod hranicou 5 % pre samostatnú stranu</div>}<button aria-pressed={p.id===focus} onClick={()=>setFocus(p.id)}><span>{p.short}{thresholdStatus(point.values[p.id])==="edge"&&<small className="studio-edge">na hrane</small>}</span><div className="studio-rank-track"><i style={{width:`${value/maximum*100}%`,background:p.color}}/><s aria-hidden="true" style={{left:`${point.values[p.id].lower/maximum*100}%`,width:`${(point.values[p.id].upper-point.values[p.id].lower)/maximum*100}%`,borderColor:p.color}}/><em style={{left:`${5/maximum*100}%`}}/></div><b>{fmt(value)} <small>%</small></b></button></div>;})}</div>}
-          {mode==="trend"&&showMonths&&<div className="studio-months" aria-label="Mesačné body vybranej strany">{monthlyPoints.map(p=><button key={p.date} aria-pressed={point.date===p.date} onClick={()=>{setPinned(p.date);setHovered(null);}} aria-label={`${fullDate(p.date)}: ${p.values[focus]?fmt(p.values[focus].value)+" percent":"bez údaja"}`}><span>{new Date(`${p.date}T12:00:00Z`).toLocaleDateString("sk-SK",{month:"short"})}</span><b>{p.values[focus]?fmt(p.values[focus].value)+" %":"—"}</b></button>)}</div>}{mode==="trend"&&showMonths&&<p className="studio-months-note">Posledný bod v každom zobrazenom mesiaci, nie mesačný priemer. Presný dátum zobrazíte kliknutím.</p>}<div className="studio-time"><div><label htmlFor={`${uid}-time`}>Preskúmať dátum</label><output htmlFor={`${uid}-time`}>{date(point.date)}</output><button onClick={()=>{setPinned(null);setHovered(null);}} disabled={pinned===null&&hovered===null} aria-label="Vrátiť sa k najnovším údajom"><RotateCcw size={13}/> Najnovšie</button></div><input id={`${uid}-time`} type="range" min="0" max={points.length-1} step="1" value={index} aria-valuetext={fullDate(point.date)} onChange={e=>{setPinned(points[e.target.valueAsNumber].date);setHovered(null);}}/><div className="studio-time-ends"><span>{date(points[0].date)}</span><span>{date(points.at(-1)!.date)}</span></div></div>
+          {mode==="trend"&&showMonths&&<div className="studio-months" aria-label="Mesačné body vybranej strany">{monthlyPoints.map(p=><button key={p.date} aria-pressed={point.date===p.date} onClick={()=>{setPinned(p.date);setHovered(null);}} aria-label={`${fullDate(p.date)}: ${p.values[focus]?fmt(p.values[focus].value)+" percent":"bez údaja"}`}><span>{new Date(`${p.date}T12:00:00Z`).toLocaleDateString("sk-SK",{month:"short"})}</span><b>{p.values[focus]?fmt(p.values[focus].value)+" %":"—"}</b></button>)}</div>}{mode==="trend"&&showMonths&&<p className="studio-months-note">Posledný bod v každom zobrazenom mesiaci, nie mesačný priemer. Presný dátum zobrazíte kliknutím.</p>}<div className="studio-time"><div><label htmlFor={`${uid}-time`}>Preskúmať dátum</label><output htmlFor={`${uid}-time`}>{date(point.date)}</output><button className="studio-play" onClick={togglePlay} aria-pressed={playing} aria-label={playing?"Zastaviť prehrávanie":"Prehrať vývoj od začiatku obdobia"}>{playing?<Pause size={13}/>:<Play size={13}/>} {playing?"Zastaviť":"Prehrať"}</button><button onClick={()=>{setPlaying(false);setPinned(null);setHovered(null);}} disabled={pinned===null&&hovered===null} aria-label="Vrátiť sa k najnovším údajom"><RotateCcw size={13}/> Najnovšie</button></div><input id={`${uid}-time`} type="range" min="0" max={points.length-1} step="1" value={index} aria-valuetext={fullDate(point.date)} onChange={e=>{setPlaying(false);setPinned(points[e.target.valueAsNumber].date);setHovered(null);}}/><div className="studio-time-ends"><span>{date(points[0].date)}</span><span>{date(points.at(-1)!.date)}</span></div></div>
         </div>
         <aside className="studio-sidebar"><div className="studio-readout"><span >{focused.short}</span><strong>{current?fmt(current.value):"—"}<small> %</small></strong><p>{change===null?"Bez porovnateľných údajov":`${change>0?"+":""}${fmt(change)} p. b. od začiatku obdobia`}</p><div className="studio-interval"><span>Modelové pásmo</span><b>{current?`${fmt(current.lower)} – ${fmt(current.upper)} %`:"Bez údaja"}</b></div>{current&&<div className="studio-interval"><span>Hranica 5 %</span><b className={`studio-status is-${thresholdStatus(current)}`} title={thresholdHints[thresholdStatus(current)]}>{thresholdLabels[thresholdStatus(current)]}{thresholdStatus(current)==="edge"&&point.date===aggregateLastDate&&seatRange&&<small> · v {Math.round(seatRange.entry*10)} z 10 prepočtov nad 5 %</small>}</b></div>}{current&&point.date===aggregateLastDate&&seatRange&&<div className="studio-interval"><span>Kreslá, orientačne</span><b>{edition.now.rows.find(r=>r.id===focus)?.seats??0}<small> · rozpätie {seatRange.low}–{seatRange.high}</small></b></div>}</div><div className="studio-party-heading">Porovnať s ostatnými <span>%</span></div><div className="studio-party-list">{primary.map(p=><button key={p.id} aria-pressed={focus===p.id} onClick={()=>setFocus(p.id)}><i style={{background:p.color}}/><span>{p.short}</span><b>{point.values[p.id]?fmt(point.values[p.id].value):"—"}</b></button>)}</div><p className="studio-sidebar-note">Hodnoty k {date(point.date)}. Ďalšie strany nájdete vo výbere a v pohľade Poradie.</p></aside>
       </div>
