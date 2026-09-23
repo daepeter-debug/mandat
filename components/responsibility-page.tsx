@@ -11,6 +11,7 @@ import { fmt } from "@/lib/polls";
 import logos from "@/lib/party-logos.json";
 import "@/app/responsibility.css";
 import SectionArt from "@/components/section-art";
+import YourSlovakia from "@/components/your-slovakia";
 
 /*
   Sekcia Zodpovednosť za stav krajiny: koľko času strávila každá strana vo vláde od 1. 1. 1993,
@@ -172,7 +173,7 @@ function Method({ rows, inactive }: { rows: ResponsibilityRow[]; inactive: Respo
   </details>;
 }
 
-export default function ResponsibilityPage({ onParty, onFinance }: { onParty: (id: string) => void; onFinance: () => void }) {
+export default function ResponsibilityPage({ birthYear, onBirthYear, onParty, onFinance }: { birthYear: number | null; onBirthYear: (year: number | null) => void; onParty: (id: string) => void; onFinance: () => void }) {
   const rows = responsibilityRows();
   const inactive = inactiveResponsibilityRows();
   const governed = rows.filter(r => r.days > 0);
@@ -182,6 +183,7 @@ export default function ResponsibilityPage({ onParty, onFinance }: { onParty: (i
   return <section className="resp-page" aria-labelledby="resp-title">
     <div className="section-hero"><header className="news-heading"><div><h1 id="resp-title">Kto nesie zodpovednosť za stav krajiny.</h1><p>Koľko času strávila každá strana vo vláde od vzniku samostatného Slovenska 1. 1. 1993, v ktorých vládach sedela a kedy mala premiéra. Meriame čas pri moci, nie výsledky vládnutia.</p></div><span className="news-selection">Údaje k {formatTenureDate(tenureAsOf)}</span></header><SectionArt name="zodpovednost"/></div>
     <Kpis rows={rows}/>
+    <YourSlovakia year={birthYear} onYear={onBirthYear}/>
     <section className="resp-block" aria-labelledby="resp-timeline-title">
       <div className="resp-block-head"><div><h2 id="resp-timeline-title">{Math.floor(responsibilityTotalDays / 365.25)} rokov vlád na jednej osi</h2><p>Každý riadok je strana, každý pás jedno obdobie vo vláde. Svetlé pozadie oddeľuje jednotlivé vlády. Presné dátumy sú pri páse a v zozname vlád nižšie.</p></div></div>
       <div className="resp-timeline-box"><div className="resp-timeline-wrap" tabIndex={0} aria-label="Časová os; na úzkej obrazovke sa posúva vodorovne"><Timeline active={governed} inactive={inactive}/></div></div>

@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — prvá fáza vylepšení: náhľady pri zdieľaní, V skratke, Tvoje Slovensko (vetva faza1, Claude)
+
+Po porovnaní s volbynrsr.sk sme sa rozhodli spraviť prehľadnejšie to, čo majú oba weby, a rozvíjať to, čo má len Mandát.
+
+- **Náhľady pri zdieľaní.** Odkaz poslaný cez WhatsApp alebo Facebook doteraz nemal obrázok. Každá hlavná sekcia má teraz vlastný náhľad 1200 × 630 z ilustrácie sekcie s názvom a jednou vetou (`public/og`, generuje `scripts/build-og.mjs` z `lib/share-cards.ts`). Vodoznak ilustrácie ostáva viditeľný. `app/page.tsx` je kvôli tomu serverová stránka s `generateMetadata`; klientska aplikácia sa presunula do `components/mandat-app.tsx`.
+- **V skratke na úvode.** Hustý zoznam zmien pod nadpisom nahradila karta s piatimi faktami z Modelu Mandát: kto vedie (s pásmom neistoty), kto za 30 dní najviac rastie a klesá, kto je na hrane 5 % (pásmo neistoty zasahuje na obe strany hranice) a koľko pribudlo meraní. Zmeny kresiel blokov nesú karty nad ňou.
+- **Tvoje Slovensko** v sekcii Zodpovednosť: po zadaní roku narodenia ukáže vlády a premiérov počas života (pred rokom 1993 od vzniku samostatného Slovenska), pás vlád so značkou 18. narodenín, stranu a premiéra, ktorí boli najdlhšie pri moci, a zmenu dlhu na obyvateľa, minimálnej mzdy (s rastom cien podľa HICP) a životnej úrovne podľa Eurostatu od roku 1995. Čas strán vo vláde je z rovnakých období ako prehľad nižšie. Rok je v adrese (`?v=responsibility&rok=1990`) a náhľad takého odkazu nesie vetu o ročníku. Výpočty sú v `lib/your-slovakia.ts`, kontroly v `scripts/verify-data.mjs`.
+
 ## 23. 9. 2026 — ilustrácie v hlavičkách sekcií (vetva ilustracie-ai, Claude)
 
 Päť sekcií dostalo v hlavičke ilustráciu v štýle ručne robenej stolovej diorámy: Zodpovednosť (model parlamentnej sály), Hospodárenie (domy na minciach v účtovnej knihe), Prieskumy (stĺpcový graf z drevených kociek na námestí), Vlastný model (škola s volebnou miestnosťou) a Herňa (Malá republika). Obrázky vytvoril Peter v Higgsfield (Nano Banana Pro, bezplatný plán); pri Malej republike boli referenciou naša herná grafika a štýlová dioráma. Na obrázkoch nie sú skutoční ľudia, strany, logá ani vlajky. Vodoznak Higgsfield ostáva a pod každým obrázkom je popis „Ilustrácia vytvorená pomocou AI“. Originály v plnej veľkosti sú mimo repa (`outputs/higgsfield`); na web idú WebP varianty 720 a 1280 px (`public/images/illustrations`, 23–99 kB). Komponent `components/section-art.tsx`: na počítači je obrázok vpravo od nadpisu, na mobile pod ním.

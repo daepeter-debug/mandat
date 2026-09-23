@@ -101,3 +101,42 @@ button.resp-row:focus-visible,.resp-never button:focus-visible{outline:2px solid
   .resp-table{font-size:12.5px}
 }
 .resp-row>.resp-mark{align-self:start;margin-top:2px}
+
+/* Tvoje Slovensko (components/your-slovakia.tsx) */
+.you-card{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px 28px;border:1px solid var(--border);border-radius:10px;background:#fff;padding:18px 20px}
+.you-input label{display:block;font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);margin-bottom:6px}
+.you-input input{width:100%;height:58px;padding:0 14px;border:1px solid #c9d4c1;border-radius:9px;background:#fbfcf8;font:600 30px/1 "IBM Plex Sans Variable",sans-serif;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--mag-ink)}
+.you-input input:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.you-input input[aria-invalid]{border-color:#b4533f}
+.you-input>p{font-size:11.5px;line-height:1.5;color:var(--text-3);margin:6px 0 0}
+.you-input>p.is-error{color:#9a3b30}
+.you-picks{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;font-size:12px;color:var(--text-3)}
+.you-picks button{min-height:34px;padding:0 12px;border:1px solid var(--border);border-radius:999px;background:#fbfcf8;font:inherit;font-weight:600;color:var(--mag-ink);cursor:pointer}
+.you-picks button:hover{background:#f3f6ee;border-color:#b9c7b0}
+.you-picks button[aria-pressed=true]{background:var(--mag-ink);border-color:var(--mag-ink);color:#fff}
+.you-picks button:focus-visible,.you-actions button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.you-result{min-width:0}
+.you-lead{font-size:21px;font-weight:550;line-height:1.35;letter-spacing:-.015em;color:var(--mag-ink);margin:2px 0 4px;text-wrap:balance}
+.you-lead span{font-weight:700}
+.you-note{font-size:12.5px;line-height:1.55;color:var(--text-2);margin:0 0 4px}
+.you-empty{align-self:center;font-size:15px;line-height:1.6;color:var(--text-2);margin:0}
+.you-strip{margin:20px 0 14px}
+.you-strip-bar{position:relative;display:flex;height:34px;border-radius:7px;background:#edf0e8}
+.you-strip-bar>span{display:flex;align-items:center;min-width:2px;overflow:hidden;border-right:1px solid #fff}
+.you-strip-bar>span:first-child{border-radius:7px 0 0 7px}.you-strip-bar>span:last-of-type{border-radius:0 7px 7px 0;border-right:0}
+.you-strip-bar b{padding:0 7px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;text-shadow:0 1px 1px #0003}
+.you-strip-adult{position:absolute;top:-5px;bottom:-5px;width:2px;margin-left:-1px;background:var(--mag-ink);border-radius:2px}
+.you-strip-adult em{position:absolute;bottom:100%;left:50%;transform:translate(-50%,-2px);font:normal 700 10px/1 "IBM Plex Sans Variable",sans-serif;color:var(--mag-ink);background:#fff;padding:1px 3px;border-radius:3px}
+.you-strip figcaption{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.you-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+.you-facts>div{min-width:0;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:#fbfcf8}
+.you-facts dt{font-size:10.5px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+.you-facts dd{margin:4px 0 2px;font-size:18px;font-weight:650;letter-spacing:-.015em;line-height:1.2;font-variant-numeric:tabular-nums;color:var(--mag-ink)}
+.you-facts dd .brief-party{font-size:18px;font-weight:650}
+.you-facts small{display:block;font-size:11.5px;line-height:1.45;color:var(--text-2)}
+.you-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:12px}
+.you-actions .text-button{display:inline-flex;align-items:center;gap:7px;min-height:40px}
+.you-actions [role=status]{font-size:12px;color:#2f6b3f}
+.you-method{font-size:11px;line-height:1.55;color:var(--text-3);margin:8px 0 0;max-width:80ch}
+@media(max-width:900px){.you-card{grid-template-columns:1fr}.you-input{max-width:360px}}
+@media(max-width:600px){.you-card{padding:14px}.you-facts{grid-template-columns:1fr 1fr}.you-lead{font-size:18px}.you-facts dd,.you-facts dd .brief-party{font-size:16px}}

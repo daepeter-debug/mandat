@@ -10,6 +10,7 @@ import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, agg
 import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../lib/blocs.ts';
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { durationLabel } from '../lib/government-tenure.ts';
+import { isBirthYear, lifeSummary, priceFactor } from '../lib/your-slovakia.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
 import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
 import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes, result2023, coalition2023 } from '../lib/parliament.ts';
@@ -264,6 +265,19 @@ assert.deepEqual(resp.find(r => r.id === 'sns').cabinets.map(c => c.id), ['mecia
 assert.deepEqual(resp.find(r => r.id === 'kdh').cabinets.map(c => c.id), ['moravcik', 'dzurinda1', 'dzurinda2', 'radicova'], 'KDH vrátane vlády Dzurinda I cez SDK');
 assert(resp.find(r => r.id === 'smer').periods.every(p => p.led) && resp.find(r => r.id === 'sns').periods.every(p => !p.led), 'Premiér zo SMER-u, nikdy zo SNS');
 assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durationLabel(1035)], ['bez účasti', '1 mesiac', '1 rok', '2 roky 10 mesiacov'], 'Dĺžka slovom');
+
+// Tvoje Slovensko: vlády a premiéri za život, 18. narodeniny, hospodárske zmeny od roku 1995.
+{
+  const y1990 = lifeSummary(1990), y2005 = lifeSummary(2005), y2010 = lifeSummary(2010), y1970 = lifeSummary(1970);
+  assert.equal(y1990.cabinets.length, cabinets.length, 'Tvoje Slovensko: ročník 1990 zažil všetky vlády SR');
+  assert.equal(y1990.premiers, new Set(cabinets.map(c => c.pm)).size, 'Tvoje Slovensko: všetci premiéri od 1993');
+  assert.deepEqual([y2005.cabinets.length, y2005.premiers, y2005.cabinets[0].cabinet.id], [10, 7, 'dzurinda2'], 'Tvoje Slovensko: ročník 2005 začína vládou úradujúcou 1. 1. 2005');
+  assert.deepEqual([y1970.adulthood.status, y2010.adulthood.status, y2005.adulthood.cabinet?.id], ['czechoslovakia', 'future', 'odor'], 'Tvoje Slovensko: 18. narodeniny');
+  assert.equal(y1990.topParty?.short, responsibilityRows()[0].short, 'Tvoje Slovensko: od 1993 najdlhšie vo vláde rovnaká strana ako v prehľade');
+  assert.deepEqual([y1990.debt?.fromYear, y1990.debt?.from, y1990.debt?.to], [financeYears[0].year, debtPerCapita(financeYears[0]), debtPerCapita(latestFinanceYear)], 'Tvoje Slovensko: dlh na obyvateľa');
+  assert.ok(Math.abs(priceFactor(2024, 2025) - (1 + financeYears.find(r => r.year === 2025).inflation / 100)) < 1e-9 && priceFactor(2025, 2025) === null, 'Tvoje Slovensko: rast cien');
+  assert.ok(isBirthYear(1920) && !isBirthYear(1919) && !isBirthYear(Number(tenureAsOf.slice(0, 4)) + 1), 'Tvoje Slovensko: rozsah rokov');
+}
 
 // Titulná strana: hlavná správa z Modelu Mandát a zmeny za 30 dní
 assert.equal(edition.now.coalition + edition.now.opposition + edition.now.others, 150, 'Kreslá blokov dnes dávajú 150');

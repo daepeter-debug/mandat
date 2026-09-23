@@ -61,14 +61,14 @@ const normalize = (s:string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "
 const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^www\./,""); } catch { return url; } };
 
 /* Stav rozhrania v URL: záložka (v), agentúra prehľadu (a), obdobie (p), graf/tabuľka (m),
-   filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana).
+   filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana), rok narodenia v Tvojom Slovensku (rok).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;parliamentPartners:boolean;game:GameId|null;news:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;parliamentPartners:boolean;game:GameId|null;news:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null;birthYear:number|null};
 const parliamentViews = ["model","volby2023"];
 const ELECTION_VIEW = "volby2023";
 // Dátový prehľad má jednu grafiku parlamentu; prepínač vyberá, čo zobrazuje.
 const spreadOptions = [ELECTION_VIEW, ...primaryAgencies];
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",parliamentPartners:false,game:null,news:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null};
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",parliamentPartners:false,game:null,news:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null,birthYear:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
@@ -94,6 +94,8 @@ function parseSearch(search:string):UiState {
     partyQuery: (s.get("s") ?? "").slice(0,80),
     detail: pick("d", v=>archive.some(p=>p.id===v)),
     party: pick("strana", v=>parties.some(p=>p.id===v)),
+    // Presný rozsah overí sekcia Zodpovednosť; tu len štvormiestny rok bez importu hospodárskych dát.
+    birthYear: Number(pick("rok", v=>/^(19[2-9][0-9]|20[0-9][0-9])$/.test(v))) || null,
   };
 }
 function serialize(state:UiState) {
@@ -116,6 +118,7 @@ function serialize(state:UiState) {
   if(state.partyQuery) s.set("s",state.partyQuery);
   if(state.detail) s.set("d",state.detail);
   if(state.party) s.set("strana",state.party);
+  if(state.birthYear) s.set("rok",String(state.birthYear));
   const qs = s.toString();
   return qs ? `?${qs}` : "";
 }
@@ -238,7 +241,7 @@ export default function MandatApp() {
         <TabsContent value="overview"><PartyStrip selected={ui.party} onSelect={p=>setParty(ui.party===p.id?null:p)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})}/></TabsContent>
         <TabsContent value="game"><Suspense fallback={<p className="chart-loading">Načítavame herňu…</p>}><GamesRoom game={ui.game} onGame={g=>update({game:g})}/></Suspense></TabsContent>
-        <TabsContent value="responsibility"><Suspense fallback={<p className="chart-loading">Načítavame prehľad vlád…</p>}><ResponsibilityPage onParty={id=>setParty(parties.find(p=>p.id===id)??null)} onFinance={()=>{update({view:"finance",finance:"governments"},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense></TabsContent>
+        <TabsContent value="responsibility"><Suspense fallback={<p className="chart-loading">Načítavame prehľad vlád…</p>}><ResponsibilityPage birthYear={ui.birthYear} onBirthYear={y=>update({birthYear:y})} onParty={id=>setParty(parties.find(p=>p.id===id)??null)} onFinance={()=>{update({view:"finance",finance:"governments"},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense></TabsContent>
         <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>
         {casesEnabled&&<TabsContent value="cases"><Suspense fallback={<p className="chart-loading">Načítavame register…</p>}><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></Suspense></TabsContent>}
         <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>
