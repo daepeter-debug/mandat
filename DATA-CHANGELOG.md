@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — mobilná navigácia dole a kompaktná hlavička (Claude)
+
+Na telefóne bola horná lišta s 11 záložkami (viditeľné asi štyri) a hlavička s citátom zaberala 121 px; nadpis úvodu začínal až v dvoch tretinách prvej obrazovky. Na mobile (do 760 px) je teraz navigácia dole pri palci (`components/mobile-dock.tsx`): Prehľad, Prieskumy, Strany, Hospodárenie a Viac. Viac otvorí spodný panel so všetkými ostatnými sekciami ako dlaždicami s krátkym popisom a s hľadaním. Horná lišta záložiek je na mobile skrytá a citát v hlavičke tiež (hlavička má 77 px), takže nadpis úvodu je o 100 px vyššie. Prilepená lišta kresiel vo Vlastnom modeli a skoky z hľadania rátajú s novou výškou. Na počítači sa nič nemení.
+
 ## 23. 9. 2026 — Vlastný model na mobile: prepočet kresiel bez posúvania do strany (Claude)
 
 Vysvetlenie „Ako sa z hlasov stanú kreslá“ malo na telefóne tabuľku širokú 640 px a štyri kroky pod sebou. Na mobile sú kroky posúvateľné karty (ďalšia vykukuje spoza okraja) a tabuľka ukazuje len stranu, podporu, kreslá a zmenu oproti dnešku; delenie volebným číslom a zvyšky ostávajú na počítači a v texte krokov.

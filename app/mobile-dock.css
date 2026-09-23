@@ -1,0 +1,34 @@
+/* Mobilná navigácia dole (components/mobile-dock.tsx) */
+.mobile-dock{display:none}
+@media(max-width:760px){
+  .mobile-dock{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:calc(62px + env(safe-area-inset-bottom,0px));padding:0 4px env(safe-area-inset-bottom,0px);border-top:1px solid #d6dfcf;background:#ffffffeb;-webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);box-shadow:0 -8px 24px #20392f12}
+  .mobile-dock button{display:grid;justify-items:center;align-content:center;gap:3px;min-width:0;border:0;background:none;font:inherit;font-size:10.5px;font-weight:600;color:#667463;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .mobile-dock button svg{width:22px;height:22px;transition:transform .15s}
+  .mobile-dock button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mobile-dock button[aria-current=page]{color:var(--mag-ink)}
+  .mobile-dock button[aria-current=page] svg{color:#2f6b3f;transform:translateY(-1px)}
+  .mobile-dock button[aria-current=page]::before{content:"";position:absolute;top:0;width:32px;height:3px;border-radius:0 0 3px 3px;background:#2f6b3f}
+  .mobile-dock button{position:relative}
+  .mobile-dock button:active svg{transform:scale(.9)}
+  .mobile-dock button:focus-visible{outline:2px solid var(--focus);outline-offset:-4px;border-radius:10px}
+  /* horná lišta záložiek je na mobile nahradená dolnou navigáciou; miesto pre ňu dole */
+  .editorial-shell .main-nav{display:none!important}
+  .editorial-shell.with-party-rail{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
+  /* kompaktná hlavička: citát je na mobile skrytý */
+  .editorial-shell .brand-motto{display:none}
+  /* prilepené lišty rátali s hornými záložkami (52 px); tie sú na mobile preč */
+  .lab-sticky{top:0!important}
+  html :is(#qa-title,#koalicia,#porovnanie,#party-money-title,#you-title,#debt-clock-title,#accuracy-title,#ako-kresla,#resp-govs-title){scroll-margin-top:16px}
+  .mobile-more{max-height:86vh;border-radius:18px 18px 0 0!important;padding:0 0 calc(12px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto;background:#fff!important}
+  .mobile-more-head{padding:18px 18px 6px!important}
+  .mobile-more-head h2{font-size:17px;font-weight:650;color:var(--mag-ink)}
+  .mobile-more-search{display:flex;align-items:center;gap:10px;width:calc(100% - 32px);min-height:48px;margin:6px 16px 10px;padding:0 14px;border:1px solid var(--border);border-radius:12px;background:#f6f8f2;font:inherit;font-size:14px;color:var(--text-2);text-align:left;cursor:pointer}
+  .mobile-more ul{list-style:none;margin:0;padding:0 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .mobile-more li button{display:grid;grid-template-columns:auto;justify-items:start;gap:4px;width:100%;min-height:92px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#fbfcf8;font:inherit;text-align:left;color:var(--mag-ink);cursor:pointer}
+  .mobile-more li button svg{width:20px;height:20px;color:#2f6b3f}
+  .mobile-more li button b{font-size:14px;font-weight:650}
+  .mobile-more li button small{font-size:11.5px;line-height:1.35;color:var(--text-2)}
+  .mobile-more li button[aria-current=page]{border-color:#2f6b3f;background:#eef3e7}
+  .mobile-more button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+}
+@media(prefers-reduced-motion:reduce){.mobile-dock button svg{transition:none}}
