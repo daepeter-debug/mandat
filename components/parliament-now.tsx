@@ -6,6 +6,7 @@ import { blocSeats, MAJORITY, optionalIds, type SeatEntry } from "@/lib/blocs";
 import { partnerWording } from "@/lib/edition";
 import { aggregateAsPoll, aggregateLastDate, aggregatePolls } from "@/lib/aggregate";
 import { date } from "@/lib/polls";
+import { currentSeatUncertainty } from "@/lib/uncertainty";
 
 /*
   Karta s dvoma pohľadmi na 150 kresiel v rovnakej vizuálnej logike (koalícia vľavo, ostatní v strede,
@@ -38,6 +39,7 @@ const views = {
 type ViewId = keyof typeof views;
 const order: ViewId[] = ["model", "volby2023"];
 // Slovné tvary sú rovnaké ako v titulku vydania, aby web hovoril o partneroch všade rovnako.
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 const blocLabel = (bloc: "Koalícia" | "Opozícia", partners: boolean) =>
   partners ? `${bloc} ${partnerWording[bloc === "Koalícia" ? "rep" : "slovensko"]}` : bloc;
 
@@ -46,6 +48,9 @@ export default function ParliamentNow({ onNavigate, view, onView, partners, onPa
   const { title, meta, data, label } = views[active];
   const { summary, groups, ordered, colours } = data[partners ? 1 : 0];
   const coalitionLabel = blocLabel("Koalícia", partners), oppositionLabel = blocLabel("Opozícia", partners);
+  const ranges = active === "model" ? currentSeatUncertainty().blocs : null;
+  const coalitionRange = ranges ? (partners ? ranges.coalitionWith : ranges.coalition) : null;
+  const oppositionRange = ranges ? (partners ? ranges.oppositionWith : ranges.opposition) : null;
   const description = `${label}, 150 kresiel: ${coalitionLabel} ${summary.coalition.seats}, ostatní ${summary.others.seats}, ${oppositionLabel} ${summary.opposition.seats}; väčšina je ${MAJORITY}. ${ordered.map(m => `${m.short} ${m.seats}`).join(", ")}.`;
   return <section className="parliament-now" aria-labelledby="parliament-now-title">
     <div className="parliament-now-head"><h2 id="parliament-now-title">{title}</h2><span>{meta}</span></div>
@@ -62,15 +67,15 @@ export default function ParliamentNow({ onNavigate, view, onView, partners, onPa
       {points.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r={0.036} fill={colours[i]?.color ?? "var(--border)"}/>)}
     </svg>
     <dl className="parliament-now-blocs">
-      <div><dt>{coalitionLabel}</dt><dd>{summary.coalition.seats}</dd></div>
+      <div><dt>{coalitionLabel}</dt><dd>{summary.coalition.seats}</dd>{coalitionRange && <small>rozpätie {coalitionRange.low}–{coalitionRange.high}</small>}</div>
       <div className="parliament-now-majority"><dt>Väčšina</dt><dd>{MAJORITY}</dd></div>
-      <div><dt>{oppositionLabel}</dt><dd>{summary.opposition.seats}</dd></div>
+      <div><dt>{oppositionLabel}</dt><dd>{summary.opposition.seats}</dd>{oppositionRange && <small>rozpätie {oppositionRange.low}–{oppositionRange.high}</small>}</div>
     </dl>
     <ul className="parliament-now-list">
       {groups.map(([name, members]) => members.length > 0 && <li key={name}><span>{name === "Koalícia" ? coalitionLabel : name === "Opozícia" ? oppositionLabel : name}</span>{members.map(m => <span key={m.id} className="parliament-now-party"><i style={{ background: m.color }} aria-hidden="true"/>{m.short} <b>{m.seats}</b></span>)}</li>)}
     </ul>
     {active === "volby2023"
       ? <p className="parliament-now-note">Oficiálny výsledok volieb 2023, nie aktuálne kluby. Koalícia: SMER, HLAS, SNS.{partners ? " S partnermi: REPUBLIKA sa do parlamentu nedostala, OĽANO a priatelia sú pripočítaní k opozícii." : ""} <a href={election2023.source} target="_blank" rel="noopener noreferrer">ŠÚ SR<ArrowUpRight size={11} aria-hidden="true"/><span className="sr-only"> (nová karta)</span></a> · <button type="button" onClick={() => onNavigate("data")}>Scenáre a bloky</button></p>
-      : <p className="parliament-now-note">Scenár, nie predpoveď: prepočet kresiel podľa § 68 z váženého priemeru {aggregatePolls.length} agentúr. {partners ? "Priradenie REPUBLIKY ku koalícii a Hnutia Slovensko k opozícii je redakčný predpoklad, nie dohoda strán." : "Bloky sú bez voliteľných partnerov; prepínačom vyššie pridáte Republiku ku koalícii a Matoviča k opozícii."} <button type="button" onClick={() => onNavigate("method")}>Model Mandát</button> · <button type="button" onClick={() => onNavigate("data")}>Scenáre a bloky</button></p>}
+      : <p className="parliament-now-note">Scenár, nie predpoveď: prepočet kresiel podľa § 68 z váženého priemeru {aggregatePolls.length} agentúr. Rozpätie je stredných 80 % z {currentSeatUncertainty().simulations.toLocaleString("sk-SK")} prepočtov v rámci pásiem neistoty{oppositionRange && oppositionRange.majority >= 0.5 ? `; väčšinu 76 kresiel má ${lowerFirst(oppositionLabel)} v ${Math.round(oppositionRange.majority * 100)} % z nich` : coalitionRange && coalitionRange.majority >= 0.5 ? `; väčšinu 76 kresiel má ${lowerFirst(coalitionLabel)} v ${Math.round(coalitionRange.majority * 100)} % z nich` : ""}. {partners ? "Priradenie REPUBLIKY ku koalícii a Hnutia Slovensko k opozícii je redakčný predpoklad, nie dohoda strán." : "Bloky sú bez voliteľných partnerov; prepínačom vyššie pridáte Republiku ku koalícii a Matoviča k opozícii."} <button type="button" onClick={() => onNavigate("method")}>Model Mandát</button> · <button type="button" onClick={() => onNavigate("data")}>Scenáre a bloky</button></p>}
   </section>;
 }

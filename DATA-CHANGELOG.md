@@ -1,5 +1,15 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — neistota Modelu Mandát zrozumiteľne (Claude)
+
+Pásmo neistoty, ktoré Model Mandát počítal pre každú stranu, bolo doteraz vidieť len v detaile strany. Teraz:
+
+- **V poradí strán** je pásmo orámované pri konci každého stĺpca a strany, ktorých pásmo pretína 5 %, majú štítok „na hrane“. Mierka stĺpcov je podľa horného okraja pásma, aby sa pásmo zmestilo.
+- **V paneli strany** pribudol stav pri hranici (nad hranicou / na hrane / pod hranicou) a orientačné kreslá s rozpätím. Pri stranách na hrane aj ľudská veta, napríklad „v 4 z 10 prepočtov nad 5 %“.
+- **V polkruhu na úvode** majú bloky pri scenári z Modelu Mandát rozpätie kresiel a poznámka hovorí, v akom podiele prepočtov má blok väčšinu 76.
+
+Rozpätie je stredných 80 % z 2 000 prepočtov, v ktorých sa podpora strán náhodne posúva v rámci pásiem (normálne rozdelenie, pásmo = 95 % interval) a kreslá sa prepočítajú podľa § 68. Strany sa hýbu nezávisle, preto je to orientačné, nie predpoveď. Generátor má pevné semeno, takže čísla sú pri každom načítaní rovnaké (`lib/uncertainty.ts`, kontroly v `scripts/verify-data.mjs`). Presné percentá pravdepodobnosti zámerne neukazujeme.
+
 ## 23. 9. 2026 — Dlhové hodiny v Hospodárení (Claude)
 
 Pod kartami Hospodárenia pribudol tmavý pás s odhadom dnešného dlhu verejnej správy, ktorý beží po sekundách, a s prepočtom na obyvateľa, sekundu a deň (`components/debt-clock.tsx`). Východisko je posledný údaj Eurostatu (dlh ku koncu roka 2025, 84,0 mld. €); ďalej sa ráta rovnomerne tempom, akým dlh rástol v roku 2025 (+6,2 mld. € za rok, asi 197 € za sekundu). Pás je výslovne označený ako odhad s vysvetlením, že skutočný dlh sa mení skokovo. Pri nastavení „obmedziť pohyb“ sa číslo mení raz za sekundu.

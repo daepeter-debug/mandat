@@ -11,6 +11,7 @@ import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../li
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { durationLabel } from '../lib/government-tenure.ts';
 import { isBirthYear, lifeSummary, priceFactor } from '../lib/your-slovakia.ts';
+import { seatUncertainty, thresholdStatus } from '../lib/uncertainty.ts';
 import { inactiveParties, inactiveTenureChecked } from '../lib/government-tenure-inactive.ts';
 import { edition, EDITION_LOOKBACK_DAYS } from '../lib/edition.ts';
 import { election2023, seated2023, validVotes2023, allocateSeats, scenarioFromPoll, hemicycleSeats, wastedVotes, result2023, coalition2023 } from '../lib/parliament.ts';
@@ -265,6 +266,20 @@ assert.deepEqual(resp.find(r => r.id === 'sns').cabinets.map(c => c.id), ['mecia
 assert.deepEqual(resp.find(r => r.id === 'kdh').cabinets.map(c => c.id), ['moravcik', 'dzurinda1', 'dzurinda2', 'radicova'], 'KDH vrátane vlády Dzurinda I cez SDK');
 assert(resp.find(r => r.id === 'smer').periods.every(p => p.led) && resp.find(r => r.id === 'sns').periods.every(p => !p.led), 'Premiér zo SMER-u, nikdy zo SNS');
 assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durationLabel(1035)], ['bez účasti', '1 mesiac', '1 rok', '2 roky 10 mesiacov'], 'Dĺžka slovom');
+
+// Neistota: simulácia je deterministická, rozpätie obsahuje bodový odhad a stav pri 5 % zodpovedá simulácii.
+{
+  const a = seatUncertainty(currentAggregate, 400), b = seatUncertainty(currentAggregate, 400);
+  assert.deepEqual(a, b, 'Neistota: rovnaké semeno dáva rovnaké rozpätia');
+  const pointSeats = scenarioFromPoll(aggregateAsPoll()).allocation.seats;
+  for (const v of Object.values(currentAggregate.values)) {
+    const r = a.parties[v.partyId], seats = pointSeats[v.partyId] ?? 0, status = thresholdStatus(v);
+    assert.ok(r.low <= seats && seats <= r.high, `Neistota: rozpätie ${v.partyId} ${r.low}–${r.high} obsahuje ${seats} kresiel`);
+    if (status === 'in') assert.ok(r.entry >= 0.9, `Neistota: ${v.partyId} je nad hranicou, ale vstupuje len v ${r.entry}`);
+    if (status === 'out') assert.ok(r.entry <= 0.1, `Neistota: ${v.partyId} je pod hranicou, ale vstupuje v ${r.entry}`);
+  }
+  assert.ok(a.blocs.opposition.low <= a.blocs.opposition.high && a.blocs.coalitionWith.majority >= 0 && a.blocs.coalitionWith.majority <= 1, 'Neistota: bloky');
+}
 
 // Tvoje Slovensko: vlády a premiéri za život, 18. narodeniny, hospodárske zmeny od roku 1995.
 {
