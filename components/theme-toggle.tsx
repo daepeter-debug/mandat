@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
 import { Moon, Sun } from "lucide-react";
 import { darkThemeColor } from "@/lib/theme-colors";
+import { track } from "@/lib/track";
 import "@/app/theme-toggle.css";
 
 // Tmavý režim len na požiadanie: predvolený je svetlý, voľba sa pamätá v prehliadači. Skript v app/layout.tsx
@@ -36,6 +37,7 @@ const isDark = () => document.documentElement.dataset.theme === "dark";
 // Prepnutie s kruhovým preliatím od tlačidla (View Transitions); bez podpory alebo pri obmedzení pohybu okamžite.
 export function setTheme(dark: boolean, origin?: { x: number; y: number }) {
   try { localStorage.setItem(THEME_KEY, dark ? "dark" : "light"); } catch { /* súkromné okno: voľba platí do zatvorenia */ }
+  track("theme", dark ? "dark" : "light");
   let done = false;
   const update = () => { if (done) return; done = true; apply(dark); flushSync(() => window.dispatchEvent(new Event(EVENT))); };
   const root = document.documentElement;

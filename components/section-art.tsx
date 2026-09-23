@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Share2 } from "lucide-react";
+import { track } from "@/lib/track";
 import "@/app/section-art.css";
 
 // Ilustrácie do hlavičiek sekcií. Vytvorené v Higgsfield (Nano Banana Pro), originály s vodoznakom mimo repa;
@@ -21,6 +22,7 @@ export default function SectionArt({ name }: { name: SectionArtName }) {
   const [copied, setCopied] = useState(false);
   async function share() {
     const url = window.location.href;
+    track("share", name);
     try {
       if (navigator.share) { await navigator.share({ title: document.title, url }); return; }
       await navigator.clipboard.writeText(url);

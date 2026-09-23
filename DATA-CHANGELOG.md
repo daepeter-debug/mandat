@@ -1,5 +1,20 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — anonymná štatistika používania (Claude)
+
+Mandát anonymne počíta, ktoré sekcie a funkcie sa používajú, bez cookies a bez tretích strán. Počíta tieto udalosti:
+- otvorenie sekcie;
+- otvorenie príbehu Mandát za minútu;
+- prepnutie tmavého režimu;
+- inštaláciu na plochu;
+- odber RSS;
+- zdieľanie;
+- zadanie ročníka v Tvojom Slovensku (samotný rok sa neposiela).
+
+Pri každej udalosti sa pošle aj to, či ide o mobil, tmavý režim alebo nainštalovanú aplikáciu. Prehliadač to odošle na vlastný Worker (`/api/udalost`), ktorý záznam zapíše do Cloudflare Workers Logs spolu s krajinou návštevy. Záznam neobsahuje identifikátory, IP adresy ani osobné údaje. Server prijme len udalosti zo zoznamu a požiadavky z iných webov zahodí. Pri „Do Not Track“ alebo Global Privacy Control sa nič neodosiela.
+
+Cloudflare Web Analytics sa nepoužíva, lebo by vyžadoval token v kóde stránky. Prehľad je v Cloudflare → Workers & Pages → mandat-preview → Observability, pole `mandat`. V O dátach pribudol odsek „Súkromie a štatistika“.
+
 ## 23. 9. 2026 — RSS odber nových prieskumov (Claude)
 
 Nové merania sa dajú odoberať cez RSS na adrese `/rss.xml`. Každé meranie z archívu je jedna položka a zoradené sú od najnovšieho zverejnenia. Položka obsahuje:

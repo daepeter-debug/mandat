@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Share2 } from "lucide-react";
 import { durationLabel, formatTenureDate } from "@/lib/government-tenure";
 import { birthYears, governmentsLabel, isBirthYear, lifeHeadline, lifeSummary, priceFactor, type LifeSummary } from "@/lib/your-slovakia";
+import { track } from "@/lib/track";
 
 // Tvoje Slovensko: rok narodenia → vlády počas života, najdlhšia strana a premiér, 18. narodeniny,
 // dlh, minimálna mzda a ceny. Rok je v adrese (?rok=), aby sa výsledok dal poslať ďalej.
@@ -38,7 +39,7 @@ export default function YourSlovakia({ year, onYear }: { year: number | null; on
     setMessage("");
     const n = Number(value);
     if (value === "") onYear(null);
-    else if (/^\d{4}$/.test(value) && isBirthYear(n)) onYear(n);
+    else if (/^\d{4}$/.test(value) && isBirthYear(n)) { onYear(n); track("year"); }
   };
   const invalid = /^\d{4}$/.test(draft) && !isBirthYear(Number(draft));
   const wagePrices = s?.minWage ? priceFactor(s.minWage.fromYear, s.minWage.toYear) : null;

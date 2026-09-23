@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Download, Share } from "lucide-react";
+import { track } from "@/lib/track";
 
 // Inštalácia Mandátu na plochu. Chrome/Edge/Android: vlastné tlačidlo (udalosť beforeinstallprompt zachytí skript
 // v app/layout.tsx, lebo môže prísť skôr, než sa načíta React). iPhone/iPad: návod cez Zdieľať. Nainštalovaná
@@ -13,7 +14,7 @@ type InstallState = "prompt" | "ios" | "none";
 const EVENT = "mandat-install";
 
 function subscribe(onChange: () => void) {
-  const installed = () => { window.__mandatInstall = null; onChange(); };
+  const installed = () => { window.__mandatInstall = null; track("install", "done"); onChange(); };
   window.addEventListener(EVENT, onChange);
   window.addEventListener("appinstalled", installed);
   return () => { window.removeEventListener(EVENT, onChange); window.removeEventListener("appinstalled", installed); };
@@ -43,12 +44,13 @@ export default function InstallApp() {
     const prompt = window.__mandatInstall;
     if (!prompt) return;
     await prompt.prompt();
-    await prompt.userChoice.catch(() => null);
+    const choice = await prompt.userChoice.catch(() => null);
+    track("install", choice?.outcome ?? "prompt");
     window.__mandatInstall = null;             // výzvu možno použiť len raz
     window.dispatchEvent(new Event(EVENT));
   }
   return <div className="app-install">
-    <button type="button" className="app-install-button" aria-expanded={state === "ios" ? help : undefined} onClick={state === "prompt" ? install : () => setHelp(h => !h)}>
+    <button type="button" className="app-install-button" aria-expanded={state === "ios" ? help : undefined} onClick={state === "prompt" ? install : () => { setHelp(h => !h); if (!help) track("install", "ios-help"); }}>
       <Download size={20} aria-hidden="true"/>
       <span>Pridať Mandát na plochu<small>Otvára sa ako aplikácia, naposledy videné časti aj offline</small></span>
     </button>

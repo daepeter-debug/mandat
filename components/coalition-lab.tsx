@@ -7,6 +7,7 @@ import { MAJORITY } from "@/lib/blocs";
 import { minimalMajorities } from "@/lib/coalitions";
 import { hemicycleSeats, scenarioFromPoll } from "@/lib/parliament";
 import { date } from "@/lib/polls";
+import { track } from "@/lib/track";
 import "@/app/coalition-lab.css";
 
 /*
@@ -60,6 +61,7 @@ export default function CoalitionLab({ onNavigate }: { onNavigate: (view: string
   const toggle = (id: string) => { setMessage(""); setSelected(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]); };
 
   async function share() {
+    track("share", "koalicia");
     const canvas = drawImage(selected, count);
     const blob = await new Promise<Blob | null>(res => canvas.toBlob(res, "image/png"));
     if (!blob) return;

@@ -4,6 +4,7 @@ import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 import { Play } from "lucide-react";
 import { edition } from "@/lib/edition";
 import { date } from "@/lib/polls";
+import { track } from "@/lib/track";
 import "@/app/minute-launch.css";
 
 // Tlačidlo „Mandát za minútu“ na úvode (krúžok ako pri príbehoch na sociálnych sieťach). Kým čitateľ príbeh
@@ -30,7 +31,7 @@ export default function MinuteLaunch({ onYear, onNavigate }: { onYear: (year: nu
     window.dispatchEvent(new Event(EVENT));
   };
   return <>
-    <button type="button" className={`minute-launch${seen ? " is-seen" : ""}`} aria-haspopup="dialog" onPointerEnter={preload} onPointerDown={preload} onFocus={preload} onClick={() => setOpen(true)}>
+    <button type="button" className={`minute-launch${seen ? " is-seen" : ""}`} aria-haspopup="dialog" onPointerEnter={preload} onPointerDown={preload} onFocus={preload} onClick={() => { setOpen(true); track("story", "open"); }}>
       <span className="minute-ring" aria-hidden="true"><span><svg viewBox="0 0 64 64"><g fill="#f5f4ee"><circle cx="10" cy="43" r="4.6"/><circle cx="16.4" cy="27.4" r="4.6"/><circle cx="32" cy="21" r="4.6"/><circle cx="21" cy="43" r="4.6"/><circle cx="32" cy="32" r="4.6"/></g><g fill="#9dbb86"><circle cx="47.6" cy="27.4" r="4.6"/><circle cx="54" cy="43" r="4.6"/><circle cx="43" cy="43" r="4.6"/></g></svg></span></span>
       <span className="minute-text"><b>Mandát za minútu</b><small>6 kariet · údaje k {date(edition.asOf)}</small></span>
       <Play size={15} aria-hidden="true"/>
