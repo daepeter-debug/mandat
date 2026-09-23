@@ -52,6 +52,7 @@ import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, 
 import SectionArt from "@/components/section-art";
 import PollAccuracy from "@/components/poll-accuracy";
 import PartyMoney from "@/components/party-money";
+import SeatsExplainer from "@/components/seats-explainer";
 const PartyCompare = lazy(() => import("@/components/party-compare"));
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
@@ -249,7 +250,7 @@ export default function MandatApp() {
         <TabsContent value="responsibility"><Suspense fallback={<p className="chart-loading">Načítavame prehľad vlád…</p>}><ResponsibilityPage birthYear={ui.birthYear} onBirthYear={y=>update({birthYear:y})} onParty={id=>setParty(parties.find(p=>p.id===id)??null)} onFinance={()=>{update({view:"finance",finance:"governments"},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense></TabsContent>
         <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>
         {casesEnabled&&<TabsContent value="cases"><Suspense fallback={<p className="chart-loading">Načítavame register…</p>}><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></Suspense></TabsContent>}
-        <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/></TabsContent>
+        <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/><SeatsExplainer/></TabsContent>
         <TabsContent value="data">
           <section className="issue-lead" aria-labelledby="issue-title">
             <h1 id="issue-title">Vydanie <span>{issuePoll.month.toLowerCase()} {issuePoll.end.slice(0,4)}</span></h1>

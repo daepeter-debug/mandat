@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Vlastný model: ako sa z hlasov stanú kreslá (Claude)
+
+Pod Vlastným modelom pribudlo vysvetlenie prepočtu hlasov na kreslá podľa § 68 zákona 180/2014 Z. z. v štyroch krokoch (hranica, republikové volebné číslo = hlasy postupujúcich strán / 151, celé kreslá, zvyšky) na dnešnom Modeli Mandát (`components/seats-explainer.tsx`, výpočet `allocateSeats` sa nemenil). Posuvník mení podporu jednej strany (predvolene strany na hrane 5 %, dnes Demokrati) a tabuľka ukazuje delenie volebným číslom, celé kreslá, zvyšok a zmenu kresiel každej strany oproti dnešku. Pri 5,2 % by Demokrati mali 9 kresiel a ostatné strany by stratili po jednom až dvoch. Uvádza sa aj, koľko hlasov „stojí“ jedno kreslo pri účasti ako v roku 2023.
+
 ## 23. 9. 2026 — Zodpovednosť: vláda v číslach (Claude)
 
 Hospodárske zhrnutie vlád už bolo v Hospodárení (pohľad Po vládach). Aby čas pri moci a hospodárenie neboli oddelené, tabuľka „Vlády od roku 1993“ v Zodpovednosti má nový stĺpec V číslach: priemerné saldo za rok (% HDP, červené pod −3 %), dlh v % HDP pri prevzatí a odovzdaní a priemerná nezamestnanosť, s odkazom na detail v Hospodárení. Čísla sú z rovnakého výpočtu `cabinetSummary` (roky vážené dňami vo funkcii); vlády pred rokom 1995 majú poznámku, že údaje Eurostatu začínajú rokom 1995.

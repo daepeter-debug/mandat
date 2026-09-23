@@ -1,0 +1,32 @@
+/* Vlastný model: ako sa z hlasov stanú kreslá (components/seats-explainer.tsx) */
+.seats-explainer{margin:40px 0 10px;border:1px solid var(--border);border-radius:12px;background:#fff;padding:20px 22px}
+.se-head h2{font-size:clamp(21px,2.1vw,27px);font-weight:600;letter-spacing:-.02em;line-height:1.2;margin:0;color:var(--mag-ink)}
+.se-head p{font-size:14px;line-height:1.65;color:var(--text-2);margin:8px 0 14px;max-width:74ch}
+.se-control{display:grid;grid-template-columns:auto 150px minmax(0,1fr) auto;align-items:center;gap:10px 14px;padding:12px 14px;border-radius:10px;background:#f6f8f2;margin-bottom:14px}
+.se-control label{font-size:11px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+.se-control select{height:40px;padding:0 10px;border:1px solid #c9d4c1;border-radius:8px;background:#fff;font:inherit;font-weight:600;color:var(--mag-ink)}
+.se-control input[type=range]{width:100%;height:36px;margin:0}
+.se-control output{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.se-control output b{font-size:20px;font-variant-numeric:tabular-nums;color:var(--mag-ink);min-width:64px;text-align:right}
+.se-control output button{padding:0;border:0;background:none;font:inherit;font-size:12px;color:#3c5d44;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.se-control select:focus-visible,.se-control output button:focus-visible,.se-table-wrap:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.se-steps{list-style:none;margin:0 0 14px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.se-steps li{padding:12px 14px;border:1px solid var(--border);border-radius:9px;background:#fbfcf8}
+.se-steps h3{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:14px;font-weight:650;color:var(--mag-ink)}
+.se-steps h3 span{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--mag-ink);color:#fff;font-size:11.5px}
+.se-steps p{margin:0;font-size:12.5px;line-height:1.55;color:var(--text-2)}
+.se-steps b{color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.se-table-wrap{overflow-x:auto}
+.se-table{width:100%;min-width:640px;border-collapse:collapse;font-size:13px}
+.se-table th,.se-table td{padding:7px 10px;border-bottom:1px solid #e9eee4;text-align:left}
+.se-table thead th{font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--text-3)}
+.se-table tbody th{font-weight:600;color:var(--mag-ink);white-space:nowrap}
+.se-table tbody th i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}
+.se-table .num{text-align:right;font-variant-numeric:tabular-nums}
+.se-table tr.is-out td,.se-table tr.is-out th{color:var(--text-3)}
+.se-table tr.is-focus{background:#f5f1e6}
+.se-table em{font-style:normal;font-weight:650;color:#2f6b3f}
+.se-table td.up{color:#2f6b3f;font-weight:650}.se-table td.down{color:#9a3b30;font-weight:650}
+.se-note{font-size:11.5px;line-height:1.6;color:var(--text-3);margin:10px 0 0;max-width:110ch}
+@media(max-width:900px){.se-steps{grid-template-columns:1fr 1fr}.se-control{grid-template-columns:auto minmax(0,1fr)}.se-control input[type=range]{grid-column:1/-1}.se-control output{grid-column:1/-1}}
+@media(max-width:600px){.seats-explainer{padding:16px 14px}.se-steps{grid-template-columns:1fr}}
