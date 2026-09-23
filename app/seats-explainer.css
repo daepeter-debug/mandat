@@ -30,3 +30,18 @@
 .se-note{font-size:11.5px;line-height:1.6;color:var(--text-3);margin:10px 0 0;max-width:110ch}
 @media(max-width:900px){.se-steps{grid-template-columns:1fr 1fr}.se-control{grid-template-columns:auto minmax(0,1fr)}.se-control input[type=range]{grid-column:1/-1}.se-control output{grid-column:1/-1}}
 @media(max-width:600px){.seats-explainer{padding:16px 14px}.se-steps{grid-template-columns:1fr}}
+/* Mobil: len strana, podpora, kreslá a zmena; medzivýpočty (÷ číslo, celé kreslá, zvyšok) na počítači */
+@media(max-width:600px){
+  .se-table{min-width:0}
+  .se-table th:nth-child(3),.se-table td:nth-child(3),.se-table th:nth-child(4),.se-table td:nth-child(4),.se-table th:nth-child(5),.se-table td:nth-child(5){display:none}
+  .se-table th,.se-table td{padding:8px 6px}
+  .se-control output b{font-size:22px}
+}
+@media(max-width:600px){
+  .se-table{font-size:12.5px}
+  .se-table tbody th{white-space:normal}
+  /* štyri kroky ako posúvateľné karty namiesto štyroch pod sebou */
+  .se-steps{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:82%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -14px 14px;padding:0 14px 4px}
+  .se-steps::-webkit-scrollbar{display:none}
+  .se-steps li{scroll-snap-align:start}
+}

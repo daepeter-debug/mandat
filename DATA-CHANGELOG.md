@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Vlastný model na mobile: prepočet kresiel bez posúvania do strany (Claude)
+
+Vysvetlenie „Ako sa z hlasov stanú kreslá“ malo na telefóne tabuľku širokú 640 px a štyri kroky pod sebou. Na mobile sú kroky posúvateľné karty (ďalšia vykukuje spoza okraja) a tabuľka ukazuje len stranu, podporu, kreslá a zmenu oproti dnešku; delenie volebným číslom a zvyšky ostávajú na počítači a v texte krokov.
+
 ## 23. 9. 2026 — Programy na mobile: kratšie karty, zbalený archív 2023 (Claude)
 
 Karta programového dokumentu mala na telefóne 550–650 px. Na mobile ukazuje len stranu, stav, názov, popis na tri riadky, témy v jednom posúvateľnom riadku a tlačidlo na pôvodný dokument (asi 300 px); poznámka ku kontextu a dátum overenia ostávajú na počítači a v dokumente. Archív volieb 2023 je na mobile zbalený do jedného riadku. Stránka Programy má na mobile asi 4 400 px namiesto 9 600.
