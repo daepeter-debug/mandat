@@ -8,7 +8,7 @@
 // Hlas a model sa musia zhodovať s nahrávkami (predvolene Adam – Young and Energetic, Multilingual v2).
 import fs from "node:fs";
 import path from "node:path";
-import { DEFAULT_MODEL, DEFAULT_VOICE, isCurrent, loadSets, mp3Ms, readManifest, restamp, saveAudio, writeManifest } from "./audio-shared.mjs";
+import { DEFAULT_MODEL, DEFAULT_VOICE, isCurrent, loadSets, mp3Ms, narrationEdition, readManifest, recordings, restamp, saveAudio, writeManifest } from "./audio-shared.mjs";
 
 const argv = process.argv.slice(2);
 const flag = name => argv.includes(`--${name}`);
@@ -54,8 +54,7 @@ function folderAudio(dir) {
 async function main() {
   if (flag("sheet")) {
     sheet.forEach(({ s, t }, i) => console.log(`\n${String(i + 1).padStart(2, "0")}  ${s}/${t.id}  ${t.text.length} znakov\n${t.text}`));
-    const n = sheet.length;
-    console.log(`\nSpolu ${n} ${n === 1 ? "nahrávka" : n < 5 ? "nahrávky" : "nahrávok"}, ${sheet.reduce((a, x) => a + x.t.text.length, 0)} znakov.`);
+    console.log(`\nSpolu ${recordings(sheet.length)}, ${sheet.reduce((a, x) => a + x.t.text.length, 0)} znakov.`);
     return;
   }
   const source = flag("history") ? await historyAudio() : option("from") ? folderAudio(option("from")) : null;
@@ -77,9 +76,9 @@ async function main() {
       imported++;
       console.log(`${s}/${t.id}: ${(ms / 1000).toFixed(1)} s, ${Math.round(audio.length / 1024)} kB`);
     }
-    console.log(`lib/audio/${s}.json: ${writeManifest(s, items, sets, voice, model)} nahrávok.`);
+    console.log(`lib/audio/${s}.json: ${recordings(writeManifest(s, items, sets, voice, model))}.`);
   }
-  console.log(`Importované ${imported}${missing ? `, chýba ${missing}` : ""}.`);
+  console.log(source ? `Importované ${imported}${missing ? `, chýba ${missing}` : ""}.` : `Platné nahrávky sú prepečiatkované na vydanie ${narrationEdition}${missing ? `, chýba ${missing}` : ""}.`);
 }
 
 main().catch(e => { console.error(e.message); process.exitCode = 1; });

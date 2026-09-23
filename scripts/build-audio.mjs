@@ -10,7 +10,7 @@
 //   node scripts/build-audio.mjs [--set=story|quick|seats|profiles]   vygeneruje len zmenené položky (šetrí kredity)
 // Nezmenený text s novým vydaním sa len prepečiatkuje (bez API). Hlas: ELEVENLABS_VOICE_ID alebo --voice=<id>.
 import fs from "node:fs";
-import { DEFAULT_MODEL, DEFAULT_VOICE, isCurrent, loadSets, readManifest, restamp, saveAudio, writeManifest } from "./audio-shared.mjs";
+import { DEFAULT_MODEL, DEFAULT_VOICE, isCurrent, loadSets, readManifest, recordings, restamp, saveAudio, writeManifest } from "./audio-shared.mjs";
 
 const API = "https://api.elevenlabs.io/v1";
 const argv = process.argv.slice(2);
@@ -98,7 +98,7 @@ async function main() {
       console.log(`${s}/${t.id}: ${t.text.length} znakov → ~${(items[t.id].ms / 1000).toFixed(1)} s`);
     }
     const n = writeManifest(s, items, sets, voice, model);
-    console.log(`lib/audio/${s}.json: ${n} nahrávok${todo.length ? `, ${todo.length} nových` : " (bez zmeny textov)"}.`);
+    console.log(`lib/audio/${s}.json: ${recordings(n)}${todo.length ? `, nové: ${todo.length}` : " (bez zmeny textov)"}.`);
   }
 }
 

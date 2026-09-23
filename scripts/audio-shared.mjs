@@ -7,6 +7,8 @@ export { narrationEdition };
 export const DEFAULT_VOICE = "2ST3sI2j7fz4A5oXjnbA"; // slovenský „Adam – Young and Energetic“ (Voice Library)
 export const DEFAULT_MODEL = "eleven_multilingual_v2";
 export const CREDIT = "Hlas: ElevenLabs (AI)";
+/** „1 nahrávka“, „3 nahrávky“, „13 nahrávok“. */
+export const recordings = n => `${n} ${n === 1 ? "nahrávka" : n >= 2 && n <= 4 ? "nahrávky" : "nahrávok"}`;
 
 export const loadSets = () => audioSets(JSON.parse(fs.readFileSync("lib/party-profiles.json", "utf8")));
 export const manifestPath = set => `lib/audio/${set}.json`;

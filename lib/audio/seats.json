@@ -1,7 +1,15 @@
 {
-  "voice": "",
-  "model": "",
+  "voice": "2ST3sI2j7fz4A5oXjnbA",
+  "model": "eleven_multilingual_v2",
   "credit": "Hlas: ElevenLabs (AI)",
-  "generated": "",
-  "items": {}
+  "generated": "2026-09-23",
+  "items": {
+    "kroky": {
+      "src": "/audio/seats/kroky-7a05c8966c.mp3",
+      "hash": "7a05c8966c",
+      "chars": 794,
+      "ms": 55301,
+      "edition": "2026-09-07"
+    }
+  }
 }

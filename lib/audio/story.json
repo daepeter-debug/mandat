@@ -1,7 +1,50 @@
 {
-  "voice": "",
-  "model": "",
+  "voice": "2ST3sI2j7fz4A5oXjnbA",
+  "model": "eleven_multilingual_v2",
   "credit": "Hlas: ElevenLabs (AI)",
-  "generated": "",
-  "items": {}
+  "generated": "2026-09-23",
+  "items": {
+    "leader": {
+      "src": "/audio/story/leader-c3e31b1d9c.mp3",
+      "hash": "c3e31b1d9c",
+      "chars": 279,
+      "ms": 19357,
+      "edition": "2026-09-07"
+    },
+    "seats": {
+      "src": "/audio/story/seats-5223a38189.mp3",
+      "hash": "5223a38189",
+      "chars": 295,
+      "ms": 20846,
+      "edition": "2026-09-07"
+    },
+    "month": {
+      "src": "/audio/story/month-664e5e13ca.mp3",
+      "hash": "664e5e13ca",
+      "chars": 218,
+      "ms": 15229,
+      "edition": "2026-09-07"
+    },
+    "edge": {
+      "src": "/audio/story/edge-2c72a2eb10.mp3",
+      "hash": "2c72a2eb10",
+      "chars": 170,
+      "ms": 12487,
+      "edition": "2026-09-07"
+    },
+    "debt": {
+      "src": "/audio/story/debt-21a8fe5066.mp3",
+      "hash": "21a8fe5066",
+      "chars": 186,
+      "ms": 12774,
+      "edition": "2026-09-07"
+    },
+    "you": {
+      "src": "/audio/story/you-dcc871b5f3.mp3",
+      "hash": "dcc871b5f3",
+      "chars": 107,
+      "ms": 6922,
+      "edition": "2026-09-07"
+    }
+  }
 }
