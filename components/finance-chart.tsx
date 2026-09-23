@@ -1,6 +1,7 @@
 "use client";
 
 import { Bar, CartesianGrid, Cell, ComposedChart, Line, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
+import type { CSSProperties } from "react";
 import { ChartContainer } from "@/components/ui/chart";
 
 /*
@@ -23,7 +24,7 @@ function Tip({ active, payload }: TipProps) {
   if (!active || !payload?.length) return null;
   const r = payload[0].payload;
   return <div className="finance-tip">
-    <b>{r.year}</b><span style={{ color: r.color }}>{r.cabinet}</span>
+    <b>{r.year}</b><span className="tone-text" style={{ "--tone": r.color } as CSSProperties}>{r.cabinet}</span>
     <p>Saldo <b>{num(r.deficitPct)} % HDP</b></p>
     <p>Dlh <b>{num(r.debtPct)} % HDP</b></p>
     {r.limit !== null && <p>Horný limit dlhu {num(r.limit, 0)} % HDP</p>}

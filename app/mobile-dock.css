@@ -30,5 +30,13 @@
   .mobile-more li button small{font-size:11.5px;line-height:1.35;color:var(--text-2)}
   .mobile-more li button[aria-current=page]{border-color:#2f6b3f;background:#eef3e7}
   .mobile-more button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+  /* nastavenia pod dlaždicami: tmavý režim a inštalácia na plochu (components/app-install.tsx) */
+  .mobile-more-settings{display:grid;gap:8px;margin:14px 12px 4px;padding-top:14px;border-top:1px solid var(--border)}
+  .app-install-button{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 14px;border:1px solid var(--border);border-radius:12px;background:#fbfcf8;font:inherit;text-align:left;color:var(--mag-ink);cursor:pointer}
+  .app-install-button svg{color:#2f6b3f;flex:none}
+  .app-install-button span{display:grid;gap:1px;font-size:14px;font-weight:600}
+  .app-install-button small{font-size:11.5px;font-weight:500;line-height:1.35;color:var(--text-2)}
+  .app-install-help{margin:8px 2px 0;font-size:13px;line-height:1.5;color:var(--text-2)}
+  .app-install-help b{display:inline-flex;align-items:center;gap:4px;color:var(--mag-ink)}
 }
 @media(prefers-reduced-motion:reduce){.mobile-dock button svg{transition:none}}

@@ -13,6 +13,7 @@ import logos from "@/lib/party-logos.json";
 import "@/app/responsibility.css";
 import SectionArt from "@/components/section-art";
 import YourSlovakia from "@/components/your-slovakia";
+import { inkOn } from "@/lib/ink";
 
 /*
   Sekcia Zodpovednosť za stav krajiny: koľko času strávila každá strana vo vláde od 1. 1. 1993,
@@ -36,7 +37,7 @@ function Mark({ row }: { row: Pick<ResponsibilityRow, "id" | "short" | "color" |
   const logo = row.active ? logoMap[row.id] : undefined;
   return logo
     ? <span className="resp-mark"><Image src={logo.src} alt="" width={26} height={26} unoptimized/></span>
-    : <span className="resp-mark is-mono" style={{ background: row.color }} aria-hidden="true">{initials(row.short)}</span>;
+    : <span className="resp-mark is-mono" style={{ background: row.color, color: inkOn(row.color) }} aria-hidden="true">{initials(row.short)}</span>;
 }
 
 function Kpis({ rows }: { rows: ResponsibilityRow[] }) {
@@ -135,7 +136,7 @@ function Coalition({ cabinet, rows }: { cabinet: Cabinet; rows: ResponsibilityRo
       const row = p.party ? rows.find(r => r.id === p.party) : undefined;
       const logo = p.party ? logoMap[p.party] : undefined;
       const inactive = p.inactive ? inactiveResponsibilityRows().find(r => r.id === p.inactive) : undefined;
-      const mark = logo ? <Image src={logo.src} alt="" width={20} height={20} unoptimized/> : <i style={{ background: inactive?.color ?? "#9aa39a" }} aria-hidden="true">{initials(p.short).slice(0, 2)}</i>;
+      const mark = logo ? <Image src={logo.src} alt="" width={20} height={20} unoptimized/> : <i style={{ background: inactive?.color ?? "#9aa39a", color: inkOn(inactive?.color ?? "#9aa39a") }} aria-hidden="true">{initials(p.short).slice(0, 2)}</i>;
       return chip(p.short, mark, p.short, row?.name ?? inactive?.name);
     })}
     {joined.map(r => { const p = r.periods.find(x => x.basis === "cabinet")!; return chip(r.id, logoMap[r.id] ? <Image src={logoMap[r.id].src} alt="" width={20} height={20} unoptimized/> : <i style={{ background: r.color }} aria-hidden="true">{initials(r.short).slice(0, 2)}</i>, `${r.short} od ${formatTenureDate(p.start)}`, p.note, true); })}

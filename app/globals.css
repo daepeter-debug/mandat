@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
+/* dark: v komponentoch nasleduje prepínač na webe (html[data-theme=dark]), nie nastavenie systému */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* Explicit public URLs keep font files available in both Vite dev and production. */
 @font-face{
@@ -66,6 +68,8 @@ h1,h2,h3,h4,p{margin-top:0}
 svg{flex-shrink:0}
 .tabular,.number-cell,.delta{font-variant-numeric:tabular-nums}
 .subtle{color:var(--text-3)}
+/* text vo farbe strany alebo vlády (farba v --tone); v tmavom režime sa zosvetlí */
+.tone-text{color:var(--tone)}
 .nowrap{white-space:nowrap}
 .label{font-size:12px;font-weight:600;letter-spacing:.2px;color:var(--text-3)}
 

@@ -1,5 +1,23 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — tmavý režim a inštalácia na plochu (Claude)
+
+Tmavý režim je voliteľný. Predvolene ostáva svetlý, prepína sa ikonou v hlavičke (na mobile v paneli Viac) a voľba sa pamätá v prehliadači. Pri prepnutí sa nová farba rozleje v kruhu od tlačidla; pri nastavení „obmedziť pohyb“ sa prepne hneď. Tmavé štýly sa generujú skriptom `scripts/build-dark.mjs` z existujúcich štýlov (výstup `app/theme-dark.css`, kontrola `--check`), takže svetlý režim sa nemení. Svetlé plochy tmavnú, tmavý text svetlie. Farby strán, logá, ilustrácie a hry ostávajú, text vo farbe strany je zosvetlený. Kontrast textu bol overený skriptom na všetkých 11 sekciách, v paneloch aj vo vyhľadávaní.
+
+Popri kontrole kontrastu boli opravené tri staršie chyby svetlého režimu:
+- takmer neviditeľný odkaz „Metodika agregátora“ v koaličnej skladačke;
+- tmavozelený odkaz na zdroj na tmavomodrej karte v Dátovom prehľade;
+- slabší kontrast popisov fotografií v O dátach.
+
+Monogramy strán bez loga v Zodpovednosti majú tmavý text tam, kde by biely bol na farbe strany málo čitateľný.
+
+Mandát sa dá pridať na plochu ako aplikácia:
+- ikony 192/512, maskovateľná ikona a ikona pre iPhone;
+- skratky v manifeste: Prieskumy, Strany, Hospodárenie, Herňa;
+- v paneli Viac tlačidlo „Pridať Mandát na plochu“ a na iPhone návod cez Zdieľať.
+
+Service worker (`public/sw.js`) berie stránky vždy najprv zo siete, takže údaje sú čerstvé. Bez signálu otvorí naposledy videnú verziu stránky alebo stránku `offline.html`. Súbory s hashom a písma berie z cache.
+
 ## 23. 9. 2026 — zdieľanie sekcie a odozva pri ťuknutí (Claude)
 
 Na ilustrácii v hlavičke piatich sekcií pribudlo v pravom hornom rohu tlačidlo Zdieľať (na mobile len ikona; vodoznak ilustrácie ostáva vpravo dole). Na telefóne otvorí systémové zdieľanie s odkazom na sekciu, ktorý má vlastný náhľad; na počítači odkaz skopíruje. Tlačidlá v rýchlych odpovediach, skladačke, porovnaní strán a podobne sa na dotykových zariadeniach pri ťuknutí jemne zmenšia (pri „obmedziť pohyb“ nie).

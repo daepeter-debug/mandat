@@ -25,7 +25,8 @@
 .cl-share{border:0;background:var(--mag-lime);color:#1f3a30}
 .cl-reset{border:1px solid #618274;background:transparent;color:#f3f8ed}
 .cl-actions [role=status]{font-size:12px;color:#c3d6c9}
-.cl-actions .mag-text-link{margin-left:auto}
+.cl-actions .mag-text-link{margin-left:auto;color:var(--mag-lime)}
+@media(hover:hover){.cl-actions .mag-text-link:hover{color:#ecffc0}}
 @media(prefers-reduced-motion:reduce){.cl-hemi circle{transition:none}.cl-top.is-majority .mag-coalition-count>b,.cl-badge,.cl-paths button{animation:none}}
 @media(max-width:1100px){.cl-top{grid-template-columns:1fr}.cl-hemi{justify-self:start;max-width:300px}.cl-paths button{grid-template-columns:90px minmax(0,1fr) 30px}}
 

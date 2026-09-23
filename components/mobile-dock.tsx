@@ -3,11 +3,13 @@
 import { useState, type ReactNode } from "react";
 import { BarChart3, BookOpen, CalendarRange, FileText, Gamepad2, Home, Landmark, LayoutGrid, Newspaper, PieChart, Scale, Search, SlidersHorizontal, Users, Wallet } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import ThemeToggle from "@/components/theme-toggle";
+import InstallApp from "@/components/app-install";
 import "@/app/mobile-dock.css";
 
 /*
   Mobilná navigácia pri palci: päť tlačidiel dole (štyri hlavné sekcie a Viac). „Viac“ otvorí
-  spodný panel so všetkými ostatnými sekciami a hľadaním. Na počítači sa nezobrazuje; horná
+  spodný panel so všetkými ostatnými sekciami, hľadaním, tmavým režimom a inštaláciou na plochu. Na počítači sa nezobrazuje; horná
   lišta záložiek je na mobile skrytá (preberá ju táto navigácia).
 */
 const primary: { id: string; label: string; icon: ReactNode }[] = [
@@ -43,6 +45,7 @@ export default function MobileDock({ views, active, onView }: { views: { id: str
         <SheetHeader className="mobile-more-head"><SheetTitle>Všetky sekcie</SheetTitle><SheetDescription className="sr-only">Prejsť na inú sekciu Mandátu alebo hľadať.</SheetDescription></SheetHeader>
         <button type="button" className="mobile-more-search" onClick={search}><Search size={18}/>Hľadať stranu, tému, vládu alebo rok…</button>
         <ul>{rest.map(v => <li key={v.id}><button type="button" aria-current={active === v.id ? "page" : undefined} onClick={() => go(v.id)}>{details[v.id]?.icon ?? <CalendarRange/>}<b>{v.label}</b><small>{details[v.id]?.text ?? ""}</small></button></li>)}</ul>
+        <div className="mobile-more-settings"><ThemeToggle label className="with-label"/><InstallApp/></div>
       </SheetContent>
     </Sheet>
   </>;

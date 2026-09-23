@@ -1,6 +1,7 @@
 "use client";
 
 import { Bar, CartesianGrid, Cell, ComposedChart, Line, Tooltip, XAxis, YAxis } from "recharts";
+import type { CSSProperties } from "react";
 import { ChartContainer } from "@/components/ui/chart";
 
 /*
@@ -22,7 +23,7 @@ function Tip({ active, payload }: TipProps) {
   if (!active || !payload?.length) return null;
   const r = payload[0].payload;
   return <div className="finance-tip">
-    <b>{r.year}</b><span style={{ color: r.color }}>{r.cabinet}</span>
+    <b>{r.year}</b><span className="tone-text" style={{ "--tone": r.color } as CSSProperties}>{r.cabinet}</span>
     {r.minWage !== null && <p>Minimálna mzda <b>{num(r.minWage)} €</b></p>}
     {r.gdpPcPps !== null && <p>HDP na obyvateľa <b>{num(r.gdpPcPps)} % priemeru EÚ</b></p>}
   </div>;

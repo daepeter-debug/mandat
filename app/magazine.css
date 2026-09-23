@@ -20,7 +20,7 @@
 .editorial-shell main>[role=tabpanel]:not([data-state=inactive]){padding-top:44px}
 .editorial-shell main>[role=tabpanel]:has(.magazine){padding-top:0}
 .editorial-shell footer{margin:60px auto 0;padding:32px max(4vw,24px);max-width:1760px;border-top:1px solid var(--border)}
-.editorial-shell .source-link{color:#315e4c}
+.editorial-shell .source-link{color:#315e4c}.editorial-shell .latest-card>.source-link{color:#a9c6ff}
 .editorial-shell .rank-source .source-link{color:#bad8ca}
 .magazine h1,.magazine h2,.election-lab h1,.election-lab h2{letter-spacing:-.04em;text-wrap:balance}
 .mag-hero{display:grid;grid-template-columns:1fr 1fr;gap:7%;align-items:center;padding:64px 0 58px}

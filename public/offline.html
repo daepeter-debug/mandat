@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandát · bez pripojenia</title>
+<meta name="theme-color" content="#f4f6f0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try{if(localStorage.getItem("mandat-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}</script>
+<style>
+  :root{--bg:#f5f4ee;--card:#fffefa;--ink:#20392f;--text:#4f6057;--line:#d9dfd4;--accent:#245c48;--on-accent:#fff}
+  html[data-theme=dark]{--bg:#1c221f;--card:#262c29;--ink:#d1e7de;--text:#bfcec6;--line:#41463d;--accent:#baead9;--on-accent:#0f231b;color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans Variable","IBM Plex Sans","Segoe UI",Arial,sans-serif}
+  main{width:100%;max-width:420px;padding:28px 24px;border:1px solid var(--line);border-radius:18px;background:var(--card);text-align:center}
+  svg{width:56px;height:56px}
+  h1{margin:16px 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.02em}
+  p{margin:0 0 20px;color:var(--text)}
+  button{min-height:48px;padding:0 22px;border:0;border-radius:999px;background:var(--accent);color:var(--on-accent);font:inherit;font-weight:600;cursor:pointer}
+  button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+</style>
+</head>
+<body>
+<main>
+  <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#20392f"/><g fill="#f5f4ee"><circle cx="10" cy="43" r="4.6"/><circle cx="16.4" cy="27.4" r="4.6"/><circle cx="32" cy="21" r="4.6"/><circle cx="21" cy="43" r="4.6"/><circle cx="32" cy="32" r="4.6"/></g><g fill="#9dbb86"><circle cx="47.6" cy="27.4" r="4.6"/><circle cx="54" cy="43" r="4.6"/><circle cx="43" cy="43" r="4.6"/></g></svg>
+  <h1>Ste bez pripojenia</h1>
+  <p>Táto stránka ešte nie je uložená v zariadení. Naposledy otvorené časti Mandátu fungujú aj offline, ostatné sa načítajú, keď sa pripojenie vráti.</p>
+  <button type="button" onclick="location.reload()">Skúsiť znova</button>
+</main>
+</body>
+</html>
