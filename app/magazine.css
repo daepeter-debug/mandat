@@ -256,13 +256,26 @@
 .edition-kpis dt{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);line-height:1.35}
 .edition-kpis dd{margin:3px 0 0;font-size:26px;font-weight:600;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--mag-ink)}
 .edition-kpis small{display:block;margin-top:3px;font-size:11px;color:var(--text-3)}
-.edition-kpis small.up,.edition-changes .up{color:#2f6b3f}.edition-kpis small.down,.edition-changes .down{color:#9a3b30}
-.edition-changes{list-style:none;margin:0 0 20px;padding:12px 0 0;border-top:1px solid var(--border);display:grid;gap:7px;font-size:13px;line-height:1.55;color:var(--text-2);max-width:60ch}
-.edition-changes li{display:grid;grid-template-columns:82px minmax(0,1fr);gap:10px}
-.edition-changes li>b{font-weight:600;color:var(--mag-ink)}
-.edition-changes .up,.edition-changes .down{font-weight:600}
+.edition-kpis small.up{color:#2f6b3f}.edition-kpis small.down{color:#9a3b30}
+/* Úvod: karta V skratke (components/edition-brief.tsx) */
+.edition-brief{margin:0 0 20px;max-width:600px;border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px 16px 6px}
+.edition-brief>header{display:flex;justify-content:space-between;align-items:baseline;gap:4px 14px;flex-wrap:wrap;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.edition-brief h2{margin:0;font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--mag-ink)}
+.edition-brief>header span{font-size:11px;color:var(--text-3)}
+.edition-brief dl{margin:0;display:grid}
+.edition-brief dl>div{display:grid;grid-template-columns:112px minmax(0,auto) minmax(0,1fr);align-items:baseline;gap:2px 14px;padding:9px 0;border-bottom:1px solid #e7ece2}
+.edition-brief dl>div:last-child{border-bottom:0}
+.edition-brief dt{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2)}
+.edition-brief dd{margin:0;display:flex;align-items:baseline;gap:8px;font-size:15px;color:var(--mag-ink);white-space:nowrap}
+.edition-brief dd b{font-weight:650;font-variant-numeric:tabular-nums}
+.edition-brief dd b.up{color:#2f6b3f}.edition-brief dd b.down{color:#9a3b30}
+.edition-brief .brief-list{flex-wrap:wrap;gap:4px 14px;white-space:normal}.edition-brief .brief-list>span{display:inline-flex;align-items:baseline;gap:8px}
+.edition-brief small{font-size:12px;line-height:1.45;color:var(--text-3);text-align:right}
+.brief-party{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px;letter-spacing:.01em}
+.brief-party i{width:9px;height:9px;border-radius:50%;flex:none}
+@media(max-width:520px){.edition-brief{padding:10px 14px 4px}.edition-brief dl>div{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label value" "note note"}.edition-brief dt{grid-area:label}.edition-brief dd{grid-area:value}.edition-brief small{grid-area:note;text-align:left}}
 @media(min-width:1700px){.with-party-rail .national-copy h1{font-size:clamp(26px,1.9vw,34px)}.edition-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:700px){.national-copy h1{font-size:clamp(25px,6.6vw,31px);max-width:none}.edition-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.edition-kpis dd{font-size:23px}.edition-changes li{grid-template-columns:74px minmax(0,1fr)}.edition-lead{font-size:14px}}
+@media(max-width:700px){.national-copy h1{font-size:clamp(25px,6.6vw,31px);max-width:none}.edition-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.edition-kpis dd{font-size:23px}.edition-lead{font-size:14px}}
 
 /* Mobilný Prehľad: aktuálne karty, potom rozcestník; duplikované sekcie sú na mobile skryté a graf podpory je v záložke Prieskumy. */
 .overview-directory,.polls-aggregate-mobile{display:none}

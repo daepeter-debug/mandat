@@ -5,7 +5,8 @@ import { ArrowDown, ArrowUpRight, CalendarDays } from "lucide-react";
 import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
-import { edition, signed, signedInt } from "@/lib/edition";
+import EditionBrief from "@/components/edition-brief";
+import { edition, signedInt } from "@/lib/edition";
 import { date } from "@/lib/polls";
 
 // Natural Earth 1:50m (public domain), equirectangular projection at 49° N.
@@ -62,12 +63,7 @@ export default function NationalIntro({ onNavigate, parliament, onParliament, pa
       <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">
         {kpis.map(k => <div key={k.label}><dt>{k.label}</dt><dd>{k.value}</dd><small className={k.delta > 0 ? "up" : k.delta < 0 ? "down" : ""}>{k.note}</small></div>)}
       </dl>
-      <ul className="edition-changes" aria-label={`Čo sa zmenilo od ${date(edition.monthAgo)}`}>
-        <li><b>Kreslá</b><span>s partnermi: koalícia {signedInt(dWithCoalition)}, opozícia {signedInt(dWithOpposition)} · bez partnerov: koalícia {signedInt(dCoalition)}, opozícia {signedInt(dOpposition)} (od {date(edition.monthAgo)})</span></li>
-        {edition.movers.length > 0 && <li><b>Podpora</b><span>{edition.movers.slice(0, 3).map((m, i) => <span key={m.id}>{i > 0 && ", "}{m.short} <span className={m.delta > 0 ? "up" : "down"}>{signed(m.delta)}</span></span>)} p. b.</span></li>}
-        {edition.crossings.map(c => <li key={c.id}><b>Hranica 5 %</b><span>{c.short}: {c.direction === "down" ? "pokles pod 5 %" : "prekročenie 5 %"} ({c.value.toLocaleString("sk-SK", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %), z {c.seatsBefore} kresiel na {c.seatsNow}</span></li>)}
-        <li><b>Merania</b><span>{edition.newPolls.length} {edition.newPolls.length === 1 ? "nové meranie" : edition.newPolls.length < 5 ? "nové merania" : "nových meraní"} za 30 dní: {[...new Set(edition.newPolls.map(p => p.agency))].join(", ")}</span></li>
-      </ul>
+      <EditionBrief/>
       <div className="national-actions"><button className="mag-button" onClick={explore}>Preskúmať prieskumy <ArrowDown size={17}/></button><button className="mag-text-link" onClick={()=>onNavigate("model")}>Zostaviť scenár <ArrowUpRight size={17}/></button></div>
       <div className="national-principles"><span>Nezávisle</span><span>So zdrojmi</span><span>Bez reklamy</span></div>
     <aside className="election-countdown" aria-labelledby="countdown-title">
