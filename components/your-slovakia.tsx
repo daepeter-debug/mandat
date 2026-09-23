@@ -9,6 +9,8 @@ import { birthYears, governmentsLabel, isBirthYear, lifeHeadline, lifeSummary, p
 // dlh, minimálna mzda a ceny. Rok je v adrese (?rok=), aby sa výsledok dal poslať ďalej.
 const nf = (n: number, digits = 0) => n.toLocaleString("sk-SK", { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const plural = (n: number, one: string, few: string, many: string) => n === 1 ? one : n >= 2 && n <= 4 ? few : many;
+// Suma a mena sa nezalomia; riadok sa môže zalomiť len pri šípke.
+const eur = (n: number) => `${nf(n)}\u00a0€`;
 const times = (f: number) => `${nf(f, f < 10 ? 1 : 0)}-krát`;
 const picks = [1970, 1990, 2005];
 const example = lifeSummary(1990).cabinets.length;
@@ -19,7 +21,7 @@ function Strip({ s }: { s: LifeSummary }) {
   return <figure className="you-strip" aria-label={`Vlády od ${formatTenureDate(s.from)} do ${formatTenureDate(s.asOf)}: ${s.cabinets.map(c => c.cabinet.short).join(", ")}`}>
     <div className="you-strip-bar">
       {s.cabinets.map(c => <span key={c.cabinet.id} style={{ flexGrow: c.days, background: c.cabinet.color }} title={`${c.cabinet.name}: ${formatTenureDate(c.start)} – ${c.cabinet.end ? formatTenureDate(c.end) : "dnes"}`}>
-        {c.days / total > 0.085 && <b>{c.cabinet.short}</b>}
+        {c.days / total > 0.085 && <b className={c.days / total > 0.14 ? undefined : "is-narrow"}>{c.cabinet.short}</b>}
       </span>)}
       {adult !== null && adult > 0 && adult < 1 && <i className="you-strip-adult" style={{ left: `${adult * 100}%` }}><em>18</em></i>}
     </div>
@@ -43,7 +45,7 @@ export default function YourSlovakia({ year, onYear }: { year: number | null; on
 
   async function share() {
     if (!s) return;
-    const debt = s.debt ? ` Dlh na obyvateľa stúpol z ${nf(s.debt.from)} € na ${nf(s.debt.to)} €.` : "";
+    const debt = s.debt ? ` Dlh na obyvateľa stúpol z ${eur(s.debt.from)} na ${eur(s.debt.to)}.` : "";
     const text = `Ročník ${s.year}: ${lifeHeadline(s)}.${debt} Pozri sa na svoj ročník:`;
     const url = window.location.href;
     try {
@@ -69,8 +71,8 @@ export default function YourSlovakia({ year, onYear }: { year: number | null; on
           {s.topParty && <div><dt>Najdlhšie vo vláde</dt><dd><span className="brief-party"><i style={{ background: s.topParty.color }} aria-hidden="true"/>{s.topParty.short}</span></dd><small>{durationLabel(s.topParty.days)} · {nf(s.topParty.share * 100)} % {s.ageAtIndependence !== null ? "tohto času" : "tvojho života"}</small></div>}
           {s.topPremier && <div><dt>Najdlhšie premiérom</dt><dd>{s.topPremier.name}</dd><small>{durationLabel(s.topPremier.days)}</small></div>}
           <div><dt>Tvoje 18. narodeniny</dt><dd>{s.adulthood.year}</dd><small>{s.adulthood.status === "czechoslovakia" ? "ešte v Česko-Slovensku" : s.adulthood.status === "future" ? "vtedy budeš môcť prvýkrát voliť" : s.adulthood.cabinet?.name ?? "—"}</small></div>
-          {s.debt && <div><dt>Dlh na obyvateľa</dt><dd>{nf(s.debt.from)} € → {nf(s.debt.to)} €</dd><small>{s.debt.fromYear} – {s.debt.toYear} · {times(s.debt.to / s.debt.from)} viac</small></div>}
-          {s.minWage && <div><dt>Minimálna mzda</dt><dd>{nf(s.minWage.from)} € → {nf(s.minWage.to)} €</dd><small>{s.minWage.fromYear} – {s.minWage.toYear}{wagePrices ? ` · ceny medzitým ${times(wagePrices)}` : ""}</small></div>}
+          {s.debt && <div><dt>Dlh na obyvateľa</dt><dd>{eur(s.debt.from)} → {eur(s.debt.to)}</dd><small>{s.debt.fromYear} – {s.debt.toYear} · {times(s.debt.to / s.debt.from)} viac</small></div>}
+          {s.minWage && <div><dt>Minimálna mzda</dt><dd>{eur(s.minWage.from)} → {eur(s.minWage.to)}</dd><small>{s.minWage.fromYear} – {s.minWage.toYear}{wagePrices ? ` · ceny medzitým ${times(wagePrices)}` : ""}</small></div>}
           {s.living && <div><dt>Životná úroveň</dt><dd>{nf(s.living.from, 1)} → {nf(s.living.to, 1)} %</dd><small>HDP na obyvateľa v kúpnej sile, priemer EÚ = 100 · {s.living.fromYear} – {s.living.toYear}</small></div>}
         </dl>
         {!s.debt && <p className="you-note">Hospodárske údaje Eurostatu zatiaľ máme len do roku {birthYears.max - 1}.</p>}
