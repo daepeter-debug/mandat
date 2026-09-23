@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Zodpovednosť na mobile: vlády ako karty (Claude)
+
+Tabuľka „Vlády od roku 1993“ bola na telefóne široká 960 px a posúvala sa do strany. Na mobile je teraz každá vláda karta: názov a poznámka, premiér a trvanie vedľa seba, obdobie, koaličné strany a riadok V číslach (saldo, dlh pri prevzatí a odovzdaní, nezamestnanosť, odkaz na detail). Na počítači ostáva tabuľka.
+
 ## 23. 9. 2026 — Hospodárenie na mobile: zoznam rokov namiesto širokej tabuľky (Claude)
 
 Tabuľka rokov v Hospodárení má 13 stĺpcov; na telefóne bolo bez posunu do strany vidno len rok a vládu, čísla boli skryté vpravo. Na mobile ju nahrádza zoznam (`components/finance-years-mobile.tsx`): pri každom roku vláda, ktorá ho odvládla najdlhšie, udalosť roka, stĺpček salda (tmavočervený pri deficite nad 3 % HDP), dlh v % HDP a na obyvateľa a nezamestnanosť. Predvolene posledných 10 rokov, tlačidlom všetky od roku 1995. Na počítači ostáva úplná tabuľka.

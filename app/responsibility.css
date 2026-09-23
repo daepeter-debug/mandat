@@ -148,3 +148,28 @@ button.resp-row:focus-visible,.resp-never button:focus-visible{outline:2px solid
 .resp-numbers button{margin-top:2px;padding:0;border:0;background:none;font:inherit;font-size:12px;font-weight:600;color:#3c5d44;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 .resp-numbers button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .resp-muted{font-size:12px;color:var(--text-3)}
+
+/* Mobil: tabuľka vlád ako karty (bez posúvania do strany) */
+@media(max-width:760px){
+  .resp-table-wrap{overflow:visible;border:0;border-radius:0;background:none}
+  .resp-table{display:block;min-width:0}
+  .resp-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .resp-table tbody{display:grid;gap:10px}
+  .resp-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 14px;padding:14px;border:1px solid var(--border);border-radius:12px;background:#fff}
+  .resp-table tbody th,.resp-table tbody td{display:block;min-width:0;padding:0;border:0!important;background:none!important;text-align:left}
+  .resp-table tbody th{grid-column:1/-1;font-size:14.5px}
+  .resp-table tbody th small{max-width:none}
+  .resp-table tbody td:nth-child(2){grid-row:2;grid-column:1}
+  .resp-table tbody td:nth-child(4){grid-row:2;grid-column:2}
+  .resp-table tbody td:nth-child(3){grid-row:3;grid-column:1/-1}
+  .resp-table tbody td:nth-child(5),.resp-table tbody td:nth-child(6){grid-column:1/-1}
+  .resp-table tbody td:nth-child(2)::before,.resp-table tbody td:nth-child(3)::before,.resp-table tbody td:nth-child(4)::before,.resp-table tbody td:nth-child(6)::before{display:block;margin-bottom:2px;font-size:10px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+  .resp-table tbody td:nth-child(2)::before{content:"Premiér"}
+  .resp-table tbody td:nth-child(3)::before{content:"Obdobie"}
+  .resp-table tbody td:nth-child(4)::before{content:"Trvanie"}
+  .resp-table tbody td:nth-child(6)::before{content:"V číslach"}
+  .resp-table tbody td:nth-child(6){padding-top:8px!important;border-top:1px solid #edf1e8!important}
+  .resp-numbers{min-width:0}
+  .resp-numbers>span{display:inline-block;margin-right:12px;white-space:nowrap}
+  .resp-numbers button{display:inline-flex;min-height:36px;align-items:center}
+}

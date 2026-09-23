@@ -145,7 +145,7 @@ function Coalition({ cabinet, rows }: { cabinet: Cabinet; rows: ResponsibilityRo
 function Governments({ rows, onFinance }: { rows: ResponsibilityRow[]; onFinance: () => void }) {
   return <section className="resp-block" aria-labelledby="resp-govs-title">
     <div className="resp-block-head"><div><h2 id="resp-govs-title">Vlády od roku 1993</h2><p>Od súčasnej po prvú vládu samostatnej SR. Koalícia je uvedená v čase vymenovania; strany, ktoré do kabinetu vstúpili neskôr, sú odlíšené.</p></div><button type="button" className="text-button" onClick={onFinance}>Ako tieto vlády hospodárili <ArrowRight size={16}/></button></div>
-    <div className="resp-table-wrap" tabIndex={0} aria-label="Zoznam vlád; na úzkej obrazovke sa posúva vodorovne"><table className="resp-table">
+    <div className="resp-table-wrap" tabIndex={0} aria-label="Zoznam vlád"><table className="resp-table">
       <caption className="sr-only">Vlády Slovenskej republiky od 1. 1. 1993</caption>
       <thead><tr><th scope="col">Vláda</th><th scope="col">Premiér</th><th scope="col">Obdobie</th><th scope="col" className="num">Trvanie</th><th scope="col">Koalícia</th><th scope="col">V číslach<small>Eurostat, % HDP</small></th></tr></thead>
       <tbody>{[...cabinets].reverse().map(c => <tr key={c.id}>
