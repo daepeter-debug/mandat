@@ -51,6 +51,7 @@ import { election2023, seated2023, scenarioFromPoll, wastedVotes, result2023 } f
 import { parties, archive, agencies, agencySeries, latest, previous, fmt, date, rank, difference, dataVerified, type Poll, type Party } from "@/lib/polls";
 import SectionArt from "@/components/section-art";
 import PollAccuracy from "@/components/poll-accuracy";
+import PartyMoney from "@/components/party-money";
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
 const primaryAgencies = ["AKO","FOCUS","INFOSTAT","IPSOS","NMS"];
@@ -301,6 +302,7 @@ export default function MandatApp() {
           <div className="archive-toolbar"><label className="search-field"><Search size={18}/><Input value={partyQuery} onChange={e=>setPartyQuery(e.target.value)} placeholder="Strana, skratka alebo osobnosť" aria-label="Hľadať politickú stranu" autoComplete="off" spellCheck={false} enterKeyHint="search"/></label><span className="result-count" role="status">{visibleParties.length} {visibleParties.length===1?"subjekt":visibleParties.length>=2&&visibleParties.length<=4?"subjekty":"subjektov"} · abecedné poradie</span></div>
           <h2 className="sr-only">Zoznam politických subjektov</h2><div className="party-grid">{visibleParties.map(p=><article className="party-card" key={p.id}><div className="party-card-top"><span className="party-monogram"><i style={{background:p.color}} aria-hidden="true"/>{p.short}</span>{partyLogoMap[p.id]&&<span className="party-card-logo"><Image src={partyLogoMap[p.id].src} alt="" width={52} height={52} unoptimized/></span>}</div><button className="party-card-action" onClick={()=>setParty(p)}><h3>{p.name}</h3><span>Pozrieť profil <ArrowRight size={16}/></span></button><PartyTags partyId={p.id}/>{partyProfiles[p.id]&&<p className="party-card-summary">{partyProfiles[p.id].summary}</p>}<div className="party-card-stat"><div><span>Model Mandát · vážený priemer</span><strong>{currentAggregate.values[p.id]===undefined?"—":`${fmt(currentAggregate.values[p.id].value)} %`}</strong></div><p className="party-card-second">{current.agency} · {current.month.toLowerCase()} 2026: <b>{current.values[p.id]===undefined?"—":`${fmt(current.values[p.id])} %`}</b></p><Result2023Line partyId={p.id}/><Source poll={current}/></div>{currentAggregate.values[p.id]===undefined&&<p className="missing-caption">Subjekt zatiaľ nie je v agregáte; jednotlivé merania sú v archíve.</p>}</article>)}</div>
           {visibleParties.length===0&&<div className="empty-state"><Search size={30}/><h3>Stranu sme v tomto výbere nenašli</h3><button className="text-button" onClick={()=>setPartyQuery("")}>Zobraziť všetky subjekty <ArrowRight size={16}/></button></div>}
+          <PartyMoney/>
           <div className="context-strip roadmap"><BookOpen size={25}/><div><h3>Od preferencií k programom</h3><p>V profiloch už nájdete prvé overené programové dokumenty. Historické verzie sú označené rokom. Medailóny osobností majú vlastné zdroje; kandidátne listiny do volieb 2027 zatiaľ neuvádzame.</p></div></div>
         </TabsContent>
 

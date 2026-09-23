@@ -1,5 +1,9 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Strany: koľko dostanú od štátu (Claude)
+
+Nárok na štátne príspevky bol doteraz len v profile každej strany. Na stránke Strany pribudol spoločný prehľad za volebné obdobie 2023–2027 (`components/party-money.tsx`, výpočet `lib/party-funding.ts` sa nemenil): spolu 92,9 mil. € pre 9 subjektov nad 3 %, 26,08 € za hlas (13,04 € jednorazovo a rovnako na činnosť), 39 120 € ročne za každý z prvých 20 mandátov a asi 35 € na voliča strany v parlamente. Stĺpec pri každom subjekte delí sumu na príspevok za hlasy, na činnosť a na mandáty; pri strane je aj suma na voliča (strany bez mandátu 26 €). Poznámka uvádza najtesnejší subjekt pod hranicou nároku a koľko hlasov mu chýbalo. Ide o nárok zo zákona, nie o skutočne vyplatené sumy.
+
 ## 23. 9. 2026 — prehrávanie vývoja Modelu Mandát (Claude)
 
 Pri časovom posuvníku v prehľade „Ako sa mení podpora strán“ pribudlo tlačidlo Prehrať. Prejde týždenné body agregátu od začiatku obdobia (20. 1. 2026) po najnovší, v poradí strán sa stĺpce a pásma menia plynulo a na konci sa zobrazenie vráti k najnovším údajom. Zastaviť sa dá tlačidlom alebo posuvníkom; po zastavení pokračuje z rovnakého týždňa. Funguje v poradí aj v trende.

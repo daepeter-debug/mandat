@@ -1,0 +1,28 @@
+/* Strany: peniaze od štátu 2023–2027 (components/party-money.tsx) */
+.party-money{margin:34px 0 8px;border:1px solid var(--border);border-radius:12px;background:#fff;padding:20px 22px}
+.party-money-head h2{font-size:clamp(21px,2.1vw,27px);font-weight:600;letter-spacing:-.02em;line-height:1.2;margin:0;color:var(--mag-ink)}
+.party-money-head p{font-size:14px;line-height:1.65;color:var(--text-2);margin:8px 0 14px;max-width:74ch}
+.party-money-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.party-money-kpis div{padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:#fbfcf8;min-width:0}
+.party-money-kpis dt{font-size:10.5px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+.party-money-kpis dd{margin:4px 0 2px;font-size:20px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--mag-ink);white-space:nowrap}
+.party-money-kpis small{font-size:11.5px;line-height:1.4;color:var(--text-2)}
+.party-money-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.party-money-list li{display:grid;grid-template-columns:190px minmax(0,1fr) 150px;align-items:center;gap:14px;padding:8px 0;border-bottom:1px solid #e9eee4}
+.party-money-list li:last-child{border-bottom:0}
+.party-money-name{display:grid;grid-template-columns:10px minmax(0,1fr);column-gap:8px;align-items:center}
+.party-money-name i{width:10px;height:10px;border-radius:50%;grid-row:1/3}
+.party-money-name b{font-size:13.5px;color:var(--mag-ink)}.party-money-name small{font-size:11px;color:var(--text-3)}
+.party-money-bar{display:flex;height:14px;border-radius:4px;background:#f0f3ec;overflow:hidden}
+.party-money-bar i,.party-money-legend i{display:block;height:100%}
+.party-money .votes{background:#20392f}.party-money .activity{background:#6f9460}.party-money .mandates{background:#c9b27a}
+.party-money-sum{display:grid;justify-items:end;text-align:right}
+.party-money-sum strong{font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;color:var(--mag-ink);white-space:nowrap}
+.party-money-sum small{font-size:11px;color:var(--text-3);white-space:nowrap}
+.party-money-legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:10px 0 0;font-size:12px;color:var(--text-2)}
+.party-money-legend span{display:inline-flex;align-items:center;gap:7px}.party-money-legend i{width:16px;height:9px;border-radius:2px}
+.party-money-near{font-size:13px;line-height:1.6;color:var(--text-2);margin:12px 0 0;padding:10px 12px;border-radius:8px;background:#f7f4ea}
+.party-money-note{font-size:11.5px;line-height:1.6;color:var(--text-3);margin:10px 0 0;max-width:110ch}
+.party-money-note a{display:inline-flex;align-items:center;gap:2px;color:#3c5d44;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:900px){.party-money-kpis{grid-template-columns:1fr 1fr}.party-money-list li{grid-template-columns:150px minmax(0,1fr) 120px}}
+@media(max-width:600px){.party-money{padding:16px 14px}.party-money-list li{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name sum" "bar bar";gap:6px 10px}.party-money-name{grid-area:name}.party-money-sum{grid-area:sum}.party-money-bar{grid-area:bar}.party-money-kpis dd{font-size:17px}}
