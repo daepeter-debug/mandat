@@ -28,6 +28,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Search 
     description,
     openGraph: { title, description, type: "website", locale: "sk_SK", siteName: "Mandát", images: [image] },
     twitter: { card: "summary_large_image", title, description, images: [image.url] },
+    // RSS odber nových prieskumov (čítačky ho nájdu samy)
+    alternates: { types: { "application/rss+xml": "/rss.xml" } },
   };
 }
 

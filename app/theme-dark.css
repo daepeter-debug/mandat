@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 23 súborov (0e0c73b237) — needitovať ručne. Pravidiel: 1170, prefarbených: 928. */
+/* Generované scripts/build-dark.mjs z 24 súborov (69a31314d8) — needitovať ručne. Pravidiel: 1180, prefarbených: 936. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3840,6 +3840,45 @@ html[data-theme="dark"] .resp-muted {
     html[data-theme="dark"] .resp-table tbody td:nth-child(6) {
         border-top: 1px solid #393d35 !important
     }
+}
+html[data-theme="dark"] .rss-box summary {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .rss-box summary svg {
+    color: #fab07b
+}
+html[data-theme="dark"] .rss-box summary:hover {
+    border-color: #4d5548
+}
+html[data-theme="dark"] .rss-box summary:focus-visible {
+    outline: 3px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .rss-box[open] summary {
+    border-color: #4d5548;
+    background: #1f221c
+}
+html[data-theme="dark"] .rss-box p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .rss-actions button,html[data-theme="dark"] .rss-actions a {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .rss-actions a {
+    border-color: transparent;
+    background: none;
+    text-decoration: underline
+}
+html[data-theme="dark"] .rss-actions :is(button,a):focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .footer-rss {
+    color: inherit
 }
 html[data-theme="dark"] .seats-explainer {
     border: 1px solid #41463d;

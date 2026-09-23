@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
 import { flushSync } from "react-dom";
-import { ArrowUpRight, ArrowRight, Info, Search, ChartNoAxesCombined, Table2, Check, BookOpen, ListFilter, ShieldCheck, ChevronRight, Activity } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Info, Search, ChartNoAxesCombined, Table2, Check, BookOpen, ListFilter, ShieldCheck, ChevronRight, Activity, Rss } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
@@ -54,6 +54,7 @@ import PollAccuracy from "@/components/poll-accuracy";
 import PartyMoney from "@/components/party-money";
 import SeatsExplainer from "@/components/seats-explainer";
 import ThemeToggle from "@/components/theme-toggle";
+import RssSubscribe from "@/components/rss-subscribe";
 import { useServiceWorker } from "@/components/app-install";
 import PollTicker from "@/components/poll-ticker";
 import ArchiveCards from "@/components/archive-cards";
@@ -311,7 +312,7 @@ export default function MandatApp() {
         </TabsContent>
 
         <TabsContent value="polls">
-          <div className="section-hero"><section className="intro polls-intro"><div><h1>Archív meraní</h1><p className="intro-description">Kto sa pýtal, kedy a koho. Výsledky spolu s metodikou a pôvodným zdrojom.</p></div></section><SectionArt name="prieskumy"/></div>
+          <div className="section-hero"><section className="intro polls-intro"><div><h1>Archív meraní</h1><p className="intro-description">Kto sa pýtal, kedy a koho. Výsledky spolu s metodikou a pôvodným zdrojom.</p><RssSubscribe/></div></section><SectionArt name="prieskumy"/></div>
           <div className="polls-aggregate-mobile"><PollAggregator onMethod={()=>changeView("method")}/></div>
           <div className="archive-toolbar"><label className="search-field"><Search size={18}/><Input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Hľadať mesiac, agentúru alebo zadávateľa" aria-label="Hľadať v prieskumoch" autoComplete="off" spellCheck={false} enterKeyHint="search"/></label><Select value={agency} onValueChange={setAgency}><SelectTrigger aria-label="Agentúra" className="agency-select"><ListFilter size={15}/><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">Všetky agentúry</SelectItem>{agencies.map(a=><SelectItem value={a} key={a}>{a}</SelectItem>)}</SelectContent></Select><span className="result-count" role="status">Počet meraní: {filtered.length}</span></div>
           <div className="archive-table panel"><Table><TableCaptionText>Archív meraní, od najnovšieho podľa konca zberu dát.</TableCaptionText><TableHeader><TableRow><TableHead>Agentúra / meranie</TableHead><TableHead>Zber dát</TableHead><TableHead>Vzorka</TableHead><TableHead>Metóda</TableHead><TableHead>Publikované</TableHead><TableHead>Zdroj</TableHead><TableHead><span className="sr-only">Detail</span></TableHead></TableRow></TableHeader><TableBody>{filtered.slice(0,archiveVisible).map(p=><TableRow key={p.id}><TableCell><button className="table-poll-title" onClick={()=>setDetail(p)}><b>{p.agency}</b><span>{p.month} 2026</span></button></TableCell><TableCell>{date(p.start)}<br/><span className="subtle">– {date(p.end)}</span></TableCell><TableCell className="tabular">{(p.sample?.toLocaleString("sk-SK")??"Neuvedené")}</TableCell><TableCell className="method-cell">{p.method}</TableCell><TableCell>{date(p.published)}</TableCell><TableCell><Source poll={p}/></TableCell><TableCell><button className="icon-button" onClick={()=>setDetail(p)} aria-label={`Detail ${p.agency}, ${p.month} 2026`}><span className="mobile-detail-label">Detail merania</span><ArrowRight size={19}/></button></TableCell></TableRow>)}</TableBody></Table><ArchiveCards polls={filtered.slice(0,archiveVisible)} onDetail={setDetail}/>{archiveVisible<filtered.length&&<button className="archive-more" type="button" onClick={()=>setArchiveVisible(count=>Math.min(count+12,filtered.length))}>Zobraziť ďalšie merania <span>{Math.min(archiveVisible,filtered.length)} z {filtered.length}</span></button>}{filtered.length===0&&<div className="empty-state"><Search size={30}/><h3>Žiadne meranie nezodpovedá filtru</h3><p>Skúste iný výraz alebo zobrazte všetky agentúry.</p><button className="text-button" onClick={()=>{setAgency("all");setQuery("");}}>Vymazať filtre <ArrowRight size={16}/></button></div>}</div>
@@ -349,7 +350,7 @@ export default function MandatApp() {
         </TabsContent>
       </main>
     </Tabs>
-    <footer><button className="brand small" onClick={()=>changeView("overview")} aria-label="Mandát — úvod"><BrandMark/>mandát.</button><p>Nezávislý hobby projekt. Bez reklamy.</p><button className="text-button" onClick={()=>changeView("method")}>Metodika a zdroje <ArrowRight size={13}/></button><span>Dáta skontrolované {verified}</span></footer>
+    <footer><button className="brand small" onClick={()=>changeView("overview")} aria-label="Mandát — úvod"><BrandMark/>mandát.</button><p>Nezávislý hobby projekt. Bez reklamy.</p><button className="text-button" onClick={()=>changeView("method")}>Metodika a zdroje <ArrowRight size={13}/></button><a className="footer-rss" href="/rss.xml"><Rss size={13} aria-hidden="true"/>RSS nových prieskumov</a><span>Dáta skontrolované {verified}</span></footer>
 
     <MobileDock views={views} active={view} onView={changeView}/>
     <Sheet open={openNews!==null} onOpenChange={open=>{if(!open)update({news:null});}}><SheetContent className="detail-sheet news-sheet">{openNews&&<><SheetHeader><SheetTitle>{openNews.title}</SheetTitle><SheetDescription>{openNews.category} · {date(openNews.published)} · naše zhrnutie</SheetDescription></SheetHeader><div className="sheet-body news-sheet-body">{openNews.detail.map((paragraph,i)=><p key={i}>{paragraph}</p>)}<div className="news-sheet-source"><h3>Zdroj</h3><p>Zhrnutie sme napísali z článku, ktorý vydal {openNews.sourceName}. Kontrola zdrojov {date(newsChecked)}.</p><a href={openNews.source} target="_blank" rel="noopener noreferrer">Čítať pôvodný článok<ArrowUpRight size={15} aria-hidden="true"/><span className="sr-only"> (otvorí sa v novej karte)</span></a></div></div><SheetClose className="sheet-bottom-close">Zavrieť</SheetClose></>}</SheetContent></Sheet>

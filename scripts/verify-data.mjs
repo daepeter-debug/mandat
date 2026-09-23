@@ -283,6 +283,22 @@ assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durat
   assert.deepEqual(systematicErrors().filter(b => b.sameSign).map(b => b.id).sort(), ['aliancia', 'rep', 'rodina', 'smer'], 'Presnosť 2023: strany, pri ktorých sa mýlili všetky rovnako');
 }
 
+// RSS: každé meranie z archívu je jedna položka s vlastným guid a odkazom na detail; XML znaky sú ošetrené.
+{
+  const { buildPollsFeed, feedPolls } = await import('../lib/rss.ts');
+  const origin = 'https://example.test';
+  const xml = buildPollsFeed(origin);
+  const items = xml.split('<item>').length - 1;
+  assert.equal(items, archive.length, 'RSS: položka pre každé meranie');
+  const guids = [...xml.matchAll(/<guid[^>]*>([^<]+)<\/guid>/g)].map(m => m[1]);
+  assert.equal(new Set(guids).size, archive.length, 'RSS: jedinečné guid');
+  const links = [...xml.matchAll(/<link>([^<]+)<\/link>/g)].map(m => m[1]);
+  assert.ok(links.every(l => l.startsWith(origin)), 'RSS: odkazy smerujú na Mandát');
+  const outsideCdata = xml.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, '');
+  assert.ok(!/&(?!amp;|lt;|gt;|quot;|apos;)/.test(outsideCdata), 'RSS: neošetrený znak &');
+  const order = feedPolls().map(p => p.published ?? p.end);
+  assert.ok(order.every((d, i) => i === 0 || order[i - 1] >= d), 'RSS: od najnovšieho zverejnenia');
+}
 // Neistota: simulácia je deterministická, rozpätie obsahuje bodový odhad a stav pri 5 % zodpovedá simulácii.
 {
   const a = seatUncertainty(currentAggregate, 400), b = seatUncertainty(currentAggregate, 400);

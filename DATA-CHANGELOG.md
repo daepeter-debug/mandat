@@ -1,5 +1,14 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — RSS odber nových prieskumov (Claude)
+
+Nové merania sa dajú odoberať cez RSS na adrese `/rss.xml`. Každé meranie z archívu je jedna položka a zoradené sú od najnovšieho zverejnenia. Položka obsahuje:
+- výsledky všetkých strán;
+- termín zberu, vzorku, typ, metódu a objednávateľa;
+- odkaz na pôvodný zdroj a na detail merania v Mandáte.
+
+Obsah závisí len od dát, nie od času požiadavky. V sekcii Prieskumy je pod úvodom rozbaľovacie „Odoberať nové prieskumy“ s tlačidlami Kopírovať adresu odberu a Otvoriť vo Feedly. Odkaz na RSS je aj v päte stránky a v hlavičke HTML, kde ho čítačky nájdu samy. Kontrola `verify-data` overuje, že každé meranie má v RSS práve jednu položku s jedinečným guid, odkazy mieria na Mandát, poradie je správne a XML je ošetrené.
+
 ## 23. 9. 2026 — bez vyhľadávania, prepínač režimu v hlavičke (Claude)
 
 Rýchle hľadanie (lupa v hlavičke, klávesová skratka Ctrl+K a riadok v paneli Viac) bolo zrušené. Na mobile nefungovalo spoľahlivo a rozhadzovalo stránku. Na jeho mieste v hlavičke je teraz prepínač tmavého režimu, na mobile aj na počítači. Panel Viac obsahuje len sekcie a prípadne tlačidlo na inštaláciu na plochu.

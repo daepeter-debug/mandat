@@ -1,0 +1,15 @@
+/* Odber nových prieskumov (components/rss-subscribe.tsx) */
+.rss-box{margin-top:16px;max-width:560px}
+.rss-box summary{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border:1px solid var(--border);border-radius:999px;background:#fffefa;font-size:14px;font-weight:600;color:var(--mag-ink);cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.rss-box summary::-webkit-details-marker{display:none}
+.rss-box summary svg{color:#c2621d}
+.rss-box summary:hover{border-color:#b9c7b0}
+.rss-box summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.rss-box[open] summary{border-color:#b9c7b0;background:#f3f6ee}
+.rss-box p{margin:12px 0 10px;font-size:14px;line-height:1.55;color:var(--text-2)}
+.rss-actions{display:flex;flex-wrap:wrap;gap:8px}
+.rss-actions button,.rss-actions a{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 14px;border:1px solid var(--border);border-radius:999px;background:#fff;font:inherit;font-size:13px;font-weight:600;color:var(--mag-ink);cursor:pointer}
+.rss-actions a{border-color:transparent;background:none;text-decoration:underline;text-underline-offset:3px}
+.rss-actions :is(button,a):focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.footer-rss{display:inline-flex;align-items:center;gap:5px;color:inherit}
+@media(max-width:760px){.rss-box{margin-top:14px}.rss-actions button{flex:1 1 100%;justify-content:center}.rss-actions a{flex:1 1 100%;justify-content:center}}
