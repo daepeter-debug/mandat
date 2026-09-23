@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 23. 9. 2026 — Parlament v 3D a na stole (Claude)
+
+Pod polkruhom „Parlament podľa prieskumov“ pribudlo tlačidlo **Pozrieť v 3D a na stole**. Otvorí 3D model snemovne: 150 stoličiek vo farbách strán podľa scenára Modelu Mandát, v rovnakom poradí ako polkruh na webe (koalícia vľavo, opozícia vpravo), stupňovité rady a rečnícky pult. Model sa dá otáčať prstom a približovať. Na telefóne s rozšírenou realitou ho tlačidlo **Položiť na stôl** postaví cez kameru na stôl alebo podlahu:
+- Android: WebXR alebo Scene Viewer;
+- iPhone: AR Quick Look.
+
+Model (`public/models/parlament.glb`, 176 kB, glTF 2.0) generuje skript `node scripts/build-parliament-glb.mjs` z aktuálneho scenára. `verify-data` zlyhá, ak kreslá v súbore nesedia s dátami. Knižnica `<model-viewer>` (Google, s three.js) sa načíta až po otvorení okna z vlastného servera, takže úvod nespomalí a nič sa neposiela tretím stranám.
+
 ## 23. 9. 2026 — živé pozadie úvodu a plynulé „preletenie“ (Claude)
 
 **Živé pozadie úvodu.** Za titulkom vydania sa pomaly prelievajú tri mäkké farebné škvrny vo farbách Mandátu (limetková, mätová, piesková), nie vo farbách strán. Animuje sa len poloha a veľkosť, bez rozmazávania, takže to nezaťaží ani slabší telefón. Tmavý režim má vlastné, hlbšie odtiene. Pri „obmedziť pohyb“ a pri tlači pozadie stojí. Kontrast textu sa nezmenil.

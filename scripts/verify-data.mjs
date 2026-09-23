@@ -307,6 +307,16 @@ assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durat
     assert.equal(rows.reduce((s, r) => s + r.amount, 0), Math.round(total), `Dane: bloček sa sčíta na ${Math.round(total)} €`);
   }
 }
+// 3D parlament: public/models/parlament.glb nesie kreslá aktuálneho scenára (inak: node scripts/build-parliament-glb.mjs).
+{
+  const { parliamentSeats } = await import('../lib/parliament-model.ts');
+  const glb = readFileSync('public/models/parlament.glb');
+  assert.equal(glb.readUInt32LE(0), 0x46546c67, '3D parlament: súbor nie je GLB');
+  const gltf = JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString('utf8').trim());
+  const now = parliamentSeats();
+  assert.deepEqual(gltf.asset.extras.seats, now.seats, '3D parlament je zastaraný — spusti: node scripts/build-parliament-glb.mjs');
+  assert.equal(gltf.nodes.filter(n => n.name.startsWith('kreslo ')).length, 150, '3D parlament: 150 kresiel');
+}
 // RSS: každé meranie z archívu je jedna položka s vlastným guid a odkazom na detail; XML znaky sú ošetrené.
 {
   const { buildPollsFeed, feedPolls } = await import('../lib/rss.ts');

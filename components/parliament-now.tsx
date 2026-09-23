@@ -8,6 +8,7 @@ import { aggregateAsPoll, aggregateLastDate, aggregatePolls } from "@/lib/aggreg
 import { date } from "@/lib/polls";
 import { currentSeatUncertainty } from "@/lib/uncertainty";
 import SeatDots, { RollNumber } from "@/components/seat-dots";
+import ParliamentAR from "@/components/parliament-ar";
 
 /*
   Karta s dvoma pohľadmi na 150 kresiel v rovnakej vizuálnej logike (koalícia vľavo, ostatní v strede,
@@ -67,6 +68,7 @@ export default function ParliamentNow({ onNavigate, view, onView, partners, onPa
     <svg className="parliament-now-svg" viewBox="-1.06 -1.06 2.12 1.1" role="img" aria-label={description}>
       {points.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r={0.036} fill={colours[i]?.color ?? "var(--border)"}/>)}
     </svg>
+    {active === "model" && <ParliamentAR/>}
     <dl className="parliament-now-blocs">
       <div><dt>{coalitionLabel}</dt><dd><RollNumber value={summary.coalition.seats}/></dd>{coalitionRange && <small>rozpätie {coalitionRange.low}–{coalitionRange.high}</small>}</div>
       <div className="parliament-now-majority"><dt>Väčšina</dt><dd>{MAJORITY}</dd></div>

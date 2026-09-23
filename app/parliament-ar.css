@@ -1,0 +1,22 @@
+/* Parlament v 3D a na stole (components/parliament-ar.tsx) — najprv mobil (celá obrazovka), na počítači okno */
+.par3d-open{display:inline-flex;align-items:center;gap:8px;min-height:40px;margin:10px 0 2px;padding:0 16px;border:1px solid var(--border);border-radius:999px;background:#fffefa;font:inherit;font-size:13.5px;font-weight:600;color:var(--mag-ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.par3d-open:hover{border-color:#b9c7b0}
+.par3d-open:focus-visible,.par3d button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.par3d-overlay{position:fixed;inset:0;z-index:70;background:#0a110ecc;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.par3d{position:fixed;z-index:71;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));background:#f5f4ee;color:var(--mag-ink);outline:none}
+.par3d-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.par3d-title{margin:0;font-size:20px;font-weight:650;letter-spacing:-.01em}
+.par3d-desc{margin:4px 0 0;font-size:13px;line-height:1.45;color:var(--text-2)}
+.par3d-close{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:#fffefa;color:var(--mag-ink);cursor:pointer}
+.par3d-stage{position:relative;min-height:0;border-radius:18px;overflow:hidden;background:radial-gradient(120% 90% at 50% 20%,#ffffff,#ebe8de)}
+.par3d-viewer{display:block;width:100%;height:100%;--poster-color:transparent;--progress-bar-color:#2f6b3f}
+.par3d-loading{position:absolute;inset:0;display:grid;place-items:center;margin:0;font-size:14px;color:var(--text-2)}
+.par3d-ar{position:absolute;left:50%;bottom:14px;translate:-50% 0;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:999px;background:#20392f;color:#fff;font:inherit;font-size:15px;font-weight:650;box-shadow:0 6px 18px #0003;cursor:pointer}
+.par3d-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;font-weight:600;color:var(--mag-ink)}
+.par3d-legend li{display:inline-flex;align-items:center;gap:6px}
+.par3d-legend i{width:10px;height:10px;border-radius:3px}
+.par3d-legend b{font-variant-numeric:tabular-nums}
+.par3d-note{margin:0;font-size:11.5px;line-height:1.45;color:var(--text-3)}
+@media(min-width:761px){
+  .par3d{inset:auto;left:50%;top:50%;translate:-50% -50%;width:min(860px,calc(100vw - 48px));height:min(720px,calc(100dvh - 48px));padding:20px 22px;border-radius:22px;box-shadow:0 40px 90px #0006}
+}

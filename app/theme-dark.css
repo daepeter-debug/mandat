@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 27 súborov (07628fc763) — needitovať ručne. Pravidiel: 1246, prefarbených: 988. */
+/* Generované scripts/build-dark.mjs z 28 súborov (3224a153c8) — needitovať ručne. Pravidiel: 1259, prefarbených: 998. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3126,6 +3126,57 @@ html[data-theme="dark"] .mobile-collapse {
 }
 html[data-theme="dark"] .mobile-collapse>.fold-toggle {
     color: #d1e7de
+}
+html[data-theme="dark"] .par3d-open {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-open:hover {
+    border-color: #4d5548
+}
+html[data-theme="dark"] .par3d-open:focus-visible,html[data-theme="dark"] .par3d button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .par3d-overlay {
+    background: #0a110ecc
+}
+html[data-theme="dark"] .par3d {
+    background: #1c221f;
+    color: #d1e7de;
+    outline: none
+}
+html[data-theme="dark"] .par3d-desc {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-close {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-stage {
+    background: radial-gradient(120% 90% at 50% 20%,#262c29,#2b2921)
+}
+html[data-theme="dark"] .par3d-loading {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-ar {
+    border: 0;
+    background: #20392f;
+    color: #fff;
+    box-shadow: 0 6px 18px #0003
+}
+html[data-theme="dark"] .par3d-legend {
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-note {
+    color: #bccac2
+}
+@media (min-width:761px) {
+    html[data-theme="dark"] .par3d {
+        box-shadow: 0 40px 90px #0006
+    }
 }
 html[data-theme="dark"] .pc-head h2 {
     color: #d1e7de
