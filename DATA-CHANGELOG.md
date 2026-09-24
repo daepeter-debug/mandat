@@ -1,5 +1,16 @@
 # Evidencia údajov a rozsahu
 
+## 24. 9. 2026 — Deň v politike doplnený za 16.–24. 9. a veta dňa pre všetky dni (Claude)
+
+Pribudlo 26 overených správ za 16., 17., 20., 22., 23. a dopoludnie 24. 9. Každý deň od 9. 9. má teraz súhrn dňa aj poradie dôležitosti a pri dňoch od 16. 9. je uvedený počet prejdených politických udalostí. Výber má 70 správ za 16 dní a kontrola zdrojov je 24. 9. (deň ešte beží).
+
+Postup bol rovnaký ako pri predchádzajúcich správach:
+- Editor vybral zo všetkých udalostí dňa tie, ktoré hýbu politikou.
+- Návrh písal jeden agent z pôvodného článku.
+- Nezávislý overovateľ ho skontroloval oproti zdroju: mená, funkcie, strany, čísla, deň v týždni, neutralitu a vlastné slová.
+
+Jednu správu (neotvorená schôdza k Šutajovi Eštokovi zo 16. 9.) overovateľ vyradil ako duplicitu už zverejnenej správy zo 17. 9. Pri správe o odškodnení obetí sterilizácií overovateľ použil novší článok s výsledkom hlasovania, keďže návrh vo štvrtok neprešiel.
+
 ## 24. 9. 2026 — Deň v politike: denný súhrn namiesto prúdu správ (Claude)
 
 Správy sú odteraz denný súhrn s názvom „Deň v politike · Čo by nemalo zapadnúť“, nie živý spravodajský prúd. Každý deň prejdeme politické udalosti (Denník N Minúta po minúte, TASR a ďalšie zdroje) a vyberieme tie, ktoré hýbu politikou.
