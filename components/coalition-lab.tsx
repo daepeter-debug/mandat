@@ -11,7 +11,7 @@ import { track } from "@/lib/track";
 import "@/app/coalition-lab.css";
 
 /*
-  Úvod: zostavte vlastnú koalíciu. Polkruh sa pri výbere vyfarbí vlnou zľava doprava, pri 76 kreslách
+  Vlastný model: zostavte vlastnú koalíciu. Polkruh sa pri výbere vyfarbí vlnou zľava doprava, pri 76 kreslách
   zasvieti väčšina. Pod ním sú cesty k väčšine (najmenšie väčšinové kombinácie, lib/coalitions.ts),
   ktoré obsahujú vybrané strany, a obrázok výberu na stiahnutie alebo zdieľanie.
 */
@@ -50,7 +50,7 @@ function drawImage(selected: string[], count: number): HTMLCanvasElement {
   return canvas;
 }
 
-export default function CoalitionLab({ onNavigate }: { onNavigate: (view: string) => void }) {
+export default function CoalitionLab({ onNavigate, inModel = false }: { onNavigate: (view: string) => void; inModel?: boolean }) {
   const [selected, setSelected] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const count = rows.filter(r => selected.includes(r.id)).reduce((a, r) => a + r.seats, 0);
@@ -76,7 +76,7 @@ export default function CoalitionLab({ onNavigate }: { onNavigate: (view: string
   }
 
   return <section className="mag-lab coalition-lab" id="koalicia">
-    <div className="mag-lab-copy"><h2>Zostavte <br/>vlastnú <br/><span>koalíciu.</span></h2><p>Vyberte ľubovoľné strany alebo jednu z ciest k väčšine. Zistite, koľko kresiel by spolu získali v scenári z Modelu Mandát.</p><button className="mag-button lime" onClick={() => onNavigate("model")}>Vyskúšať vlastný model <ArrowUpRight size={20}/></button><p className="mag-lab-disclaimer">Výber je čisto matematický. Nehovorí nič o ochote strán spolupracovať.</p></div>
+    <div className="mag-lab-copy"><h2>Zostavte <br/>vlastnú <br/><span>koalíciu.</span></h2><p>Vyberte ľubovoľné strany alebo jednu z ciest k väčšine. Zistite, koľko kresiel by spolu získali v scenári z Modelu Mandát.</p>{!inModel && <button className="mag-button lime" onClick={() => onNavigate("model")}>Vyskúšať vlastný model <ArrowUpRight size={20}/></button>}<p className="mag-lab-disclaimer">Výber je čisto matematický. Nehovorí nič o ochote strán spolupracovať.</p></div>
     <div className="mag-lab-play">
       <div className={`cl-top ${reached ? "is-majority" : ""}`}>
         <div className="mag-coalition-count" role="status"><b key={reached ? "yes" : "no"}>{count}</b><span>zo 150 kresiel<br/>{selected.length === 0 ? "Začnite výberom strán" : reached ? <em className="cl-badge">Väčšina {MAJORITY} ✓</em> : `Do ${MAJORITY} chýba ${MAJORITY - count}`}</span></div>

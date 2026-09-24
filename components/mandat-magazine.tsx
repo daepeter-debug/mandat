@@ -10,7 +10,6 @@ import PollAggregator from "@/components/poll-aggregator";
 import NationalIntro from "@/components/national-intro";
 import OverviewDirectory from "@/components/overview-directory";
 import SectionArt from "@/components/section-art";
-import CoalitionLab from "@/components/coalition-lab";
 
 const agencies = ["AKO", "FOCUS", "INFOSTAT", "IPSOS", "NMS"];
 function Publication({poll}:{poll:Poll}) {
@@ -20,12 +19,12 @@ export function AgencyPicker({value,onChange}:{value:string;onChange:(value:stri
   return <div className="mag-agencies" role="group" aria-label="Vybrať agentúru">{agencies.map(a=><button key={a} aria-pressed={value===a} onClick={()=>onChange(a)}>{a}{value===a&&<Check size={14}/>}</button>)}</div>;
 }
 
-export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onParliament,parliamentPartners,onParliamentPartners,onOpenNews}:{poll:Poll;onAgency:(a:string)=>void;onNavigate:(v:string)=>void;onYear:(year:number)=>void;parliament:string;onParliament:(v:string)=>void;parliamentPartners:boolean;onParliamentPartners:(v:boolean)=>void;onOpenNews:(id:string)=>void}) {
+export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onParliament,parliamentPartners,onParliamentPartners,onOpenNews,onOpenNewsDay}:{poll:Poll;onAgency:(a:string)=>void;onNavigate:(v:string)=>void;onYear:(year:number)=>void;parliament:string;onParliament:(v:string)=>void;parliamentPartners:boolean;onParliamentPartners:(v:boolean)=>void;onOpenNews:(id:string)=>void;onOpenNewsDay?:(day:string)=>void}) {
   const rows=rank(poll).filter(p=>poll.values[p.id]>1);
   const small=rows.filter(p=>poll.values[p.id]<5);
   const large=rows.filter(p=>poll.values[p.id]>=5);
   return <div className="magazine">
-    <NationalIntro onNavigate={onNavigate} onYear={onYear} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews}/>
+    <NationalIntro onNavigate={onNavigate} onYear={onYear} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews} onOpenNewsDay={onOpenNewsDay}/>
     <div className="mag-edition"><span>Slovensko · volebné prieskumy</span><span>{archive.length} meraní v archíve</span><button onClick={()=>onNavigate("method")}>Ako pracujeme so zdrojmi <ArrowUpRight size={16}/></button></div>
     <PollAggregator onMethod={()=>onNavigate("method")}/>
     <section className="mag-pulse" aria-labelledby="pulse-title"><div className="mag-section-head"><div><h2 id="pulse-title">Posledné meranie každej agentúry</h2><p>Agregát je hlavný pohľad. Tu si môžete skontrolovať každú agentúru osobitne.</p></div><AgencyPicker value={poll.agency} onChange={onAgency}/></div><div className="mag-poll-meta"><b>{poll.agency} · {poll.month.toLowerCase()} {poll.end.slice(0,4)}</b><span>Zber {date(poll.start)} – {date(poll.end)} · n = {poll.sample?.toLocaleString("sk-SK")??"neuvedené"}</span></div>
@@ -33,7 +32,6 @@ export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onPar
       <div className="mag-threshold"><span>5 %</span><p>Hranica pre samostatnú stranu</p></div><div className="mag-small-parties" aria-label="Strany nad 1 % a pod 5 %">{small.map(p=><div key={p.id}><span>{p.short}</span><b>{fmt(poll.values[p.id])}<small> %</small></b></div>)}</div>
       <div className="mag-poll-source"><Publication poll={poll}/><p>Zobrazujeme dostupné presné hodnoty nad 1 %. Chýbajúca hodnota nie je nula. Koalície majú odlišné volebné hranice.</p><button className="mag-text-link" onClick={()=>onNavigate("data")}>Trendy a všetky merania <ArrowRight size={18}/></button></div>
     </section>
-    <CoalitionLab onNavigate={onNavigate}/>
     <OverviewDirectory onNavigate={onNavigate}/>
     <section className="mag-explore"><h2>Ďalšie<br/>pohľady</h2><div>{[{title:"Prieskumy v čase",text:"Od jedného čísla k dlhšiemu príbehu. Porovnajte merania a ich zdroje.",view:"polls"},{title:"Politické strany",text:"Podpora, jednotlivé merania a dokumenty na jednom mieste.",view:"parties"},{title:"Čo majú v programe",text:"Aktuálne návrhy, porovnávač tém a jasne oddelený archív 2023.",view:"programmes"}].map(x=><button key={x.view} onClick={()=>onNavigate(x.view)}><span><b>{x.title}</b><span>{x.text}</span></span><ArrowUpRight size={26}/></button>)}</div></section>
   </div>;

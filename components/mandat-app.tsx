@@ -53,6 +53,7 @@ import SectionArt from "@/components/section-art";
 import PollAccuracy from "@/components/poll-accuracy";
 import PartyMoney from "@/components/party-money";
 import SeatsExplainer from "@/components/seats-explainer";
+import CoalitionLab from "@/components/coalition-lab";
 import ThemeToggle from "@/components/theme-toggle";
 import RssSubscribe from "@/components/rss-subscribe";
 import { track } from "@/lib/track";
@@ -278,13 +279,13 @@ export default function MandatApp() {
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">
-        <TabsContent value="overview"><PollTicker onOpen={id=>{update({view:"polls",detail:id},true);window.scrollTo({top:0,behavior:"instant"});}}/><PartyStrip selected={ui.party} onSelect={(p,logo)=>openParty(ui.party===p.id?null:p,logo)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} onYear={y=>{update({view:"responsibility",birthYear:y},true);window.scrollTo({top:0,behavior:"instant"});}} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})}/></TabsContent>
+        <TabsContent value="overview"><PollTicker onOpen={id=>{update({view:"polls",detail:id},true);window.scrollTo({top:0,behavior:"instant"});}}/><PartyStrip selected={ui.party} onSelect={(p,logo)=>openParty(ui.party===p.id?null:p,logo)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} onYear={y=>{update({view:"responsibility",birthYear:y},true);window.scrollTo({top:0,behavior:"instant"});}} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})} onOpenNewsDay={day=>{update({view:"news",newsDay:day},true);window.scrollTo({top:0,behavior:"instant"});}}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})} day={ui.newsDay} onDay={d=>update({newsDay:d})}/></TabsContent>
         <TabsContent value="game"><Suspense fallback={<p className="chart-loading">Načítavame herňu…</p>}><GamesRoom game={ui.game} onGame={g=>update({game:g})}/></Suspense></TabsContent>
         <TabsContent value="responsibility"><Suspense fallback={<p className="chart-loading">Načítavame prehľad vlád…</p>}><ResponsibilityPage birthYear={ui.birthYear} onBirthYear={y=>update({birthYear:y})} onParty={id=>setParty(parties.find(p=>p.id===id)??null)} onFinance={()=>{update({view:"finance",finance:"governments"},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense></TabsContent>
         <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>
         {casesEnabled&&<TabsContent value="cases"><Suspense fallback={<p className="chart-loading">Načítavame register…</p>}><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></Suspense></TabsContent>}
-        <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/><SeatsExplainer/></TabsContent>
+        <TabsContent value="model"><ElectionLab key={aggregatePoll.id} poll={aggregatePoll} onMethod={()=>changeView("method")}/><CoalitionLab onNavigate={changeView} inModel/><SeatsExplainer/></TabsContent>
         <TabsContent value="data">
           <section className="issue-lead" aria-labelledby="issue-title">
             <h1 id="issue-title">Vydanie <span>{issuePoll.month.toLowerCase()} {issuePoll.end.slice(0,4)}</span></h1>

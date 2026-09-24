@@ -250,7 +250,7 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
         <div className="story-stage" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={() => { press.current = null; setHold(false); drag(0); }}>
           <section key={slide.id} className={`story-slide is-${slide.id}`} aria-label={`${index + 1} zo ${slides.length}: ${slide.label}`}>
             <p className="story-kicker">{slide.label}</p>
-            <Slide id={slide.id} onYear={y => after(() => onYear(y))} onCoalition={() => after(() => document.getElementById("koalicia")?.scrollIntoView({ behavior: reducedMotion() ? "instant" : "smooth", block: "start" }))} onPolls={() => after(() => onNavigate("polls"))}/>
+            <Slide id={slide.id} onYear={y => after(() => onYear(y))} onCoalition={() => after(() => { onNavigate("model"); let tries = 0; const seek = () => { const el = document.getElementById("koalicia"); if (el) el.scrollIntoView({ behavior: reducedMotion() ? "instant" : "smooth", block: "start" }); else if (tries++ < 25) window.setTimeout(seek, 80); }; window.setTimeout(seek, 160); })} onPolls={() => after(() => onNavigate("polls"))}/>
           </section>
         </div>
         <p className="story-toast" role="status">{toast}</p>

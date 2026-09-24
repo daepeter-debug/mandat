@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (61abfae8d3) — needitovať ručne. Pravidiel: 1335, prefarbených: 1058. */
+/* Generované scripts/build-dark.mjs z 30 súborov (1ff2f38674) — needitovať ručne. Pravidiel: 1345, prefarbených: 1064. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2893,7 +2893,7 @@ html[data-theme="dark"] .dip-days {
     border-bottom: 1px solid color-mix(in srgb,#41463d 70%,transparent)
 }
 html[data-theme="dark"] .dip-days ol {
-    mask-image: linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%)
+    mask-image: linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%)
 }
 html[data-theme="dark"] .dip-days button {
     border: 1px solid #41463d;
@@ -2931,6 +2931,10 @@ html[data-theme="dark"] .dip-days button:focus-visible {
     html[data-theme="dark"] .dip-days button:not([aria-current=date]):hover {
         border-color: #515e55
     }
+}
+html[data-theme="dark"] .dip-days.is-compact {
+    background: none;
+    border: 0
 }
 html[data-theme="dark"] .dip-day-head h2 {
     color: #d1e7de
@@ -3080,8 +3084,28 @@ html[data-theme="dark"] .dip-toast {
 html[data-theme="dark"] .dip-digest-head h2 {
     color: #d1e7de
 }
+html[data-theme="dark"] .dip-digest-arrows button {
+    border: 1px solid #484f42;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-digest-arrows button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .dip-digest-arrows button:not(:disabled):hover {
+        border-color: #8fa585
+    }
+}
 html[data-theme="dark"] .dip-digest-date {
-    color: #bed6b6
+    color: #c4dbc0
+}
+html[data-theme="dark"] .dip-digest-date b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-digest-date span {
+    color: #bfcec6
 }
 html[data-theme="dark"] .dip-digest .dip-line {
     border-left-width: 2px
@@ -3100,14 +3124,29 @@ html[data-theme="dark"] .dip-mini li.is-lead .dip-rank {
     border-color: #97aba3;
     color: #fff
 }
-html[data-theme="dark"] .dip-mini button {
+html[data-theme="dark"] .dip-mini .dip-tier {
+    background: #20392f;
+    color: #fff
+}
+html[data-theme="dark"] .dip-mini h3 button {
     border: 0;
     background: none;
     color: #d1e7de
 }
-html[data-theme="dark"] .dip-mini button:focus-visible {
+html[data-theme="dark"] .dip-mini h3 svg {
+    color: #bed6b6
+}
+html[data-theme="dark"] .dip-mini h3 button:focus-visible {
     outline: 2px solid #77a998;
     outline-offset: 2px
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .dip-mini h3 button:hover {
+        text-decoration: underline
+    }
+}
+html[data-theme="dark"] .dip-mini p {
+    color: #c0d1c5
 }
 html[data-theme="dark"] .dip-sheet-nav>button {
     border: 1px solid #41463d;

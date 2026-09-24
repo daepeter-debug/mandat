@@ -1,4 +1,5 @@
-/* Úvod: koaličná skladačka s polkruhom a cestami k väčšine (components/coalition-lab.tsx) */
+/* Vlastný model: koaličná skladačka s polkruhom a cestami k väčšine (components/coalition-lab.tsx) */
+.mag-lab.coalition-lab{margin:40px 0 8px}
 .cl-top{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:18px 28px;margin-bottom:22px}
 .cl-hemi{width:100%;max-width:340px;justify-self:end;overflow:visible}
 .cl-hemi circle{fill:#3d5a4d;transition:fill .35s ease}
@@ -34,25 +35,25 @@
 
 /* Mobil: skladačka je viditeľná, kompaktná a ovládateľná palcom */
 @media(max-width:760px){
-  .magazine .coalition-lab{padding:22px 16px 18px;gap:16px;margin:4px 0 26px;border-radius:14px}
-  .magazine .coalition-lab h2{font-size:clamp(26px,7.4vw,32px);line-height:1.1;margin-bottom:8px}
-  .magazine .coalition-lab h2 br{display:none}
-  .magazine .coalition-lab .mag-lab-copy>p{font-size:14px;line-height:1.55;margin:0}
-  .magazine .coalition-lab .mag-lab-copy>.mag-button{display:none}
-  .magazine .coalition-lab .mag-lab-disclaimer{margin-top:8px;font-size:11.5px}
-  .magazine .coalition-lab .cl-top{grid-template-columns:auto minmax(0,1fr);gap:8px 14px;margin-bottom:14px}
-  .magazine .coalition-lab .cl-hemi{max-width:220px;justify-self:end}
-  .magazine .coalition-lab .mag-coalition-count{gap:10px}
-  .magazine .coalition-lab .mag-coalition-count>b{font-size:60px}
-  .magazine .coalition-lab .mag-coalition-count>span{font-size:12px;line-height:1.5}
-  .magazine .coalition-lab .mag-coalition-buttons{grid-template-columns:1fr 1fr;gap:8px}
-  .magazine .coalition-lab .mag-coalition-buttons button{min-height:46px;padding:10px;font-size:12.5px}
-  .magazine .coalition-lab .cl-paths{margin-top:18px}
-  .magazine .coalition-lab .cl-paths button{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"names seats" "bar bar";gap:6px 10px;min-height:48px}
-  .magazine .coalition-lab .cl-path-names{grid-area:names;white-space:normal}
-  .magazine .coalition-lab .cl-paths button b{grid-area:seats}
-  .magazine .coalition-lab .cl-path-bar{grid-area:bar}
-  .magazine .coalition-lab .cl-actions .mag-text-link{margin-left:0}
+  .mag-lab.coalition-lab{padding:22px 16px 18px;gap:16px;margin:22px 0 26px;border-radius:14px}
+  .mag-lab.coalition-lab h2{font-size:clamp(26px,7.4vw,32px);line-height:1.1;margin-bottom:8px}
+  .mag-lab.coalition-lab h2 br{display:none}
+  .mag-lab.coalition-lab .mag-lab-copy>p{font-size:14px;line-height:1.55;margin:0}
+  .mag-lab.coalition-lab .mag-lab-copy>.mag-button{display:none}
+  .mag-lab.coalition-lab .mag-lab-disclaimer{margin-top:8px;font-size:11.5px}
+  .mag-lab.coalition-lab .cl-top{grid-template-columns:auto minmax(0,1fr);gap:8px 14px;margin-bottom:14px}
+  .mag-lab.coalition-lab .cl-hemi{max-width:220px;justify-self:end}
+  .mag-lab.coalition-lab .mag-coalition-count{gap:10px}
+  .mag-lab.coalition-lab .mag-coalition-count>b{font-size:60px}
+  .mag-lab.coalition-lab .mag-coalition-count>span{font-size:12px;line-height:1.5}
+  .mag-lab.coalition-lab .mag-coalition-buttons{grid-template-columns:1fr 1fr;gap:8px}
+  .mag-lab.coalition-lab .mag-coalition-buttons button{min-height:46px;padding:10px;font-size:12.5px}
+  .mag-lab.coalition-lab .cl-paths{margin-top:18px}
+  .mag-lab.coalition-lab .cl-paths button{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"names seats" "bar bar";gap:6px 10px;min-height:48px}
+  .mag-lab.coalition-lab .cl-path-names{grid-area:names;white-space:normal}
+  .mag-lab.coalition-lab .cl-paths button b{grid-area:seats}
+  .mag-lab.coalition-lab .cl-path-bar{grid-area:bar}
+  .mag-lab.coalition-lab .cl-actions .mag-text-link{margin-left:0}
 }
-@media(max-width:380px){.magazine .coalition-lab .cl-top{grid-template-columns:1fr}.magazine .coalition-lab .cl-hemi{justify-self:start;max-width:260px}}
-@media(max-width:760px){.magazine .coalition-lab .cl-paths li:nth-child(n+5){display:none}}
+@media(max-width:380px){.mag-lab.coalition-lab .cl-top{grid-template-columns:1fr}.mag-lab.coalition-lab .cl-hemi{justify-self:start;max-width:260px}}
+@media(max-width:760px){.mag-lab.coalition-lab .cl-paths li:nth-child(n+5){display:none}}

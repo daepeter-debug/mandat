@@ -26,7 +26,7 @@ const subscribeDay = (notify: () => void) => {
 const currentDay = () => new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/Bratislava",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 const serverDay = () => "";
 
-export default function NationalIntro({ onNavigate, onYear, parliament, onParliament, parliamentPartners, onParliamentPartners, onOpenNews }: { onNavigate: (view: string) => void; onYear: (year: number) => void; parliament: string; onParliament: (value: string) => void; parliamentPartners: boolean; onParliamentPartners: (value: boolean) => void; onOpenNews: (id: string) => void }) {
+export default function NationalIntro({ onNavigate, onYear, parliament, onParliament, parliamentPartners, onParliamentPartners, onOpenNews, onOpenNewsDay }: { onNavigate: (view: string) => void; onYear: (year: number) => void; parliament: string; onParliament: (value: string) => void; parliamentPartners: boolean; onParliamentPartners: (value: boolean) => void; onOpenNews: (id: string) => void; onOpenNewsDay?: (day: string) => void }) {
   const uid = useId().replace(/:/g, "");
   const today = useSyncExternalStore(subscribeDay, currentDay, serverDay);
   const [year, month] = today.split("-").map(Number);
@@ -86,7 +86,7 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
     </div>
     <QuickAnswers onYear={onYear}/>
     <ParliamentNow onNavigate={onNavigate} view={parliament} onView={onParliament} partners={parliamentPartners} onPartners={onParliamentPartners}/>
-    <PoliticalNewsFeed compact onOpen={()=>onNavigate('news')} onOpenNews={onOpenNews}/>
+    <PoliticalNewsFeed compact onOpen={day=>onOpenNewsDay?onOpenNewsDay(day):onNavigate('news')} onOpenNews={onOpenNews}/>
   </section>;
 }
 

@@ -1,5 +1,31 @@
 # Evidencia údajov a rozsahu
 
+## 24. 9. 2026 — Deň v politike: denný súhrn namiesto prúdu správ (Claude)
+
+Správy sú odteraz denný súhrn s názvom „Deň v politike · Čo by nemalo zapadnúť“, nie živý spravodajský prúd. Každý deň prejdeme politické udalosti (Denník N Minúta po minúte, TASR a ďalšie zdroje) a vyberieme tie, ktoré hýbu politikou.
+
+Správy v dni sú zoradené podľa dôležitosti, pole `rank` v `lib/political-news.ts`:
+- 1 = téma dňa;
+- 2–3 = dôležité;
+- ďalšie = stojí za pozornosť.
+
+Pri kompletných dňoch je uvedený aj počet prejdených udalostí (`newsDays`). Témy: Vláda, Parlament, Opozícia, Prezident, Voľby, Prieskumy a Politika.
+
+**Sekcia Správy:**
+- Pás dní (starší vľavo, najnovší vpravo) ostáva pri posúvaní hore.
+- Deň má hlavičku, správy s číslom poradia, štítkami tém s ikonami a časom čítania.
+- Medzi dňami sa dá listovať šípkami aj potiahnutím prstom a zobrazuje sa archív predchádzajúcich dní.
+- Súhrn dňa sa dá zdieľať (`?v=news&den=…`, s náhľadom a titulkom dňa), rovnako aj jedna správa.
+- V detaile správy je poradie v dni a listovanie na ďalšiu správu dňa.
+
+**Úvod:** karta „Deň v politike“ ukazuje posledný deň so správami a krátkymi popismi. Pás dní, šípky a potiahnutie prepínajú staršie dni a tlačidlo otvorí celý súhrn zvoleného dňa.
+
+**Pribudlo 14 nových overených správ** z 18.–21. 9. Každú napísal agent z pôvodného článku a iný agent ju nezávisle overil oproti zdroju (mená, funkcie, čísla, deň v týždni, neutralita, vlastné slová). Poradie dostali aj staršie správy z 9.–18. 9. Dni 16., 17. a 20.–24. 9. sa doplnia po dokončení overenia. Kontrola zdrojov je preto 21. 9.
+
+Podklady zbiera `scripts/news-harvest.mjs` a postup je v `docs/den-v-politike.md`.
+
+Skladačka „Zostavte vlastnú koalíciu“ sa presunula z úvodu do Vlastného modelu, medzi vlastný model a vysvetlenie kresiel. Odkaz z Mandátu za minútu vedie tam.
+
 ## 24. 9. 2026 — hlas pri profiloch strán (Claude)
 
 Pri „Čím sa profiluje“ v profile každej zo 16 strán je tlačidlo „Vypočuj si profil“. Nahrávka trvá 10 – 16 s. Hlas je ten istý slovenský „Adam – Young and Energetic“ (Multilingual v2), nahrávky sú vytvorené na webe ElevenLabs a prenesené cez `scripts/import-audio.mjs --history`.

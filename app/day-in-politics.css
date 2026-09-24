@@ -10,7 +10,9 @@
 /* Pás dní: vodorovne posúvateľný, pri posúvaní stránky ostane hore. */
 .dip-days{position:sticky;top:0;z-index:12;margin:0 -16px;padding:10px 16px;background:color-mix(in srgb,var(--mag-paper) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--border) 70%,transparent)}
 @media(min-width:761px){.dip-days{top:52px;margin:0;padding:10px 0;border-radius:0}}
-.dip-days ol{display:flex;gap:8px;margin:0;padding:2px 2px 4px;list-style:none;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%)}
+.dip-days ol{display:flex;gap:8px;margin:0;padding:2px 2px 4px;list-style:none;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;--fade-l:28px;--fade-r:28px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%)}
+.dip-days ol[data-start="1"]{--fade-l:0px}
+.dip-days ol[data-end="1"]{--fade-r:0px}
 .dip-days ol::-webkit-scrollbar{display:none}
 .dip-days li{scroll-snap-align:center;flex:0 0 auto}
 .dip-days button{display:grid;justify-items:center;gap:3px;min-width:66px;min-height:64px;padding:8px 10px 7px;border:1px solid var(--border);border-radius:14px;background:var(--card);font:inherit;color:var(--mag-ink);cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
@@ -25,13 +27,20 @@
 .dip-days button[aria-current=date] em:first-child{background:#e6f1dc}
 .dip-days button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 @media(hover:hover){.dip-days button:not([aria-current=date]):hover{border-color:#9fb3a5;transform:translateY(-1px)}}
+/* Kompaktný pás v karte na úvode: bez prilepenia, menšie dni. */
+.dip-days.is-compact{position:static;margin:12px 0 2px;padding:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border:0}
+@media(min-width:761px){.dip-days.is-compact{top:auto;margin:12px 0 2px;padding:0}}
+.dip-days.is-compact ol{gap:6px}
+.dip-days.is-compact button{min-width:54px;min-height:52px;padding:6px 8px 5px;border-radius:12px}
+.dip-days.is-compact button span{font-size:10.5px}
+.dip-days.is-compact button b{font-size:13.5px}
 
 /* Deň */
 .dip-day{padding:22px 0 8px}
 .dip-day-head h2{margin:6px 0 0;font-size:clamp(26px,6vw,36px);font-weight:600;line-height:1.1;letter-spacing:-.03em;color:var(--mag-ink)}
 .dip-line{margin:14px 0 0;padding:2px 0 2px 14px;border-left:3px solid #6d9a5f;font-size:16.5px;line-height:1.55;color:#2c3f2c;max-width:64ch}
 .dip-meta{margin:12px 0 0;font-size:12.5px;color:var(--text-2)}
-.dip-list{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:0;counter-reset:dip}
+.dip-list{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:0;touch-action:pan-y}
 .dip-item{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:20px 0;border-top:1px solid var(--border)}
 .dip-rank{display:grid;place-items:center;align-self:start;width:36px;height:36px;border-radius:50%;border:1.5px solid #b9c7b0;font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;color:#4f6b46;background:var(--card)}
 .dip-item-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:8px}
@@ -90,19 +99,33 @@
 
 /* Úvod: karta Deň v politike (mriežku úvodu drží .news-digest v app/news.css). */
 .dip-digest{gap:0}
-.dip-digest-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}
+.dip-digest-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .dip-digest-head h2{display:flex;align-items:center;gap:8px;margin:0;font-size:18px;font-weight:600;letter-spacing:-.02em;color:var(--mag-ink)}
-.dip-digest-date{font-size:12px;font-weight:600;color:#4f6b46}
-.dip-digest .dip-line{margin:10px 0 4px;font-size:14px;border-left-width:2px;padding-left:11px}
-.dip-mini{list-style:none;margin:6px 0 0;padding:0}
-.dip-mini li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 0;border-top:1px solid #cad5c1}
+.dip-digest-arrows{display:flex;gap:6px}
+.dip-digest-arrows button{display:grid;place-items:center;width:38px;height:38px;border:1px solid #c9d5bf;border-radius:50%;background:var(--card);color:var(--mag-ink);cursor:pointer;transition:border-color .2s,transform .2s}
+.dip-digest-arrows button:disabled{opacity:.35;cursor:default}
+.dip-digest-arrows button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media(hover:hover){.dip-digest-arrows button:not(:disabled):hover{border-color:#8fa585;transform:translateY(-1px)}}
+.dip-digest .news-scroll{touch-action:pan-y}
+.dip-digest-day{padding-top:4px}
+.dip-digest-date{margin:8px 0 0;font-size:12.5px;font-weight:600;color:#3f5a3a}
+.dip-digest-date b{font-weight:700;color:#20392f}
+.dip-digest-date span{font-weight:500;color:var(--text-2)}
+.dip-digest .dip-line{margin:8px 0 2px;font-size:14px;border-left-width:2px;padding-left:11px}
+.dip-mini{list-style:none;margin:4px 0 0;padding:0}
+.dip-mini li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:14px 0;border-top:1px solid #cad5c1}
 .dip-mini li:first-child{border-top:0}
 .dip-mini .dip-rank{width:26px;height:26px;font-size:12.5px;border-width:1px}
 .dip-mini li.is-lead .dip-rank{background:#20392f;border-color:#20392f;color:#fff}
-.dip-mini li>div{display:grid;gap:6px;justify-items:start}
-.dip-mini button{padding:0;border:0;background:none;font:inherit;font-size:14.5px;font-weight:600;line-height:1.35;color:var(--mag-ink);text-align:left;cursor:pointer;min-height:32px}
-.dip-mini li.is-lead button{font-size:15.5px}
-.dip-mini button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
+.dip-mini-meta{display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;margin-bottom:6px}
+.dip-mini .dip-tier{font-size:9.5px;padding:2px 8px;border-radius:999px;background:#20392f;color:#fff;letter-spacing:.08em}
+.dip-mini h3{margin:0;font-size:15.5px;font-weight:600;line-height:1.35;letter-spacing:-.01em}
+.dip-mini li.is-lead h3{font-size:16.5px}
+.dip-mini h3 button{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;width:100%;min-height:32px;padding:0;border:0;background:none;font:inherit;color:var(--mag-ink);text-align:left;cursor:pointer}
+.dip-mini h3 svg{flex-shrink:0;margin-top:3px;color:#4f6b46;transition:transform .2s}
+.dip-mini h3 button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
+@media(hover:hover){.dip-mini h3 button:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}.dip-mini h3 button:hover svg{transform:translateX(3px)}}
+.dip-mini p{margin:6px 0 0;font-size:13.5px;line-height:1.6;color:#4a5d4f}
 .dip-mini .dip-chip{font-size:10.5px;padding:2px 8px 2px 6px}
 .dip-mini .dip-chip svg{width:12px;height:12px}
 
@@ -123,10 +146,18 @@
   @supports (animation-timeline:view()){
     .dip-item,.dip-archive li{animation:dip-rise linear both;animation-timeline:view();animation-range:entry 0% entry 45%}
   }
-  ::view-transition-old(dip-day){animation:dip-out .18s ease-in both}
-  ::view-transition-new(dip-day){animation:dip-in .28s ease-out both}
+  ::view-transition-old(dip-day),::view-transition-old(dip-digest){animation:dip-out .18s ease-in both}
+  ::view-transition-new(dip-day),::view-transition-new(dip-digest){animation:dip-in .28s ease-out both}
+  html[data-dip-dir=older]::view-transition-old(dip-day),html[data-dip-dir=older]::view-transition-old(dip-digest){animation-name:dip-out-right}
+  html[data-dip-dir=older]::view-transition-new(dip-day),html[data-dip-dir=older]::view-transition-new(dip-digest){animation-name:dip-in-left}
+  html[data-dip-dir=newer]::view-transition-old(dip-day),html[data-dip-dir=newer]::view-transition-old(dip-digest){animation-name:dip-out-left}
+  html[data-dip-dir=newer]::view-transition-new(dip-day),html[data-dip-dir=newer]::view-transition-new(dip-digest){animation-name:dip-in-right}
 }
 @keyframes dip-rise{from{opacity:.35;translate:0 14px}}
 @keyframes dip-out{to{opacity:0;translate:0 -8px}}
 @keyframes dip-in{from{opacity:0;translate:0 10px}}
-@media(prefers-reduced-motion:reduce){.dip-days button,.dip-read svg{transition:none}}
+@keyframes dip-out-right{to{opacity:0;translate:28px 0}}
+@keyframes dip-in-left{from{opacity:0;translate:-28px 0}}
+@keyframes dip-out-left{to{opacity:0;translate:-28px 0}}
+@keyframes dip-in-right{from{opacity:0;translate:28px 0}}
+@media(prefers-reduced-motion:reduce){.dip-days button,.dip-read svg,.dip-digest-arrows button,.dip-mini h3 svg{transition:none}}

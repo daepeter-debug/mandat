@@ -50,7 +50,7 @@ for (const n of politicalNews) {
   }
   for (const [d, v] of Object.entries(newsDays)) {
     assert(byDay[d], `Veta dňa ${d} patrí ku dňu so správami`);
-    assert(v.line.length >= 60 && v.line.length <= 280 && !/https?:/.test(v.line), `Veta dňa ${d}: dĺžka a bez odkazov`);
+    if (v.line) assert(v.line.length >= 60 && v.line.length <= 280 && !/https?:/.test(v.line), `Veta dňa ${d}: dĺžka a bez odkazov`);
     if (v.analyzed) assert(v.analyzed >= byDay[d].length, `Počet prejdených udalostí ${d} nie je menší ako počet správ`);
   }
   const fixture = [{ ...politicalNews[0], id: 'b', published: '2026-09-20', rank: 2 }, { ...politicalNews[0], id: 'a', published: '2026-09-20', rank: 1 }, { ...politicalNews[0], id: 'c', published: '2026-09-21' }, { ...politicalNews[0], id: 'z', published: '2026-09-30' }];
