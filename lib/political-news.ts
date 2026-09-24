@@ -1,12 +1,19 @@
-export type PoliticalNews = {id:string;published:string;category:'Parlament'|'Vláda'|'Prieskumy';title:string;summary:string;detail:string[];sourceName:string;source:string};
+export const newsCategories = ['Vláda','Parlament','Opozícia','Prezident','Voľby','Prieskumy','Politika'] as const;
+export type NewsCategory = typeof newsCategories[number];
+/** rank = poradie dôležitosti v rámci dňa (1 = téma dňa). */
+export type PoliticalNews = {id:string;published:string;rank?:number;category:NewsCategory;title:string;summary:string;detail:string[];sourceName:string;source:string};
 /*
-  Redakčný výber. Bez automatického zberu a bez nároku na úplné pokrytie.
+  Deň v politike: denný súhrn, nie živý spravodajský prúd. Každý deň prejdeme politické udalosti
+  (Denník N Minúta po minúte, TASR a ďalšie zdroje) a vyberieme zhruba päť, ktoré by nemali zapadnúť,
+  zoradené podľa dôležitosti (rank). Veta dňa a počet prejdených udalostí sú v newsDays.
   `summary` je krátky popis do zoznamu, `detail` je naše dlhšie zhrnutie pôvodného článku,
   ktoré otvára titulok. Zo zoznamov sme odkazy na cudzie weby odstránili, aby čitateľ
   neodchádzal skôr, než dostane obsah; vydavateľ aj odkaz na originál sú v detaile,
   lebo zhrnutie stojí na jeho práci.
 */
 export const newsChecked='2026-09-19';
+/** Veta dňa (neutrálne zhrnutie) a počet politických udalostí, z ktorých sme vyberali. */
+export const newsDays:Record<string,{line:string;analyzed?:number}>={};
 export const politicalNews:PoliticalNews[]=[
   {id:'kalinak-strnad-16',published:'2026-09-16',category:'Vláda',title:'Firma ministra obrany dostávala peniaze od českého zbrojára, Kaliňák konflikt záujmov odmieta',
    summary:'Poradenská firma Roberta Kaliňáka dostala v rokoch 2022 a 2023 milióny eur od zbrojárskej skupiny Michala Strnada za sprostredkovanie predaja vozidiel Tatra. Minister hovorí o riadne zdanenej práci, opozícia o konflikte záujmov.',
@@ -205,3 +212,35 @@ export function filterNews(items:PoliticalNews[],today:string,period:string,cate
 }
 
 export const newsById=(id:string|null)=>id?politicalNews.find(n=>n.id===id)??null:null;
+
+export type NewsDay = {date:string;items:PoliticalNews[];line:string;analyzed:number|null};
+const byRank = (a:PoliticalNews,b:PoliticalNews)=>(a.rank??99)-(b.rank??99)||a.id.localeCompare(b.id);
+/** Dni so správami od najnovšieho, správy v dni podľa dôležitosti; budúce dátumy sa nezobrazujú. */
+export function newsDayGroups(items:PoliticalNews[],today:string):NewsDay[]{
+  const days=new Map<string,PoliticalNews[]>();
+  for(const n of items) if(n.published<=today) days.set(n.published,[...(days.get(n.published)??[]),n]);
+  return [...days.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([date,list])=>({date,items:list.sort(byRank),line:newsDays[date]?.line??'',analyzed:newsDays[date]?.analyzed??null}));
+}
+/** Susedné správy toho istého dňa (listovanie v detaile) a poradie správy v dni. */
+export function newsNeighbors(id:string){
+  const n=newsById(id);
+  if(!n) return null;
+  const day=politicalNews.filter(x=>x.published===n.published).sort(byRank);
+  const i=day.findIndex(x=>x.id===id);
+  return {position:i+1,count:day.length,prev:day[i-1]??null,next:day[i+1]??null};
+}
+const at=(d:string)=>new Date(`${d}T12:00:00Z`);
+const fmt=(d:string,o:Intl.DateTimeFormatOptions)=>new Intl.DateTimeFormat('sk-SK',{timeZone:'Europe/Bratislava',...o}).format(at(d));
+const upper=(s:string)=>s.charAt(0).toUpperCase()+s.slice(1);
+/** „Streda 23. septembra“ */
+export const dayHeading=(d:string)=>upper(fmt(d,{weekday:'long',day:'numeric',month:'long'}));
+/** „St“ */
+export const weekdayShort=(d:string)=>upper(fmt(d,{weekday:'short'}));
+/** „Dnes“ / „Včera“ / null */
+export function relativeDay(d:string,today:string){
+  if(d===today) return 'Dnes';
+  const y=new Date(at(today).getTime()-86400000).toISOString().slice(0,10);
+  return d===y?'Včera':null;
+}
+/** Odhad dĺžky čítania zhrnutia v minútach (200 slov za minútu). */
+export const readingMinutes=(n:PoliticalNews)=>Math.max(1,Math.round([n.summary,...n.detail].join(' ').split(/\s+/).length/200));

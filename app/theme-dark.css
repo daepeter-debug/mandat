@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 29 súborov (36159fc2b1) — needitovať ručne. Pravidiel: 1267, prefarbených: 1004. */
+/* Generované scripts/build-dark.mjs z 30 súborov (61abfae8d3) — needitovať ručne. Pravidiel: 1335, prefarbených: 1058. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2869,6 +2869,263 @@ html[data-theme="dark"] .cl-actions .mag-text-link {
     html[data-theme="dark"] .cl-actions .mag-text-link:hover {
         color: #ecffc0
     }
+}
+html[data-theme="dark"] .dip-page {
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-kicker {
+    color: #bed6b6
+}
+html[data-theme="dark"] .dip-kicker b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-hero h1 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-hero>p:not(.dip-kicker):not(.dip-checked) {
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-checked {
+    color: #bccac2
+}
+html[data-theme="dark"] .dip-days {
+    background: color-mix(in srgb,#1c221f 88%,transparent);
+    border-bottom: 1px solid color-mix(in srgb,#41463d 70%,transparent)
+}
+html[data-theme="dark"] .dip-days ol {
+    mask-image: linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%)
+}
+html[data-theme="dark"] .dip-days button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-days button span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-days button em {
+    background: #3c4734
+}
+html[data-theme="dark"] .dip-days button em:first-child {
+    background: #4f7a45
+}
+html[data-theme="dark"] .dip-days button[aria-current=date] {
+    background: #20392f;
+    border-color: #97aba3;
+    color: #fff
+}
+html[data-theme="dark"] .dip-days button[aria-current=date] span {
+    color: #cfe0c6
+}
+html[data-theme="dark"] .dip-days button[aria-current=date] em {
+    background: #6d8f63
+}
+html[data-theme="dark"] .dip-days button[aria-current=date] em:first-child {
+    background: #242d1d
+}
+html[data-theme="dark"] .dip-days button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .dip-days button:not([aria-current=date]):hover {
+        border-color: #515e55
+    }
+}
+html[data-theme="dark"] .dip-day-head h2 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-line {
+    border-left: 3px solid #6d9a5f;
+    color: #cfe0cf
+}
+html[data-theme="dark"] .dip-meta {
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-item {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .dip-rank {
+    border: 1.5px solid #4d5548;
+    color: #bed6b6;
+    background: #262c29
+}
+html[data-theme="dark"] .dip-tier {
+    color: #b7c5b1
+}
+html[data-theme="dark"] .dip-item h3 button {
+    border: 0;
+    background: none;
+    color: inherit
+}
+html[data-theme="dark"] .dip-item h3 button:focus-visible,html[data-theme="dark"] .dip-read:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .dip-item p {
+    color: #c4d3c3
+}
+html[data-theme="dark"] .dip-read {
+    border: 0;
+    background: none;
+    color: #bee2c7
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .dip-item h3 button:hover {
+        text-decoration: underline
+    }
+}
+html[data-theme="dark"] .dip-item.is-lead {
+    border: 1px solid #474e41;
+    background: linear-gradient(160deg,#262c29 0%,#20241b 100%);
+    box-shadow: 0 1px 2px #20392f0f,0 20px 40px -30px #20392f66
+}
+html[data-theme="dark"] .dip-item.is-lead+.dip-item {
+    border-top: 0
+}
+html[data-theme="dark"] .dip-item.is-lead .dip-rank {
+    border: 0;
+    background: #20392f;
+    color: #fff;
+    box-shadow: 0 4px 10px -4px #20392f99
+}
+html[data-theme="dark"] .dip-item.is-lead .dip-tier {
+    background: #20392f;
+    color: #fff
+}
+html[data-theme="dark"] .dip-item.is-lead p {
+    color: #cbdcd1
+}
+html[data-theme="dark"] .dip-chip {
+    background: #252821;
+    color: #cbd7c9
+}
+html[data-theme="dark"] .dip-chip[data-cat="Vláda"] {
+    background: #242a21;
+    color: #c4e1c8
+}
+html[data-theme="dark"] .dip-chip[data-cat="Parlament"] {
+    background: #1f2429;
+    color: #b8d0e4
+}
+html[data-theme="dark"] .dip-chip[data-cat="Opozícia"] {
+    background: #332c1c;
+    color: #f8e1b1
+}
+html[data-theme="dark"] .dip-chip[data-cat="Prezident"] {
+    background: #252027;
+    color: #cfbadb
+}
+html[data-theme="dark"] .dip-chip[data-cat="Voľby"] {
+    background: #1f2a27;
+    color: #beece3
+}
+html[data-theme="dark"] .dip-chip[data-cat="Prieskumy"] {
+    background: #2e241d;
+    color: #efc6ad
+}
+html[data-theme="dark"] .dip-chip[data-cat="Politika"] {
+    background: #232926;
+    color: #cfd2cb
+}
+html[data-theme="dark"] .dip-day-nav {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .dip-day-nav button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-day-nav .dip-share {
+    background: #20392f;
+    border-color: #97aba3;
+    color: #fff
+}
+html[data-theme="dark"] .dip-day-nav button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .dip-archive button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-archive-date small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-archive-line {
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-archive button svg {
+    color: #bed6b6
+}
+html[data-theme="dark"] .dip-archive button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .dip-archive button:hover {
+        border-color: #515e55
+    }
+}
+html[data-theme="dark"] .dip-footnote {
+    border-top: 1px solid #41463d;
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-toast {
+    background: #20392f;
+    color: #fff;
+    box-shadow: 0 10px 30px -10px #0008
+}
+html[data-theme="dark"] .dip-digest-head h2 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-digest-date {
+    color: #bed6b6
+}
+html[data-theme="dark"] .dip-digest .dip-line {
+    border-left-width: 2px
+}
+html[data-theme="dark"] .dip-mini li {
+    border-top: 1px solid #474e41
+}
+html[data-theme="dark"] .dip-mini li:first-child {
+    border-top: 0
+}
+html[data-theme="dark"] .dip-mini .dip-rank {
+    border-width: 1px
+}
+html[data-theme="dark"] .dip-mini li.is-lead .dip-rank {
+    background: #20392f;
+    border-color: #97aba3;
+    color: #fff
+}
+html[data-theme="dark"] .dip-mini button {
+    border: 0;
+    background: none;
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-mini button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .dip-sheet-nav>button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .dip-sheet-nav>button small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-sheet-nav>button svg {
+    color: #bed6b6
+}
+html[data-theme="dark"] .dip-sheet-nav .dip-sheet-share {
+    background: none
+}
+html[data-theme="dark"] .dip-sheet-nav button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
 }
 html[data-theme="dark"] .debt-clock {
     background: #20392f;

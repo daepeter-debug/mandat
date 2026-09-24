@@ -35,6 +35,27 @@ for (const n of politicalNews) {
   assert(n.detail.join(' ').length > n.summary.length * 1.5, `Zhrnutie je výrazne dlhšie ako popis v zozname: ${n.id}`);
   assert(!n.summary.includes('http') && n.detail.every(p => !p.includes('http')), `Text správy neobsahuje odkazy, tie patria k zdroju: ${n.id}`);
 }
+// Deň v politike: téma zo zoznamu, poradie v dni jedinečné, veta dňa len pri dni so správami.
+{
+  const { newsCategories, newsDays, newsDayGroups } = await import('../lib/political-news.ts');
+  const byDay = {};
+  for (const n of politicalNews) {
+    assert(newsCategories.includes(n.category), `Téma správy zo zoznamu: ${n.id}`);
+    (byDay[n.published] ??= []).push(n);
+  }
+  for (const [d, list] of Object.entries(byDay)) {
+    const ranks = list.map(n => n.rank).filter(r => r !== undefined);
+    assert.equal(new Set(ranks).size, ranks.length, `Poradie správ v ${d} je jedinečné`);
+    assert(ranks.every(r => Number.isInteger(r) && r >= 1), `Poradie v ${d} je kladné celé číslo`);
+  }
+  for (const [d, v] of Object.entries(newsDays)) {
+    assert(byDay[d], `Veta dňa ${d} patrí ku dňu so správami`);
+    assert(v.line.length >= 60 && v.line.length <= 280 && !/https?:/.test(v.line), `Veta dňa ${d}: dĺžka a bez odkazov`);
+    if (v.analyzed) assert(v.analyzed >= byDay[d].length, `Počet prejdených udalostí ${d} nie je menší ako počet správ`);
+  }
+  const fixture = [{ ...politicalNews[0], id: 'b', published: '2026-09-20', rank: 2 }, { ...politicalNews[0], id: 'a', published: '2026-09-20', rank: 1 }, { ...politicalNews[0], id: 'c', published: '2026-09-21' }, { ...politicalNews[0], id: 'z', published: '2026-09-30' }];
+  assert.deepEqual(newsDayGroups(fixture, '2026-09-21').map(g => `${g.date}:${g.items.map(n => n.id).join('')}`), ['2026-09-21:c', '2026-09-20:ab'], 'Dni od najnovšieho, v dni podľa poradia, bez budúcich');
+}
 const newestNews = politicalNews.reduce((max,n)=>n.published>max?n.published:max,'0000-00-00');
 assert((Date.parse(newsChecked)-Date.parse(newestNews))/86400000 <= 3,`Výber nesmie zaostávať za kontrolou o viac než tri dni: ${newestNews} vs ${newsChecked}`);
 const fixtureNews=['2026-09-06','2026-09-07','2026-09-09','2026-09-13','2026-09-14'].map((published,i)=>({...politicalNews[0],id:String(i),published}));
