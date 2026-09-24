@@ -1,7 +1,104 @@
 {
-  "voice": "",
-  "model": "",
+  "voice": "2ST3sI2j7fz4A5oXjnbA",
+  "model": "eleven_multilingual_v2",
   "credit": "Hlas: ElevenLabs (AI)",
-  "generated": "",
-  "items": {}
+  "generated": "2026-09-24",
+  "items": {
+    "ps": {
+      "src": "/audio/profiles/ps-16f5634b8d.mp3",
+      "hash": "16f5634b8d",
+      "chars": 184,
+      "ms": 12617
+    },
+    "smer": {
+      "src": "/audio/profiles/smer-8379dd9b53.mp3",
+      "hash": "8379dd9b53",
+      "chars": 169,
+      "ms": 11833
+    },
+    "rep": {
+      "src": "/audio/profiles/rep-18b0e0f8e7.mp3",
+      "hash": "18b0e0f8e7",
+      "chars": 185,
+      "ms": 13035
+    },
+    "slovensko": {
+      "src": "/audio/profiles/slovensko-9e740edcee.mp3",
+      "hash": "9e740edcee",
+      "chars": 157,
+      "ms": 9927
+    },
+    "sas": {
+      "src": "/audio/profiles/sas-8cac535cd7.mp3",
+      "hash": "8cac535cd7",
+      "chars": 173,
+      "ms": 12800
+    },
+    "hlas": {
+      "src": "/audio/profiles/hlas-e0fab40bdd.mp3",
+      "hash": "e0fab40bdd",
+      "chars": 160,
+      "ms": 10710
+    },
+    "kdh": {
+      "src": "/audio/profiles/kdh-e1d0ba7384.mp3",
+      "hash": "e1d0ba7384",
+      "chars": 175,
+      "ms": 11233
+    },
+    "dem": {
+      "src": "/audio/profiles/dem-02a7a39b7d.mp3",
+      "hash": "02a7a39b7d",
+      "chars": 197,
+      "ms": 13270
+    },
+    "aliancia": {
+      "src": "/audio/profiles/aliancia-509e44669a.mp3",
+      "hash": "509e44669a",
+      "chars": 164,
+      "ms": 11180
+    },
+    "rodina": {
+      "src": "/audio/profiles/rodina-70fd8ea8a4.mp3",
+      "hash": "70fd8ea8a4",
+      "chars": 159,
+      "ms": 10475
+    },
+    "pnp": {
+      "src": "/audio/profiles/pnp-d025970490.mp3",
+      "hash": "d025970490",
+      "chars": 206,
+      "ms": 14576
+    },
+    "sns": {
+      "src": "/audio/profiles/sns-af9e699b76.mp3",
+      "hash": "af9e699b76",
+      "chars": 162,
+      "ms": 11102
+    },
+    "lsns": {
+      "src": "/audio/profiles/lsns-ef8c9e806a.mp3",
+      "hash": "ef8c9e806a",
+      "chars": 215,
+      "ms": 16327
+    },
+    "ku": {
+      "src": "/audio/profiles/ku-3965d5d5ea.mp3",
+      "hash": "3965d5d5ea",
+      "chars": 208,
+      "ms": 14237
+    },
+    "vidiek": {
+      "src": "/audio/profiles/vidiek-050438f98c.mp3",
+      "hash": "050438f98c",
+      "chars": 176,
+      "ms": 11468
+    },
+    "zaludi": {
+      "src": "/audio/profiles/zaludi-6692fabf80.mp3",
+      "hash": "6692fabf80",
+      "chars": 172,
+      "ms": 10867
+    }
+  }
 }

@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 24. 9. 2026 — hlas pri profiloch strán (Claude)
+
+Pri „Čím sa profiluje“ v profile každej zo 16 strán je tlačidlo „Vypočuj si profil“. Nahrávka trvá 10 – 16 s. Hlas je ten istý slovenský „Adam – Young and Energetic“ (Multilingual v2), nahrávky sú vytvorené na webe ElevenLabs a prenesené cez `scripts/import-audio.mjs --history`.
+
+Hlas dostáva upravenú verziu textu, text na webe sa nemení. Názvy písané veľkými písmenami (SMER, HLAS, REPUBLIKA, SME RODINA, ZA ĽUDÍ, OĽANO) dostane ako bežné slová, aby ich nehláskoval. STVR dostane celým názvom „Slovenská televízia a rozhlas“.
+
+Nahrávky profilov nezávisia od vydania Modelu Mandát. Pri zmene zhrnutia v `lib/party-profiles.json` na to `verify-data` upozorní a profil treba nahrať znova.
+
 ## 23. 9. 2026 — hlasové verzie: rýchle odpovede, kreslá, profily a import z webu ElevenLabs (Claude)
 
 Tlačidlo „Vypočuj si“ s ikonou reproduktora je pri týchto textoch:

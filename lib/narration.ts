@@ -102,9 +102,16 @@ export function narration(): Narration[] {
 
 export const narrationEdition = edition.asOf;
 
+// Názvy písané veľkými písmenami by hlas mohol hláskovať — pre hlas ich píšeme ako slová; STVR celým názvom.
+const speakable: [RegExp, string][] = [
+  [/\bSMER\b/g, "Smer"], [/\bREPUBLIKA\b/g, "Republika"], [/\bHLAS\b/g, "Hlas"], [/\bSME RODINA\b/g, "Sme rodina"],
+  [/ZA ĽUDÍ/g, "Za ľudí"], [/OĽANO/g, "Oľano"], [/\bSTVR\b/g, "Slovenská televízia a rozhlas"],
+];
+const forSpeech = (text: string) => speakable.reduce((t, [re, word]) => t.replace(re, word), text);
+
 /** Profily strán: rovnaký formát pre všetky strany — celý názov a redakčné zhrnutie z lib/party-profiles.json. */
 export function profileNarrations(profiles: Record<string, { summary: string }>): Narration2[] {
-  return parties.filter(p => profiles[p.id]?.summary).map(p => ({ id: p.id, text: `${p.name.replace(/ – /g, ", ")}. Čím sa profiluje: ${profiles[p.id].summary}` }));
+  return parties.filter(p => profiles[p.id]?.summary).map(p => ({ id: p.id, text: forSpeech(`${p.name.replace(/ – /g, ", ")}. Čím sa profiluje: ${profiles[p.id].summary}`) }));
 }
 
 /** Ako sa z hlasov stanú kreslá: štyri kroky na dnešnom Modeli Mandát (rovnaké čísla ako karta pri otvorení). */
