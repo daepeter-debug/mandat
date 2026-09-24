@@ -1,5 +1,31 @@
 # Evidencia údajov a rozsahu
 
+## 24. 9. 2026 — jazyková revízia Dňa v politike (Claude)
+
+Všetkých 71 správ, 16 viet dňa a texty pre hlas prešli jazykovou revíziou (traja nezávislí korektori + kontrola viet dňa). Opravených je 20 miest:
+
+**Deň v týždni:** 12. 9. 2026 bola sobota, nie piatok (dve správy).
+
+**Tvary a pravopis:**
+- „v klube“;
+- „po svojom odvolaní“;
+- „pre to, aby“;
+- „v Bukoveli“;
+- „záleží mu na záväzkoch“;
+- „zrušeniu zastávok nezabránili“;
+- „staval sa kriticky“;
+- „odstúpenie“;
+- „Úrad vlády“;
+- „TA3“.
+
+**Mená a skratky:**
+- Tomáš Valášek;
+- CSV pri Infostate.
+
+**Typografia:** pomlčka „–“ a malé písmeno po dvojbodke v titulku.
+
+**Veta dňa 20. 9.:** „o Žilinkovom proteste“ namiesto „o spore so Žilinkom“, čo je presnejšie a neutrálnejšie. Oprava „nameral“ v 24. 9. je v predchádzajúcom zázname.
+
 ## 24. 9. 2026 — septembrový Ipsos a nové poradie spodného menu (Claude)
 
 Do archívu pribudol septembrový volebný model Ipsos pre Denník N. Údaje sú prepísané z pôvodnej tlačovej správy z 24. 9. 2026: zber 18.–22. 9., online, 1 030 respondentov, odhadovaná účasť 64 %.
