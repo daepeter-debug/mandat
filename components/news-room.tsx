@@ -70,7 +70,9 @@ function DayStrip({days,current,today,onPick,compact=false}:{days:NewsDay[];curr
   useEffect(()=>{
     const ol=list.current,btn=ol?.querySelector<HTMLElement>('[aria-current="date"]');
     if(!ol||!btn) return;
-    ol.scrollTo({left:btn.offsetLeft-ol.clientWidth/2+btn.offsetWidth/2,behavior:first.current?'instant':'smooth'});
+    // Poloha dňa voči samotnému pásu (offsetLeft by sa rátal od iného predka a pás by na širšej obrazovke odrezal dnešok).
+    const left=btn.getBoundingClientRect().left-ol.getBoundingClientRect().left+ol.scrollLeft-(ol.clientWidth-btn.offsetWidth)/2;
+    ol.scrollTo({left:Math.max(0,left),behavior:first.current?'instant':'smooth'});
     first.current=false;
   },[current]);
   useEffect(()=>{
