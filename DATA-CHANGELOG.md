@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 24. 9. 2026 — Deň v politike: pás dní začína dneškom (Claude)
+
+Pás dní v Správach aj v karte na úvode teraz začína vľavo dneškom a doprava idú staršie dni. Ovládanie je s tým zladené:
+- šípka › a potiahnutie prstom doľava prepnú na starší deň;
+- šípka ‹ a potiahnutie doprava vrátia novší deň;
+- pri prepnutí prichádza starší deň sprava;
+- pod súhrnom dňa je „← Novší deň“ vľavo a „Starší deň →“ vpravo.
+
 ## 24. 9. 2026 — Deň v politike doplnený za 16.–24. 9. a veta dňa pre všetky dni (Claude)
 
 Pribudlo 26 overených správ za 16., 17., 20., 22., 23. a dopoludnie 24. 9. Každý deň od 9. 9. má teraz súhrn dňa aj poradie dôležitosti a pri dňoch od 16. 9. je uvedený počet prejdených politických udalostí. Výber má 70 správ za 16 dní a kontrola zdrojov je 24. 9. (deň ešte beží).

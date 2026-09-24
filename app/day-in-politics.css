@@ -148,10 +148,10 @@
   }
   ::view-transition-old(dip-day),::view-transition-old(dip-digest){animation:dip-out .18s ease-in both}
   ::view-transition-new(dip-day),::view-transition-new(dip-digest){animation:dip-in .28s ease-out both}
-  html[data-dip-dir=older]::view-transition-old(dip-day),html[data-dip-dir=older]::view-transition-old(dip-digest){animation-name:dip-out-right}
-  html[data-dip-dir=older]::view-transition-new(dip-day),html[data-dip-dir=older]::view-transition-new(dip-digest){animation-name:dip-in-left}
-  html[data-dip-dir=newer]::view-transition-old(dip-day),html[data-dip-dir=newer]::view-transition-old(dip-digest){animation-name:dip-out-left}
-  html[data-dip-dir=newer]::view-transition-new(dip-day),html[data-dip-dir=newer]::view-transition-new(dip-digest){animation-name:dip-in-right}
+  html[data-dip-dir=older]::view-transition-old(dip-day),html[data-dip-dir=older]::view-transition-old(dip-digest){animation-name:dip-out-left}
+  html[data-dip-dir=older]::view-transition-new(dip-day),html[data-dip-dir=older]::view-transition-new(dip-digest){animation-name:dip-in-right}
+  html[data-dip-dir=newer]::view-transition-old(dip-day),html[data-dip-dir=newer]::view-transition-old(dip-digest){animation-name:dip-out-right}
+  html[data-dip-dir=newer]::view-transition-new(dip-day),html[data-dip-dir=newer]::view-transition-new(dip-digest){animation-name:dip-in-left}
 }
 @keyframes dip-rise{from{opacity:.35;translate:0 14px}}
 @keyframes dip-out{to{opacity:0;translate:0 -8px}}

@@ -13,7 +13,7 @@ const subscribe=(onChange:()=>void)=>{const timer=setInterval(onChange,60000);re
 /*
   Deň v politike: denný súhrn, nie živý prúd správ. Každý deň má vlastnú hlavičku, správy idú
   podľa dôležitosti (1 = téma dňa), aby čitateľ vedel, čo si pozrieť hneď a čo je menej podstatné.
-  Dni idú ako v kalendári: starší vľavo, najnovší vpravo (šípka ‹ aj potiahnutie doprava = starší deň).
+  Pás dní začína vľavo dneškom, doprava idú staršie dni (šípka › aj potiahnutie doľava = starší deň).
   Zoznam neodkazuje na cudzie weby: titulok otvára naše zhrnutie, vydavateľ a originál sú v ňom.
 */
 const icons:Record<NewsCategory,ReactNode>={Vláda:<Building2/>,Parlament:<Landmark/>,Opozícia:<Megaphone/>,Prezident:<Flag/>,Voľby:<Vote/>,Prieskumy:<BarChart3/>,Politika:<Newspaper/>};
@@ -24,7 +24,7 @@ const tier=(rank:number)=>rank===1?'Téma dňa':rank<=3?'Dôležité':'Stojí za
 const count=(n:number)=>`${n} ${n===1?'správa':n>=2&&n<=4?'správy':'správ'}`;
 const shortDate=(d:string)=>date(d).replace(/\s?2026$/,'').replace(/\s+$/,'');
 
-// Plynulé prepnutie dňa (View Transitions) so smerom (starší deň prichádza zľava); bez podpory alebo pri obmedzení pohybu hneď.
+// Plynulé prepnutie dňa (View Transitions) so smerom (starší deň prichádza sprava); bez podpory alebo pri obmedzení pohybu hneď.
 function transition(run:()=>void,direction:'older'|'newer'|null=null){
   const doc=document as Document&{startViewTransition?:(cb:()=>void)=>{ready:Promise<void>;finished:Promise<void>;updateCallbackDone:Promise<void>}};
   if(!doc.startViewTransition||window.matchMedia('(prefers-reduced-motion: reduce)').matches){run();return;}
@@ -39,7 +39,7 @@ function transition(run:()=>void,direction:'older'|'newer'|null=null){
   t.finished.catch(()=>{}).finally(()=>{delete root.dataset.dipDir;});
 }
 
-// Potiahnutie prstom doprava = starší deň, doľava = novší (ako listovanie v kalendári). Zvislé posúvanie stránky ostáva prehliadaču.
+// Potiahnutie prstom doľava = starší deň (ako v páse dní, kde staršie dni sú vpravo), doprava = novší. Zvislé posúvanie stránky ostáva prehliadaču.
 function useSwipe(onOlder?:()=>void,onNewer?:()=>void){
   const start=useRef<{x:number;y:number}|null>(null);
   return {
@@ -50,7 +50,7 @@ function useSwipe(onOlder?:()=>void,onNewer?:()=>void){
       if(!s) return;
       const dx=e.clientX-s.x,dy=e.clientY-s.y;
       if(Math.abs(dx)<56||Math.abs(dx)<Math.abs(dy)*1.8) return;
-      if(dx>0) onOlder?.(); else onNewer?.();
+      if(dx<0) onOlder?.(); else onNewer?.();
     },
   };
 }
@@ -82,9 +82,8 @@ function DayStrip({days,current,today,onPick,compact=false}:{days:NewsDay[];curr
     window.addEventListener('resize',edges);
     return()=>{ol.removeEventListener('scroll',edges);window.removeEventListener('resize',edges);};
   },[days.length]);
-  const chronological=[...days].reverse();
   return <nav className={`dip-days${compact?' is-compact':''}`} aria-label="Vyberte deň">
-    <ol ref={list}>{chronological.map(d=>{const rel=relativeDay(d.date,today);return <li key={d.date}>
+    <ol ref={list}>{days.map(d=>{const rel=relativeDay(d.date,today);return <li key={d.date}>
       <button type="button" aria-current={d.date===current?'date':undefined} onClick={()=>onPick(d.date)} aria-label={`${dayHeading(d.date)}, ${count(d.items.length)}`}>
         <span>{rel??weekdayShort(d.date)}</span><b>{shortDate(d.date)}</b>
         <i aria-hidden="true">{d.items.slice(0,6).map(n=><em key={n.id}/>)}</i>
@@ -106,9 +105,9 @@ function DayCard({d,today,onOpenNews,onPrev,onNext,onShare}:{d:NewsDay;today:str
     </header>
     <ol className="dip-list" {...swipe}>{d.items.map((n,i)=><NewsItem key={n.id} n={n} rank={i+1} onOpen={()=>onOpenNews(n.id)}/>)}</ol>
     <footer className="dip-day-nav">
-      <button type="button" onClick={onPrev} disabled={!onPrev}><ArrowLeft size={16} aria-hidden="true"/>Starší deň</button>
+      <button type="button" onClick={onNext} disabled={!onNext}><ArrowLeft size={16} aria-hidden="true"/>Novší deň</button>
       <button type="button" className="dip-share" onClick={onShare}><Share2 size={16} aria-hidden="true"/>Zdieľať súhrn</button>
-      <button type="button" onClick={onNext} disabled={!onNext}>Novší deň<ArrowRight size={16} aria-hidden="true"/></button>
+      <button type="button" onClick={onPrev} disabled={!onPrev}>Starší deň<ArrowRight size={16} aria-hidden="true"/></button>
     </footer>
   </section>;
 }
@@ -139,8 +138,8 @@ function DayDigest({days,today,onOpen,onOpenNews}:{days:NewsDay[];today:string;o
     <header className="dip-digest-head">
       <h2 id={uid}><Newspaper size={18} strokeWidth={1.6} aria-hidden="true"/>Deň v politike</h2>
       <div className="dip-digest-arrows">
-        <button type="button" onClick={()=>go(older,'older')} disabled={!older} aria-label={older?`Starší deň: ${dayHeading(older.date)}`:'Starší deň'}><ChevronLeft size={18} aria-hidden="true"/></button>
-        <button type="button" onClick={()=>go(newer,'newer')} disabled={!newer} aria-label={newer?`Novší deň: ${dayHeading(newer.date)}`:'Novší deň'}><ChevronRight size={18} aria-hidden="true"/></button>
+        <button type="button" onClick={()=>go(newer,'newer')} disabled={!newer} aria-label={newer?`Novší deň: ${dayHeading(newer.date)}`:'Novší deň'}><ChevronLeft size={18} aria-hidden="true"/></button>
+        <button type="button" onClick={()=>go(older,'older')} disabled={!older} aria-label={older?`Starší deň: ${dayHeading(older.date)}`:'Starší deň'}><ChevronRight size={18} aria-hidden="true"/></button>
       </div>
     </header>
     <DayStrip compact days={days} current={current.date} today={today} onPick={d=>go(days.find(x=>x.date===d),d<current.date?'older':'newer')}/>
