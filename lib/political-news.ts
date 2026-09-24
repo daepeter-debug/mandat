@@ -29,7 +29,7 @@ export const newsDays:Record<string,{line?:string;analyzed?:number}>={
   '2026-09-21':{line:'Koaličná rada rokovala o rozpočte na rok 2027, veľvyslanci EÚ sa zhodli na predĺžení sankcií bez Usmanova a Fridmana, no formálne ho neschválili, a predseda parlamentu Raši hovoril o článku 5 NATO.',analyzed:21},
   '2026-09-22':{line:'Vláda ohlásila rozhodnutie o cenách palív, Smer pripustil zachovanie transakčnej dane, koalícia sa dohodla na obmedzení krúžkovania a parlament rokoval o Občianskom zákonníku.',analyzed:26},
   '2026-09-23':{line:'Koalícia riešila transakčnú daň a envirorezort, vláda obmedzila maržu na palivá, Pellegrini v OSN odmietol anexiu Krymu a Ústavný súd nevyhovel návrhu o manželstve.',analyzed:21},
-  '2026-09-24':{line:'Septembrový Ipsos namerial vedenie PS, rekord Republiky a pokles Hlasu, bratislavská opozícia vyzvala voliť proti Smeru a parlament neschválil odškodnenie obetí sterilizácií.'},
+  '2026-09-24':{line:'Septembrový Ipsos nameral vedenie PS, rekord Republiky a pokles Hlasu, bratislavská opozícia vyzvala voliť proti Smeru a parlament neschválil odškodnenie obetí sterilizácií.'},
 };
 export const politicalNews:PoliticalNews[]=[
   {id:'ipsos-september-24',published:'2026-09-24',rank:1,category:'Prieskumy',title:'Septembrový Ipsos: PS vedie s 19 %, Republika má rekord a Hlas klesol na 6,6 %',

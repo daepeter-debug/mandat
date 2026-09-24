@@ -4,6 +4,34 @@
   "credit": "Hlas: ElevenLabs (AI)",
   "generated": "2026-09-24",
   "items": {
+    "leader": {
+      "src": "/audio/story/leader-4de10ceba0.mp3",
+      "hash": "4de10ceba0",
+      "chars": 294,
+      "ms": 20793,
+      "edition": "2026-09-22"
+    },
+    "seats": {
+      "src": "/audio/story/seats-f237fe302e.mp3",
+      "hash": "f237fe302e",
+      "chars": 300,
+      "ms": 21394,
+      "edition": "2026-09-22"
+    },
+    "month": {
+      "src": "/audio/story/month-494dac5a49.mp3",
+      "hash": "494dac5a49",
+      "chars": 224,
+      "ms": 15464,
+      "edition": "2026-09-22"
+    },
+    "edge": {
+      "src": "/audio/story/edge-ad2fbe0bcb.mp3",
+      "hash": "ad2fbe0bcb",
+      "chars": 171,
+      "ms": 10998,
+      "edition": "2026-09-22"
+    },
     "debt": {
       "src": "/audio/story/debt-21a8fe5066.mp3",
       "hash": "21a8fe5066",
