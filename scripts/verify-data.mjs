@@ -4,7 +4,7 @@ import { politicalNews, newsChecked, filterNews } from '../lib/political-news.ts
 import { casesEnabled } from '../lib/features.ts';
 import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, financeCompare, financeYears, latestFinanceYear, primaryBalance, yearShares } from '../lib/public-finance.ts';
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
-import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies } from '../lib/polls.ts';
+import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies, dataVerified } from '../lib/polls.ts';
 import { programmes, positions } from '../lib/programmes.ts';
 import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, aggregatePolls, currentAggregate } from '../lib/aggregate.ts';
 import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../lib/blocs.ts';
@@ -58,7 +58,7 @@ for (const n of politicalNews) {
 }
 const newestNews = politicalNews.reduce((max,n)=>n.published>max?n.published:max,'0000-00-00');
 assert((Date.parse(newsChecked)-Date.parse(newestNews))/86400000 <= 3,`Výber nesmie zaostávať za kontrolou o viac než tri dni: ${newestNews} vs ${newsChecked}`);
-const fixtureNews=['2026-09-06','2026-09-07','2026-09-09','2026-09-13','2026-09-14'].map((published,i)=>({...politicalNews[0],id:String(i),published}));
+const fixtureNews=['2026-09-06','2026-09-07','2026-09-09','2026-09-13','2026-09-14'].map((published,i)=>({...politicalNews[0],id:String(i),published,category:'Vláda'}));
 assert.deepEqual(filterNews(fixtureNews,'2026-09-13','week','all').map(n=>n.published),['2026-09-13','2026-09-09','2026-09-07'],'Posledných 7 dní vrátane dneška, bez budúcich správ');
 assert.deepEqual(filterNews(fixtureNews,'2026-09-14','week','all').map(n=>n.published),['2026-09-14','2026-09-13','2026-09-09'],'Pohyblivé okno, nie kalendárny týždeň: v pondelok nezostane len dnešok');
 assert.equal(filterNews(fixtureNews,'2026-09-13','today','all').length,1);
@@ -75,7 +75,8 @@ for (const poll of archive) {
   assert(!pollIds.has(poll.id), `Duplicitné meranie: ${poll.id}`);
   pollIds.add(poll.id);
   assert(poll.start <= poll.end && (!poll.published || poll.end <= poll.published), `Chronológia: ${poll.id}`);
-  assert(poll.end <= '2026-09-11' && (!poll.published || poll.published <= '2026-09-11'), `Budúci údaj: ${poll.id}`);
+  // Žiadne meranie nesmie byť novšie ako posledná ručná kontrola dát (dataVerified v lib/polls.ts).
+  assert(poll.end <= dataVerified && (!poll.published || poll.published <= dataVerified), `Budúci údaj: ${poll.id}`);
   assert(poll.sample===null || (Number.isInteger(poll.sample) && poll.sample > 0), `Vzorka: ${poll.id}`);
   if(poll.sample===null || poll.published===null) assert(poll.note, `Chýbajúce metadáta potrebujú vysvetlenie: ${poll.id}`);
   assert(new URL(poll.source).protocol === 'https:', `Zdroj: ${poll.id}`);
@@ -111,7 +112,7 @@ assert.equal(agencySeries('AKO',9).length,8);
 assert.equal(agencySeries('AKO',9)[0].values.ps,23.2);
 assert.equal(agencySeries('FOCUS',1)[0].values.ps,17.3);
 assert.equal(agencySeries('FOCUS',1)[0].values.smer,17.3);
-assert.equal(agencySeries('IPSOS',1)[0].sample,1061);
+assert.equal(agencySeries('IPSOS',1)[0].sample,1030); // Ipsos september 2026, tlačová správa 24. 9. 2026
 assert.equal(agencySeries('INFOSTAT',1)[0].values.sas,9.8);
 assert.equal(archive.find(p=>p.id==='ipsos-2026-06').published,null);
 assert.equal(archive.find(p=>p.id==='ipsos-2026-06').sample,null);
@@ -132,7 +133,7 @@ for(const position of positions){assert(partyIds.has(position.partyId)&&position
 
 // Agregátor: chýbajúce údaje sa nedopĺňajú nulou a každá agentúra vstupuje najviac raz.
 assert.deepEqual(aggregateAgencies,['AKO','FOCUS','INFOSTAT','IPSOS','NMS']);
-assert.equal(aggregateLastDate,'2026-09-07');
+assert.equal(aggregateLastDate,'2026-09-22'); // koniec zberu septembrového Ipsosu
 assert.equal(new Set(aggregatePolls.map(p=>p.agency)).size,aggregatePolls.length,'Jedna agentúra najviac raz v aktuálnom bode');
 assert(aggregatePolls.length>=3,'Aktuálny agregát potrebuje aspoň tri agentúry');
 assert.equal(currentAggregate.pollIds.length,aggregatePolls.length);

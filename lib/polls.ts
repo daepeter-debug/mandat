@@ -28,7 +28,7 @@ export const polls: Poll[] = [...additionalPolls.filter(p=>p.agency==="NMS"),
   {...base,id:"nms-2026-08",month:"August",published:"2026-08-12",start:"2026-08-05",end:"2026-08-10",sample:1001,source:"https://nms.global/sk/volebny-model-august-2026/",values:{ps:19.2,smer:16.5,rep:13.3,slovensko:8.9,sas:7.4,hlas:5.9,kdh:5.9,dem:4.6,aliancia:4,rodina:3.7,pnp:3.6,sns:2.9,zaludi:2.2}},
   {...base,id:"nms-2026-09",month:"September",published:"2026-09-10",start:"2026-09-02",end:"2026-09-07",sample:1004,source:"https://nms.global/sk/volebny-model-september-2026/",values:{ps:21.6,smer:16.2,rep:15.6,slovensko:9,sas:6.8,hlas:6.4,kdh:5.8,dem:4.8,aliancia:3.1,rodina:3,pnp:2.1,sns:1.9,zaludi:1.6},note:"Rozdiely počítame zo zverejnených hodnôt v tejto databáze. Slovný komentár agentúry uvádza pri niektorých stranách odlišné medzimesačné zmeny. SNS 1,9 % a ZA ĽUDÍ 1,6 % doplnené 12. 9. 2026 z vloženého grafu NMS: https://flo.uri.sh/visualisation/30183930/embed (filter September 2026)."},
 ];
-export const dataVerified = "2026-09-12"; // deň poslednej ručnej kontroly dát a programových zdrojov
+export const dataVerified = "2026-09-24"; // deň poslednej ručnej kontroly dát a programových zdrojov
 export const latest = polls[polls.length-1];
 export const previous = polls[polls.length-2];
 export const archive: Poll[] = [...polls,...additionalPolls.filter(p=>p.agency!=="NMS"),

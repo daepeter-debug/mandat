@@ -144,7 +144,8 @@ export function quickNarrations(): Narration2[] {
   const onEdge = values.filter(v => v.upper >= 3 && v.lower <= 7.5 && thresholdStatus(v) === "edge");
   const below = values.filter(v => v.value < 5 && v.value >= 1);
   const share = below.reduce((s, v) => s + v.value, 0), n = Math.round(share);
-  const lost = share >= 18 && share <= 22 ? "každý piaty hlas" : share >= 9 && share <= 11 ? "každý desiaty hlas" : `${numberWords(n)} zo sto hlasov`;
+  // Prirovnanie len keď sedí (každý piaty/desiaty); inak by hlas zopakoval to isté číslo dvakrát.
+  const lost = share >= 18 && share <= 22 ? "každý piaty hlas" : share >= 9 && share <= 11 ? "každý desiaty hlas" : null;
   const perPerson = Math.floor(debtLastMeur * 1e6 / population / 1000);
   return [
     { id: "winner", dated: true, text: `Kto by dnes vyhral? ${name(a.partyId)} ${verb(a.partyId, "má", "majú")} ${percentWords(a.value)}, ${name(b.partyId)} ${percentWords(b.value)}. Prvé miesto v Modeli Mandát ${verb(a.partyId, "má", "majú")} ${name(a.partyId)} ${runsWords(fa)}${fb > 0.05 ? `, ${name(b.partyId)} ${runsWords(fb)}` : ""}.${under.length ? ` Pozor: v roku dvetisícdvadsaťtri prieskumy podcenili ${joinAnd(under.map(x => name(x.id)))} priemerne o ${pointsWords(under[0].mean)}.` : ""}` },
@@ -152,7 +153,7 @@ export function quickNarrations(): Narration2[] {
     { id: "edge", dated: true, text: onEdge.length
       ? `Kto je na hrane piatich percent? ${onEdge.map(v => `${name(v.partyId)} ${verb(v.partyId, "má", "majú")} ${percentWords(v.value)} a nad hranicou ${verb(v.partyId, "je", "sú")} ${runsWords(u.parties[v.partyId]?.entry ?? 0)}`).join(". ")}. O vstupe do parlamentu rozhodnú voľby, nie prieskum.`
       : "Kto je na hrane piatich percent? Pásmo neistoty žiadnej strany dnes nepretína hranicu piatich percent." },
-    { id: "wasted", dated: true, text: `Koľko hlasov prepadne? ${upperFirst(percentWords(n))} hlasov by dnes nemalo zástupcu v parlamente, teda približne ${lost}. Pod hranicou piatich percent sú najmä ${joinAnd(below.map(v => name(v.partyId)))}.` },
+    { id: "wasted", dated: true, text: `Koľko hlasov prepadne? ${upperFirst(percentWords(n))} hlasov by dnes nemalo zástupcu v parlamente${lost ? `, teda približne ${lost}` : ""}. Pod hranicou piatich percent sú najmä ${joinAnd(below.map(v => name(v.partyId)))}.` },
     { id: "debt", text: `Aký veľký je dlh? Dlh štátu rastie asi o ${numberWords(Math.round(debtPerSecond))} eur za sekundu, tempom roku ${numberWords(debtYear)}. Posledný údaj Eurostatu je ${billionsWords(debtLastMeur / 1000)} eur ku koncu roka ${numberWords(debtYear)}, teda viac ako ${numberWords(perPerson)}tisíc eur na každého obyvateľa.` },
     { id: "year", text: "Čo zažil môj ročník? Zadaj rok narodenia a Mandát ti ukáže, koľko vlád a premiérov zažil tvoj ročník, kto vládol na tvoje osemnáste narodeniny a ako sa zmenil dlh, mzdy a ceny." },
   ];

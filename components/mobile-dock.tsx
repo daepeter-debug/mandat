@@ -14,11 +14,11 @@ import "@/app/mobile-dock.css";
 const primary: { id: string; label: string; icon: ReactNode }[] = [
   { id: "overview", label: "Prehľad", icon: <Home/> },
   { id: "polls", label: "Prieskumy", icon: <BarChart3/> },
+  { id: "news", label: "Správy", icon: <Newspaper/> },
   { id: "parties", label: "Strany", icon: <Users/> },
-  { id: "finance", label: "Hospodárenie", icon: <Wallet/> },
 ];
 const details: Record<string, { icon: ReactNode; text: string }> = {
-  news: { icon: <Newspaper/>, text: "Podstatné udalosti so zdrojmi" },
+  finance: { icon: <Wallet/>, text: "Deficit, dlh, dane a životná úroveň" },
   responsibility: { icon: <Landmark/>, text: "Kto vládol a čo zažil tvoj ročník" },
   cases: { icon: <Scale/>, text: "Register prípadov" },
   data: { icon: <PieChart/>, text: "Polkruhy, bloky a agentúry" },

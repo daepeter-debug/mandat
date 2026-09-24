@@ -1,5 +1,37 @@
 # Evidencia údajov a rozsahu
 
+## 24. 9. 2026 — septembrový Ipsos a nové poradie spodného menu (Claude)
+
+Do archívu pribudol septembrový volebný model Ipsos pre Denník N. Údaje sú prepísané z pôvodnej tlačovej správy z 24. 9. 2026: zber 18.–22. 9., online, 1 030 respondentov, odhadovaná účasť 64 %.
+
+| Strana | % |
+|---|---|
+| PS | 19,0 |
+| Smer | 16,9 |
+| Republika | 12,8 |
+| Hnutie Slovensko | 10,7 |
+| SaS | 8,4 |
+| KDH | 7,0 |
+| Hlas | 6,6 |
+| Demokrati | 5,5 |
+| Maďarská aliancia | 3,9 |
+| Právo na pravdu | 2,2 |
+| SNS | 2,2 |
+| Sme rodina (v prieskume ako Sme rodina a Sulíkovci) | 2,0 |
+| iné strany | 2,9 |
+
+Model Mandát je teraz k 22. 9. a septembrový Ipsos v ňom nahradil augustový. Prepočítali sa od neho všetky odvodené časti: Mandát za minútu, rýchle odpovede, kreslá a bloky, neistota, 3D parlament (`public/models/parlament.glb`) a RSS. Údaje sú overené k 24. 9.
+
+**Kontroly (`verify-data`):**
+- Budúce merania sa porovnávajú s `dataVerified` namiesto pevného dátumu.
+- Pripnuté hodnoty sa posunuli na nové posledné meranie Ipsosu.
+
+**Deň v politike:** 24. 9. dostal ako tému dňa správu o septembrovom Ipsose a novú vetu dňa.
+
+**Hlas:** text o prepadnutých hlasoch už neopakuje to isté číslo dvakrát. Nahrávky, ktorých čísla sa zmenili, sa do prenahratia na webe neukážu.
+
+**Spodné menu na mobile:** Prehľad, Prieskumy, Správy, Strany a Viac. Hospodárenie je teraz ako prvé v paneli Viac.
+
 ## 24. 9. 2026 — Deň v politike: pás dní začína dneškom (Claude)
 
 Pás dní v Správach aj v karte na úvode teraz začína vľavo dneškom a doprava idú staršie dni. Ovládanie je s tým zladené:

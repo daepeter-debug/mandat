@@ -435,6 +435,37 @@ export const additionalPolls: Poll[] = [
     "other": 2.1
   },
   {
+    "id": "ipsos-2026-09",
+    "agency": "IPSOS",
+    "month": "September",
+    "published": "2026-09-24",
+    "start": "2026-09-18",
+    "end": "2026-09-22",
+    "sample": 1030,
+    "source": "https://www.ipsos.com/sites/default/files/ct/news/documents/2026-09/IPSOS%20-%20Tla%C4%8Dov%C3%A1%20spr%C3%A1va%20-%20Reprezentat%C3%ADvny%20prieskum%20politick%C3%BDch%20preferenci%C3%AD%2024.%209.%202026.pdf",
+    "sourceName": "IPSOS · pôvodná správa",
+    "values": {
+      "ps": 19,
+      "smer": 16.9,
+      "rep": 12.8,
+      "slovensko": 10.7,
+      "sas": 8.4,
+      "kdh": 7,
+      "hlas": 6.6,
+      "dem": 5.5,
+      "aliancia": 3.9,
+      "pnp": 2.2,
+      "sns": 2.2,
+      "rodina": 2
+    },
+    "method": "Online zber (CAWI)",
+    "client": "Denník N",
+    "type": "Volebný model",
+    "complete": false,
+    "note": "Model váži ochotu ísť voliť (účasť 64 %). Kategória „iné strany“ je uvedená oddelene. Sme rodina je v prieskume uvedená pod novým názvom Sme rodina a Sulíkovci (po pripojení Richarda Sulíka).",
+    "other": 2.9
+  },
+  {
     "id": "focus-2026-02",
     "agency": "FOCUS",
     "month": "Február",
