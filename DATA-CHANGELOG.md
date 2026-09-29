@@ -1,5 +1,16 @@
 # Evidencia údajov a rozsahu
 
+## 29. 9. 2026 večer — Deň v politike za 29. 9. (Claude)
+
+Pribudlo päť overených správ za utorok 29. 9. (stav okolo 19:00):
+- Národná rada vyslovila nedôveru ministrovi Tomášovi Tarabovi. Za hlasovalo 77 prítomných poslancov, z toho 70 z opozície a 7 zo SNS.
+- Po útoku v škole v Staškove neprešiel návrh na skoršie rokovanie o zákone proti radikalizácii.
+- NBS zverejnila prognózu.
+- Prezident podpísal zvýšenie minimálneho výživného.
+- Nemecký minister zahraničných vecí Wadephul navštívil Bratislavu.
+
+Súhrn dňa bol overený až po večerných hlasovaniach, z najnovších správ Denníka N, TASR a záznamu hlasovaní NR SR. Deň ešte neskončil a neskoršie udalosti pribudnú pri ďalšej aktualizácii.
+
 ## 29. 9. 2026 — dva chýbajúce septembrové prieskumy a Deň v politike 24.–28. 9. (Claude)
 
 **Prieskumy (kontrola 29. 9.):**
