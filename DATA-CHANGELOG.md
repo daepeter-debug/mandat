@@ -1,5 +1,24 @@
 # Evidencia údajov a rozsahu
 
+## 29. 9. 2026 — dva chýbajúce septembrové prieskumy a Deň v politike 24.–28. 9. (Claude)
+
+**Prieskumy (kontrola 29. 9.):**
+- Pribudol **CSV pri Infostate, september** (zber 31. 8.–4. 9., 1 095 respondentov, CAPI), údaje sú z pôvodného PDF Infostatu. Meranie vstupuje do Modelu Mandát, takže sa mierne zmenil aj agregát k 22. 9.
+- Pribudol **SANEP pre TA3, september** (zverejnený 24. 9., zber 11.–21. 9., 2 100 respondentov, CAWI, 68,5 % rozhodnutých), údaje sú z článku TA3. Do agregátu nevstupuje.
+- Septembrový AKO pre JOJ 24 zatiaľ nevyšiel. Ostatné agentúry (NMS, FOCUS, Ipsos) nové merania od poslednej kontroly nezverejnili.
+- Upravené je pokrytie agentúr (Ipsos, Infostat, SANEP) a vysvetlenie, prečo SANEP nevstupuje do agregátu.
+- Šesť hlasových nahrávok s číslami (Mandát za minútu: líder, mesiac, hrana; rýchle odpovede: víťaz, hrana, prepadnuté hlasy) po zmene agregátu nesedelo s textom. Sú skryté, kým sa nenahrajú znova.
+
+**Deň v politike:** pribudlo 21 overených správ.
+- 24. 9. (popoludnie): pribudla správa o koaličnej väčšine ako téma dňa. Ostatné správy dňa sú posunuté o miesto nižšie.
+- 25.–28. 9.: po päť správ za deň. Každý deň má vetu dňa a počet prejdených udalostí.
+
+Každú správu napísal jeden agent a nezávisle ju overil druhý, oproti zdrojom aj jazykovo.
+
+**Opravy:**
+- Zo správy o prieskume Infostatu (21. 9.) vypadla veta o prieskume SANEP, ktorý vyšiel až 24. 9.
+- Ku septembrovému Ipsosu (24. 9.) pribudol odsek o prieskume SANEP zverejnenom v ten istý deň.
+
 ## 24. 9. 2026 — jazyková revízia Dňa v politike (Claude)
 
 Všetkých 71 správ, 16 viet dňa a texty pre hlas prešli jazykovou revíziou (traja nezávislí korektori + kontrola viet dňa). Opravených je 20 miest:

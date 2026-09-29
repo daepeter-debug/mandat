@@ -814,5 +814,36 @@ export const additionalPolls: Poll[] = [
     "type": "Volebné preferencie",
     "complete": false,
     "note": "Deň prvého zverejnenia nie je v pôvodnom dokumente jednoznačne uvedený. Dátum vytvorenia PDF nepovažujeme za dátum publikovania. Zdroj obsahuje výber strán; chýbajúce podiely neodhadujeme."
+  },
+  {
+    "id": "infostat-2026-09",
+    "agency": "INFOSTAT",
+    "month": "September",
+    "published": null,
+    "start": "2026-08-31",
+    "end": "2026-09-04",
+    "sample": 1095,
+    "source": "https://www.infostat.sk/csv/suhrnna-sprava/pdf/Volebne_preferencie_september_2026.pdf",
+    "sourceName": "INFOSTAT · Centrum sociálnych výskumov",
+    "values": {
+      "smer": 18.7,
+      "ps": 18.2,
+      "rep": 9.9,
+      "kdh": 8.8,
+      "sas": 8.4,
+      "hlas": 7.4,
+      "slovensko": 6.9,
+      "dem": 5.9,
+      "aliancia": 5,
+      "pnp": 3.5,
+      "sns": 3.2,
+      "rodina": 2.2,
+      "lsns": 1.5
+    },
+    "method": "Osobné rozhovory (CAPI)",
+    "client": "Vlastný výskum CSV pri INFOSTAT-e",
+    "type": "Volebné preferencie",
+    "complete": false,
+    "note": "Deň prvého zverejnenia nie je v pôvodnom dokumente jednoznačne uvedený; TASR o prieskume informovala 21. 9. 2026. Účasť deklarovalo 66,4 % opýtaných. Zdroj uvádza strany nad 1 %; chýbajúce podiely neodhadujeme."
   }
 ];

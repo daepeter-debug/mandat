@@ -113,11 +113,11 @@ assert.equal(agencySeries('AKO',9)[0].values.ps,23.2);
 assert.equal(agencySeries('FOCUS',1)[0].values.ps,17.3);
 assert.equal(agencySeries('FOCUS',1)[0].values.smer,17.3);
 assert.equal(agencySeries('IPSOS',1)[0].sample,1030); // Ipsos september 2026, tlačová správa 24. 9. 2026
-assert.equal(agencySeries('INFOSTAT',1)[0].values.sas,9.8);
+assert.equal(agencySeries('INFOSTAT',1)[0].values.sas,8.4); // CSV pri Infostate september 2026 (zber 31. 8.–4. 9.)
 assert.equal(archive.find(p=>p.id==='ipsos-2026-06').published,null);
 assert.equal(archive.find(p=>p.id==='ipsos-2026-06').sample,null);
 assert.equal(archive.find(p=>p.id==='focus-2026-06').published,'2026-07-03');
-assert.deepEqual(availableTrendAgencies,['AKO','FOCUS','INFOSTAT','IPSOS','NMS']);
+assert.deepEqual(availableTrendAgencies,['AKO','FOCUS','INFOSTAT','IPSOS','NMS','SANEP']); // SANEP od septembra 2026 s dvomi meraniami (mimo agregátu)
 assert.equal(agencySeries('unknown').length,0);
 for(const doc of programmes) {
   assert(partyIds.has(doc.partyId),'Program musí patriť známemu subjektu');
