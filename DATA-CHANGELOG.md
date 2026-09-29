@@ -1,5 +1,17 @@
 # Evidencia údajov a rozsahu
 
+## 29. 9. 2026, 20:00 — večerná aktualizácia Dňa v politike (Claude)
+
+Hlavná správa dňa (nedôvera Tarabovi) je doplnená o večerné reakcie. Zdrojom je Minúta po minúte medzi 19:06 a 19:42.
+- Robert Fico zvolal na stredu o 17.00 predsedníctvo Smeru-SD.
+- Kancelária prezidenta oznámila, že Peter Pellegrini Tarabu odvolá v stredu.
+- Hlas-SD varoval pred „nebezpečnou cestou“ a Peter Žiga navrhol koaličnú radu.
+- Peter Slyško vyjadril Tarabovi podporu.
+- SNS (Roman Michelko) trvá na Filipovi Kuffovi ako nominantovi na ministra.
+- PS vyzvalo premiéra, aby vládu položil, a SaS žiada demisiu.
+
+Nová je aj veta dňa a počet prejdených udalostí (27). Ďalšie večerné udalosti nepotrebovali samostatnú správu.
+
 ## 29. 9. 2026 večer — Deň v politike za 29. 9. (Claude)
 
 Pribudlo päť overených správ za utorok 29. 9. (stav okolo 19:00):
