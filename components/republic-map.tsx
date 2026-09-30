@@ -11,7 +11,7 @@ const cells=Array.from({length:36},(_,i)=>({x:i%6,y:Math.floor(i/6)}));
 // Doska diorámy: okraj M okolo mriežky 6 × 6 a hrúbka T (zemina + drevo).
 const M=.28, A=-.5-M, B=5.5+M, T=16;
 const hash=(s:string)=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h;};
-const meadow=["#b3c98a","#adc585","#b7cb8e","#a9c181"];
+const meadow=["#becd9f","#b9c99a","#c1cfa3","#b6c696"];
 const tuftSpots=[[-.28,-.05],[.12,.25],[.02,-.3],[.3,.05],[-.1,.3],[-.22,-.3]] as const;
 const quad=(x0:number,y0:number,x1:number,y1:number,z=0)=>pts([x0,y0,z],[x1,y0,z],[x1,y1,z],[x0,y1,z]);
 const setts=(x:number,y:number)=>[-.3,-.1,.1,.3].map(t=>seg([x+t,y-.5],[x+t,y+.5])+seg([x-.5,y+t],[x+.5,y+t])).join("");
@@ -115,7 +115,7 @@ export default function RepublicMap({town,editing,selected,target,onCell,onObjec
           <Bush x={A+.12} y={3.3} s={.7} tone={1}/><Bush x={2.6} y={A+.12} s={.65} flowers="#fbf6e8"/>
         </g>
         <g pointerEvents="none" aria-hidden="true">
-          {town.placed.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)||a.x-b.x).map(o=>{const c=at(o);return <g key={o.instanceId} transform={`translate(${c.x} ${c.y})`}>
+          {town.placed.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)||a.x-b.x).map(o=>{const c=at(o);return <g className="republic-piece" key={o.instanceId} transform={`translate(${c.x} ${c.y})`}>
             <TownPiece id={o.id} branch={o.id==="station"?town.branch:null} finished={town.completed.includes("opening")} variant={hash(o.instanceId)}/>
             {!o.fixed&&catalog[o.id].kind==="building"&&<g transform="translate(30 10)"><circle r="5" fill={connected(town,o)?"#315e4b":"#a86343"} stroke="#fff9df" strokeWidth="1.6"/>{!connected(town,o)&&<path d="M-2.2 0h4.4" stroke="#fff9df" strokeWidth="1.3"/>}</g>}
           </g>;})}

@@ -1,7 +1,7 @@
-.republic { --rep-ink:#20392f; --rep-muted:#53675a; --rep-line:#d6ddcd; --rep-paper:#fffefa; --rep-green:#245c48; max-width:1120px; margin:auto; padding:18px 0 28px; color:var(--rep-ink); }
+.republic { --rep-ink:#20392f; --rep-muted:#53675a; --rep-line:#d6ddcd; --rep-paper:#fffefa; --rep-green:#245c48; max-width:1120px; margin:auto; padding:18px 0 28px; color:var(--rep-ink); position:relative; }
 .republic button,.republic-dialog button { font-family:inherit; cursor:pointer; touch-action:manipulation; }
 .republic button:disabled,.republic-dialog button:disabled { cursor:default; }
-.republic :is(button,input,summary,[role=button]):focus-visible,.republic-dialog button:focus-visible { outline:3px solid #306e59; outline-offset:3px; }
+.republic :is(a,button,input,summary,[role=button]):focus-visible,.republic-dialog button:focus-visible { outline:3px solid #306e59; outline-offset:3px; }
 .republic ::selection,.republic-dialog ::selection { color:#20392f; background:#dcf59b; }
 .republic-heading { display:flex; align-items:start; justify-content:space-between; gap:18px; margin-bottom:20px; }
 .republic-heading h1 { margin:0; font-size:clamp(30px,3vw,42px); font-weight:550; letter-spacing:-.035em; line-height:1.15; }
@@ -143,5 +143,64 @@
   .republic-object-detail h3 { font-size:14px; }.republic-object-detail .republic-button-row { gap:0; }.republic-object-detail .republic-button-row button { padding-inline:5px; font-size:11px; }
   .republic-dialog { padding:20px 14px; }.republic-dialog h2 { font-size:25px; padding-right:12px; }.republic-offer { gap:6px; }.republic-offer button>.republic-art { height:93px; }.republic-offer b { font-size:12px; }.republic-offer small { font-size:10px; }
   .republic-storage-alert { display:block; }.republic-coordinate-grid { gap:3px; }.republic-list-view { padding:8px; }
+}
+/* The game owns its space only while its focus switch is active. */
+.editorial-shell.with-party-rail:has(.republic[data-focus=true]) { padding-left:0; background:#f5f3eb; }
+.editorial-shell:has(.republic[data-focus=true]) .party-rail { display:none; }
+.editorial-shell:has(.republic[data-focus=true]) .main-nav { display:none; }
+.editorial-shell:has(.republic[data-focus=true]) .site-header { height:64px; }
+.editorial-shell:has(.republic[data-focus=true]) .brand-motto { display:none; }
+.editorial-shell:has(.republic[data-focus=true]) .games-room { max-width:1120px; padding-top:12px; }
+.editorial-shell:has(.republic[data-focus=true]) main>[role=tabpanel]:has(.republic) { padding-top:0; }
+.republic-focus-toggle { display:flex; align-items:center; gap:7px; min-height:44px; font-size:11px; color:var(--rep-muted); position:absolute; right:0; top:-41px; }
+.republic-current-goal { display:none; }
+.republic-art-switch { display:flex; align-items:center; gap:4px; margin-bottom:9px; font-size:11px; color:var(--rep-muted); flex-wrap:wrap; }
+.republic-art-switch>span { margin-right:4px; }
+.republic-art-switch button { min-height:44px; padding:0 10px; border-radius:6px; color:var(--rep-muted); }
+.republic-art-switch button[aria-pressed=true] { background:#20392f; color:#fffefa; }
+.republic-art-switch small { margin-left:auto; font-size:10px; }
+.republic-project { scroll-margin-top:100px; }
+.republic-map { background:radial-gradient(ellipse at 48% 38%,#faf7ec,#ececdd 75%); border-radius:16px; }
+.republic-map-tools { background:#e4e7d9; border-top:1px solid #d5dbc9; }
+.republic-build-grid button { transition:background-color .18s,border-color .18s; }
+.republic-build-grid button:hover .republic-art { transform:translateY(-3px); }
+.republic-build-grid .republic-art { transition:transform .2s ease-out; }
+.republic-piece { animation:republic-place .35s cubic-bezier(.16,1,.3,1); transform-box:fill-box; transform-origin:center bottom; }
+@keyframes republic-place { from { opacity:.5; translate:0 -7px; } to { opacity:1; translate:0 0; } }
+@media(max-width:800px) {
+  .republic-current-goal { display:flex; align-items:center; gap:10px; padding:11px 12px; margin-bottom:8px; background:#ecebdc; border-radius:10px; color:var(--rep-ink); text-decoration:none; }
+  .republic-current-goal>svg { flex:none; color:#63774a; }
+  .republic-current-goal>span { flex:1; }
+  .republic-current-goal b { display:block; font-size:13px; font-weight:600; }
+  .republic-current-goal small { display:block; font-size:11px; line-height:1.5; margin-top:3px; color:var(--rep-muted); }
+  .republic-catalog { padding:10px 12px 12px; background:#eeeee3; border-radius:12px; margin-top:10px; }
+  .republic-panel-title { margin-bottom:3px; }
+  .republic-panel-title h2 { font-size:15px; }
+  .republic-build-grid { display:flex; overflow-x:auto; gap:8px; padding:3px 2px 9px; scroll-snap-type:x proximity; scrollbar-width:thin; scrollbar-color:#9eaf91 transparent; }
+  .republic-build-grid button { flex:0 0 112px; scroll-snap-align:start; }
+}
+@media(max-width:560px) {
+  .editorial-shell:has(.republic[data-focus=true]) .mobile-dock { display:none; }
+  .editorial-shell.with-party-rail:has(.republic[data-focus=true]) { padding-bottom:env(safe-area-inset-bottom,0px)!important; }
+  .editorial-shell:has(.republic[data-focus=true]) .site-header { height:58px; }
+  .editorial-shell:has(.republic[data-focus=true]) .games-room { padding-top:4px; }
+  .editorial-shell:has(.republic[data-focus=true]) main { padding-inline:14px; }
+  .republic { padding-top:6px; }
+  .republic-heading { margin-bottom:9px; }
+  .republic-heading h1 { font-size:26px; }
+  .republic-heading p { max-width:none; font-size:11px; margin-top:4px; }
+  .republic-save { font-size:9px; max-width:80px; }
+  .republic-focus-toggle { font-size:10px; }
+  .republic-topline { padding:8px 0; margin-bottom:8px; }
+  .republic-topline>div { width:auto; }
+  .republic-topline>div:first-child { display:block; }
+  .republic-topline>div:first-child>span { display:block; font-size:10px; margin-top:2px; }
+  .republic-topline .republic-resources { gap:10px; }
+  .republic-resources span { font-size:0; gap:4px; }
+  .republic-resources b { font-size:16px; }
+  .republic-actions { grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; margin-top:8px; }
+  .republic-actions button { flex-direction:column; gap:4px; min-height:62px; font-size:10px; position:relative; }
+  .republic-actions b { position:absolute; right:5px; top:4px; font-size:8px; }
+  .republic-view-switch { margin-bottom:4px; }
 }
 @media(prefers-reduced-motion:reduce) { .republic *,.republic-dialog { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }

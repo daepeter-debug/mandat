@@ -65,3 +65,19 @@ Astra začala opravný priechod (pravidlá odmien, presun až po potvrdení, roz
 - V prehliadači: plná štvrť so všetkými 24 typmi kúskov aj začiatočná štvrť na 800 px a 375 px (mobil bez vodorovného posunu), katalóg Stavať, dialóg zásielky, pohľadnica stanice, karta v Herni. Plná mapa má okolo 2 400 SVG prvkov.
 
 **Konkrétny ďalší krok:** Peter si pozrie štvrť na mobile; ak sa páči, zlúčiť vetvu `republika-grafika` do main (nasadenie).
+
+## 30. 9. 2026 — lokálna ilustrovaná ukážka a priestor pre hru
+
+- Zapnutý režim sústredenia ukryje politický panel a horné záložky, zmenší hlavičku. Na úzkom mobile ukryje aj globálnu spodnú navigáciu. Návrat cez „Zobraziť celý web“, značku Mandát alebo „Všetky hry“ zostáva dostupný. CSS je podmienené aktívnou republikou; ostatné sekcie sa nemenia.
+- Mobil má kompaktné zdroje, aktuálny cieľ nad mapou s odkazom na celý projekt a štyri herné akcie v jednom rade. Katalóg do 800 px používa horizontálny rad, neodsúva projekt mnohými riadkami kariet.
+- Dom, škola, park a pôvodná opustená stanica majú nové transparentné ilustrácie. Prepínač „Ilustrácie / Pôvodná kresba“ umožní porovnanie v tej istej štvrti. Zrekonštruované stanice zachovávajú svoje odlišné SVG varianty. Sada je označená ako ukážka štyroch objektov, ďalšie budovy zatiaľ nie sú prekreslené.
+- Tlmená lúka, teplejší podklad, krátke objavenie budovy a hover katalógu; rešpektuje sa reduced-motion. Herný model, ekonomika a formát uloženia bez zmeny.
+- Ilustrácie majú spolu ~804 kB; zdroj a zadanie v `public/images/games/republic/README.md`. V prípade chyby načítania sa použije existujúca SVG grafika.
+
+### Overenie
+
+- TypeScript, ESLint troch upravených komponentov, produkčný build a `verify-republic` PASS. Testy pokrývajú 73 ciest kapitolou aj ukladanie. Impeccable detector: `[]`. Build ponecháva upozornenie na veľké balíky aplikácie.
+- Lokálny prehliadač: desktop a mobilný override 390 × 844 (reálna šírka obsahu 375 px kvôli scrollbar); šírka dokumentu neprekračuje viewport. Katalóg 8 položiek má výšku 223,5 px. Overené otvorenie a zavretie katalógu, výber Parku, náhľad C4 s napojením a cenou, zrušenie bez zápisu, prepínač ilustrácií a obnovenie politického panelu. Konzola bez chýb.
+- Náhľady v `docs/mala-republika/previews/`: mobile-illustrations.png, desktop-illustrations.png. Nejde o test fyzického telefónu ani kompletný audit čítačky obrazovky.
+
+**Stav:** iba lokálne, bez commitu/pushu/nasadenia. Peter posúdi nový výtvarný smer v `http://localhost:5173/?v=game&g=republic`. Až potom rozšíriť ilustrácie na zvyšné budovy a postavy. Účty a cloudové uloženie zostávajú samostatný priechod B.

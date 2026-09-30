@@ -1,5 +1,8 @@
-import { memo, type ReactNode } from "react";
+import { createContext, memo, useContext, useState, type ReactNode } from "react";
 import type { Branch, ItemId } from "@/lib/republic";
+
+export const RepublicIllustrations = createContext(false);
+const illustratedIds = new Set<ItemId>(["house", "school", "station", "park"]);
 
 /*
   Kúsky stolovej diorámy Malej republiky.
@@ -707,6 +710,13 @@ function Decoration({ id }: { id: ItemId }) {
 
 // Kúsky sa kreslia z primitívnych props, takže memo ušetrí prepočet celej mapy pri každom ťuknutí.
 export const TownPiece = memo(function TownPiece({ id, branch = null, finished = false, variant = 0 }: { id: ItemId; branch?: Branch | null; finished?: boolean; variant?: number }) {
+  const illustrated=useContext(RepublicIllustrations);
+  const [failed,setFailed]=useState(false);
+  // Restored stations keep their distinct branch artwork; this pilot covers the abandoned station.
+  if(illustrated&&!failed&&illustratedIds.has(id)&&!(id==="station"&&(branch||finished))) {
+    const size=id==="house"?82:id==="park"?94:96;
+    return <image href={`/images/games/republic/${id}-v1.png`} x={-size/2} y={18-size} width={size} height={size} onError={()=>setFailed(true)}/>;
+  }
   switch (id) {
     case "house": return <House variant={variant}/>;
     case "school": return <School/>;

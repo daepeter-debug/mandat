@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Dialog } from "radix-ui";
-import { Archive, ArrowRight, Check, Coins, Hammer, MapPinned, PackageOpen, X, Boxes, Move, Undo2, List, Map, Download, AlertCircle } from "lucide-react";
+import { Archive, ArrowRight, Check, Coins, Hammer, MapPinned, PackageOpen, X, Boxes, Move, Undo2, List, Map, Download, AlertCircle, Maximize2, Minimize2, Flag } from "lucide-react";
 import RepublicMap from "@/components/republic-map";
-import RepublicArt from "@/components/republic-art";
+import RepublicArt, { RepublicIllustrations } from "@/components/republic-art";
 import { accrue, branchNames, branches, catalog, combos, connected, currentStep, decorationIds, distance, execute, homesServed, pools, rarityNames, slovakDay, stepCost, taskClaimed, taskNames, taskReady, tasksFor, type Command, type DecorationId, type ItemId, type Point } from "@/lib/republic";
 import { browserStore, republicKey, type Snapshot } from "@/lib/republic-storage";
 import "@/app/republic-game.css";
@@ -21,6 +21,8 @@ function downloadBackup(raw:string) {
   a.href=url;a.download="mala-republika-zaloha.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 export default function RepublicGame() {
+  const [focusMode,setFocusMode]=useState(true);
+  const [illustrated,setIllustrated]=useState(true);
   const store=useRef<ReturnType<typeof browserStore>|null>(null),inFlight=useRef(false),parcelButton=useRef<HTMLButtonElement>(null);
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false),[conflict,setConflict]=useState(false);
   const [notice,setNotice]=useState(""),[saveError,setSaveError]=useState(false),[retry,setRetry]=useState<Command|null>(null);
@@ -97,12 +99,15 @@ export default function RepublicGame() {
   const activeCombos=combos(town);
   const parcel=town.pending;
 
-  return <section className="republic" onKeyDown={e=>{if(e.key==="Escape"){cancel();setPanel(null);setObjectId(null);}}}>
+  return <RepublicIllustrations.Provider value={illustrated}><section className="republic" data-focus={focusMode} onKeyDown={e=>{if(e.key==="Escape"){cancel();setPanel(null);setObjectId(null);}}}>
+    <button className="republic-focus-toggle" aria-pressed={focusMode} onClick={()=>setFocusMode(!focusMode)}>{focusMode?<Minimize2 size={15}/>:<Maximize2 size={15}/>} {focusMode?"Zobraziť celý web":"Sústrediť sa na hru"}</button>
     <header className="republic-heading"><div><h1>Malá republika<span>.</span></h1><p>Veľké veci začínajú v malej štvrti.</p></div><span className={saveError?"republic-save has-error":"republic-save"}>{saveError?<AlertCircle size={15}/>:<Check size={15}/>} {busy?"Ukladám…":saveError?"Neuložené":conflict?"Novší postup v inej karte":"Uložené v zariadení"}</span></header>
     {(conflict||saveError)&&<div className="republic-storage-alert" role="alert"><p>{conflict?"Iná karta zmenila mesto. Tvoj nepotvrdený ťah sa nezapísal.":notice}</p><button disabled={busy} onClick={()=>conflict?void refresh():void run(retry)}>{conflict?"Načítať novší postup":"Skúsiť uložiť znova"}</button></div>}
     <div className="republic-topline"><div><strong>{town.name}</strong><span>Projekt {town.completed.length} / 7</span></div><div className="republic-resources"><span><Coins size={16}/><b>{town.coins}</b> mincí</span><span><Boxes size={16}/><b>{town.materials}</b> materiálov</span></div></div>
     <div className="republic-layout">
       <div className="republic-stage">
+        <div className="republic-art-switch" role="group" aria-label="Grafika štvrte"><span>Grafika</span><button aria-pressed={illustrated} onClick={()=>setIllustrated(true)}>Ilustrácie</button><button aria-pressed={!illustrated} onClick={()=>setIllustrated(false)}>Pôvodná kresba</button><small>Ukážka 4 objektov</small></div>
+        <a className="republic-current-goal" href="#republic-project"><Flag size={19}/><span><b>{dailyDone?"Dnešný krok je hotový":step?step.name:"Stanica znova žije"}</b><small>{dailyDone?"Môžeš ďalej stavať a plniť objednávky.":step?.goal??"Uprav si štvrť a objav ďalšie kombinácie."}</small></span><ArrowRight size={17}/></a>
         <div className="republic-view-switch" role="group" aria-label="Zobrazenie štvrte"><button aria-pressed={view==="map"} onClick={()=>setView("map")}><Map size={15}/> Mapa</button><button aria-pressed={view==="list"} onClick={()=>setView("list")}><List size={15}/> Zoznam a políčka</button><span>6 × 6 políčok</span></div>
         {view==="map"?<RepublicMap town={town} editing={!!intent} selected={selected} target={target} onCell={selectCell} onObject={setObjectId}/>:<div className="republic-list-view">
           <p>{intent?"Vyber cieľové políčko. Stavbu potvrdíš pod mapou.":"Vyber budovu na mriežke alebo v zozname."}</p>
@@ -133,7 +138,7 @@ export default function RepublicGame() {
         <p className="republic-notice" role="status" aria-live="polite">{notice||"Tip na začiatok: postav park pri škole a pripoj ho k ceste."}</p>
       </div>
       <aside className="republic-side">
-        <article className="republic-project">
+        <article className="republic-project" id="republic-project" tabIndex={-1}>
           {step?<><div className="republic-person"><span aria-hidden="true">{step.speaker.slice(0,1)}</span><p><b>{step.speaker}</b><small>{roles[step.speaker as keyof typeof roles]}</small></p><span className="republic-step">Krok {town.completed.length+1}/7</span></div><h2>{step.name}</h2><p>{step.text}</p>
             <ol className="republic-progress" aria-label="Postup kapitoly">{Array.from({length:7},(_,i)=><li key={i} className={i<town.completed.length?"done":i===town.completed.length?"current":""} aria-label={`Krok ${i+1}: ${i<town.completed.length?"hotový":i===town.completed.length?"aktuálny":"neskôr"}`}/>)}</ol>
             {dailyDone&&<p className="republic-tomorrow"><Check size={16}/> Dnešný krok je hotový. Tento dokončíš zajtra; štvrť môžeš ďalej upravovať.</p>}
@@ -164,5 +169,5 @@ export default function RepublicGame() {
         {saveError&&<p role="alert">Odmena sa nepotvrdila. Skús výber znova; pôvodná ponuka je zachovaná.</p>}
       </Dialog.Content></Dialog.Portal>
     </Dialog.Root>
-  </section>;
+  </section></RepublicIllustrations.Provider>;
 }
