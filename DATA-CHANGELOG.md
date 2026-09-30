@@ -1,5 +1,21 @@
 # Evidencia údajov a rozsahu
 
+## 30. 9. 2026 — oprava: súčet Modelu Mandát nad 100 % (Claude)
+
+Po doplnení septembrového Infostatu dával Model Mandát k 22. 9. súčet 101,5 %. Vlastný model pri súčte nad 100 % scenár nevypočítal.
+
+**Príčina:** priemer sa počíta za každú stranu zvlášť, len z meraní, ktoré ju uvádzajú. Malé subjekty, ktoré uvádza jedna či dve agentúry, sa tak k súčtu pripočítali:
+- Kotlebovci – ĽSNS 1,5 % len z Infostatu,
+- ZA ĽUDÍ z Focusu a NMS,
+- KÚ a Strana vidieka len z Focusu.
+
+Ostatné agentúry ich podiel rozdeľujú inak alebo ho neuvádzajú.
+
+**Oprava:** stranu do bodu zaraďujeme, len ak ju v ňom uvádza väčšina meraní. Ostatné zostávajú v nerozdelenej podpore.
+- Súčet je teraz 97,4 % a v celom časovom rade najviac 99,7 %.
+- Hodnoty hlavných strán ani rozdelenie kresiel sa nezmenili.
+- verify-data stráži, aby súčet v žiadnom bode nepresiahol 100 %. Pravidlo je vysvetlené v metodike agregátora.
+
 ## 29. 9. 2026, 20:00 — večerná aktualizácia Dňa v politike (Claude)
 
 Hlavná správa dňa (nedôvera Tarabovi) je doplnená o večerné reakcie. Zdrojom je Minúta po minúte medzi 19:06 a 19:42.

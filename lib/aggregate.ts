@@ -3,6 +3,9 @@ import { archive, parties, type Poll } from "./polls.ts";
 export const aggregateAgencies = ["AKO", "FOCUS", "INFOSTAT", "IPSOS", "NMS"] as const;
 export const aggregateWindowDays = 60;
 export const aggregateHalfLifeDays = 30;
+/** Strana vstupuje do bodu, len ak ju uvádza väčšina meraní v bode. Podiel z jednej či dvoch agentúr by sa inak
+    pripočítal k súčtu, ktorý ostatné agentúry rozdeľujú inak (stranu neuvádzajú), a súčet by prekročil 100 %. */
+export const reportedByMajority = (reporting:number, selected:number) => reporting * 2 > selected;
 
 export type AggregateValue = {
   partyId: string;
@@ -42,7 +45,7 @@ export function aggregateAt(asOf:string, source:Poll[]=archive):AggregatePoint {
       const precision = Math.max(.7,Math.min(1.4,Math.sqrt(sample/1000)));
       return {poll:p,value:p.values[party.id],weight:recency*precision,sample};
     });
-    if(!inputs.length) continue;
+    if(!inputs.length || !reportedByMajority(inputs.length,selected.length)) continue;
     const weightSum=inputs.reduce((sum,x)=>sum+x.weight,0);
     const normalized=inputs.map(x=>({...x,alpha:x.weight/weightSum}));
     const mean=normalized.reduce((sum,x)=>sum+x.alpha*x.value,0);

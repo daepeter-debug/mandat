@@ -6,7 +6,7 @@ import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, financeCompare, f
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
 import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies, dataVerified } from '../lib/polls.ts';
 import { programmes, positions } from '../lib/programmes.ts';
-import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, aggregatePolls, currentAggregate } from '../lib/aggregate.ts';
+import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, aggregatePolls, aggregateSeries, currentAggregate } from '../lib/aggregate.ts';
 import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../lib/blocs.ts';
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { durationLabel } from '../lib/government-tenure.ts';
@@ -138,6 +138,8 @@ assert.equal(new Set(aggregatePolls.map(p=>p.agency)).size,aggregatePolls.length
 assert(aggregatePolls.length>=3,'Aktuálny agregát potrebuje aspoň tri agentúry');
 assert.equal(currentAggregate.pollIds.length,aggregatePolls.length);
 for(const value of Object.values(currentAggregate.values)) { assert(value.lower<=value.value&&value.value<=value.upper,'Priemer musí ležať v pásme'); assert(value.agencies.length===value.polls,'Počet vstupov sedí'); }
+for(const point of [...aggregateSeries,currentAggregate]) { const sum=Object.values(point.values).reduce((a,v)=>a+v.value,0); assert(sum<=100.05,`Súčet Modelu Mandát ${point.date} je ${sum.toFixed(1)} % (nad 100 %)`); }
+assert.equal(currentAggregate.values.lsns,undefined,'Stranu, ktorú uvádza len menšina agentúr v bode, do priemeru nezaraďujeme');
 const missingAggregate=aggregateAt('2026-09-07',[{...latest,id:'missing-test',agency:'NMS',values:{ps:20}}]);
 assert.equal(missingAggregate.values.smer,undefined,'Chýbajúca strana sa v agregáte nesmie zmeniť na nulu');
 assert.equal(missingAggregate.values.ps.value,20,'Jediný dostupný vstup sa zachová');
