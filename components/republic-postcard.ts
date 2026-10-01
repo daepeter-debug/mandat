@@ -1,4 +1,4 @@
-import type { festivalPostcardData } from "@/lib/republic-celebration";
+import { slovakDate, type festivalPostcardData } from "@/lib/republic-celebration";
 
 type Card = NonNullable<ReturnType<typeof festivalPostcardData>>;
 const FONT='"IBM Plex Sans Variable", "IBM Plex Sans", "Segoe UI", Arial, sans-serif';
@@ -60,7 +60,7 @@ export async function festivalPostcardImage(source:SVGSVGElement,card:Card):Prom
   font(500,30);ctx.fillText(fit(ctx,card.title,744),56,138);
   [0,1,2].forEach(i=>star(ctx,922+i*39,126,i<card.stars));
   ctx.save();ctx.beginPath();ctx.roundRect(36,170,1008,756,16);ctx.clip();ctx.drawImage(image,36,170,1008,756);ctx.restore();
-  font(500,26);ctx.fillStyle="#4c614a";ctx.fillText(`Pohľadnica zo slávnosti · ${card.day.split("-").reverse().join(". ")}`,56,970);
+  font(500,26);ctx.fillStyle="#4c614a";ctx.fillText(`Pohľadnica zo slávnosti · ${slovakDate(card.day)}`,56,970);
   card.reactions.forEach((r,i)=>{
     const y=1016+i*84;
     font(600,26);ctx.fillStyle="#20392f";ctx.fillText(r.name,56,y);

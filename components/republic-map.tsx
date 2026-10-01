@@ -2,9 +2,10 @@
 
 import { useEffect, useId, useRef, useState, type RefObject } from "react";
 import { Grid2X2, LocateFixed, Minus, Plus } from "lucide-react";
-import { catalog, connected, distance, network, type ItemId, type Point, type RepublicState } from "@/lib/republic";
+import { catalog, connected, distance, network, type ItemId, type Placed, type Point, type RepublicState } from "@/lib/republic";
+import type { Gathering } from "@/lib/republic-living";
 import { TownPiece, seg, type V } from "@/components/republic-art";
-import { LivingWalkers, LivingGatherings, NightWindows, SeasonalScene, RiverFlow, useLivingScene } from "@/components/republic-living";
+import { LivingWalkers, NightWindows, ResidentSprite, SeasonalScene, RiverFlow, useLivingScene } from "@/components/republic-living";
 import { CelebrationGuests, CelebrationLanterns, useCelebrationOpening } from "@/components/republic-celebration";
 import { celebrationScene, CELEBRATION_SECONDS } from "@/lib/republic-celebration";
 
@@ -14,6 +15,19 @@ const cells=Array.from({length:36},(_,i)=>({x:i%6,y:Math.floor(i/6)}));
 // Geometry stays independent of artwork and saved coordinates.
 const hash=(s:string)=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h;};
 const coords=(p:Point)=>`${String.fromCharCode(65+p.x)}${p.y+1}`;
+type Layer={kind:"piece";piece:Placed;depth:number;tie:number}|{kind:"person";person:Gathering;depth:number;tie:number};
+/** Budovy a ľudia pri nich v jednom poradí kreslenia: človek stojí v prednej časti svojho políčka (hĺbka + 0,5). */
+const layers=(town:RepublicState,people:Gathering[]):Layer[]=>[
+  ...town.placed.map(piece=>({kind:"piece" as const,piece,depth:piece.x+piece.y,tie:piece.x})),
+  ...people.map(person=>({kind:"person" as const,person,depth:person.point.x+person.point.y+.5,tie:person.point.x})),
+].sort((a,b)=>a.depth-b.depth||a.tie-b.tie);
+function GatheringPerson({person,active}:{person:Gathering;active:boolean}) {
+  const p=at(person.point);
+  return <g className="republic-gatherings" data-running={active}><g transform={`translate(${p.x-10+person.offset*14} ${p.y+18})`} data-activity={person.activity}>
+    <g transform={person.offset?"scale(-1 1)":undefined}><ResidentSprite kind={person.kind}/></g>
+    {person.activity==="play"&&person.offset===0&&<circle className="republic-play-ball" cx="7" cy="0" r="2.2" fill="#efe3b0" stroke="#a97246" strokeWidth=".7"/>}
+  </g></g>;
+}
 
 export default function RepublicMap({town,editing,selected,target,suggested=[],onCell,onObject,captureRef,festivalReplay=0,festivalStill=false}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void;captureRef?:RefObject<SVGSVGElement|null>;festivalReplay?:number;festivalStill?:boolean}) {
   const [zoom,setZoom]=useState(1),[focus,setFocus]=useState(14),[grid,setGrid]=useState(false);
@@ -66,7 +80,7 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
         </defs>
         <g aria-hidden="true" pointerEvents="none">
           <rect x="-40" width="640" height="480" fill="#b5c58c"/>
-          {terrainReady&&!terrainFailed&&<image href="/images/games/republic-terrain-v1.webp" x="-40" y="0" width="640" height="480" preserveAspectRatio="none" onError={()=>setTerrainFailed(true)}/>}
+          {(terrainReady||festivalStill)&&!terrainFailed&&<image href="/images/games/republic-terrain-v1.webp" x="-40" y="0" width="640" height="480" preserveAspectRatio="none" onError={()=>setTerrainFailed(true)}/>}
         </g>
         {terrainReady&&!terrainFailed&&visible&&<RiverFlow active={active}/>}
         {cells.map(p=>{
@@ -84,9 +98,9 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
           </g>;
         })}
         {scene&&visible&&<LivingWalkers scene={scene} active={active}/>}
-        {celebration&&visible&&<CelebrationGuests scene={celebration} seconds={celebrationSeconds} active={active&&!festivalStill}/>}
+        {celebration&&(visible||festivalStill)&&<CelebrationGuests scene={celebration} seconds={celebrationSeconds} active={active&&!festivalStill}/>}
         <g pointerEvents="none" aria-hidden="true">
-          {town.placed.slice().sort((a,b)=>(a.x+a.y)-(b.x+b.y)||a.x-b.x).map(o=>{const c=at(o);return <g className="republic-piece" key={o.instanceId} transform={`translate(${c.x} ${c.y})`}>
+          {layers(town,scene&&visible?scene.gatherings:[]).map(layer=>{if(layer.kind==="person")return <GatheringPerson key={layer.person.key} person={layer.person} active={active}/>;const o=layer.piece,c=at(o);return <g className="republic-piece" key={o.instanceId} transform={`translate(${c.x} ${c.y})`}>
             <TownPiece id={o.id} branch={o.id==="station"?town.branch:null} finished={town.completed.includes("opening")} variant={hash(o.instanceId)}/>
             {!o.fixed&&catalog[o.id].kind==="building"&&<g transform="translate(30 10)"><circle r="5" fill={connected(town,o)?"#315e4b":"#a86343"} stroke="#fff9df" strokeWidth="1.6"/>{!connected(town,o)&&<path d="M-2.2 0h4.4" stroke="#fff9df" strokeWidth="1.3"/>}</g>}
           </g>;})}
@@ -102,10 +116,9 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
         {scene&&<>
           <rect aria-hidden="true" pointerEvents="none" x="-40" y="0" width="640" height="480" fill="#172641" opacity={scene.time.night*.48}/>
           <NightWindows town={town} night={scene.time.night}/>
-          {visible&&<LivingGatherings scene={scene} active={active}/>}
           {visible&&<SeasonalScene scene={scene} active={active}/>}
         </>}
-        {celebration&&visible&&<CelebrationLanterns scene={celebration} seconds={celebrationSeconds} active={active&&!festivalStill}/>}
+        {celebration&&(visible||festivalStill)&&<CelebrationLanterns scene={celebration} seconds={celebrationSeconds} active={active&&!festivalStill}/>}
         <g className="republic-input-layer">
           {cells.map((p,i)=>{const o=town.placed.find(x=>distance(x,p)===0),road=town.roads.some(x=>distance(x,p)===0);
             return <g key={i} role="button" tabIndex={focus===i?0:-1} data-cell={`${p.x}-${p.y}`} aria-label={`${String.fromCharCode(65+p.x)}${p.y+1}: ${o?catalog[o.id].name:road?"cesta":"voľné miesto"}${suggested.some(s=>distance(s,p)===0)?", odporúčané pre úlohu":""}`} aria-pressed={target?distance(p,target)===0:undefined} onFocus={()=>{setFocus(i);setHover(p);}} onPointerEnter={()=>setHover(p)} onClick={()=>pick(p)} onKeyDown={e=>keyDown(e,p)}>

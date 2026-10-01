@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (1ff2f38674) — needitovať ručne. Pravidiel: 1345, prefarbených: 1064. */
+/* Generované scripts/build-dark.mjs z 31 súborov (249a8538b4) — needitovať ručne. Pravidiel: 1391, prefarbených: 1107. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3254,14 +3254,7 @@ html[data-theme="dark"] .games-entry {
     border: 1px solid #41463d
 }
 html[data-theme="dark"] .games-republic-art {
-    background: linear-gradient(180deg, #eef2e2 0%, #dbe5c8 46%, #b9cc98 100%)
-}
-html[data-theme="dark"] .games-republic-art::before {
-    background: repeating-linear-gradient(90deg, #cfdcb7 0 22px, #c4d3ab 22px 44px)
-}
-html[data-theme="dark"] .games-republic-art::after {
-    background: #f6e3a4;
-    box-shadow: 0 0 0 10px #f6e3a433
+    background: #d7dfc0
 }
 html[data-theme="dark"] .games-parliament {
     background: #20392f
@@ -3932,6 +3925,168 @@ html[data-theme="dark"] .qa-year input {
     border: 1px solid #474e42;
     background: #262c29;
     color: #d1e7de
+}
+html[data-theme="dark"] .festival {
+    color: color-mix(in oklab, var(--rep-ink, #d1e7de) 68%, #fff)
+}
+html[data-theme="dark"] .festival-heading p {
+    color: #c5d3bc
+}
+html[data-theme="dark"] .festival-mission {
+    background: #2f351e
+}
+html[data-theme="dark"] .festival-steps {
+    border-bottom: 1px solid #4e5246
+}
+html[data-theme="dark"] .festival-steps li {
+    color: #c6d0bd
+}
+html[data-theme="dark"] .festival-steps li[aria-current=step] {
+    color: #d1e7de;
+    box-shadow: inset 0 -3px #315e4b
+}
+html[data-theme="dark"] .festival-steps li.is-done {
+    color: #bbe2d1
+}
+html[data-theme="dark"] .festival-options>button {
+    border: 1px solid #4c5144;
+    background: #262c29;
+    color: inherit
+}
+html[data-theme="dark"] .festival-options>button>svg {
+    color: #cadbad
+}
+html[data-theme="dark"] .festival-options small {
+    color: #c5d3bc
+}
+html[data-theme="dark"] .festival-options>button:hover:not(:disabled),html[data-theme="dark"] .festival-options>button[aria-pressed=true] {
+    background: #272b1c;
+    border-color: #82a697
+}
+html[data-theme="dark"] .festival-impact {
+    color: #ccdbc3
+}
+html[data-theme="dark"] .festival .festival-tip {
+    color: #c5d3bc
+}
+html[data-theme="dark"] .festival-site-preview,html[data-theme="dark"] .festival-plan {
+    border-top: 1px solid #4c5144
+}
+html[data-theme="dark"] .festival .festival-discovery {
+    background: #36311f;
+    color: #dedfc8
+}
+html[data-theme="dark"] .festival-replan {
+    color: #c5d3bc;
+    text-decoration: underline
+}
+html[data-theme="dark"] .festival-readiness>span {
+    color: #c5d3bc
+}
+html[data-theme="dark"] .festival-readiness progress {
+    border: 0;
+    background: #313528;
+    color: #c5d7ae
+}
+html[data-theme="dark"] .festival-readiness progress::-webkit-progress-bar {
+    background: #313528
+}
+html[data-theme="dark"] .festival-readiness progress::-webkit-progress-value {
+    background: #627847
+}
+html[data-theme="dark"] .festival-readiness progress::-moz-progress-bar {
+    background: #627847
+}
+html[data-theme="dark"] .festival-celebration-caption strong {
+    color: #d1e7de
+}
+html[data-theme="dark"] .festival-celebration-caption>button {
+    color: #bbe2d1
+}
+html[data-theme="dark"] .festival-postcard {
+    border-top: 1px solid #4c5144
+}
+html[data-theme="dark"] .festival-postcard p {
+    color: #bfd1be
+}
+html[data-theme="dark"] .festival-postcard img {
+    box-shadow: 0 8px 24px #20392f1a
+}
+html[data-theme="dark"] .festival-postcard button {
+    background: #315e4b;
+    color: #fffefa
+}
+html[data-theme="dark"] .festival-postcard-actions>button:last-child {
+    background: #2f351e;
+    color: #d1e7de
+}
+html[data-theme="dark"] .festival-locations>button {
+    border: 1px solid #4c5144
+}
+html[data-theme="dark"] .festival-locations>button[aria-pressed=true] {
+    background: #303821;
+    border-color: #82a697
+}
+html[data-theme="dark"] .festival-prepared {
+    border-top: 1px solid #4c5144
+}
+html[data-theme="dark"] .festival-incident {
+    color: #e4c7ae
+}
+html[data-theme="dark"] .festival-stars {
+    color: #f5cb90
+}
+html[data-theme="dark"] .festival-reactions p {
+    border-top: 1px solid #4a4d41
+}
+html[data-theme="dark"] .festival-launch {
+    background: #2f351e
+}
+html[data-theme="dark"] .festival-launch small {
+    color: #c8d6bd
+}
+html[data-theme="dark"] .festival button:focus-visible {
+    outline: 3px solid #795c31;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .festival-story {
+    color: #c3d8c2
+}
+html[data-theme="dark"] .festival-journey {
+    border-bottom: 1px solid #4e5246
+}
+html[data-theme="dark"] .festival-journey li:not(:last-child)::after {
+    background: #414a33
+}
+html[data-theme="dark"] .festival-journey li>span:first-child {
+    border: 1px solid #52574a;
+    color: #c7d1bd;
+    background: #24241e
+}
+html[data-theme="dark"] .festival-journey li.is-complete>span:first-child {
+    background: #365744;
+    color: #fff;
+    border-color: #87a292
+}
+html[data-theme="dark"] .festival-journey li[aria-current=step]>span:first-child {
+    outline: 2px solid #87a292;
+    outline-offset: 3px;
+    color: #d1e7de
+}
+html[data-theme="dark"] .festival-journey p {
+    color: #c5d3bc
+}
+html[data-theme="dark"] .festival-next-day {
+    border-block: 1px solid #4e5246
+}
+html[data-theme="dark"] .festival-next-day small {
+    color: #dacfba
+}
+html[data-theme="dark"] .festival-result-actions>button {
+    border: 1px solid #52574a
+}
+html[data-theme="dark"] .republic-daily-entry {
+    color: #c3d8c2
 }
 html[data-theme="dark"] .resp-block-head h2 {
     color: #d1e7de

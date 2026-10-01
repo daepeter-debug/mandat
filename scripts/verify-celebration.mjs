@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createTown, network, readSave } from '../lib/republic.ts';
-import { celebrationScene, celebrationFrame, festivalPostcardData, CELEBRATION_SECONDS } from '../lib/republic-celebration.ts';
+import { celebrationScene, celebrationFrame, festivalPostcardData, slovakDate, CELEBRATION_SECONDS } from '../lib/republic-celebration.ts';
 const base=createTown('2026-10-01');
 assert.equal(celebrationScene(base),null);assert.equal(festivalPostcardData(base),null);
 for(const theme of ['books','food','music']) {
@@ -40,4 +40,5 @@ const noRoads=structuredClone(base);noRoads.roads=[];
 noRoads.festival={day:base.lastDay,best:0,round:1,theme:'food',site:{x:2,y:2},mood:[5,5,5],discovery:null,preparations:[],incident:'rain',response:null};
 assert.equal(celebrationScene(noRoads).guests.length,3,'Square remains walkable');
 assert(readSave(base),'Old saves load without additional fields');
+assert.equal(slovakDate('2026-10-01'),'1. 10. 2026','Dátum bez núl na začiatku');assert.equal(slovakDate('2026-12-24'),'24. 12. 2026');
 console.log('PASS celebration: themes, opening, crowd by satisfaction, deterministic paving positions, postcard data, unchanged old saves');

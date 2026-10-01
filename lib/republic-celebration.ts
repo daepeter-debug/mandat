@@ -3,6 +3,8 @@ import { festivalResult, neighbours, themes, type Theme } from "./republic-festi
 import { sceneHash, type ResidentKind } from "./republic-living.ts";
 
 export const CELEBRATION_SECONDS = 24;
+/** Slovenský zápis dátumu bez núl na začiatku: 2026-10-01 → „1. 10. 2026“. */
+export const slovakDate = (day: string) => { const [y, m, d] = day.split("-").map(Number); return `${d}. ${m}. ${y}`; };
 export type FestivalGuest = {
   key: string; kind: ResidentKind; point: Point; offset: Point;
   arrival: number; activity: "watch" | "read" | "picnic" | "dance";

@@ -25,11 +25,15 @@ function downloadBackup(raw:string) {
   const url=URL.createObjectURL(new Blob([raw],{type:"application/json"})),a=document.createElement("a");
   a.href=url;a.download="mala-republika-zaloha.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
+const exploreKey="mandat:republic:v1:explore";
+const readExplore=()=>{try{return localStorage.getItem(exploreKey)==="1";}catch{return false;}};
 export default function RepublicGame() {
   const [festivalVisible,setFestivalVisible]=useState<boolean|null>(null);
   const [focusMode,setFocusMode]=useState(true);
   const [illustrated,setIllustrated]=useState(true);
-  const [introStarted,setIntroStarted]=useState(false),[exploring,setExploring]=useState(false);
+  const [introStarted,setIntroStarted]=useState(false),[exploring,setExploringState]=useState(false);
+  // Voľba „Chcem objavovať sám“ sa pamätá v zariadení mimo uloženia štvrte, aby sa Eva po obnovení stránky neukázala znova.
+  const setExploring=(value:boolean)=>{setExploringState(value);try{if(value)localStorage.setItem(exploreKey,"1");else localStorage.removeItem(exploreKey);}catch{/* úložisko môže byť nedostupné */}};
   const [celebration,setCelebration]=useState<string|null>(null);
   const store=useRef<ReturnType<typeof browserStore>|null>(null),inFlight=useRef(false),parcelButton=useRef<HTMLButtonElement>(null);
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false),[conflict,setConflict]=useState(false);
@@ -43,9 +47,9 @@ export default function RepublicGame() {
     let active=true;store.current=browserStore();
     const initial=store.current.load();
     const initialise=async()=>{
-      if(initial.problem){if(active)setSnapshot(initial);return;}
+      if(initial.problem){if(active){setExploringState(readExplore());setSnapshot(initial);}return;}
       const result=await store.current!.write(initial,null);
-      if(active){setSnapshot(result.ok?result.snapshot:initial);setSaveError(!result.ok);if(!result.ok)setNotice(result.message);setParcelOpen(!!initial.state?.pending);}
+      if(active){setExploringState(readExplore());setSnapshot(result.ok?result.snapshot:initial);setSaveError(!result.ok);if(!result.ok)setNotice(result.message);setParcelOpen(!!initial.state?.pending);}
     };
     void initialise();
     const changed=(e:StorageEvent)=>{if(e.key===republicKey||e.key===null){setConflict(true);setNotice("Novší postup je otvorený v inej karte. Načítaj ho pred ďalším ťahom.");}};
