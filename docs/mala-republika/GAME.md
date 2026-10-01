@@ -125,3 +125,25 @@ Peter odsúhlasil dlhší denný event s jedným cieľom rozdeleným na menšie 
 - Uloženie ostáva v1, pole `festival` je voliteľné; staré mestá fungujú bez migrácie. Zápisy používajú existujúce overenie revízie a ochranu pred súbežnými ťahmi.
 
 Toto je jeden druh udalosti s tromi zadaniami a tromi komplikáciami, nie hotová knižnica denných príbehov. Dĺžka hrania ani dlhodobá návratnosť zatiaľ nie sú overené hráčmi. Implementácia: `lib/republic-festival.ts`, UI: `components/republic-festival.tsx`, overenie: `node scripts/verify-festival.mjs`.
+
+## Príbeh štvrte — sedem herných dní (lokálna revízia 1. 10.)
+
+Na používateľovu požiadavku plynulého pokračovania po úvode nadväzuje príbeh slávností. Po otvorení knižnice hlavná akcia pozve na prvú slávnosť; vedľajšia umožní najprv upravovať štvrť. Rozpracovaná staršia denná výzva sa zachová a môže sa dohrať pred vstupom do príbehu.
+
+| Deň | Osobitný cieľ | Spokojní susedia | Rozpočet / potrebná rezerva |
+| --- | --- | --- | --- |
+| 1 Pozvánka pre susedov | Nina aspoň 4/5 | aspoň 2 | 8 / 1 |
+| 2 Piknik za pár bodov | Piknik a spolu aspoň 11 bodov spokojnosti | aspoň 2 | 7 / 2 |
+| 3 Pokojné popoludnie | Tichý kútik a Eva aspoň 4/5 | aspoň 2 | 7 / 1 |
+| 4 Milanov veľký deň | Milan aspoň 4/5 | aspoň 2 | 8 / 2 |
+| 5 Nikto bokom | Spolu aspoň 11 bodov spokojnosti | všetci 3 | 9 / 1 |
+| 6 Slávnosť aj v daždi | Krytý stánok aj uvítací stolík, vždy dážď | aspoň 2 | 8 / 2 |
+| 7 Štvrť, ktorá drží spolu | Objavené spojenie s okolitou budovou, vždy dážď | všetci 3 | 8 / 1 |
+
+- Každý deň používa existujúce päťfázové pravidlá slávnosti. Tri hviezdy označujú tri konkrétne splnené ciele, nie skóre náhody. Najlepší výsledok 3/3 odomkne ďalší deň hneď; neúspešný pokus možno zopakovať alebo preplánovať. Retry nemení komplikáciu a nezmaže lepší výsledok.
+- Herné dni sú oddelené od skutočného dátumu. Posun neobnovuje zásielky, objednávky, mince ani materiály a neobchádza denné limity obnovy stanice. Staršia rozpracovaná slávnosť prežije polnoc.
+- Siedmy deň jednorazovo odomkne existujúcu dekoráciu `ceremonial-gate`. Dá sa postaviť zadarmo, neudeľuje opakovateľné zdroje. Ak už bola odomknutá inak, nevzniká duplikát.
+- Skutočná denná výzva ostáva osobitná možnosť. Prepnutie režimu neprepisuje výsledky príbehu; aktuálny pokus sa najprv musí dokončiť. Po príbehu zostáva denná výzva a stavanie.
+- Save v1 má voliteľné `festivalJourney: { stage, scores[7] }` a voliteľné `festival.mode/stage`. Staré slávnosti bez režimu sa považujú za denné; staré mestá fungujú bez resetu. Validátor kontroluje rozsahy, dokončené predchádzajúce dni a zhodu najlepšieho skóre.
+
+Je to sedem variantov jedného priestorového hlavolamu s príbehovými textami a odmenou, nie sedem rôznych minihier ani nekonečný príbehový generátor. Overenie `scripts/verify-journey.mjs` nachádza konkrétne riešenia po parkovom aj záhradnom úvode pre všetky tri druhy komplikácií; nehľadá vyčerpávajúco všetky možné cesty.

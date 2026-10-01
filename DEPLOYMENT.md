@@ -52,3 +52,9 @@ V Cloudflare: Workers & Pages → `mandat-preview` → Settings → Builds → p
 Na žiadosť Petra nasadený úvod s Evou, denná slávnosť Malej republiky a oprava nového spustenia z mobilnej ikony (Prehľad; reload hry a explicitné skratky sa zachovajú). Build, dátové/herné testy, TypeScript, ESLint a dry-run prešli. Priamy deploy verzia `b90098ea-06a4-4587-8e91-781ec453d01f`; adresa zostáva `https://mandat-preview.mandat.workers.dev`.
 
 Online kontrola mobilného viewportu: domovská adresa otvorí Prehľad, Viac zatvorené; `/?v=game&g=republic` otvorí hru s dennou výzvou, začatie a reload ukladajú stav. Bez chýb konzoly a bez vodorovného pretekania pri obsahu 375 px. Fyzické otvorenie z ikony overí Peter; samotný návrat už bežiacej aplikácie z pozadia hru neprerušuje. Service worker cache `2026-10-01` nemení localStorage hier.
+
+## Nasadenie sedemdňového príbehu 1. 10. 2026
+
+Na pokyn „ok nasad“ nasadené plynulé pokračovanie z úvodu do siedmich herných dní, rozdielne ciele/rozpočty, okamžitý posun po splnení 3/3 cieľov a jednorazová slávnostná brána. Použitý overený produkčný build tejto revízie; Wrangler dry-run aj deploy PASS. Priama Worker verzia `0db06e43-b1a4-4dc8-9479-c661a1c659cb`, rovnaká workers.dev adresa.
+
+Online overené načítanie nového UI, dohranie existujúcej dennej slávnosti, otvorenie príbehu a zachovanie prvého rozpracovaného herného dňa po obnovení stránky. Mobilný viewport 390 × 844 bez horizontálneho pretekania (obsah 375 px), konzola bez chýb. Snímka `docs/mala-republika/previews/journey-online-mobile.png`. Herné uloženia sa neresetujú; posledné lokálne testy a rozsah sú v STATUS.md. Zdrojová revízia sa synchronizuje do `main`; Cloudflare Builds môže následne vydať rovnaký kód pod ďalším identifikátorom verzie.

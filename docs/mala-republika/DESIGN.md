@@ -78,3 +78,9 @@ Voľba „Chcem objavovať sám“ sprístupní všetky bežné nástroje; návr
 ## Denná slávnosť 1. 10. 2026
 
 Denná slávnosť pridaná 1. 10. používa tú istú vizuálnu rodinu: teplý podklad, zelené akcenty, ilustrovaná stolová mapa. Nad rozhodnutiami je vždy cieľ, rozpočet, päť krokov a aktuálna spokojnosť troch susedov; čísla sú doplnené textom a progressbarmi. Na desktope sú rozhodnutia vedľa mapy, pod 800 px v jednom stĺpci. Výber miesta posunie pohľad k potvrdeniu, výber zázemia k mape, uložený krok späť k zadaniu. Zoznam miest poskytuje alternatívu ku grafickej mape. Mestské zdroje sú počas udalosti skryté, aby sa neplietli s prípravnými bodmi. Finále ukáže splnené aj chýbajúce ciele, reakcie susedov a slávnostnú vrstvu mapy. Krátke objavenie vlajočiek rešpektuje reduced-motion. Náhľady: `previews/festival-start-desktop.png`, `previews/festival-desktop.png`, `previews/festival-mobile.png`.
+
+### Plynulé pokračovanie do príbehu
+
+Príbeh má kompaktnú sedemdňovú os, text aktuálneho suseda a malý náhľad slávnostnej brány. Os ukazuje dokončené dni aj slovom pre asistívne technológie, aktuálny deň cez `aria-current`; zamknuté dni sa netvária ako klikateľné tlačidlá. Na mobile je odmena pod osou, na desktope napravo. Existujúca dioráma a paleta sa zachovali.
+
+Po úspechu je hlavná akcia „Prejsť na deň …“ s názvom nasledujúcej úlohy; po siedmom „Prevziať slávnostnú bránu“ a následne jej umiestnenie do skutočnej štvrte. Posun otvorí hlavičku nového dňa, aby hráč videl nové zadanie. Bežné prípravné kroky vracajú pohľad k rozhodnutiu. Na mobile majú hlavné akcie plnú šírku a aspoň 44 px. Názvy a dostupné body zodpovedajú uloženému hernému dňu, nezavádzajú hráča tvrdením o posune skutočného kalendára. Náhľady: `previews/journey-desktop.png`, `previews/journey-mobile.png`.

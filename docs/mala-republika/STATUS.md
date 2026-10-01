@@ -136,3 +136,33 @@ Peter požiadal nasadiť lokálnu verziu na mobilné vyskúšanie a uviedol, že
 - Standalone štart je overený izolovaným testom bootstrappingu, nie fyzickým iPhonom/Androidom. Oprava sa vykoná pri novom načítaní dokumentu; samotný návrat do už bežiacej aplikácie z pozadia zámerne neprerušuje rozohranú hru.
 
 **Nasadené.** Ďalší krok: Peter otvorí ikonu nanovo a vyskúša slávnosť na svojom mobile. Ak ikona drží starý dokument, najprv obnoviť stránku alebo aplikáciu úplne zavrieť a znovu otvoriť; nepristupovať k mazaniu herných dát.
+
+## 1. 10. 2026 — plynulé pokračovanie, sedem herných dní (iba lokálne)
+
+Peter požiadal o pokračovanie po úvode, väčšiu výzvu a možnosť posunúť herný deň bez čakania. Zostáva existujúca štvrť aj jadro slávnosti.
+
+- Po otvorení knižnice hlavná akcia „Pripraviť prvú slávnosť“ spustí sedemdňový príbeh. Vedľajšia umožní najprv upravovať štvrť. Staršia rozpracovaná denná výzva sa neresetuje.
+- Sedem zadaní podľa `journeyDays`: privítať Ninu, lacný piknik, pokoj pre Evu, Milanov deň, spokojnosť všetkých, príprava na dážď a finále so spojením s okolím. Menia sa požadované ciele, rozpočet 7–9 a rezerva 1–2 body. Pravidlá a tabuľka sú v GAME.md.
+- Tri splnené ciele odomknú okamžitý ďalší herný deň. Retry zachová komplikáciu aj najlepší výsledok. Po siedmom sa jednorazovo odomkne slávnostná brána s akciou na bezplatné umiestnenie do skutočnej štvrte. Skutočná denná výzva zostáva dostupná zvlášť.
+- Herné dni neposúvajú dátum, zásielky, ekonomiku ani neskoršie denné limity obnovy stanice. Uloženie v1 sa rozširuje voliteľným `festivalJourney` a režimom/číslom dňa v `festival`; staré uloženia sa prijímajú bez resetu.
+- UI: kompaktná os siedmich dní, náhľad odmeny, susedské zadanie a jasná hlavná akcia po výsledku. Posun dňa otvorí jeho hlavičku; bežné prípravné kroky vracajú pohľad k rozhodnutiam. Zachovaná dioráma, teplá paleta a rozloženie pre mobil.
+- Zmeny: `lib/republic-festival.ts`, `lib/republic.ts`, `components/republic-festival.tsx`, `components/republic-game.tsx`, `components/republic-intro.tsx`, `app/republic-festival.css`, nový `scripts/verify-journey.mjs`, GAMES.md a dokumentácia tejto hry.
+
+### Overenie tejto revízie
+
+- `node scripts/verify-journey.mjs` — PASS: šesť celých príbehov po parkovom aj záhradnom úvode pri troch seedoch, 3 866 vyhodnotených plánov pri hľadaní riešenia. Kryje neúspech/retry, blokovanie predčasného posunu, zachovanie najlepšieho skóre, načítanie každého zapísaného stavu, jednorazovú bránu a nezmenený skutočný dátum/ekonomiku. Nejde o vyčerpávajúcu analýzu všetkých rozložení.
+- `verify-festival` — PASS (2 250 plánov); `verify-republic` — PASS (73 ciest a adaptér uloženia). TypeScript, ESLint zmenených TS/TSX/testov a produkčný build — PASS. Build ponecháva existujúce upozornenie na veľké chunky.
+- Prehliadač: celý parkový úvod vrátane presunu a knižnice → prvá príbehová slávnosť cez mapu → výsledok 3/3 → obnovenie s výsledkom zachovaným → okamžitý druhý deň s rozpočtom 7 a rezervou 2 → reload zachová druhý deň → návrat do štvrte a pokračovanie. Konzola bez chýb.
+- Desktop a mobilný viewport 390 × 844 (obsah 375 px), bez horizontálneho pretekania. Uložené `previews/journey-desktop.png` a `previews/journey-mobile.png`. Nejde o kontrolu fyzického telefónu ani plný audit čítačky obrazovky. Odmena po všetkých siedmich dňoch je overená jadrom; v prehliadači sa ručne dohral prvý deň a otvoril druhý.
+- Čistý QA origin `http://[::1]:5174` je lokálny HTTP proxy na už bežiaci server 5173; obsahuje vlastnú testovaciu štvrť. Používateľovo uloženie na 5173/localhost/verejnom webe sa neresetovalo. Samotný upravený web naďalej beží na 5173.
+
+**Bez pushu a nasadenia.** Je to sedem variantov jedného priestorového hlavolamu, nie sedem druhov minihier; dlhodobá zábavnosť a návratnosť ešte nie sú overené hráčmi. Ďalší krok: Peter si vyskúša nadväzujúci príbeh lokálne a posúdi tempo aj náročnosť, potom prípadne nasadiť túto revíziu. Účty a cloud zostávajú samostatná etapa.
+
+## 1. 10. 2026 — sedemdňový príbeh nasadený
+
+- Na Petrov pokyn „ok nasad“ publikovaná vyššie overená revízia na `https://mandat-preview.mandat.workers.dev/?v=game&g=republic`. Wrangler dry-run a priamy deploy PASS; Worker verzia `0db06e43-b1a4-4dc8-9479-c661a1c659cb`.
+- Verejný prehliadač: existujúca denná slávnosť prijatá bez resetu, dohraná cez mapu na 3/3, otvorený nový sedemdňový príbeh, reload zachová jeho prvý rozpracovaný deň. Konzola bez chýb.
+- Mobilný viewport 390 × 844: obsah 375 px bez horizontálneho pretekania; aktuálny deň, os príbehu a odmena sa zobrazujú. `previews/journey-online-mobile.png`. Fyzický telefón zostáva na vyskúšanie používateľom.
+- Zdrojové súbory, test a dokumentácia tejto revízie sa synchronizujú do GitHub `main`; následný Cloudflare Build nasadzuje rovnakú implementáciu. Účty ani cloudové uloženie sa nepridávajú.
+
+**Nasadené.** Ďalší krok: Peter si zahrá viac dní na mobile a posúdi rozhodovanie, tempo a zábavnosť; až potom rozširovať druhy udalostí.

@@ -5,7 +5,7 @@ import { Dialog } from "radix-ui";
 import { Archive, ArrowRight, Check, Coins, Hammer, MapPinned, PackageOpen, X, Boxes, Move, Undo2, List, Map, Download, AlertCircle, Maximize2, Minimize2, Flag } from "lucide-react";
 import RepublicMap from "@/components/republic-map";
 import RepublicFestival from "@/components/republic-festival";
-import { dailyBrief } from "@/lib/republic-festival";
+import { dailyBrief, journeyDays } from "@/lib/republic-festival";
 import RepublicIntro from "@/components/republic-intro";
 import { introSites } from "@/lib/republic-intro";
 import { dailyProjectError } from "@/lib/republic";
@@ -118,17 +118,27 @@ export default function RepublicGame() {
   const nextBuild=town.completed.length===0?"park":"library";
   const needsFunds=!(town.completed.length===0&&green)&&!town.inventory.some(o=>o.id===nextBuild)&&(town.coins<catalog[nextBuild].coins||town.materials<catalog[nextBuild].materials);
   const startMove=()=>{if(green){setIntent({kind:"move",id:green.id,instanceId:green.instanceId});setTarget(null);setObjectId(null);}};
+  const journeyFinished=town.festivalJourney?.stage===7;
+  async function openStory() {
+    const resumable=town!.festival&&(town!.festival.response===null||town!.festival.mode==="journey"&&!journeyFinished);
+    if(resumable||await run({type:journeyFinished?"festival-start":"festival-journey"})) {
+      setFestivalVisible(true);setCelebration(null);setExploring(true);cancel();setObjectId(null);
+      requestAnimationFrame(()=>document.querySelector(".festival-heading")?.scrollIntoView({block:"start",behavior:"instant"}));
+    }
+  }
 
   return <RepublicIllustrations.Provider value={illustrated}><section className="republic" data-focus={focusMode} data-guided={guided} data-festival={festivalOpen} onKeyDown={e=>{if(e.key==="Escape"){cancel();setPanel(null);setObjectId(null);}}}>
     <button className="republic-focus-toggle" aria-pressed={focusMode} onClick={()=>setFocusMode(!focusMode)}>{focusMode?<Minimize2 size={15}/>:<Maximize2 size={15}/>} {focusMode?"Zobraziť celý web":"Sústrediť sa na hru"}</button>
     <header className="republic-heading"><div><h1>Malá republika<span>.</span></h1><p>Veľké veci začínajú v malej štvrti.</p></div><span className={saveError?"republic-save has-error":"republic-save"}>{saveError?<AlertCircle size={15}/>:<Check size={15}/>} {busy?"Ukladám…":saveError?"Neuložené":conflict?"Novší postup v inej karte":"Uložené v zariadení"}</span></header>
     {(conflict||saveError)&&<div className="republic-storage-alert" role="alert"><p>{conflict?"Iná karta zmenila mesto. Tvoj nepotvrdený ťah sa nezapísal.":notice}</p><button disabled={busy} onClick={()=>conflict?void refresh():void run(retry)}>{conflict?"Načítať novší postup":"Skúsiť uložiť znova"}</button></div>}
     <div className="republic-topline"><div><strong>{town.name}</strong><span>Projekt {town.completed.length} / 7</span></div><div className="republic-resources"><span><Coins size={16}/><b>{town.coins}</b> mincí</span><span><Boxes size={16}/><b>{town.materials}</b> materiálov</span></div></div>
-    {!festivalOpen&&<button className="festival-launch" disabled={blocked} onClick={async()=>{if(town.festival||await run({type:"festival-start"})){setFestivalVisible(true);setCelebration(null);cancel();setObjectId(null);}}}><Flag size={24}/><span><b>{town.festival?.response===null?"Pokračovať v príprave slávnosti":town.festival?"Výsledok slávnosti a ďalší pokus":dailyBrief(today).title}</b><small>Denná výzva · program, miesto, dve stanovištia a nečakaná udalosť. Bez čakania medzi úlohami.</small></span><ArrowRight size={20}/></button>}
-    {festivalOpen&&<RepublicFestival town={town} blocked={blocked} onCommand={async c=>{const ok=await run(c);if(ok)setFestivalVisible(true);return ok;}} onClose={()=>setFestivalVisible(false)}/>}{festivalOpen&&<p className="republic-notice" role="status">{notice}</p>}
+    {!festivalOpen&&!guided&&<div className="republic-story-entry"><button className="festival-launch" disabled={blocked} onClick={()=>void openStory()}><Flag size={24}/><span><b>{town.festival?.response===null?"Pokračovať v rozpracovanej výzve":journeyFinished?dailyBrief(today).title:`Deň ${(town.festivalJourney?.stage??0)+1}: ${journeyDays[town.festivalJourney?.stage??0].title}`}</b><small>{journeyFinished?"Príbeh je hotový. Vyrieš nové denné zadanie a vylepši svoj výsledok.":"Príbeh štvrte · 7 herných dní bez čakania · na konci vlastná slávnostná brána."}</small></span><ArrowRight size={20}/></button>
+      {!journeyFinished&&town.festival?.response!==null&&<button className="republic-daily-entry" disabled={blocked} onClick={async()=>{if(await run({type:"festival-start"})){setFestivalVisible(true);cancel();setObjectId(null);}}}>Alebo dnešná výzva · {dailyBrief(today).title}<ArrowRight size={14}/></button>}
+    </div>}
+    {festivalOpen&&<RepublicFestival town={town} blocked={blocked} onCommand={async c=>{const ok=await run(c);if(ok)setFestivalVisible(true);return ok;}} onClose={()=>setFestivalVisible(false)} onReward={()=>{setFestivalVisible(false);setExploring(true);setCelebration(null);selectBuild("ceremonial-gate");requestAnimationFrame(()=>document.querySelector(".republic-stage")?.scrollIntoView({block:"start",behavior:"instant"}));}}/>}{festivalOpen&&<p className="republic-notice" role="status">{notice}</p>}
     {guided&&<RepublicIntro chapter={town.completed.length} started={introStarted||!!green||town.completed.length>0} ready={ready} placing={!!intent} moving={intent?.kind==="move"} celebration={celebration} needsSpace={librarySites.length===0&&!!green} hasGreen={!!green} blocked={blocked} needsFunds={needsFunds}
       onStart={()=>setIntroStarted(true)} onBuild={selectBuild} onMove={startMove} onFinish={()=>void run({type:"step"})}
-      onContinue={()=>{setCelebration(null);setIntroStarted(true);if(town.completed.length>=2)setExploring(true);}}
+      onContinue={()=>{if(town.completed.length>=2)void openStory();else {setCelebration(null);setIntroStarted(true);}}}
       onExplore={()=>{setExploring(true);setCelebration(null);cancel();}}/>}
     {!festivalOpen&&!guided&&town.completed.length<2&&<button className="republic-resume-guide" onClick={()=>{setExploring(false);setIntroStarted(true);cancel();}}>Ukázať prvé kroky s Evou<ArrowRight size={15}/></button>}
     {!festivalOpen&&<div className="republic-layout">

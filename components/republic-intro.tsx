@@ -19,8 +19,8 @@ export default function RepublicIntro(p:Props) {
       <p>{celebrating?(p.chapter===1?"Eva: „Teraz máme kde byť aj po vyučovaní. Pomôžeš nám ešte s knižnicou?“":"Eva: „Z dvora a knižnice je už miesto pre celú školu. Takto sa začína naša nová štvrť.“"):first&&!p.started?"Zo starej stanice raz môže byť múzeum, tržnica alebo susedská hala. Začni malou pomocou ľuďom, ktorí tu žijú.":first?"Eva, učiteľka: „Po škole nám chýba kúsok zelene. Vyberieš pre deti park alebo záhradu?“":"Eva, učiteľka: „Nájdime knižnici miesto blízko školy. Aj jedna dobre umiestnená budova môže zmeniť celú štvrť.“"}</p>
       {celebrating?<>
         <div className="republic-intro-reward"><Check size={18}/> Hotovo · +2 mince a +1 materiál</div>
-        <button className="republic-primary" onClick={p.onContinue}>{p.chapter===1?"Pomôcť s knižnicou":"Preskúmať vlastnú štvrť"}<ArrowRight size={17}/></button>
-        {p.chapter===2&&<p className="republic-intro-note">Dnes môžeš ešte otvoriť zásielku, stavať a plniť objednávky. Zajtra ťa čaká ambulancia pre susedov.</p>}
+        <button className="republic-primary" disabled={p.blocked} onClick={p.onContinue}>{p.chapter===1?"Pomôcť s knižnicou":"Pripraviť prvú slávnosť"}<ArrowRight size={17}/></button>
+        {p.chapter===2&&<><p className="republic-intro-note">Nina: „Knižnica je otvorená. Pozvime aj ostatných susedov!“ Čaká ťa sedem herných dní, rozdielne zadania a brána pre tvoju štvrť. Ďalší deň otvoríš hneď po splnení cieľov.</p><button className="republic-intro-skip" onClick={p.onExplore}>Najprv si upravím štvrť</button></>}
       </>:!p.started&&first?<>
         <button className="republic-primary" onClick={p.onStart}>Pomôcť Eve pri škole<ArrowRight size={17}/></button>
         <small>Dve krátke úlohy. Stavby môžeš zadarmo premiestňovať.</small>

@@ -1,4 +1,4 @@
-import { festivalCommand, validFestival, type Festival, type FestivalCommand } from "./republic-festival.ts";
+import { festivalCommand, validFestival, validJourney, type Journey, type Festival, type FestivalCommand } from "./republic-festival.ts";
 export type BuildingId = "house" | "school" | "library" | "clinic" | "park" | "market" | "workshop" | "garden" | "culture" | "town-hall" | "plaza" | "station";
 export type DecorationId = "bench" | "flower-bed" | "linden" | "fountain" | "book-kiosk" | "pergola" | "clock" | "bandstand" | "sculpture" | "observatory" | "glasshouse" | "ceremonial-gate";
 export type ItemId = BuildingId | DecorationId;
@@ -9,6 +9,7 @@ export type Pending = { sequence: number; rarity: Rarity; cards: [DecorationId, 
 export type Rarity = "common" | "uncommon" | "rare" | "epic";
 export type RepublicState = {
   festival?:Festival|null;
+  festivalJourney?:Journey;
   version: 1; revision: number; name: string; coins: number; materials: number; createdDay: string; lastDay: string;
   charges: number; claimSequence: number; pending: Pending | null; unlocked: DecorationId[]; placed: Placed[]; inventory: Placed[];
   roads: Point[]; completed: string[]; branch: Branch | null; finalReward: boolean; claimedTasks: string[]; lastProjectDay: string | null; seed: number;
@@ -210,7 +211,7 @@ export function execute(state:RepublicState,command:Command,today:string):Result
   if(!validDay(today)||today<state.lastDay)return fail("Dátum zariadenia je starší než uložený postup. Skontroluj dátum a skús znova.");
   const s=accrue(state,today);
   switch(command.type) {
-    case "festival-replan": case "festival-start": case "festival-theme": case "festival-site": case "festival-prep": case "festival-response": return festivalCommand(s,command);
+    case "festival-journey": case "festival-next": case "festival-retry": case "festival-replan": case "festival-start": case "festival-theme": case "festival-site": case "festival-prep": case "festival-response": return festivalCommand(s,command);
     case "build": return place(s,command.id,command.target);
     case "move": return move(s,command.instanceId,command.target);
     case "store": return store(s,command.instanceId);
@@ -260,6 +261,9 @@ export function readSave(value:unknown):RepublicState|null {
     s.claimedTasks=s.claimedTasks.map(t=>typeof t==="string"&&Object.hasOwn(taskNames,t)?`${s.lastDay}:${t}`:t);
     if(s.claimedTasks.some(t=>typeof t!=="string"||!validDay(t.slice(0,10))||t.slice(0,10)>s.lastDay||t.slice(0,10)<s.createdDay||!Object.hasOwn(taskNames,t.slice(11))||t[10]!==":")||new Set(s.claimedTasks).size!==s.claimedTasks.length)return null;
     if(!validFestival(s.festival)||s.festival&&(s.festival.day>s.lastDay||s.festival.day<s.createdDay))return null;
+    if(!validJourney(s.festivalJourney))return null;
+    if(s.festival?.mode==="journey"&&(!s.festivalJourney||s.festival.stage!>s.festivalJourney.stage||s.festival.stage!==s.festivalJourney.stage&&s.festivalJourney.stage!==7))return null;
+    if(s.festival?.mode==="journey"&&s.festivalJourney?.scores[s.festival.stage!]!==s.festival.best)return null;
     return s;
   } catch {return null;}
 }

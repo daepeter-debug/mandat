@@ -74,7 +74,39 @@
 .festival-launch>svg { flex:none; }
 .festival button:focus-visible { outline:3px solid #795c31; outline-offset:3px; }
 .festival button { scroll-margin-block:150px 30px; }
+.festival-story { max-width:72ch; font-size:14px; line-height:1.6; margin:16px 0 0; color:#40583e; }
+.festival-journey { display:flex; align-items:center; gap:24px; padding:17px 0 14px; margin-top:10px; border-bottom:1px solid #c6ccb8; }
+.festival-journey>div:first-child { flex:1; min-width:0; }
+.festival-journey ol { display:flex; list-style:none; padding:0; margin:0; gap:0; }
+.festival-journey li { flex:1; display:flex; align-items:center; position:relative; }
+.festival-journey li:not(:last-child)::after { content:""; height:1px; background:#bcc8a9; flex:1; }
+.festival-journey li>span:first-child { display:grid; place-items:center; height:31px; width:31px; flex:none; border:1px solid #bcc8a9; border-radius:50%; font-size:12px; font-variant-numeric:tabular-nums; color:#57634b; background:#f1f2e9; }
+.festival-journey li.is-complete>span:first-child { background:#365744; color:#fff; border-color:#365744; }
+.festival-journey li[aria-current=step]>span:first-child { outline:2px solid #365744; outline-offset:3px; color:#20392f; font-weight:700; }
+.festival-journey p { margin:12px 0 0; font-size:11px; line-height:1.5; color:#536348; max-width:70ch; }
+.festival-journey-prize { display:flex; align-items:center; gap:8px; flex:none; }
+.festival-journey-prize>svg { width:75px; height:75px; }
+.festival-journey-prize strong { font-size:12px; font-weight:600; }
+.festival-journey-prize strong>span { display:block; font-size:10px; font-weight:400; margin-top:3px; }
+.festival-next-day { margin:20px 0 12px; padding:16px 0; border-block:1px solid #c6ccb8; }
+.festival-next-day p { margin:0 0 10px; font-size:13px; font-weight:600; }
+.festival-next-day small { display:block; margin-top:8px; font-size:12px; color:#63553d; }
+.festival-result-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+.festival-result-actions>button { display:flex; align-items:center; gap:7px; border:1px solid #bcc8a9; border-radius:10px; padding:9px 12px; font-size:12px; min-height:44px; }
+.festival-gift { display:flex; gap:12px; align-items:center; margin:20px 0; }
+.festival-gift>svg { width:90px; height:90px; flex:none; }
+.festival-gift h4 { font-size:17px; margin:0 0 7px; }
+.festival-gift p { font-size:12px; }
+.republic-story-entry .festival-launch { margin-bottom:0; }
+.republic-daily-entry { display:flex; gap:8px; align-items:center; font-size:12px; min-height:44px; color:#40583e; text-align:left; margin-bottom:8px; }
 @media(max-width:800px) {
+ .festival-journey { flex-direction:column; align-items:stretch; gap:8px; padding-top:12px; }
+ .festival-journey-prize { gap:7px; }
+ .festival-journey-prize>svg { width:46px; height:46px; }
+ .festival-journey-prize strong>span { display:inline; margin-left:7px; }
+ .festival-story { font-size:13px; margin-top:12px; }
+ .festival-gift { align-items:start; }
+ .festival-gift>svg { width:65px; height:65px; }
  .festival-layout { grid-template-columns:minmax(0,1fr); gap:20px; }
  .festival-scene { position:static; }
  .festival-heading { flex-direction:column; gap:5px; }
