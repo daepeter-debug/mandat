@@ -124,12 +124,12 @@ function OwnRepublicGame() {
   }
   function selectBuild(id:ItemId){setIntent({kind:"build",id});setTarget(pendingTarget);setPendingTarget(null);clearInspect();setPanel(null);}
   function selectCell(p:Point) {
-    if(intent){setTarget(p);return;}
     const obj=town?.placed.find(o=>distance(o,p)===0);
     if(obj){inspectObject(obj.instanceId);return;}
+    if(intent){clearInspect();setTarget(p);return;}
     setObjectId(null);setCell(old=>old&&distance(old,p)===0?null:p);
   }
-  function inspectObject(id:string){setObjectId(old=>old===id?null:id);setCell(null);}
+  function inspectObject(id:string){setObjectId(old=>old===id?null:id);setCell(null);if(intent)setTarget(null);}
   function cancel(){setIntent(null);setTarget(null);}
   function backup(){if(snapshot?.raw)downloadBackup(snapshot.raw);}
   if(!snapshot)return <p className="chart-loading" role="status">Načítavame tvoju štvrť…</p>;
@@ -142,7 +142,7 @@ function OwnRepublicGame() {
   </section>;
   const blocked=busy||conflict;
   const object=town.placed.find(o=>o.instanceId===objectId);
-  const report=intent?null:object?objectReport(town,object.instanceId):cell?cellReport(town,cell):null;
+  const report=object?objectReport(town,object.instanceId):!intent&&cell?cellReport(town,cell):null;
   const inspect=report?{key:report.key,point:report.point,highlight:report.highlight,selected:object?.instanceId??null}:null;
   const command:Command|null=intent&&target?(intent.kind==="road"?{type:"road",target}:intent.kind==="move"?{type:"move",instanceId:intent.instanceId,target}:{type:"build",id:intent.id,target}):null;
   const preview=command?execute(town,command,today):null;
@@ -181,7 +181,7 @@ function OwnRepublicGame() {
     else if(q.kind==="road-here"&&cell)void run({type:"road",target:cell});
   }
   const infoCard=report&&<InfoCard report={report} blocked={blocked} branch={town.branch} finished={town.completed.includes("opening")} onClose={clearInspect} onQuick={quick}
-    onMove={()=>{if(object){setIntent({kind:"move",id:object.id,instanceId:object.instanceId});setTarget(null);}}}
+    onMove={()=>{if(object){setIntent({kind:"move",id:object.id,instanceId:object.instanceId});setTarget(null);clearInspect();}}}
     onStore={async()=>{if(object&&await run({type:"store",instanceId:object.instanceId}))clearInspect();}}/>;
   function planAction(a:PlanAction) {
     if(a.type==="step")void run({type:"step"});
@@ -217,7 +217,7 @@ function OwnRepublicGame() {
     {!festivalOpen&&!welcome&&<div className="republic-layout">
       <div className="republic-stage" tabIndex={-1}>
         <div className="republic-view-switch" role="group" aria-label="Zobrazenie štvrte"><button aria-pressed={view==="map"} onClick={()=>setView("map")}><Map size={15}/> Mapa</button><button aria-pressed={view==="list"} onClick={()=>setView("list")}><List size={15}/> Zoznam a políčka</button><span>6 × 6 políčok</span></div>
-        {view==="map"?<RepublicMap town={town} editing={!!intent} selected={selected} target={target} suggested={suggested} onCell={selectCell} onObject={inspectObject} notice={mapNotice} wishes={homeWishes(town)} inspect={inspect} suggestHint={advice?.why?`Fajka: ${advice.why}`:undefined}>{infoCard}</RepublicMap>:<div className="republic-list-view">
+        {view==="map"?<RepublicMap town={town} editing={!!intent} inspectBuildingsWhileEditing selected={selected} target={target} suggested={suggested} onCell={selectCell} onObject={inspectObject} notice={mapNotice} wishes={homeWishes(town)} inspect={inspect} suggestHint={advice?.why?`Fajka: ${advice.why}`:undefined}>{infoCard}</RepublicMap>:<div className="republic-list-view">
           <p>{intent?"Vyber cieľové políčko. Stavbu potvrdíš pod mapou.":"Vyber budovu na mriežke alebo v zozname."}</p>
           <div className="republic-coordinate-grid">{Array.from({length:36},(_,i)=>({x:i%6,y:Math.floor(i/6)})).map(p=>{const obj=town.placed.find(o=>distance(p,o)===0),road=town.roads.some(r=>distance(p,r)===0);return <button key={coords(p)} className={obj?"occupied":road?"road":""} aria-pressed={target?distance(target,p)===0:false} aria-label={`${coords(p)}: ${obj?catalog[obj.id].name:road?"cesta":"voľné"}${suggested.some(s=>distance(s,p)===0)?", odporúčané pre úlohu":""}`} onClick={()=>selectCell(p)}>{coords(p)}{suggested.some(s=>distance(s,p)===0)&&" ✓"}<small>{obj?catalog[obj.id].name:road?"cesta":"voľné"}</small></button>;})}</div>
           <ul className="republic-building-list">{town.placed.map(o=><li key={o.instanceId}><button onClick={()=>inspectObject(o.instanceId)}><RepublicArt id={o.id} branch={o.id==="station"?town.branch:null}/><span><b>{catalog[o.id].name}</b><small>{coords(o)} · {o.id==="plaza"?"začiatok siete":connected(town,o)?"napojené":"bez spojenia"}</small></span><ArrowRight size={16}/></button></li>)}</ul>
@@ -263,7 +263,7 @@ function OwnRepublicGame() {
     </div>}
     {!festivalOpen&&!guided&&<RepublicElection town={town} today={today}/>}
     <details className="republic-help"><summary>Pravidlá, nastavenia a uloženie</summary><div>
-      <p>Budovy potrebujú susednú cestu spojenú s námestím. Dosah 2 sa počíta po vodorovných a zvislých políčkach, nie diagonálne. Bodka na štítku budovy: zelená znamená napojenie, hnedá chýbajúcu cestu. Štítky sa dajú skryť tlačidlom so štítkom pod mapou.</p>
+      <p>Budovy potrebujú susednú cestu spojenú s námestím. Dosah 2 sa počíta po vodorovných a zvislých políčkach, nie diagonálne. Hnedá bodka pri budove znamená chýbajúcu cestu. Ťuknutím na budovu otvoríš jej účinky a napojenie aj počas stavania; voľné políčko vyberie miesto pre stavbu.</p>
       <div className="republic-art-switch" role="group" aria-label="Grafika štvrte"><span>Grafika</span><button aria-pressed={illustrated} onClick={()=>setIllustrated(true)}>Ilustrácie</button><button aria-pressed={!illustrated} onClick={()=>setIllustrated(false)}>Pôvodná kresba</button><small>Ukážka 4 objektov</small></div>
       <p>Každý deň v slovenskom čase pribudne zásielka, najviac tri do zásoby. Každá dá 8 mincí a 4 materiály; duplicitná ozdoba pridá 2 materiály navyše. Triedy zásielok: bežná 60 %, neobvyklá 25 %, vzácna 12 %, epická 3 %. Dekorácie nemenia ekonomiku.</p>
       <p>Prvé dva kroky môžeš dokončiť pri jednej návšteve. Potom jeden krok projektu denne. Vynechanie dní mesto nepoškodí. Hosť používa dátum zariadenia. Postup je len v tomto prehliadači; vymazanie dát stránky ho odstráni. Limit zdrojov je 999.</p>

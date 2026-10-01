@@ -41,13 +41,14 @@ function WishGlyph({wish}:{wish:string}) {
   </g></g>;
 }
 
-export default function RepublicMap({town,editing,selected,target,suggested=[],onCell,onObject,captureRef,festivalReplay=0,festivalStill=false,notice=null,wishes=[],inspect=null,suggestHint,children}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void;captureRef?:RefObject<SVGSVGElement|null>;festivalReplay?:number;festivalStill?:boolean;notice?:{title:string;detail:string}|null;wishes?:{instanceId:string;x:number;y:number;wish:string|null}[];inspect?:MapInspect|null;suggestHint?:string;children?:ReactNode}) {
+export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=false,selected,target,suggested=[],onCell,onObject,captureRef,festivalReplay=0,festivalStill=false,notice=null,wishes=[],inspect=null,suggestHint,children}:{town:RepublicState;editing:boolean;inspectBuildingsWhileEditing?:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void;captureRef?:RefObject<SVGSVGElement|null>;festivalReplay?:number;festivalStill?:boolean;notice?:{title:string;detail:string}|null;wishes?:{instanceId:string;x:number;y:number;wish:string|null}[];inspect?:MapInspect|null;suggestHint?:string;children?:ReactNode}) {
   const [zoom,setZoom]=useState(()=>typeof window!=="undefined"&&window.matchMedia?.("(max-width: 560px)").matches?1.5:1),[focus,setFocus]=useState(14),[grid,setGrid]=useState(false);
   const [hover,setHover]=useState<Point|null>(null),[terrainFailed,setTerrainFailed]=useState(false);
   const [terrainReady,setTerrainReady]=useState(false);
   const [scenePreview,setScenePreview]=useState("");
   const uid=useId().replaceAll(":","");
   const showGrid=grid||editing;
+  const showInspect=!editing||inspectBuildingsWhileEditing;
   const viewport=useRef<HTMLDivElement>(null),svg=useRef<SVGSVGElement>(null);
   const {scene,active,visible}=useLivingScene(town,viewport,scenePreview);
   const celebration=celebrationScene(town);
@@ -82,7 +83,7 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
   }
   function pick(p:Point) {
     const object=town.placed.find(o=>o.x===p.x&&o.y===p.y);
-    if(editing||!object)onCell(p);else onObject(object.instanceId);
+    if(!object||editing&&!inspectBuildingsWhileEditing)onCell(p);else onObject(object.instanceId);
   }
   const inspected=target??hover;
   const inspectedObject=inspected?town.placed.find(o=>distance(o,inspected)===0):null;
@@ -119,10 +120,10 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
             {reach&&<polygon points={diamond(p,3)} fill="#b2dcce" opacity=".32"/>}
             {suggested.some(s=>distance(s,p)===0)&&<polygon points={diamond(p,3)} className="republic-plot-suggested"/>}
             {target&&distance(p,target)===0&&<polygon points={diamond(p,2)} className="republic-plot-selected"/>}
-            {!editing&&inspect?.highlight.reach.some(r=>distance(r,p)===0)&&<polygon points={diamond(p,3)} className="republic-plot-reach"/>}
-            {!editing&&inspect?.highlight.good.some(r=>distance(r,p)===0)&&<polygon points={diamond(p,2)} className="republic-plot-helped"/>}
-            {!editing&&inspect?.highlight.bad.some(r=>distance(r,p)===0)&&<polygon points={diamond(p,2)} className="republic-plot-unlinked"/>}
-            {!editing&&inspect&&distance(inspect.point,p)===0&&<polygon points={diamond(p,1)} className="republic-plot-focus"/>}
+            {showInspect&&inspect?.highlight.reach.some(r=>distance(r,p)===0)&&<polygon points={diamond(p,3)} className="republic-plot-reach"/>}
+            {showInspect&&inspect?.highlight.good.some(r=>distance(r,p)===0)&&<polygon points={diamond(p,2)} className="republic-plot-helped"/>}
+            {showInspect&&inspect?.highlight.bad.some(r=>distance(r,p)===0)&&<polygon points={diamond(p,2)} className="republic-plot-unlinked"/>}
+            {showInspect&&inspect&&distance(inspect.point,p)===0&&<polygon points={diamond(p,1)} className="republic-plot-focus"/>}
           </g>;
         })}
         {scene&&visible&&<LivingWalkers scene={scene} active={active}/>}
@@ -151,9 +152,9 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
         <g className="republic-input-layer">
           {[...cells].sort((a,b)=>a.x+a.y-b.x-b.y||a.x-b.x).map(p=>{const i=p.y*6+p.x,o=town.placed.find(x=>distance(x,p)===0),road=town.roads.some(x=>distance(x,p)===0);
             const wish=wishes.find(w=>w.instanceId===o?.instanceId)?.wish;
-            return <g key={i} role="button" tabIndex={focus===i?0:-1} data-cell={`${p.x}-${p.y}`} aria-label={`${String.fromCharCode(65+p.x)}${p.y+1}: ${o?catalog[o.id].name:road?"cesta":"voľné miesto"}${wish?`, ${needs[wish as Need].wish}`:""}${suggested.some(s=>distance(s,p)===0)?", odporúčané pre úlohu":""}`} aria-pressed={editing?(target?distance(p,target)===0:false):inspect?.point?distance(p,inspect.point)===0:false} onFocus={()=>{setFocus(i);setHover(p);}} onPointerEnter={()=>setHover(p)} onClick={()=>pick(p)} onKeyDown={e=>keyDown(e,p)}>
+            return <g key={i} role="button" tabIndex={focus===i?0:-1} data-cell={`${p.x}-${p.y}`} aria-label={`${String.fromCharCode(65+p.x)}${p.y+1}: ${o?catalog[o.id].name:road?"cesta":"voľné miesto"}${wish?`, ${needs[wish as Need].wish}`:""}${suggested.some(s=>distance(s,p)===0)?", odporúčané pre úlohu":""}`} aria-pressed={inspect?.point?distance(p,inspect.point)===0:target?distance(p,target)===0:false} onFocus={()=>{setFocus(i);setHover(p);}} onPointerEnter={()=>setHover(p)} onClick={()=>pick(p)} onKeyDown={e=>keyDown(e,p)}>
               <polygon points={diamond(p,1)} className="republic-hit"/>
-              {!editing&&o&&catalog[o.id].kind==="building"&&!["plaza","park","garden"].includes(o.id)&&<path transform={`translate(${at(p).x} ${at(p).y})`} d={`M0 ${o.id==="station"?-84:-64}l32 18v48L0 20-32 2v-48Z`} className="republic-building-hit"/>}
+              {showInspect&&o&&catalog[o.id].kind==="building"&&!["plaza","park","garden"].includes(o.id)&&<path transform={`translate(${at(p).x} ${at(p).y})`} d={`M0 ${o.id==="station"?-84:-64}l32 18v48L0 20-32 2v-48Z`} className="republic-building-hit"/>}
               {editing&&<text x={at(p).x} y={at(p).y+4} className="republic-cell-mark">{suggested.some(s=>distance(s,p)===0)?"✓":o||road?"·":"+"}</text>}
             </g>;})}
         </g>

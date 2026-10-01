@@ -11,6 +11,8 @@ import "@/app/republic-festival.css";
 import { festivalPostcardData } from "@/lib/republic-celebration";
 import { downloadPostcard, festivalPostcardImage } from "@/components/republic-postcard";
 import { FestivalGaps } from "@/components/republic-plan";
+import { InfoCard } from "@/components/republic-info";
+import { objectReport } from "@/lib/republic-info";
 
 const icons={books:BookOpen,food:Utensils,music:Music};
 const supportIcons={shelter:Tent,welcome:Users,quiet:Armchair};
@@ -19,6 +21,7 @@ function Impact({mood}:{mood:Mood}) {return <span className="festival-impact">{m
 export default function RepublicFestival({town,blocked:saving,onCommand,onClose,onReward}:{town:RepublicState;blocked:boolean;onCommand:(c:FestivalCommand)=>Promise<boolean>;onClose:()=>void;onReward:()=>void}) {
   const [target,setTarget]=useState<Point|null>(null),[support,setSupport]=useState<Support|null>(null),[list,setList]=useState(false);
   const [answer,setAnswer]=useState<number|null>(null);
+  const [objectId,setObjectId]=useState<string|null>(null);
   const [replay,setReplay]=useState(0),[exporting,setExporting]=useState(false),[card,setCard]=useState<{blob:Blob;url:string;filename:string}|null>(null),[cardError,setCardError]=useState("");
   const capture=useRef<SVGSVGElement|null>(null);
   const mounted=useRef(false);
@@ -30,6 +33,7 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
   const journey=f.mode==="journey",stage=f.stage??0,graduated=town.festivalJourney?.stage===7;
   const phase=!f.theme?0:!f.site?1:f.preparations.length<2?2:done?4:3;
   const choices=phase===1?festivalSites(town):phase===2&&support?prepSites(town,f):[];
+  const objectDetail=objectId?objectReport(town,objectId):null;
   const valid=!!target&&choices.some(p=>distance(p,target)===0);
   const report=target&&f.theme&&phase===1?siteReport(town,f.theme,target):null;
   const result=festivalResult(f),preview=answer===null?null:festivalResult(f,answer);
@@ -40,10 +44,10 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
     : town.placed.map(p=>({key:p.instanceId,point:p,name:catalog[p.id].name,role:catalog[p.id].kind==="decoration"?"Ozdoba štvrte":"Miesto v štvrti"}));
   const EventIcon=f.incident==="rain"?CloudRain:f.incident==="power"?Zap:Users;
   function clearCard(){setCard(null);setCardError("");}
-  async function send(c:FestivalCommand){if(await onCommand(c)){setTarget(null);setSupport(null);setAnswer(null);clearCard();const newDay=c.type==="festival-next"||c.type==="festival-journey"||c.type==="festival-start";requestAnimationFrame(()=>document.querySelector(newDay?".festival-heading":c.type==="festival-response"?".festival-scene":".festival-decisions")?.scrollIntoView({block:"start",behavior:"instant"}));}}
+  async function send(c:FestivalCommand){if(await onCommand(c)){setTarget(null);setSupport(null);setAnswer(null);setObjectId(null);clearCard();const newDay=c.type==="festival-next"||c.type==="festival-journey"||c.type==="festival-start";requestAnimationFrame(()=>document.querySelector(newDay?".festival-heading":c.type==="festival-response"?".festival-scene":".festival-decisions")?.scrollIntoView({block:"start",behavior:"instant"}));}}
   async function makeCard(){
     const data=festivalPostcardData(town);if(!data||exporting)return;
-    setList(false);setExporting(true);clearCard();
+    setList(false);setObjectId(null);setExporting(true);clearCard();
     try {
       await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
       document.querySelector(".festival-scene")?.scrollIntoView({block:"start",behavior:"instant"});
@@ -64,9 +68,16 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
     }
     downloadPostcard(card.blob,card.filename);
   }
-  function pick(p:Point){setTarget(p);if(choices.some(c=>distance(c,p)===0))requestAnimationFrame(()=>document.querySelector(".festival-place-confirm")?.scrollIntoView({block:"center",behavior:"instant"}));}
-  function selectSupport(id:Support){setSupport(id);setTarget(null);requestAnimationFrame(()=>document.querySelector(".festival-scene")?.scrollIntoView({block:"start",behavior:"instant"}));}
-  return <section className="festival" aria-label={journey?"Príbeh štvrte: sedem herných dní":"Denná výzva: susedská slávnosť"}>
+  function pick(p:Point){
+    if(exporting)return;
+    const available=choices.some(c=>distance(c,p)===0),object=town.placed.find(o=>distance(o,p)===0);
+    // Platné stanovište má prednosť (námestie môže byť miestom programu); ostatné budovy iba skúmame.
+    if(object&&!available){setObjectId(old=>old===object.instanceId?null:object.instanceId);setTarget(null);return;}
+    setObjectId(null);setTarget(p);
+    if(available)requestAnimationFrame(()=>document.querySelector(".festival-place-confirm")?.scrollIntoView({block:"center",behavior:"instant"}));
+  }
+  function selectSupport(id:Support){setSupport(id);setTarget(null);setObjectId(null);requestAnimationFrame(()=>document.querySelector(".festival-scene")?.scrollIntoView({block:"start",behavior:"instant"}));}
+  return <section className="festival" aria-label={journey?"Príbeh štvrte: sedem herných dní":"Denná výzva: susedská slávnosť"} onKeyDown={e=>{if(e.key==="Escape")setObjectId(null);}}>
     <header className="festival-heading"><div><h2>{brief.title}</h2><p>{journey?`Príbeh štvrte · deň ${stage+1} zo 7 · bez čakania na zajtra`:`Denná výzva na ${Number(f.day.slice(8,10))}. ${Number(f.day.slice(5,7))}. ${f.day.slice(0,4)}`} · postup sa ukladá</p></div><button disabled={exporting} onClick={onClose}><ArrowLeft size={16}/> Späť do štvrte</button></header>
     {journey&&<div className="festival-journey"><div><ol aria-label="Sedem dní príbehu">{journeyDays.map((d,i)=><li key={d.title} aria-current={i===stage&&!graduated?"step":undefined} className={(town.festivalJourney?.scores[i]??0)===3?"is-complete":""} title={d.title}><span>{(town.festivalJourney?.scores[i]??0)===3?<Check size={15}/>:i+1}</span><span className="sr-only">{d.title}: {(town.festivalJourney?.scores[i]??0)===3?"splnené":i===stage?"aktuálny deň":"zamknuté"}</span></li>)}</ol><p>{graduated?"Sedem dní hotových. Štvrť má svoju slávnostnú bránu.":"Splň 3 ciele a posuň sa na ďalší herný deň. Kalendár ani zásielky tým nemeníš."}</p></div><div className="festival-journey-prize"><RepublicArt id="ceremonial-gate"/><strong>Slávnostná brána<span>Odmena za 7 dní</span></strong></div></div>}
     <p className="festival-story">{brief.story}</p>
@@ -101,7 +112,9 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
           <h4>{f.site?"Pripravené miesta slávnosti":"Miesta v tvojej štvrti"}</h4>
           <ul>{placedLocations.map(place=><li key={place.key}><span className="festival-place-coordinate">{coords(place.point)}</span><div><b>{place.name}</b><small>{place.role}</small></div></li>)}</ul>
           {choices.length>0?<><h4>Dostupné miesta na výber</h4><div className="festival-locations">{choices.map(p=><button key={coords(p)} disabled={blocked} aria-pressed={!!target&&distance(p,target)===0} onClick={()=>pick(p)}>{coords(p)}<span>{town.placed.find(o=>distance(o,p)===0)?.id==="plaza"?"Námestie":"Miesto pri ceste"}</span></button>)}</div></>:!done&&<p>{phase===2&&!support?"Vyber druh zázemia. Potom tu uvidíš dostupné miesta.":phase===0?"Najprv vyber program slávnosti.":phase===2?"Pre toto zázemie teraz nie je voľné miesto. Zvoľ iné zázemie alebo preplánuj slávnosť.":"Stanovištia sú pripravené. Pokračuj riešením udalosti."}</p>}
-        </div>:<RepublicMap town={town} editing={choices.length>0} selected={null} target={target} suggested={choices} captureRef={capture} festivalReplay={replay} festivalStill={exporting} onCell={pick} onObject={id=>{const p=town.placed.find(o=>o.instanceId===id);if(p)pick(p);}}/>}
+        </div>:<RepublicMap town={town} editing={choices.length>0} inspectBuildingsWhileEditing selected={null} target={target} suggested={choices} captureRef={capture} festivalReplay={replay} festivalStill={exporting} inspect={objectDetail?{key:objectDetail.key,point:objectDetail.point,highlight:objectDetail.highlight,selected:objectId}:null} onCell={pick} onObject={id=>{const p=town.placed.find(o=>o.instanceId===id);if(p)pick(p);}}>
+          {objectDetail&&!exporting&&<InfoCard report={objectDetail} readOnly branch={town.branch} finished={town.completed.includes("opening")} onClose={()=>setObjectId(null)}/>}
+        </RepublicMap>}
         {done&&<div className="festival-postcard"><h4>Pohľadnica zo slávnosti</h4><p>Tvoja štvrť, výsledok a odkazy od susedov na jednom obrázku.</p>
           {card?<><Image unoptimized src={card.url} alt={`Pohľadnica: ${town.name}, ${themes[f.theme!].name}, ${result.stars} z 3 cieľov`} width={1080} height={1350}/><div className="festival-postcard-actions"><button onClick={()=>void shareCard()}><Share2 size={16}/> Zdieľať pohľadnicu</button><button onClick={()=>downloadPostcard(card.blob,card.filename)}><Download size={16}/> Stiahnuť PNG</button></div></>:<button disabled={exporting} onClick={()=>void makeCard()}><Share2 size={16}/>{exporting?"Pripravujem pohľadnicu…":"Vytvoriť pohľadnicu"}</button>}
           {cardError&&<p role="alert">{cardError}</p>}<span role="status" className="sr-only">{card?"Pohľadnica je pripravená na zdieľanie alebo stiahnutie.":exporting?"Pripravujem obrázok slávnosti.":""}</span>

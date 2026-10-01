@@ -33,7 +33,7 @@ export function InfoCard({ report, blocked = false, readOnly = false, branch=nul
     const head=ref.current;
     if (!head || head.closest(".republic-map-detail") && window.matchMedia("(min-width: 960px)").matches) return;
     const rect=head.getBoundingClientRect();
-    if(rect.top<0||rect.bottom>window.innerHeight-80) head.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+    if(rect.top<0||rect.top>window.innerHeight*.45) head.scrollIntoView({block:"center",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
   }, [report.key]);
   function close() {
     const cell=ref.current?.closest(".republic")?.querySelector<SVGGElement>(`[data-cell="${report.point.x}-${report.point.y}"]`);
