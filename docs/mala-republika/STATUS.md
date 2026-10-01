@@ -304,3 +304,9 @@ Podnet: Petrova spätná väzba z testovania hry — hráč má vždy vedieť, *
 
 - Čerstvý Impeccable finish reviewer: celá nová časť zodpovedá zdedenému svetu; jedna materiálna korekcia označenia skúšobného výsledku. Po oprave a nových snímkach verdikt **ship** pre skórovanú opravu, bez regresií (`review.md`, `verdict.md`). Označenie skúšky je obyčajný text pod výsledkovým nadpisom, nie ďalší štítok nad ním.
 - Po poslednej korekcii znovu všetkých 9 verify skriptov, tsc, ESLint a build PASS. Dokumentácia výslednej obyčajnej nadstavby sa dopĺňa samostatnou kontrolou do lokálneho DESIGN.md; globálna identita Mandátu sa nemení.
+
+### Nasadenie a verejné overenie
+
+- Implementácia commitnutá menovite v `3ece01a`, pred pushom `git pull --rebase` (bez nových zmien), push do main úspešný. Nasadené cez `npm run deploy:preview`, Worker `mandat-preview`, verzia `e908803d-09b8-489e-a0de-9c90c111c645`.
+- Verejná ilustrácia miestnosti aj nový herný chunk odpovedajú HTTP 200. Na workers.dev overený skutočný návštevný odkaz: „Štvrť od suseda · iba na prezeranie“, správna mapa a návrat do pôvodne rozpracovaného príbehu Pozvánka pre susedov (8/8 prípravných bodov). Konzola bez chýb a varovaní. Fyzický mobil zostáva na Petrovo overenie.
+- Dokumenter dokončil lokálny DESIGN.md a evidenciu documentation.md; globálne PRODUCT.md, DESIGN.md a design.json ostali zachované. Návrh ekonomiky sa stále neimplementuje bez Petrovho OK.
