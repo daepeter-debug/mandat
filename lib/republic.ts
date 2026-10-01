@@ -1,3 +1,4 @@
+import { festivalCommand, validFestival, type Festival, type FestivalCommand } from "./republic-festival.ts";
 export type BuildingId = "house" | "school" | "library" | "clinic" | "park" | "market" | "workshop" | "garden" | "culture" | "town-hall" | "plaza" | "station";
 export type DecorationId = "bench" | "flower-bed" | "linden" | "fountain" | "book-kiosk" | "pergola" | "clock" | "bandstand" | "sculpture" | "observatory" | "glasshouse" | "ceremonial-gate";
 export type ItemId = BuildingId | DecorationId;
@@ -7,6 +8,7 @@ export type Placed = Point & { instanceId: string; id: ItemId; fixed?: boolean }
 export type Pending = { sequence: number; rarity: Rarity; cards: [DecorationId, DecorationId, DecorationId] };
 export type Rarity = "common" | "uncommon" | "rare" | "epic";
 export type RepublicState = {
+  festival?:Festival|null;
   version: 1; revision: number; name: string; coins: number; materials: number; createdDay: string; lastDay: string;
   charges: number; claimSequence: number; pending: Pending | null; unlocked: DecorationId[]; placed: Placed[]; inventory: Placed[];
   roads: Point[]; completed: string[]; branch: Branch | null; finalReward: boolean; claimedTasks: string[]; lastProjectDay: string | null; seed: number;
@@ -167,7 +169,8 @@ export function claimParcel(state:RepublicState,id:DecorationId):Result {
   if(!duplicate)s.unlocked.push(id);s.pending=null;
   return success(s,`${duplicate?"Duplikát: dva materiály navyše.":catalog[id].name+" pribudla do zbierky."} ${reward(s,8,duplicate?6:4)}`);
 }
-const dailyProjectError = (s:RepublicState) => s.lastProjectDay!==null&&s.lastProjectDay>=s.lastDay;
+// The first two projects form one playable introduction. Later projects retain their daily rhythm.
+export const dailyProjectError = (s:RepublicState) => s.lastProjectDay!==null&&s.lastProjectDay>=s.lastDay&&!(s.completed.length===1&&s.lastProjectDay===s.lastDay);
 export function chooseBranch(state:RepublicState,branch:Branch):Result {
   if(!branches.includes(branch)||currentStep(state)?.id!=="discovery")return fail("Podobu haly teraz nie je možné vybrať.");
   if(dailyProjectError(state))return fail("Dnešný krok je hotový. Pokračovanie príde zajtra.");
@@ -183,7 +186,7 @@ export function completeStep(state:RepublicState):Result {
   const [c,m]=stepCost(step.id);
   if(state.coins<c||state.materials<m)return fail(`Na krok potrebuješ ${c} mincí a ${m} materiály.`);
   const s=structuredClone(state);s.coins-=c;s.materials-=m;s.completed.push(step.id);s.lastProjectDay=s.lastDay;
-  return success(s,`${step.id==="opening"?"Stanica znova žije. Vyber si finálnu dekoráciu.":"Krok projektu je hotový. Ďalší dokončíš zajtra."} ${reward(s,step.reward[0],step.reward[1])}`);
+  return success(s,`${step.id==="opening"?"Stanica znova žije. Vyber si finálnu dekoráciu.":step.id==="school-yard"?"Školský dvor je pripravený. Môžeš hneď pokračovať knižnicou.":"Krok projektu je hotový. Ďalší dokončíš zajtra."} ${reward(s,step.reward[0],step.reward[1])}`);
 }
 export function claimFinalDecoration(state:RepublicState,id:DecorationId):Result {
   if(!state.completed.includes("opening")||state.finalReward||!decorationIds.includes(id))return fail("Finálna dekorácia teraz nie je dostupná.");
@@ -197,7 +200,7 @@ export function claimTask(state:RepublicState,task:Task):Result {
   const s=structuredClone(state);s.claimedTasks.push(`${s.lastDay}:${task}`);
   return success(s,`Objednávka vybavená. ${reward(s,2,1)}`);
 }
-export type Command =
+export type Command = FestivalCommand
   | {type:"build";id:ItemId;target:Point} | {type:"move";instanceId:string;target:Point}
   | {type:"store";instanceId:string} | {type:"road";target:Point}
   | {type:"parcel-open"} | {type:"parcel-claim";id:DecorationId}
@@ -207,6 +210,7 @@ export function execute(state:RepublicState,command:Command,today:string):Result
   if(!validDay(today)||today<state.lastDay)return fail("Dátum zariadenia je starší než uložený postup. Skontroluj dátum a skús znova.");
   const s=accrue(state,today);
   switch(command.type) {
+    case "festival-replan": case "festival-start": case "festival-theme": case "festival-site": case "festival-prep": case "festival-response": return festivalCommand(s,command);
     case "build": return place(s,command.id,command.target);
     case "move": return move(s,command.instanceId,command.target);
     case "store": return store(s,command.instanceId);
@@ -255,6 +259,7 @@ export function readSave(value:unknown):RepublicState|null {
     }
     s.claimedTasks=s.claimedTasks.map(t=>typeof t==="string"&&Object.hasOwn(taskNames,t)?`${s.lastDay}:${t}`:t);
     if(s.claimedTasks.some(t=>typeof t!=="string"||!validDay(t.slice(0,10))||t.slice(0,10)>s.lastDay||t.slice(0,10)<s.createdDay||!Object.hasOwn(taskNames,t.slice(11))||t[10]!==":")||new Set(s.claimedTasks).size!==s.claimedTasks.length)return null;
+    if(!validFestival(s.festival)||s.festival&&(s.festival.day>s.lastDay||s.festival.day<s.createdDay))return null;
     return s;
   } catch {return null;}
 }

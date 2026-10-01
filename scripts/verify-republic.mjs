@@ -1,12 +1,36 @@
 import assert from "node:assert/strict";
 import { accrue, branches, claimParcel, claimTask, clinicReady, combos, connected, coveredHomes, createTown, dayNumber, execute, move, network, openParcel, parcelRarity, place, readSave, slovakDay, steps, tasksFor, toggleRoad } from "../lib/republic.ts";
 import { createLocalStore, republicKey } from "../lib/republic-storage.ts";
+import { introSites } from "../lib/republic-intro.ts";
 
 const ok=r=>{assert.equal(r.ok,true,r.message);return r.state;};
 const date=n=>new Date(Date.UTC(2026,8,20+n)).toISOString().slice(0,10);
 const at=(s,id,x,y)=>s.placed.find(p=>p.id===id&&p.x===x&&p.y===y)?.instanceId;
 const fresh=createTown(date(0));
 assert.equal(fresh.coins,12);assert.equal(fresh.materials,8);
+// The introduction works with normal funds, no parcel luck, both green choices,
+// and a real move to make room. Reloads preserve progress and cannot replay rewards.
+for(const id of ["park","garden"]) {
+ let s=createTown(date(0));
+ const site=introSites(s,{kind:"build",id},date(0))[0];assert(site);
+ s=ok(execute(s,{type:"build",id,target:site},date(0)));
+ s=ok(execute(s,{type:"step"},date(0)));
+ assert.equal(s.completed.length,1);
+ s=readSave(JSON.parse(JSON.stringify(s)));assert(s);
+ if(!introSites(s,{kind:"build",id:"library"},date(0)).length){
+   const green=s.placed.find(p=>p.id===id);
+   const intent={kind:"move",id,instanceId:green.instanceId};
+   const target=introSites(s,intent,date(0))[0];assert(target,"Guide supplies a valid move");
+   s=ok(execute(s,{type:"move",instanceId:green.instanceId,target},date(0)));
+ }
+ const library=introSites(s,{kind:"build",id:"library"},date(0))[0];assert(library);
+ s=ok(execute(s,{type:"build",id:"library",target:library},date(0)));
+ s=ok(execute(s,{type:"step"},date(0)));
+ assert.deepEqual(s.completed,["school-yard","books"]);
+ assert.equal(execute(s,{type:"step"},date(0)).ok,false,"Third project remains daily");
+ assert.equal(execute(s,{type:"step"},date(-1)).ok,false,"Intro does not bypass clock checks");
+ assert(readSave(s));assert(s.coins>=0&&s.materials>=0);
+}
 assert.equal(connected(fresh,{x:1,y:1}),true);
 assert.equal(place(fresh,"park",{x:-1,y:0}).ok,false);
 assert.equal(place(fresh,"park",{x:2,y:2}).ok,false);
@@ -88,7 +112,7 @@ function playChapter(branch,seed=1729,communityBuilding="park") {
  const build=(id,x,y)=>go({type:"build",id,target:{x,y}});
  const relocate=(id,x,y,tx,ty)=>go({type:"move",instanceId:at(s,id,x,y),target:{x:tx,y:ty}});
  const putAway=(id,x,y)=>go({type:"store",instanceId:at(s,id,x,y)});
- const finish=()=>{go({type:"step"});assert.equal(execute(s,{type:"step"},date(day)).ok,false,"One project step per day");};
+ const finish=()=>{go({type:"step"});assert.equal(execute(s,{type:"step"},date(day)).ok,false,"No next reward without its goal or daily allowance");};
  receive();build(communityBuilding,1,3);finish();
  nextDay();relocate(communityBuilding,1,3,0,3);relocate("school",1,1,1,3);build("library",2,3);finish();
  nextDay();relocate("house",3,1,1,1);relocate("house",0,1,4,1);relocate("house",4,3,3,3);build("clinic",3,1);finish();

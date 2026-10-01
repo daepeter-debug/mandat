@@ -22,7 +22,7 @@ const backTrees=[
   {x:A+.08,y:A+.08,kind:"round",s:1,tone:2,gap:false},
 ].sort((a,b)=>(a.x+a.y)-(b.x+b.y));
 
-export default function RepublicMap({town,editing,selected,target,onCell,onObject}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;onCell:(p:Point)=>void;onObject:(id:string)=>void}) {
+export default function RepublicMap({town,editing,selected,target,suggested=[],onCell,onObject}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void}) {
   const [zoom,setZoom]=useState(1),[focus,setFocus]=useState(14);
   const viewport=useRef<HTMLDivElement>(null),svg=useRef<SVGSVGElement>(null);
   const roads=network(town);
@@ -104,6 +104,7 @@ export default function RepublicMap({town,editing,selected,target,onCell,onObjec
             <polygon points={diamond(p)} fill={road?joined?"#e3d4ad":"#cbc5b0":meadow[(hash(`${p.x}${p.y}`)+(p.x+p.y)%2*2)%4]} stroke={road?"none":"#9db676"} strokeWidth=".6"/>
             {road&&<g transform="translate(280 100)"><path d={setts(p.x,p.y)} stroke={joined?"#cdbb91":"#b3ac97"} strokeWidth=".55" fill="none"/>{edges.length>0&&<path d={edges.map(e=>seg(...e)).join("")} stroke={joined?"#f3eacf":"#e2ddcd"} strokeWidth="1.4" fill="none"/>}</g>}
             {reach&&<polygon points={diamond(p,3)} fill="#3e8b78" opacity=".2"/>}
+            {suggested.some(s=>distance(s,p)===0)&&<polygon points={diamond(p,3)} fill="#f7e4a0" stroke="#526b34" strokeWidth="2" strokeDasharray="4 2"/>}
             {target&&distance(p,target)===0&&<polygon points={diamond(p,2)} fill="#eaf6b0" stroke="#245c48" strokeWidth="2"/>}
           </g>;
         })}
@@ -127,16 +128,24 @@ export default function RepublicMap({town,editing,selected,target,onCell,onObjec
           <polygon points={pts([5.57,B-.12,0],[5.74,B-.12,0],[5.74,B-.12,4.5],[5.57,B-.12,4.5])} fill="#c8443a"/><path d={seg([5.6,B-.12,2.2],[5.71,B-.12,2.2])} stroke="#fff" strokeWidth="1.3" strokeDasharray="1.8 1.6"/>
           <Lamp x={-.5-M*.4} y={1.42}/>
         </g>
+        {town.festival?.site&&<g aria-hidden="true" pointerEvents="none" className="festival-map-scene">
+          {town.festival.preparations.map(p=><g key={p.kind} transform={`translate(${at(p).x} ${at(p).y}) scale(.62)`}><TownPiece id={p.kind==="shelter"?"pergola":p.kind==="quiet"?"bench":"flower-bed"}/></g>)}
+          <g transform={`translate(${at(town.festival.site).x} ${at(town.festival.site).y})`}>
+            <ellipse rx="35" ry="16" fill="#ecd69a" opacity=".75"/>
+            <g transform="scale(.7)"><TownPiece id={town.festival.theme==="music"?"bandstand":town.festival.theme==="food"?"market":"book-kiosk"}/></g>
+            {town.festival.response!==null&&<g className="festival-bunting"><path d="M-43 4v-60M43 4v-60" stroke="#685239" strokeWidth="2"/><path d="M-43-53Q0-34 43-53" fill="none" stroke="#685239" strokeWidth="1.2"/>{[-32,-16,0,16,32].map((x,i)=><path key={x} d={`M${x-5} ${-44-Math.abs(x)*.16}l10 0-5 10Z`} fill={["#bd7046","#6d8952","#ddbe68"][i%3]}/>)}</g>}
+          </g>
+        </g>}
         <g className="republic-input-layer">
           {cells.map((p,i)=>{const o=town.placed.find(x=>distance(x,p)===0),road=town.roads.some(x=>distance(x,p)===0);
-            return <g key={i} role="button" tabIndex={focus===i?0:-1} data-cell={`${p.x}-${p.y}`} aria-label={`${String.fromCharCode(65+p.x)}${p.y+1}: ${o?catalog[o.id].name:road?"cesta":"voľné miesto"}`} aria-pressed={target?distance(p,target)===0:undefined} onFocus={()=>setFocus(i)} onClick={()=>pick(p)} onKeyDown={e=>keyDown(e,p)}>
+            return <g key={i} role="button" tabIndex={focus===i?0:-1} data-cell={`${p.x}-${p.y}`} aria-label={`${String.fromCharCode(65+p.x)}${p.y+1}: ${o?catalog[o.id].name:road?"cesta":"voľné miesto"}${suggested.some(s=>distance(s,p)===0)?", odporúčané pre úlohu":""}`} aria-pressed={target?distance(p,target)===0:undefined} onFocus={()=>setFocus(i)} onClick={()=>pick(p)} onKeyDown={e=>keyDown(e,p)}>
               <polygon points={diamond(p,1)} className="republic-hit"/>
-              {editing&&<text x={at(p).x} y={at(p).y+4} className="republic-cell-mark">{o||road?"·":"+"}</text>}
+              {editing&&<text x={at(p).x} y={at(p).y+4} className="republic-cell-mark">{suggested.some(s=>distance(s,p)===0)?"✓":o||road?"·":"+"}</text>}
             </g>;})}
         </g>
       </svg>
     </div>
-    <div className="republic-map-tools"><span>{editing?"Vyber políčko. Ťah ešte nie je potvrdený.":"Ťukni na políčko s budovou."}</span><div>
+    <div className="republic-map-tools"><span>{editing?suggested.length?"Orámované miesta s fajkou pomôžu splniť úlohu.":"Vyber políčko. Ťah ešte nie je potvrdený.":"Ťukni na políčko s budovou."}</span><div>
       <button type="button" aria-label="Oddialiť mapu" disabled={zoom<=1} onClick={()=>setZoom(z=>Math.max(1,z-.5))}><Minus size={16}/></button>
       <button type="button" aria-label="Priblížiť mapu" disabled={zoom>=2} onClick={()=>setZoom(z=>Math.min(2,z+.5))}><Plus size={16}/></button>
       <button type="button" aria-label="Centrovať mapu" onClick={centre}><LocateFixed size={17}/></button>

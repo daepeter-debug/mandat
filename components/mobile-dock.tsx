@@ -69,7 +69,7 @@ export default function MobileDock({ views, active, onView }: { views: { id: str
       <SheetContent side="bottom" className="mobile-more">
         <SheetHeader className="mobile-more-head"><SheetTitle>Všetky sekcie</SheetTitle><SheetDescription className="sr-only">Prejsť na inú sekciu Mandátu.</SheetDescription></SheetHeader>
         <ul>{rest.map(v => <li key={v.id}><button type="button" aria-current={active === v.id ? "page" : undefined} onClick={() => go(v.id)}>{details[v.id]?.icon ?? <CalendarRange/>}<b>{v.label}</b><small>{details[v.id]?.text ?? ""}</small></button></li>)}</ul>
-        <div className="mobile-more-settings"><InstallApp/></div>
+        <div className="mobile-more-settings"><InstallApp onPrepareHome={() => onView("overview")}/></div>
       </SheetContent>
     </Sheet>
   </>;

@@ -1,0 +1,98 @@
+.festival { margin:18px 0 30px; color:var(--rep-ink,#20392f); }
+.republic[data-festival=true] .republic-topline { display:none; }
+.festival-heading { display:flex; justify-content:space-between; gap:16px; align-items:start; }
+.festival-heading h2 { font-size:clamp(25px,3vw,36px); font-weight:600; letter-spacing:-.025em; line-height:1.12; margin:0 0 9px; }
+.festival-heading p { font-size:12px; color:#536348; margin:0; }
+.festival-heading>button { display:flex; gap:7px; align-items:center; min-height:44px; font-size:12px; }
+.festival-mission { position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:13px; background:#e4edce; padding:16px 20px; border-radius:14px; margin:20px 0 14px; }
+.festival-mission>svg { flex:none; }
+.festival-mission>div { flex:1; }
+.festival-mission strong { display:block; font-size:14px; }
+.festival-mission>div>span { display:block; font-size:12px; margin-top:5px; line-height:1.45; }
+.festival-budget { font-size:13px; white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums; }
+.festival-budget b { font-size:28px; }
+.festival-budget>span { display:block; font-size:10px; }
+.festival-steps { display:flex; list-style:none; padding:0; margin:0 0 22px; border-bottom:1px solid #c6ccb8; overflow-x:auto; }
+.festival-steps li { display:flex; align-items:center; gap:7px; flex:1; padding:13px 5px; font-size:12px; white-space:nowrap; color:#58634d; }
+.festival-steps li[aria-current=step] { color:#20392f; box-shadow:inset 0 -3px #315e4b; font-weight:600; }
+.festival-steps li.is-done { color:#315e4b; }
+.festival-steps li>span { font-variant-numeric:tabular-nums; }
+.festival-layout { display:grid; grid-template-columns:minmax(310px,.85fr) minmax(0,1.25fr); gap:30px; align-items:start; }
+.festival-decisions h3 { font-size:24px; font-weight:550; letter-spacing:-.02em; line-height:1.2; margin:0 0 12px; text-wrap:balance; }
+.festival-decisions>p { font-size:13px; line-height:1.6; margin:0 0 17px; max-width:65ch; }
+.festival-options { display:flex; flex-direction:column; gap:9px; margin:16px 0; }
+.festival-options>button { display:flex; align-items:start; text-align:left; gap:12px; padding:15px; border:1px solid #c7cebb; border-radius:12px; background:#fffefa; color:inherit; min-height:76px; }
+.festival-options>button>svg { flex:none; color:#647742; margin-top:2px; }
+.festival-options>button>span { flex:1; min-width:0; }
+.festival-options b { display:block; font-size:14px; line-height:1.3; }
+.festival-options small { display:block; font-size:12px; line-height:1.5; color:#536348; margin-top:6px; }
+.festival-options strong { min-width:25px; font-size:18px; text-align:right; font-variant-numeric:tabular-nums; }
+.festival-options strong small { font-size:10px; margin-top:0; max-width:50px; }
+.festival-options>button:hover:not(:disabled),.festival-options>button[aria-pressed=true] { background:#eef3df; border-color:#315e4b; }
+.festival-options>button:disabled { opacity:.55; cursor:not-allowed; }
+.festival-impact { display:flex; flex-wrap:wrap; gap:5px 12px; font-size:11px; margin-top:9px; color:#425438; font-variant-numeric:tabular-nums; }
+.festival .festival-tip { color:#536348; font-size:12px; }
+.festival-site-preview,.festival-plan { padding-top:15px; border-top:1px solid #c7cebb; }
+.festival-site-preview p,.festival-plan p { font-size:13px; line-height:1.6; margin:10px 0; }
+.festival .festival-discovery { font-size:12px; line-height:1.5; background:#ece5cd; padding:12px; border-radius:10px; color:#4a4b30; }
+.festival-replan { display:flex; gap:6px; align-items:center; margin-top:18px; font-size:11px; min-height:44px; color:#536348; text-decoration:underline; text-underline-offset:3px; }
+.festival-scene { position:sticky; top:130px; min-width:0; }
+.festival-decisions,.festival-scene,.festival-place-confirm { scroll-margin-top:140px; }
+.festival-readiness { display:flex; align-items:center; gap:25px; padding:0 0 20px; font-size:12px; }
+.festival-readiness>span { max-width:125px; color:#536348; font-size:11px; }
+.festival-readiness>div { flex:1; display:grid; grid-template-columns:1fr auto; gap:5px 8px; }
+.festival-readiness b { font-weight:550; }
+.festival-readiness>div>span { font-variant-numeric:tabular-nums; font-size:11px; }
+.festival-readiness progress { grid-column:1/-1; appearance:none; border:0; width:100%; height:5px; background:#d8decc; color:#627847; border-radius:4px; overflow:hidden; }
+.festival-readiness progress::-webkit-progress-bar { background:#d8decc; }
+.festival-readiness progress::-webkit-progress-value { background:#627847; }
+.festival-readiness progress::-moz-progress-bar { background:#627847; }
+.festival-bunting { transform-origin:center; animation:festival-open .65s ease-out; }
+@keyframes festival-open { from { opacity:.5; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+.festival-scene-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; font-size:13px; }
+.festival-scene-heading>button { display:flex; align-items:center; gap:6px; min-height:44px; padding:0 10px; }
+.festival-locations { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.festival-locations>button { border:1px solid #c7cebb; border-radius:10px; min-height:64px; padding:9px; text-align:left; }
+.festival-locations>button[aria-pressed=true] { background:#dfeac8; border-color:#315e4b; }
+.festival-locations span { display:block; font-size:10px; margin-top:5px; }
+.festival-prepared { margin-top:16px; border-top:1px solid #c7cebb; padding-top:12px; }
+.festival-prepared h4 { font-size:13px; font-weight:600; margin:0 0 8px; }
+.festival-prepared p,.festival-prepared li,.festival-map-hint { font-size:12px; line-height:1.5; }
+.festival-prepared ul,.festival-results { list-style:none; padding:0; margin:0; }
+.festival-prepared li,.festival-results li { display:flex; align-items:center; gap:8px; margin:7px 0; }
+.festival-incident { display:flex; align-items:start; gap:12px; color:#725033; }
+.festival-incident>svg { flex:none; }
+.festival-stars { display:flex; gap:7px; color:#9b6a24; margin:18px 0; }
+.festival-results { font-size:13px; }
+.festival-reactions { margin:20px 0; }
+.festival-reactions p { font-size:13px; line-height:1.55; border-top:1px solid #d0d4c5; padding-top:12px; }
+.festival-reactions b { display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; }
+.festival-launch { display:flex; gap:14px; align-items:center; text-align:left; background:#e4edce; border-radius:12px; padding:16px 20px; width:100%; margin-bottom:18px; }
+.festival-launch>span { flex:1; }
+.festival-launch b { display:block; font-size:16px; }
+.festival-launch small { display:block; margin-top:5px; font-size:12px; line-height:1.4; color:#4f6042; }
+.festival-launch>svg { flex:none; }
+.festival button:focus-visible { outline:3px solid #795c31; outline-offset:3px; }
+.festival button { scroll-margin-block:150px 30px; }
+@media(max-width:800px) {
+ .festival-layout { grid-template-columns:minmax(0,1fr); gap:20px; }
+ .festival-scene { position:static; }
+ .festival-heading { flex-direction:column; gap:5px; }
+ .festival-heading h2 { font-size:27px; }
+ .festival-mission { padding:13px; gap:10px; align-items:start; }
+ .festival-mission>svg { display:none; }
+ .festival-mission strong { font-size:13px; }
+ .festival-mission>div>span { font-size:11px; }
+ .festival-budget b { font-size:24px; }
+ .festival-budget>span { max-width:55px; white-space:normal; }
+ .festival-steps { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px; margin-bottom:18px; overflow:visible; }
+ .festival-steps li { flex-direction:column; font-size:10px; gap:5px; padding:10px 0; white-space:normal; text-align:center; }
+ .festival-options>button { padding:13px; }
+ .festival-decisions h3 { font-size:23px; }
+ .festival .republic-primary { width:100%; }
+ .festival-launch { padding:14px; }
+ .festival-readiness { gap:12px; flex-wrap:wrap; }
+ .festival-readiness>span { width:100%; max-width:none; }
+ .festival-readiness>div { grid-template-columns:1fr; gap:3px; }
+ .festival-decisions,.festival-scene,.festival-place-confirm { scroll-margin-top:145px; }
+}

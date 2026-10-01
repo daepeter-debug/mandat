@@ -36,7 +36,7 @@ export function useServiceWorker() {
   }, []);
 }
 
-export default function InstallApp() {
+export default function InstallApp({ onPrepareHome }: { onPrepareHome: () => void }) {
   const state = useSyncExternalStore(subscribe, getState, () => "none" as InstallState);
   const [help, setHelp] = useState(false);
   if (state === "none") return null;
@@ -50,10 +50,10 @@ export default function InstallApp() {
     window.dispatchEvent(new Event(EVENT));
   }
   return <div className="app-install">
-    <button type="button" className="app-install-button" aria-expanded={state === "ios" ? help : undefined} onClick={state === "prompt" ? install : () => { setHelp(h => !h); if (!help) track("install", "ios-help"); }}>
+    <button type="button" className="app-install-button" aria-expanded={state === "ios" ? help : undefined} onClick={state === "prompt" ? install : () => { if (!help) { onPrepareHome(); track("install", "ios-help"); } setHelp(h => !h); }}>
       <Download size={20} aria-hidden="true"/>
       <span>Pridať Mandát na plochu<small>Otvára sa ako aplikácia, naposledy videné časti aj offline</small></span>
     </button>
-    {state === "ios" && help && <p className="app-install-help">V Safari ťuknite na <b><Share size={15} aria-label="Zdieľať"/> Zdieľať</b> a potom na <b>Pridať na plochu</b>.</p>}
+    {state === "ios" && help && <p className="app-install-help">Prepli sme na Prehľad, aby nová ikona otvárala úvod webu. V Safari ťuknite na <b><Share size={15} aria-label="Zdieľať"/> Zdieľať</b> a potom na <b>Pridať na plochu</b>. Ak stará ikona otvára inú sekciu, pridajte ju znova z Prehľadu.</p>}
   </div>;
 }

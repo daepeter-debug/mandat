@@ -61,7 +61,7 @@ Deterministický cyklus objednávok (riadok = rozdiel kalendárnych dní od zalo
 
 school-link = zapojená škola; three-homes = aspoň 3 zapojené domy; green-home/green-two = park alebo garden pokrýva aspoň 1/2 zapojené domy; care-two = jedna ambulancia pokrýva 2 domy; school-pair/craft-pair/market-square = príslušná kombinácia. Výber taskIds uložiť pri prvom otvorení dňa a už ho počas dňa nemeniť. Pri zmene zariadenia/času dozadu sa neobnovia staršie odmeny: starší deň odmietnuť. Počet 7 označuje návrhový cyklus, nie obmedzenie hry na týždeň.
 
-Projekt má 7 krokov. Dokončiť možno najviac jeden krok za kalendárny deň; po splnení sa stavba/rozhodnutie zapíše navždy, neskorší presun úspech nezruší. Rozostavaný krok čaká bez časového limitu. Cestovanie v čase dozadu nesmie odomknúť ďalší krok. Kontrola dátumu aj v jadre, nielen disabled tlačidlo.
+Projekt má 7 krokov. Od úpravy úvodu 30. 9. 2026 možno prvé dva kroky (školský dvor a knižnica) dokončiť pri jednej návšteve v ten istý deň. Od tretieho kroku platí najviac jeden krok za kalendárny deň, tretí sa nedá dokončiť v deň dokončenia druhého. Celú kapitolu teda možno dokončiť najskôr počas šiestich kalendárnych dní. Po splnení sa stavba/rozhodnutie zapíše navždy, neskorší presun úspech nezruší. Rozostavaný krok čaká bez časového limitu. Cestovanie v čase dozadu nesmie odomknúť ďalší krok. Kontrola dátumu aj v jadre, nielen disabled tlačidlo.
 
 Po dennej odmene môže hráč ďalej bezplatne upravovať mesto a skúmať kombinácie. Denný postup sa obnoví ďalší deň; hra ho nenúti čakať pri otvorenej obrazovke. Chýbajúce dni nič nepokazia, neexistuje streak odmena.
 
@@ -109,3 +109,19 @@ Krok 5 zvoliť museum. Krok 6 dočasne presunúť library=(4,1), dom odtiaľ odl
 Celková nutná spotreba: park 3/2 + library 6/3 + clinic 7/4 + market 6/3 + príprava 6/4 + otvorenie 8/4 = **36 C / 20 M**. Počiatočných 12/8 + sedem zásielok 56/28 + štyri projektové odmeny 8/4 dáva **76 C / 40 M**, bez objednávok a bez opakovaných dekorácií. Zámerne veľká rezerva pre prvé testovanie, nie hotové vyváženie. Podobne otestovať zvyšné dve vetvy; ich dočasná budova sa zmestí na (4,1).
 
 Tento prototyp testuje chuť tvoriť a kombinovať, nie tvrdú ekonomickú obtiažnosť. Obtiažnosť zvyšovať neskôr voliteľnými layout úlohami (napr. rovnaké pokrytie s menším počtom ciest), nikdy znížením šance na povinný predmet.
+
+## Denná slávnosť — lokálny prototyp 1. 10. 2026
+
+Peter odsúhlasil dlhší denný event s jedným cieľom rozdeleným na menšie úlohy. Prvý pilot používa existujúcu štvrť a troch fiktívnych susedov; nenahrádza kapitolu obnovy stanice.
+
+- Päť fáz: program → miesto → dve rôzne stanovištia zázemia → nečakaná komplikácia → výsledok. Medzi fázami nie je čakanie ani časovač.
+- Rozpočet je 8 prípravných bodov na pokus. Ide o samostatnú veličinu; slávnosť nespotrebúva mestské mince ani materiály a nedáva opakovateľné ekonomické odmeny.
+- Program má tri možnosti (čítanie, piknik, koncert), zázemie tri typy (krytý stánok, uvítací stolík, tichý kútik). Vybrať treba dva odlišné typy a skutočné dostupné miesta pri cestnej sieti do vzdialenosti 2 od programu.
+- Priestor mení spokojnosť: vzdialenosť od námestia, domov a programu, blízka škola/knižnica, záhrada alebo park. Prípravy sa kreslia ako dočasná vrstva nad mapou, nemenia inventár ani budovy štvrte.
+- Eva, Milan a Nina začínajú na 2 bodoch. Skóre po udalosti sa obmedzí na 0–5; spokojný sused má aspoň 3. Pred udalosťou môže príprava vytvoriť rezervu nad 5, ktorú rozhranie označí.
+- Jeden bod výsledku za aspoň dvoch spokojných susedov, jeden za osobitný cieľ dňa a jeden za najmenej 1 prípravný bod v rezerve. Osobitné ciele sa striedajú v trojdňovom cykle: spolu aspoň 11 bodov spokojnosti, Eva aspoň 4, Nina aspoň 4.
+- Komplikácia (dážď, elektrina, nával hostí) závisí deterministicky od dátumu a seedu štvrte. Odhalí sa po príprave druhého stanovišťa; má tri reakcie s cenou a dôsledkami. Rovnaký deň, retry ani preplánovanie neprežrebujú udalosť.
+- Preplánovanie vráti prípravné body. Po výsledku možno skúsiť iný plán; uloží sa najlepší výsledok daného dňa. Rozpracovanú staršiu výzvu možno dohrať po polnoci, až potom otvoriť dnešnú. Nový deň začína s novým cieľom a nulovým najlepším výsledkom.
+- Uloženie ostáva v1, pole `festival` je voliteľné; staré mestá fungujú bez migrácie. Zápisy používajú existujúce overenie revízie a ochranu pred súbežnými ťahmi.
+
+Toto je jeden druh udalosti s tromi zadaniami a tromi komplikáciami, nie hotová knižnica denných príbehov. Dĺžka hrania ani dlhodobá návratnosť zatiaľ nie sú overené hráčmi. Implementácia: `lib/republic-festival.ts`, UI: `components/republic-festival.tsx`, overenie: `node scripts/verify-festival.mjs`.

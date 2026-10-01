@@ -52,7 +52,7 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
         </article>
         <article className="games-entry games-republic">
           <div className="games-republic-art" aria-hidden="true"><RepublicArt id="school"/><RepublicArt id="station" branch="museum"/><RepublicArt id="park"/></div>
-          <div className="games-entry-body"><h2>Malá republika</h2><div className="games-entry-meta"><span>Staviteľská logika</span><span>10–15 min</span></div><p>Vytvor vlastnú štvrť pri starej stanici. Cesty, služby, objavy a malý projekt na sedem dní.</p><p className="games-entry-detail">Bez účtu · mesto sa ukladá v tomto zariadení.</p><button type="button" className="games-play" data-game="republic" onClick={() => open("republic")}>Začať stavať <ArrowRight size={17} aria-hidden="true"/></button></div>
+          <div className="games-entry-body"><h2>Malá republika</h2><div className="games-entry-meta"><span>Staviteľská logika</span><span>Denná výzva</span></div><p>Vytvor vlastnú štvrť pri starej stanici. Stavaj, objavuj spojenia a priprav slávnosť, ktorá poteší susedov.</p><p className="games-entry-detail">Bez účtu · mesto aj výzva sa ukladajú v tomto zariadení.</p><button type="button" className="games-play" data-game="republic" onClick={() => open("republic")}>Otvoriť štvrť <ArrowRight size={17} aria-hidden="true"/></button></div>
         </article>
       </div>
       <p className="games-room-footnote">Fiktívne situácie, priestor na vlastné rozhodnutia. Hry nehodnotia skutočné politické strany ani obce.</p>

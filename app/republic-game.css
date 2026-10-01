@@ -203,4 +203,58 @@
   .republic-actions b { position:absolute; right:5px; top:4px; font-size:8px; }
   .republic-view-switch { margin-bottom:4px; }
 }
+.republic-intro { display:flex; align-items:center; gap:22px; padding:24px 28px; margin:0 0 18px; background:#eee8d9; border-radius:16px; scroll-margin-top:12px; }
+.republic-intro-copy { flex:1; min-width:0; }
+.republic-intro h2 { font-size:clamp(23px,2.7vw,32px); letter-spacing:-.03em; font-weight:550; line-height:1.13; margin:0 0 10px; max-width:25ch; text-wrap:balance; }
+.republic-intro p { max-width:64ch; font-size:14px; line-height:1.6; color:#4f5d48; margin:0 0 15px; }
+.republic-intro small { display:block; font-size:11px; color:#576348; line-height:1.5; margin-top:8px; }
+.republic-intro-art { width:150px; flex:none; align-self:center; }
+.republic-intro-art>span { display:flex; align-items:center; justify-content:center; gap:6px; font-size:12px; }
+.republic-intro .republic-primary { width:fit-content; }
+.republic-intro-skip,.republic-resume-guide { min-height:44px; font-size:12px; text-decoration:underline; text-underline-offset:3px; color:#536348; }
+.republic-resume-guide { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.republic-intro-choices { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.republic-intro-choices button { display:flex; align-items:center; gap:8px; text-align:left; background:#fffefa; border-radius:10px; padding:9px; color:var(--rep-ink); border:1px solid #cdcbb8; }
+.republic-intro-choices button:hover { background:#f5f8e7; border-color:#6a8152; }
+.republic-intro-choices .republic-art { width:64px; height:74px; }
+.republic-intro-choices b { font-size:14px; font-weight:600; }
+.republic-intro-choices small { font-size:11px; margin-top:3px; }
+.republic-intro-choices strong { font-size:11px; font-weight:500; display:block; margin-top:7px; }
+.republic-intro-choices button>svg:last-child { flex:none; margin-left:auto; }
+.republic-intro .republic-intro-feedback { display:flex; gap:8px; align-items:start; color:#345c3c; margin-bottom:12px; }
+.republic-intro-feedback svg { flex:none; margin-top:3px; }
+.republic-intro-reward { display:flex; align-items:center; gap:8px; color:#345c3c; margin:6px 0 14px; font-size:13px; }
+.republic-intro.is-celebrating { background:#e4edd5; animation:republic-unpack .35s ease-out; }
+.republic-intro .republic-intro-note { font-size:12px; margin-top:10px; }
+.republic[data-guided=true] .republic-layout { grid-template-columns:minmax(0,1fr); max-width:820px; margin:auto; }
+.republic[data-guided=true] :is(.republic-side,.republic-current-goal,.republic-art-switch,.republic-actions) { display:none; }
+.republic[data-guided=true] .republic-object-detail .republic-button-row { display:none; }
+.republic[data-guided=true] .republic-map { max-width:650px; margin-inline:auto; }
+.republic-placement .republic-placement-guidance { font-size:12px; color:#345c3c; }
+@media(min-width:960px) {
+  .republic[data-guided=true] { display:grid; grid-template-columns:340px minmax(0,1fr); column-gap:24px; }
+  .republic[data-guided=true]>:not(.republic-intro):not(.republic-layout) { grid-column:1/-1; }
+  .republic[data-guided=true] .republic-intro { display:block; align-self:start; padding:24px; }
+  .republic[data-guided=true] .republic-intro-art { display:none; }
+  .republic[data-guided=true] .republic-intro-choices { grid-template-columns:1fr; }
+  .republic[data-guided=true] .republic-layout { width:100%; min-width:0; align-self:start; margin:0; }
+}
+@media(max-width:800px) {
+  .republic-intro { padding:18px; gap:12px; }
+  .republic-intro-art { width:100px; }
+  .republic-intro-choices { grid-template-columns:1fr; }
+}
+@media(max-width:560px) {
+  .republic-intro { position:relative; padding:16px; margin-bottom:9px; }
+  .republic-intro h2 { font-size:24px; max-width:22ch; padding-right:42px; }
+  .republic-intro p { font-size:12px; line-height:1.5; margin-bottom:12px; }
+  .republic-intro-art { position:absolute; top:11px; right:9px; width:54px; pointer-events:none; }
+  .republic-intro-art>span { display:none; }
+  .republic-intro .republic-primary { width:100%; font-size:12px; }
+  .republic-intro-choices .republic-art { width:50px; height:58px; }
+  .republic-intro-choices button { padding:7px 10px; }
+  .republic-intro-choices small { font-size:10px; }
+  .republic-intro-choices strong { margin-top:3px; }
+  .republic[data-guided=true] .republic-heading p { display:none; }
+}
 @media(prefers-reduced-motion:reduce) { .republic *,.republic-dialog { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }

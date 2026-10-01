@@ -81,3 +81,58 @@ Astra začala opravný priechod (pravidlá odmien, presun až po potvrdení, roz
 - Náhľady v `docs/mala-republika/previews/`: mobile-illustrations.png, desktop-illustrations.png. Nejde o test fyzického telefónu ani kompletný audit čítačky obrazovky.
 
 **Stav:** 30. 9. nasadené na `https://mandat-preview.mandat.workers.dev/?v=game&g=republic` (commit `6e7b3ae`, Cloudflare Worker verzia `c074086d-554d-411a-bcc9-4ed49bb8ba5c`). Git push aj priamy Wrangler deploy prešli, verejná stránka ukázala nové ilustrácie a prepínač grafiky bez chyby v konzole. Peter môže posúdiť výtvarný smer; až potom rozšíriť ilustrácie na zvyšné budovy a postavy. Účty a cloudové uloženie zostávajú samostatný priechod B.
+
+## 30. 9. 2026 — hrateľný úvod s Evou (lokálna revízia)
+
+Používateľ odsúhlasil prerobiť začiatok tak, aby bolo jasné čo, prečo a ako robiť, pri zachovaní doterajšej hry. Tento priechod mení prvé dve úlohy, nie celú kapitolu.
+
+- Nový `components/republic-intro.tsx`: krátky cieľ obnovy štvrte, učiteľka Eva, voľba parku alebo záhrady, priestorová úloha s knižnicou, reakcia po splnení a okamžité pokračovanie. Sprievodcu možno preskočiť a počas prvých dvoch krokov znovu zapnúť.
+- Počas úvodu je viditeľná jedna úloha a mapa. Katalóg, zbierka a objednávky sa ukážu po úvode alebo jeho preskočení. Desktop má zadanie vedľa mapy, mobil nad mapou. Pôvodná grafika aj ilustrácie zostali zachované.
+- `lib/republic-intro.ts` overuje odporúčané políčka cez skutočné herné príkazy a podmienky cieľa. Rovnaká nápoveda je vizuálne na mape aj v názvoch tlačidiel mriežky pre asistívne technológie. Stavba/presun stále vyžaduje potvrdenie. Po potvrdení sa pohľad vráti k zadaniu.
+- Školský dvor aj knižnicu možno dokončiť v ten istý deň; ďalšie kroky ostávajú denné. Pravidlo je v jadre, bez resetu alebo migrácie uloženia. Presun parku uvoľní jediné počiatočné miesto pre knižnicu pri škole a naučí bezplatné úpravy štvrte. Nedostatok zdrojov odkáže na dostupné zásielky/objednávky.
+- Nové automatizované scenáre: park aj záhrada → prvá odmena → načítanie uloženia → vhodný presun → knižnica → druhá odmena v ten istý deň; tretí krok a posun času dozadu ostávajú zamknuté.
+
+### Overenie tejto revízie
+
+- `node scripts/verify-republic.mjs` — PASS vrátane nového úvodu, pôvodných 73 ciest kapitoly a testov lokálneho uloženia/súbehu.
+- TypeScript a ESLint nad zmenenými TS/TSX/testami — PASS.
+- `npm run build` — PASS po spustení mimo Windows sandboxu (pôvodný pokus skončil spawn EPERM). Zostáva upozornenie na veľké chunky aplikácie.
+- Impeccable detector nad UI — bez nálezov. Finálne desktopové rozloženie overené snímkou.
+- Prehliadač: celý parkový úvod vrátane presunu, stavby knižnice, dvoch odmien, prechodu do voľnej hry a reloadu. Overený výber políčka klávesnicou v zozname, preskočenie sprievodcu a návrat. Bez chýb v konzole. Mobilné viewporty 390/360 px (šírka obsahu 375/345 px kvôli scrollbar): bez horizontálneho pretekania, karty voľby približne 78 px vysoké. Nejde o test fyzického telefónu ani plný audit čítačkou obrazovky.
+- Snímky: `previews/intro-desktop.png`, `previews/intro-choice-mobile.png`, `previews/intro-success-mobile.png`.
+- Test prebiehal na samostatnom lokálnom origine `http://[::1]:5173/?v=game&g=republic`. Vlastná testovacia štvrť je po kontrole vynulovaná cez bežnú funkciu s automatickou zálohou a pripravená na prvé hranie. Uloženie používateľa na localhost ani verejnom webe nebolo resetované.
+
+**Zatiaľ iba lokálne, bez pushu a nasadenia.** Účty, nové denné udalosti, postavy pohybujúce sa po mape a prepracovanie neskorších kapitol nie sú súčasťou tejto revízie. Ďalší krok: používateľ vyskúša prvé dve úlohy a posúdi zrozumiteľnosť a tempo pred nasadením.
+
+## 1. 10. 2026 — denná slávnosť (lokálny prototyp)
+
+Na schválený zámer dlhšieho denného eventu nadväzuje jedna viacstupňová výzva: program, miesto v skutočnej štvrti, dve stanovištia, komplikácia a výsledok. Tri susedské priority, obmedzených 8 bodov a priestorové bonusy vytvárajú rozdielne výsledky. Pred potvrdením reakcie vidno jej dopad. Mapové prípravy ostávajú oddelené od budov a ekonomiky pôvodnej hry.
+
+- Nové jadro `lib/republic-festival.ts`, komponent `components/republic-festival.tsx`, samostatné CSS a vrstva príprav v `republic-map.tsx`. Hra má viditeľný vstup do výzvy; pôvodná kapitola aj úvod zostávajú dostupné cez návrat do štvrte.
+- Denný cyklus troch cieľov, tri komplikácie a tri reakcie pri každej. Replay zachováva prekvapenie a najlepšie skóre daného dňa; preplánovanie vráti body. Starší rozpracovaný deň možno dokončiť, nový deň začne novým zadaním.
+- Uloženie v1 prijíma staré mestá bez `festival`. Nový stav sa validuje a používa pôvodný adaptér s ochranou súbežných zápisov. Zmenené rozloženie štvrte nemôže potichu viesť k finále s neplatnými stanovišťami.
+- Herňa má aktualizovaný popis bez neovereného časového sľubu.
+
+### Overenie
+
+- `node scripts/verify-festival.mjs`: 2 250 plánov, 955 výsledkov 3/3, dosiahnuteľné skóre 0/1/2/3; všetkých deväť kombinácií denného cieľa a udalosti má úspešné aj neúspešné plány. Test neprechádza všetky permutácie umiestnenia, pri jednotlivých stanovištiach používa prvé platné miesto.
+- Testy rozpočtu, priestorového účinku, zachovania ekonomiky, neplatných ťahov, starých/nových uložených stavov, polnoci, retry/preplánovania a konfliktu revízií. Pôvodný `verify-republic`: 73 ciest kapitoly, úvod a lokálne uloženie PASS.
+- TypeScript, ESLint zmenených súborov a produkčný build PASS. Build má existujúce upozornenie na veľké chunky. Impeccable detector UI bez nálezov.
+- Prehliadač: kompletná slávnosť kliknutím vrátane mapových miest, oboch stanovišť, reakcie a výsledku 3/3. Reload obnovil pokus z 30. 9.; jeho dohranie a následné otvorenie 1. 10. ukázalo nový cieľ a rozpočet 8/8. Konzola bez chýb. Vývojový server bolo potrebné znovu spustiť po jeho ukončení; čerstvé načítanie reaguje na kliknutia.
+- Desktop a mobilný viewport 390 × 844 (obsah 375 px): bez horizontálneho pretekania, päť krokov v jednom rade. Náhľady v `previews/festival-*.png`. Nie je to test fyzického telefónu ani úplný audit čítačky obrazovky.
+- QA origin `http://[::1]:5173` používa vlastnú testovaciu štvrť; používateľovo uloženie na localhost/verejnom webe nebolo resetované. Testovací náhľad je pripravený na začiatku výzvy 1. 10.
+
+**Iba lokálne, bez pushu a nasadenia.** Rozsah: jeden pilot slávnosti s dennými variantmi; bez účtov, rebríčka, ďalších typov eventov a pohybujúcich sa obyvateľov. Ďalší krok: Peter vyskúša výzvu bez návodu a posúdi rozhodovanie a náročnosť. Až podľa toho rozširovať obsah alebo nasadiť.
+
+## 1. 10. 2026 — nasadenie dennej výzvy a štart mobilnej aplikácie
+
+Peter požiadal nasadiť lokálnu verziu na mobilné vyskúšanie a uviedol, že ikona na ploche otvára Hospodárenie/Viac.
+
+- Nasadený celý schválený lokálny prototyp vrátane úvodu s Evou a dennej slávnosti na `https://mandat-preview.mandat.workers.dev/?v=game&g=republic`. Priamy Wrangler deploy: verzia `b90098ea-06a4-4587-8e91-781ec453d01f`.
+- `lib/app-launch.ts` nastaví úvod pred hydratáciou pri novej navigácii v standalone aplikácii, aj keď stará ikona obsahuje query inej sekcie. Reload a back/forward zachovávajú sekciu; bežné odkazy v prehliadači ostávajú funkčné. Manifestové skratky majú `launch=shortcut` a zachovajú explicitný cieľ. Samotný manifest má naďalej `start_url: /`.
+- iOS návod na pridanie ikony najprv prepne na Prehľad, aby nová ikona neuložila náhodnú sekciu. Verzia service worker cache zvýšená na `2026-10-01`; herné localStorage dáta sa nemažú.
+- `verify-app-launch`, `verify-festival`, `verify-republic`, `verify-data`, TypeScript, ESLint, produkčný build a Wrangler dry-run PASS. Build ponecháva upozornenie na veľké chunky.
+- Online mobilný viewport 390 × 844: úvod aktívny Prehľad, Viac zatvorené, obsah 375/375 px; nový bootstrap prítomný. Priamy herný odkaz otvoril novú slávnosť, začatie aj reload zachovali stav, konzola bez chýb. Snímka `previews/festival-online-mobile.png`.
+- Standalone štart je overený izolovaným testom bootstrappingu, nie fyzickým iPhonom/Androidom. Oprava sa vykoná pri novom načítaní dokumentu; samotný návrat do už bežiacej aplikácie z pozadia zámerne neprerušuje rozohranú hru.
+
+**Nasadené.** Ďalší krok: Peter otvorí ikonu nanovo a vyskúša slávnosť na svojom mobile. Ak ikona drží starý dokument, najprv obnoviť stránku alebo aplikáciu úplne zavrieť a znovu otvoriť; nepristupovať k mazaniu herných dát.

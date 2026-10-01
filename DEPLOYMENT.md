@@ -46,3 +46,9 @@ Odporúčané nastavenie Cloudflare Workers Builds pre súkromný GitHub repozit
 - Deploy command: `npm run deploy:preview`
 
 V Cloudflare: Workers & Pages → `mandat-preview` → Settings → Builds → pripojiť Git repository. Cloudflare potom nasadí nový commit po pushnutí na `main`; ostatné vetvy možno používať na náhľady pred spojením.
+
+## Nasadenie 1. 10. 2026
+
+Na žiadosť Petra nasadený úvod s Evou, denná slávnosť Malej republiky a oprava nového spustenia z mobilnej ikony (Prehľad; reload hry a explicitné skratky sa zachovajú). Build, dátové/herné testy, TypeScript, ESLint a dry-run prešli. Priamy deploy verzia `b90098ea-06a4-4587-8e91-781ec453d01f`; adresa zostáva `https://mandat-preview.mandat.workers.dev`.
+
+Online kontrola mobilného viewportu: domovská adresa otvorí Prehľad, Viac zatvorené; `/?v=game&g=republic` otvorí hru s dennou výzvou, začatie a reload ukladajú stav. Bez chýb konzoly a bez vodorovného pretekania pri obsahu 375 px. Fyzické otvorenie z ikony overí Peter; samotný návrat už bežiacej aplikácie z pozadia hru neprerušuje. Service worker cache `2026-10-01` nemení localStorage hier.

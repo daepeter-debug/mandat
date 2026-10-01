@@ -5,6 +5,7 @@ import "./news.css";
 import "./motion.css";
 import "./theme-dark.css";
 import { darkThemeColor } from "@/lib/theme-colors";
+import { appLaunchScript } from "@/lib/app-launch";
 
 
 const description = "Nezávislý prehľad volebných prieskumov a politických strán. Overiteľné zdroje, zrozumiteľné súvislosti.";
@@ -43,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="sk" suppressHydrationWarning>
       <body className="antialiased">
-        <script dangerouslySetInnerHTML={{ __html: themeScript }}/>
+        <script dangerouslySetInnerHTML={{ __html: themeScript + appLaunchScript }}/>
         {/* Písmo je v každom texte; React tieto prednačítania presunie do <head>. */}
         {fonts.map(file => <link key={file} rel="preload" as="font" type="font/woff2" href={file} crossOrigin="anonymous"/>)}
         {children}

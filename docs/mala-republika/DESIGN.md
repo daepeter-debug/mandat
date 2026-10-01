@@ -68,3 +68,13 @@ Cieľový rozpočet: lazy načítanie hry, prvá sada obrázkov približne do 1,
 ## Čo má Terra ukázať pri odovzdaní
 
 Jeden desktop a jeden mobil s reálnym stavom: rozostavaná mapa, náhľad stavby, výber zásielky a splnený projekt. Ukázať aj chybu uloženia. Jedna spoločná kontrola, jedna séria opráv a jedno potvrdenie výsledku; ďalšie leštenie len pri konkrétnom nevyriešenom probléme. Bez screenshotov nevyhlásiť vizuál a mobil za overené.
+
+## Revízia úvodu 30. 9. 2026
+
+Prvé dve úlohy používajú zjednodušený herný pohľad: jedna požiadavka učiteľky Evy a skutočná mapa. Na desktope je zadanie v ľavom stĺpci širokom 340 px, mapa vpravo; pod 960 px je zadanie nad mapou. Nový hráč najprv vyberie park alebo záhradu, potom dostane označené vhodné políčka a potvrdenie ceny. Druhá úloha učí presúvať budovy zadarmo a uvoľniť miesto pri škole pre knižnicu. Po každom kroku sa zobrazí reakcia a odmena. Pôvodná dioráma a ilustrácie sa používajú ďalej.
+
+Voľba „Chcem objavovať sám“ sprístupní všetky bežné nástroje; návrat k Eve je dostupný do dokončenia druhého kroku. Sprievodca vychádza z uloženého postupu, nevytvára nový save formát. Prvé dve odmeny možno získať počas jednej návštevy. Neskoršie denné stretnutia a rozšírenie príbehu sú ďalšia etapa, nie hotová súčasť tohto prototypu.
+
+## Denná slávnosť 1. 10. 2026
+
+Denná slávnosť pridaná 1. 10. používa tú istú vizuálnu rodinu: teplý podklad, zelené akcenty, ilustrovaná stolová mapa. Nad rozhodnutiami je vždy cieľ, rozpočet, päť krokov a aktuálna spokojnosť troch susedov; čísla sú doplnené textom a progressbarmi. Na desktope sú rozhodnutia vedľa mapy, pod 800 px v jednom stĺpci. Výber miesta posunie pohľad k potvrdeniu, výber zázemia k mape, uložený krok späť k zadaniu. Zoznam miest poskytuje alternatívu ku grafickej mape. Mestské zdroje sú počas udalosti skryté, aby sa neplietli s prípravnými bodmi. Finále ukáže splnené aj chýbajúce ciele, reakcie susedov a slávnostnú vrstvu mapy. Krátke objavenie vlajočiek rešpektuje reduced-motion. Náhľady: `previews/festival-start-desktop.png`, `previews/festival-desktop.png`, `previews/festival-mobile.png`.

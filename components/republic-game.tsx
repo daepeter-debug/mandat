@@ -4,6 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { Dialog } from "radix-ui";
 import { Archive, ArrowRight, Check, Coins, Hammer, MapPinned, PackageOpen, X, Boxes, Move, Undo2, List, Map, Download, AlertCircle, Maximize2, Minimize2, Flag } from "lucide-react";
 import RepublicMap from "@/components/republic-map";
+import RepublicFestival from "@/components/republic-festival";
+import { dailyBrief } from "@/lib/republic-festival";
+import RepublicIntro from "@/components/republic-intro";
+import { introSites } from "@/lib/republic-intro";
+import { dailyProjectError } from "@/lib/republic";
 import RepublicArt, { RepublicIllustrations } from "@/components/republic-art";
 import { accrue, branchNames, branches, catalog, combos, connected, currentStep, decorationIds, distance, execute, homesServed, pools, rarityNames, slovakDay, stepCost, taskClaimed, taskNames, taskReady, tasksFor, type Command, type DecorationId, type ItemId, type Point } from "@/lib/republic";
 import { browserStore, republicKey, type Snapshot } from "@/lib/republic-storage";
@@ -21,8 +26,11 @@ function downloadBackup(raw:string) {
   a.href=url;a.download="mala-republika-zaloha.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 export default function RepublicGame() {
+  const [festivalVisible,setFestivalVisible]=useState<boolean|null>(null);
   const [focusMode,setFocusMode]=useState(true);
   const [illustrated,setIllustrated]=useState(true);
+  const [introStarted,setIntroStarted]=useState(false),[exploring,setExploring]=useState(false);
+  const [celebration,setCelebration]=useState<string|null>(null);
   const store=useRef<ReturnType<typeof browserStore>|null>(null),inFlight=useRef(false),parcelButton=useRef<HTMLButtonElement>(null);
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false),[conflict,setConflict]=useState(false);
   const [notice,setNotice]=useState(""),[saveError,setSaveError]=useState(false),[retry,setRetry]=useState<Command|null>(null);
@@ -48,7 +56,7 @@ export default function RepublicGame() {
   },[]);
   const town=snapshot?.state?accrue(snapshot.state,today):null;
   const step=town?currentStep(town):null;
-  const dailyDone=!!town?.lastProjectDay&&town.lastProjectDay>=today;
+  const dailyDone=!!town&&dailyProjectError(town);
 
   async function refresh() {
     if(!store.current||inFlight.current)return;
@@ -64,7 +72,11 @@ export default function RepublicGame() {
       setNotice(result.message);
       if(!result.ok){setConflict(result.kind==="conflict");setSaveError(result.kind==="storage");setRetry(command);return false;}
       setSnapshot(result.snapshot);setSaveError(false);setRetry(null);
-      if(reset){setIntent(null);setTarget(null);setObjectId(null);setPanel(null);setResetOpen(false);}
+      if(command?.type==="step"&&snapshot.state&&snapshot.state.completed.length<2&&!exploring) {
+        setCelebration(snapshot.state.completed.length===0?"Školský dvor je otvorený.":"Školská štvrť už žije.");
+        requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-intro")?.scrollIntoView({block:"start",behavior:"instant"}));
+      }
+      if(reset){setFestivalVisible(null);setIntent(null);setTarget(null);setObjectId(null);setPanel(null);setResetOpen(false);setIntroStarted(false);setExploring(false);setCelebration(null);}
       return true;
     } finally {inFlight.current=false;setBusy(false);}
   }
@@ -98,26 +110,42 @@ export default function RepublicGame() {
   const collection=decorationIds.filter(id=>town.unlocked.includes(id));
   const activeCombos=combos(town);
   const parcel=town.pending;
+  const festivalOpen=!!town.festival&&(festivalVisible??town.festival.response===null);
+  const guided=!festivalOpen&&((!exploring&&town.completed.length<2)||!!celebration);
+  const green=town.placed.find(o=>o.id==="park"||o.id==="garden");
+  const librarySites=guided&&step?.id==="books"?introSites(town,{kind:"build",id:"library"},today):[];
+  const suggested=guided&&intent&&intent.kind!=="road"?introSites(town,intent,today):[];
+  const nextBuild=town.completed.length===0?"park":"library";
+  const needsFunds=!(town.completed.length===0&&green)&&!town.inventory.some(o=>o.id===nextBuild)&&(town.coins<catalog[nextBuild].coins||town.materials<catalog[nextBuild].materials);
+  const startMove=()=>{if(green){setIntent({kind:"move",id:green.id,instanceId:green.instanceId});setTarget(null);setObjectId(null);}};
 
-  return <RepublicIllustrations.Provider value={illustrated}><section className="republic" data-focus={focusMode} onKeyDown={e=>{if(e.key==="Escape"){cancel();setPanel(null);setObjectId(null);}}}>
+  return <RepublicIllustrations.Provider value={illustrated}><section className="republic" data-focus={focusMode} data-guided={guided} data-festival={festivalOpen} onKeyDown={e=>{if(e.key==="Escape"){cancel();setPanel(null);setObjectId(null);}}}>
     <button className="republic-focus-toggle" aria-pressed={focusMode} onClick={()=>setFocusMode(!focusMode)}>{focusMode?<Minimize2 size={15}/>:<Maximize2 size={15}/>} {focusMode?"Zobraziť celý web":"Sústrediť sa na hru"}</button>
     <header className="republic-heading"><div><h1>Malá republika<span>.</span></h1><p>Veľké veci začínajú v malej štvrti.</p></div><span className={saveError?"republic-save has-error":"republic-save"}>{saveError?<AlertCircle size={15}/>:<Check size={15}/>} {busy?"Ukladám…":saveError?"Neuložené":conflict?"Novší postup v inej karte":"Uložené v zariadení"}</span></header>
     {(conflict||saveError)&&<div className="republic-storage-alert" role="alert"><p>{conflict?"Iná karta zmenila mesto. Tvoj nepotvrdený ťah sa nezapísal.":notice}</p><button disabled={busy} onClick={()=>conflict?void refresh():void run(retry)}>{conflict?"Načítať novší postup":"Skúsiť uložiť znova"}</button></div>}
     <div className="republic-topline"><div><strong>{town.name}</strong><span>Projekt {town.completed.length} / 7</span></div><div className="republic-resources"><span><Coins size={16}/><b>{town.coins}</b> mincí</span><span><Boxes size={16}/><b>{town.materials}</b> materiálov</span></div></div>
-    <div className="republic-layout">
+    {!festivalOpen&&<button className="festival-launch" disabled={blocked} onClick={async()=>{if(town.festival||await run({type:"festival-start"})){setFestivalVisible(true);setCelebration(null);cancel();setObjectId(null);}}}><Flag size={24}/><span><b>{town.festival?.response===null?"Pokračovať v príprave slávnosti":town.festival?"Výsledok slávnosti a ďalší pokus":dailyBrief(today).title}</b><small>Denná výzva · program, miesto, dve stanovištia a nečakaná udalosť. Bez čakania medzi úlohami.</small></span><ArrowRight size={20}/></button>}
+    {festivalOpen&&<RepublicFestival town={town} blocked={blocked} onCommand={async c=>{const ok=await run(c);if(ok)setFestivalVisible(true);return ok;}} onClose={()=>setFestivalVisible(false)}/>}{festivalOpen&&<p className="republic-notice" role="status">{notice}</p>}
+    {guided&&<RepublicIntro chapter={town.completed.length} started={introStarted||!!green||town.completed.length>0} ready={ready} placing={!!intent} moving={intent?.kind==="move"} celebration={celebration} needsSpace={librarySites.length===0&&!!green} hasGreen={!!green} blocked={blocked} needsFunds={needsFunds}
+      onStart={()=>setIntroStarted(true)} onBuild={selectBuild} onMove={startMove} onFinish={()=>void run({type:"step"})}
+      onContinue={()=>{setCelebration(null);setIntroStarted(true);if(town.completed.length>=2)setExploring(true);}}
+      onExplore={()=>{setExploring(true);setCelebration(null);cancel();}}/>}
+    {!festivalOpen&&!guided&&town.completed.length<2&&<button className="republic-resume-guide" onClick={()=>{setExploring(false);setIntroStarted(true);cancel();}}>Ukázať prvé kroky s Evou<ArrowRight size={15}/></button>}
+    {!festivalOpen&&<div className="republic-layout">
       <div className="republic-stage">
         <div className="republic-art-switch" role="group" aria-label="Grafika štvrte"><span>Grafika</span><button aria-pressed={illustrated} onClick={()=>setIllustrated(true)}>Ilustrácie</button><button aria-pressed={!illustrated} onClick={()=>setIllustrated(false)}>Pôvodná kresba</button><small>Ukážka 4 objektov</small></div>
         <a className="republic-current-goal" href="#republic-project"><Flag size={19}/><span><b>{dailyDone?"Dnešný krok je hotový":step?step.name:"Stanica znova žije"}</b><small>{dailyDone?"Môžeš ďalej stavať a plniť objednávky.":step?.goal??"Uprav si štvrť a objav ďalšie kombinácie."}</small></span><ArrowRight size={17}/></a>
         <div className="republic-view-switch" role="group" aria-label="Zobrazenie štvrte"><button aria-pressed={view==="map"} onClick={()=>setView("map")}><Map size={15}/> Mapa</button><button aria-pressed={view==="list"} onClick={()=>setView("list")}><List size={15}/> Zoznam a políčka</button><span>6 × 6 políčok</span></div>
-        {view==="map"?<RepublicMap town={town} editing={!!intent} selected={selected} target={target} onCell={selectCell} onObject={setObjectId}/>:<div className="republic-list-view">
+        {view==="map"?<RepublicMap town={town} editing={!!intent} selected={selected} target={target} suggested={suggested} onCell={selectCell} onObject={setObjectId}/>:<div className="republic-list-view">
           <p>{intent?"Vyber cieľové políčko. Stavbu potvrdíš pod mapou.":"Vyber budovu na mriežke alebo v zozname."}</p>
-          <div className="republic-coordinate-grid">{Array.from({length:36},(_,i)=>({x:i%6,y:Math.floor(i/6)})).map(p=>{const obj=town.placed.find(o=>distance(p,o)===0),road=town.roads.some(r=>distance(p,r)===0);return <button key={coords(p)} className={obj?"occupied":road?"road":""} aria-pressed={target?distance(target,p)===0:false} aria-label={`${coords(p)}: ${obj?catalog[obj.id].name:road?"cesta":"voľné"}`} onClick={()=>selectCell(p)}>{coords(p)}<small>{obj?catalog[obj.id].name:road?"cesta":"voľné"}</small></button>;})}</div>
+          <div className="republic-coordinate-grid">{Array.from({length:36},(_,i)=>({x:i%6,y:Math.floor(i/6)})).map(p=>{const obj=town.placed.find(o=>distance(p,o)===0),road=town.roads.some(r=>distance(p,r)===0);return <button key={coords(p)} className={obj?"occupied":road?"road":""} aria-pressed={target?distance(target,p)===0:false} aria-label={`${coords(p)}: ${obj?catalog[obj.id].name:road?"cesta":"voľné"}${suggested.some(s=>distance(s,p)===0)?", odporúčané pre úlohu":""}`} onClick={()=>selectCell(p)}>{coords(p)}{suggested.some(s=>distance(s,p)===0)&&" ✓"}<small>{obj?catalog[obj.id].name:road?"cesta":"voľné"}</small></button>;})}</div>
           <ul className="republic-building-list">{town.placed.map(o=><li key={o.instanceId}><button onClick={()=>setObjectId(o.instanceId)}><RepublicArt id={o.id} branch={o.id==="station"?town.branch:null}/><span><b>{catalog[o.id].name}</b><small>{coords(o)} · {o.id==="plaza"?"začiatok siete":connected(town,o)?"napojené":"bez spojenia"}</small></span><ArrowRight size={16}/></button></li>)}</ul>
         </div>}
         {intent&&<div className="republic-placement">
           <div><b>{intent.kind==="road"?"Upraviť cestu":`${intent.kind==="move"?"Presunúť":"Umiestniť"}: ${catalog[intent.id].name}`}</b><button aria-label="Zrušiť umiestňovanie" onClick={cancel}><X size={18}/></button></div>
           {target?<><p>{preview?.ok?`${coords(target)} · ${connectedPreview?"napojené na námestie":"bez cesty k námestiu"}${selected&&["clinic","park","garden"].includes(selected)?` · domy v dosahu: ${served}`:""}`:preview&&!preview.ok?preview.message:""}</p>
-            <div className="republic-placement-footer"><span>{cost.coins||cost.materials?`${cost.coins} mincí · ${cost.materials} materiály`:"Zadarmo"}</span><button className="republic-primary" disabled={!preview?.ok||blocked} onClick={async()=>{if(command&&await run(command)){if(intent.kind==="road")setTarget(null);else cancel();}}}>Potvrdiť {intent.kind==="move"?"presun":intent.kind==="road"?"cestu":"stavbu"}<Check size={16}/></button></div>
+            {guided&&preview?.ok&&<p className="republic-placement-guidance">{suggested.some(p=>distance(p,target)===0)?intent?.kind==="move"&&town.completed.length===1?"Tu zeleň zostane dostupná a pri škole vznikne miesto pre knižnicu.":"Toto miesto splní Evinu úlohu.":"Tu sa stavať dá, ale Evinu úlohu tým ešte nesplníš. Skús označené miesto."}</p>}
+            <div className="republic-placement-footer"><span>{cost.coins||cost.materials?`${cost.coins} mincí · ${cost.materials} materiály`:"Zadarmo"}</span><button className="republic-primary" disabled={!preview?.ok||blocked} onClick={async()=>{if(command&&await run(command)){if(intent.kind==="road")setTarget(null);else {cancel();if(guided)requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-intro")?.scrollIntoView({block:"start",behavior:"instant"}));}}}}>Potvrdiť {intent.kind==="move"?"presun":intent.kind==="road"?"cestu":"stavbu"}<Check size={16}/></button></div>
           </>:<p>Vyber políčko na mape alebo v zozname. {intent.kind==="move"?"Pôvodná budova zatiaľ zostáva na mieste.":intent.kind==="road"?"Klepnutie na cestu ju odstráni. Režim ostáva zapnutý, kým ho nezavrieš.":"Pred potvrdením uvidíš cenu a napojenie."}</p>}
         </div>}
         {object&&!intent&&<div className="republic-object-detail"><RepublicArt id={object.id} branch={object.id==="station"?town.branch:null} finished={town.completed.includes("opening")}/><div><h3>{object.id==="station"&&town.branch?branchNames[town.branch]:catalog[object.id].name}</h3><p>{coords(object)} · {object.id==="plaza"?"Tu začína cestná sieť.":connected(town,object)?"Napojené na námestie.":"Chýba susedná cesta vedúca k námestiu."}</p>
@@ -135,7 +163,7 @@ export default function RepublicGame() {
             return <button key={id} onClick={()=>selectBuild(id)}><RepublicArt id={id}/><b>{entry.name}</b><span>{count?`V zásobe: ${count} · zadarmo`:entry.kind==="decoration"?"Odomknuté · zadarmo":`${entry.coins} mincí · ${entry.materials} mat.`}</span>{!affordable&&<small>Chýbajú zdroje</small>}</button>;
           })}</div>}
         </div>}
-        <p className="republic-notice" role="status" aria-live="polite">{notice||"Tip na začiatok: postav park pri škole a pripoj ho k ceste."}</p>
+        <p className="republic-notice" role="status" aria-live="polite">{notice||(guided?"Tvoja voľba mení skutočnú štvrť. Presun stavieb je zadarmo.":"Vyber budovu a preskúmaj, komu v okolí pomáha.")}</p>
       </div>
       <aside className="republic-side">
         <article className="republic-project" id="republic-project" tabIndex={-1}>
@@ -149,11 +177,11 @@ export default function RepublicGame() {
         <section className="republic-orders"><h2>Dnes v štvrti</h2><p>Tri malé objednávky. Každá za 2 mince a 1 materiál.</p>{tasksFor(town).map(t=>{const claimed=taskClaimed(town,t),available=taskReady(town,t);return <button key={t} disabled={blocked||claimed||!available} onClick={()=>void run({type:"task",task:t})}><span className={claimed?"done":""}>{claimed?<Check size={15}/>:<span className="republic-dot"/>}</span><b>{taskNames[t]}</b><small>{claimed?"hotovo":available?"vyzdvihnúť":"pripraviť"}</small></button>;})}</section>
         <section className="republic-combos"><h2>Čo spolu funguje</h2>{(Object.keys(activeCombos) as (keyof typeof activeCombos)[]).map(k=><div key={k} className={activeCombos[k]?"is-ready":""}><Check size={15}/><p><b>{comboNames[k]}</b><small>{comboHints[k]}</small></p></div>)}</section>
       </aside>
-    </div>
+    </div>}
     <details className="republic-help"><summary>Pravidlá, názov štvrte a uloženie</summary><div>
       <p>Budovy potrebujú susednú cestu spojenú s námestím. Dosah 2 sa počíta po vodorovných a zvislých políčkach, nie diagonálne. Zelená bodka znamená napojenie; hnedá s pomlčkou chýbajúcu cestu.</p>
       <p>Každý deň v slovenskom čase pribudne zásielka, najviac tri do zásoby. Každá dá 8 mincí a 4 materiály; duplicitná ozdoba pridá 2 materiály navyše. Triedy zásielok: bežná 60 %, neobvyklá 25 %, vzácna 12 %, epická 3 %. Dekorácie nemenia ekonomiku.</p>
-      <p>Jeden krok projektu denne. Vynechanie dní mesto nepoškodí. Hosť používa dátum zariadenia. Postup je len v tomto prehliadači; vymazanie dát stránky ho odstráni. Limit zdrojov je 999.</p>
+      <p>Prvé dva kroky môžeš dokončiť pri jednej návšteve. Potom jeden krok projektu denne. Vynechanie dní mesto nepoškodí. Hosť používa dátum zariadenia. Postup je len v tomto prehliadači; vymazanie dát stránky ho odstráni. Limit zdrojov je 999.</p>
       <form onSubmit={async e=>{e.preventDefault();if(await run({type:"rename",name}))setName("");}}><label htmlFor="republic-name">Názov štvrte</label><div className="republic-button-row"><input id="republic-name" value={name} placeholder={town.name} maxLength={40} onChange={e=>setName(e.target.value)}/><button disabled={blocked||!name.trim()}>Uložiť názov</button></div></form>
       <div className="republic-button-row"><button onClick={backup}><Download size={16}/> Stiahnuť zálohu</button><button onClick={()=>setResetOpen(true)}><Undo2 size={16}/> Nová štvrť…</button></div>
       {resetOpen&&<div className="republic-confirm"><p>Nahradiť aktuálnu štvrť novou? Súčasné uloženie najprv automaticky zálohujeme.</p><button disabled={blocked} onClick={()=>void run(null,true)}>Potvrdiť nový začiatok</button><button onClick={()=>setResetOpen(false)}>Zrušiť</button></div>}

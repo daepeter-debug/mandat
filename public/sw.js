@@ -2,7 +2,7 @@
 // Stránky: najprv sieť (vždy čerstvé údaje), bez siete posledná uložená verzia alebo offline.html.
 // Súbory s hashom v názve (/_next/static) a písma: z cache. Obrázky: z cache a na pozadí sa obnovia.
 // Pri zmene tohto súboru zvýšiť VERSION (staré cache sa zmažú).
-const VERSION = "2026-09-23";
+const VERSION = "2026-10-01";
 const PAGES = `mandat-pages-${VERSION}`;
 const STATIC = `mandat-static-${VERSION}`;
 const MEDIA = `mandat-media-${VERSION}`;
