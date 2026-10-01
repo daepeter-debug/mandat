@@ -235,3 +235,16 @@ Peter požiadal o pokračovanie po úvode, väčšiu výzvu a možnosť posunú�
 - Vlastné súbory commitnuté ako `02deab6`, pred pushom `git pull --rebase` (aktuálny main), push na GitHub úspešný. Verejný web potom ešte ukazoval staré CSS, preto overený build nasadený priamo cez `npm run deploy:preview` s existujúcim `wrangler.preview.jsonc` do mandat-preview. Cloudflare verzia `6cfe9a8a-e13a-4db6-bbab-9e5c881ee946`.
 - Nový verejný herný JS vracia HTTP 200 a SHA-256 je zhodné s lokálnym overeným buildom. Obnovená verejná hra vykresľuje všetky tri aktívne prúdy rieky; mobil 375 × 844 má scrollWidth 360 px a konzola nemá error/warn. Verejná rozpracovaná slávnosť nebola resetovaná ani dokončená počas kontroly. Dôkaz `previews/celebration-deployed-mobile.png`.
 - Verejný odkaz: https://mandat-preview.mandat.workers.dev/?v=game&g=republic . Natívne zdieľanie a posúvanie prstom ostávajú na vyskúšanie na fyzickom telefóne.
+
+## 1. 10. 2026 večer — kontrola nasadenia a opravy (Claude, commit `bed6f5a`)
+
+- Kontrola nasadeného `26f4c25`: všetky verify skripty, TypeScript, ESLint aj build prešli; konzola na živom webe bez chýb. Zastaraný bol tmavý režim (`theme-dark.css` neobsahoval `republic-festival.css` ani nové štýly hry).
+- Opravené a nasadené:
+  - **pohľadnica** kreslí terén, hostí a lampióny aj vtedy, keď mapa ešte nebola na obrazovke (`festivalStill` v `republic-map.tsx`);
+  - **ľudia pri budovách** (gatherings) sa radia s budovami podľa hĺbky x + y v jednej vrstve (`layers` + `GatheringPerson` v `republic-map.tsx`), v noci ich stmaví rovnaký závoj;
+  - **tmavý režim** pregenerovaný;
+  - **dátum** „1. 10. 2026“ (`slovakDate` v `lib/republic-celebration.ts`, test vo `verify-celebration`);
+  - **„Chcem objavovať sám“** sa pamätá v `localStorage` kľúči `mandat:republic:v1:explore` (mimo uloženia štvrte; reset štvrte ho zmaže).
+- Overené naživo na mobile 375 px: pohľadnica vytvorená bez posúvania k mape má terén aj hostí; po obnovení stránky sa Eva po „objavovať sám“ neukáže; ľudia sú v DOM medzi budovami podľa hĺbky.
+- **Pre Codex:** necommitnuté zmeny v pracovnom strome (zoznam miest slávnosti, potok) vznikli nad `26f4c25`. Pred pokračovaním: `git stash` → `git pull --ff-only` → `git stash pop` (zmeny sú v iných častiach súborov). Po každej zmene CSS spustiť `node scripts/build-dark.mjs`.
+- Netestované: animácia slávnosti v reálnom čase (v skrytom paneli nebeží requestAnimationFrame) a pohľadnica/zdieľanie na fyzickom iPhone.
