@@ -229,3 +229,9 @@ Peter požiadal o pokračovanie po úvode, väčšiu výzvu a možnosť posunú�
 - Peter počas práce výslovne autorizoval rovno nasadzovať overené rozšírenia. Táto aktualizácia nahrádza skoršie čakajúce OK; zachytená aj v `LIVING-EXPANSIONS.md`. Nasadenie tejto verzie sa zapíše po kontrole verejného webu.
 
 **Ďalší krok:** rozšírenie 3 — návšteva suseda cez krátky prísne validovaný odkaz, iba na čítanie a bez zásahu do vlastného uloženia. Potom rozšírenie 4 — fiktívne komunálne voľby, s overením aktuálnych právnych zdrojov a termínom pred 24. 10. Tieto dve časti zatiaľ nie sú implementované.
+
+### Rozšírenie 2 nasadené
+
+- Vlastné súbory commitnuté ako `02deab6`, pred pushom `git pull --rebase` (aktuálny main), push na GitHub úspešný. Verejný web potom ešte ukazoval staré CSS, preto overený build nasadený priamo cez `npm run deploy:preview` s existujúcim `wrangler.preview.jsonc` do mandat-preview. Cloudflare verzia `6cfe9a8a-e13a-4db6-bbab-9e5c881ee946`.
+- Nový verejný herný JS vracia HTTP 200 a SHA-256 je zhodné s lokálnym overeným buildom. Obnovená verejná hra vykresľuje všetky tri aktívne prúdy rieky; mobil 375 × 844 má scrollWidth 360 px a konzola nemá error/warn. Verejná rozpracovaná slávnosť nebola resetovaná ani dokončená počas kontroly. Dôkaz `previews/celebration-deployed-mobile.png`.
+- Verejný odkaz: https://mandat-preview.mandat.workers.dev/?v=game&g=republic . Natívne zdieľanie a posúvanie prstom ostávajú na vyskúšanie na fyzickom telefóne.
