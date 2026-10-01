@@ -1,0 +1,22 @@
+.republic-share { margin:10px 0 18px; }
+.republic-share-button { display:inline-flex; gap:7px; align-items:center; min-height:44px; padding:9px 13px; border:1px solid #b8c8b4; border-radius:10px; background:#fffefa; color:#245c48; font:inherit; font-size:13px; font-weight:600; cursor:pointer; }
+.republic-share-button:hover { background:#edf2e6; }
+.republic-share-link { margin-top:10px; max-width:540px; }
+.republic-share-link label { display:block; font-size:12px; font-weight:600; margin-bottom:5px; }
+.republic-share-link>div { display:flex; gap:6px; }
+.republic-share-link input { min-width:0; flex:1; min-height:44px; border:1px solid #b8c8b4; border-radius:8px; padding:8px; color:#20392f; background:#fffefa; font-size:12px; }
+.republic-share-link button { display:grid; place-items:center; min-width:44px; border:1px solid #b8c8b4; border-radius:8px; color:#245c48; background:#edf2e6; cursor:pointer; }
+.republic-share-link small,.republic-share>p { display:block; font-size:12px; line-height:1.5; color:#546352; margin:6px 0 0; }
+.republic-visit { color:#20392f; background:#f5f4ee; padding:22px; border-radius:16px; }
+.republic-visit-heading { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px; margin-bottom:14px; }
+.republic-visit-heading>div { min-width:0; }
+.republic-visit-heading h1 { font-size:clamp(24px,3vw,34px); line-height:1.2; letter-spacing:-.025em; margin:0; overflow-wrap:anywhere; }
+.republic-visit-heading p { display:flex; align-items:center; flex-wrap:wrap; gap:6px; font-size:13px; color:#546352; margin:8px 0 0; }
+.republic-visit-note { max-width:68ch; font-size:14px; line-height:1.6; margin:0 0 18px; }
+.republic-visit-caption { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; font-size:13px; margin:10px 0 24px; }
+.republic-visit-caption p { margin:0; }
+.republic-visit-footer { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; border-top:1px solid #d6dccb; padding-top:20px; }
+.republic-visit-footer h2 { font-size:21px; margin:0; }
+.republic-visit-footer p { font-size:13px; line-height:1.5; margin:5px 0 0; }
+.republic-visit :focus-visible,.republic-share :focus-visible { outline:3px solid #53845a; outline-offset:3px; }
+@media(max-width:560px) { .republic-visit { padding:16px 10px; } .republic-visit-footer .plan-now-button { width:100%; } }

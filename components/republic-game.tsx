@@ -5,6 +5,7 @@ import { Dialog } from "radix-ui";
 import { Archive, ArrowRight, Check, Coins, Hammer, MapPinned, PackageOpen, X, Boxes, Move, Undo2, List, Map, Download, AlertCircle, Maximize2, Minimize2, Flag, Volume2, VolumeX, AlertTriangle } from "lucide-react";
 import { PlanPanel, PlanToday, WinBanner, type Win } from "@/components/republic-plan";
 import RepublicElection from "@/components/republic-election";
+import RepublicVisit, { ShareNeighbourhood } from "@/components/republic-visit";
 import { placementOptions, playerPlan, type PlanAction } from "@/lib/republic-plan";
 import { homeWishes, townSatisfaction } from "@/lib/republic-trust";
 import { electionPhase } from "@/lib/republic-election";
@@ -34,6 +35,20 @@ function downloadBackup(raw:string) {
 const exploreKey="mandat:republic:v1:explore";
 const readExplore=()=>{try{return localStorage.getItem(exploreKey)==="1";}catch{return false;}};
 export default function RepublicGame() {
+  const [visit, setVisit] = useState<string|null|undefined>(undefined);
+  useEffect(()=>{
+    const changed=()=>setVisit(new URLSearchParams(window.location.search).get("navsteva"));
+    changed(); window.addEventListener("popstate",changed);
+    return ()=>window.removeEventListener("popstate",changed);
+  },[]);
+  function returnHome() {
+    const url=new URL(window.location.href);url.searchParams.delete("navsteva");
+    window.history.replaceState(null,"",url);setVisit(null);
+  }
+  if(visit===undefined)return <p className="republic-loading" role="status">Otváram štvrť…</p>;
+  return visit!==null?<RepublicVisit key={visit} code={visit} onReturn={returnHome}/>:<OwnRepublicGame/>;
+}
+function OwnRepublicGame() {
   const [festivalVisible,setFestivalVisible]=useState<boolean|null>(null);
   const [focusMode,setFocusMode]=useState(true);
   const [illustrated,setIllustrated]=useState(true);
@@ -174,6 +189,7 @@ export default function RepublicGame() {
     <WinBanner win={win} onClose={closeWin}/>
     {(conflict||saveError)&&<div className="republic-storage-alert" role="alert"><p>{conflict?"Iná karta zmenila mesto. Tvoj nepotvrdený ťah sa nezapísal.":notice}</p><button disabled={busy} onClick={()=>conflict?void refresh():void run(retry)}>{conflict?"Načítať novší postup":"Skúsiť uložiť znova"}</button></div>}
     <div className="republic-topline"><div><strong>{town.name}</strong><span>Projekt {town.completed.length} / 7</span></div><div className="republic-resources"><span><Coins size={16}/><b>{town.coins}</b> mincí</span><span><Boxes size={16}/><b>{town.materials}</b> materiálov</span></div></div>
+    {!guided&&<ShareNeighbourhood town={town}/>}
     {!festivalOpen&&!guided&&<PlanPanel plan={plan} satisfaction={satisfaction} project={town.completed.length} journey={town.festivalJourney?.stage??0} electionDays={election.phase==="po"?null:election.days} blocked={blocked} onAction={planAction}/>}
     {!festivalOpen&&!guided&&<div className="republic-story-entry"><button className="festival-launch" disabled={blocked} onClick={()=>void openStory()}><Flag size={24}/><span><b>{town.festival?.response===null?"Pokračovať v rozpracovanej výzve":journeyFinished?dailyBrief(today).title:`Deň ${(town.festivalJourney?.stage??0)+1}: ${journeyDays[town.festivalJourney?.stage??0].title}`}</b><small>{journeyFinished?"Príbeh je hotový. Vyrieš nové denné zadanie a vylepši svoj výsledok.":"Príbeh štvrte · 7 herných dní bez čakania · na konci vlastná slávnostná brána."}</small></span><ArrowRight size={20}/></button>
       {!journeyFinished&&town.festival?.response!==null&&<button className="republic-daily-entry" disabled={blocked} onClick={async()=>{if(await run({type:"festival-start"})){setFestivalVisible(true);cancel();setObjectId(null);}}}>Alebo dnešná výzva · {dailyBrief(today).title}<ArrowRight size={14}/></button>}

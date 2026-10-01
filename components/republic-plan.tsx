@@ -40,8 +40,7 @@ export function PlanPanel({ plan, satisfaction, project, journey, electionDays, 
   const next = plan.next;
   return <section className="republic-plan" aria-label="Kde som a čo ďalej">
     <div className="plan-goal">
-      <p className="plan-kicker"><Flag size={14} aria-hidden="true"/> Hlavný cieľ</p>
-      <h2>Vráť život štvrti pri starej stanici</h2>
+      <h2><Flag size={20} aria-hidden="true"/> Vráť život štvrti pri starej stanici</h2>
       <p className="plan-goal-text">Sedem krokov projektu, sedem dní slávností a spokojní susedia{electionDays !== null ? " pred voľbami v štvrti" : ""}.</p>
       <div className="plan-meters">
         <Meter label="Projekt" value={project} max={7} text={`${project}/7`}/>
@@ -53,14 +52,13 @@ export function PlanPanel({ plan, satisfaction, project, journey, electionDays, 
     <div className="plan-now-column">
       {plan.blockers.map(b => <div key={b.key} className="plan-blocker" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{b.title}</b><p>{b.detail}</p></div></div>)}
       {next && !(plan.idle && next.key === "story") ? <div className="plan-now" data-status={next.status}>
-        <p className="plan-kicker">{next.status === "ready" ? "Teraz môžeš" : "Ďalší krok"}</p>
         <h3>{next.title}</h3>
+        <p className="plan-next-status">{next.status === "ready" ? "Teraz môžeš" : "Ďalší krok"}</p>
         <p>{next.detail}</p>
         {next.progress && <p className="plan-progress">Stav: <b>{next.progress.have}/{next.progress.need}</b></p>}
         <div className="plan-now-footer"><RewardChips reward={next.reward} cost={next.cost}/>
           {next.action.type !== "none" && <button className="plan-now-button" disabled={blocked} onClick={() => onAction(next.action, next)}>{actionLabel(next.action, next)}<ArrowRight size={16} aria-hidden="true"/></button>}</div>
       </div> : <div className="plan-now is-idle">
-        <p className="plan-kicker">Dnes</p>
         <h3>Na dnes máš projekt aj objednávky hotové.</h3>
         <p>Zajtra príde nová zásielka, ďalší krok projektu a nové objednávky. Medzitým môžeš štvrť preplánovať (presuny sú zadarmo) alebo zahrať slávnosť.</p>
         <div className="plan-now-footer"><button className="plan-now-button" disabled={blocked} onClick={() => onAction(plan.story.action, plan.story)}>{plan.story.title}<ArrowRight size={16} aria-hidden="true"/></button></div>

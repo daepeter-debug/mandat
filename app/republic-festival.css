@@ -71,6 +71,14 @@
 .festival-locations>button { border:1px solid #c7cebb; border-radius:10px; min-height:64px; padding:9px; text-align:left; }
 .festival-locations>button[aria-pressed=true] { background:#dfeac8; border-color:#315e4b; }
 .festival-locations span { display:block; font-size:10px; margin-top:5px; }
+.festival-place-list h4 { font-size:13px; font-weight:600; margin:16px 0 10px; }
+.festival-place-list h4:first-child { margin-top:8px; }
+.festival-place-list>ul { list-style:none; padding:0; margin:0 0 20px; }
+.festival-place-list li { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #d9decd; }
+.festival-place-coordinate { display:grid; place-items:center; flex:none; width:36px; height:36px; border-radius:8px; background:#e4edce; color:#315e4b; font-size:12px; font-weight:600; }
+.festival-place-list li b { display:block; font-size:13px; font-weight:500; }
+.festival-place-list li small { display:block; color:#4c614a; font-size:11px; margin-top:3px; }
+.festival-place-list>p { font-size:12px; line-height:1.5; color:#4c614a; }
 .festival-prepared { margin-top:16px; border-top:1px solid #c7cebb; padding-top:12px; }
 .festival-prepared h4 { font-size:13px; font-weight:600; margin:0 0 8px; }
 .festival-prepared p,.festival-prepared li,.festival-map-hint { font-size:12px; line-height:1.5; }

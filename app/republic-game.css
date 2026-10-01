@@ -300,7 +300,15 @@
   .republic-welcome h2 { font-size:28px; max-width:22ch; padding-right:0; }
   .republic-welcome p { font-size:13px; }
 }
-.republic-river-current { animation:republic-river-flow 13s linear infinite; }
-.republic-river[data-running=false] .republic-river-current { animation-play-state:paused; }
-@keyframes republic-river-flow { to { stroke-dashoffset:-76; } }
+.republic-river-current { animation:republic-river-flow 4.4s linear infinite; }
+.republic-river-texture { opacity:0; animation:republic-water-surface 3.6s linear infinite; }
+.republic-river[data-running=false] .republic-river-current,
+.republic-river[data-running=false] .republic-river-texture { animation-play-state:paused; }
+@keyframes republic-river-flow { to { stroke-dashoffset:-46; } }
+@keyframes republic-water-surface {
+  0% { transform:translate(0,0); opacity:0; }
+  20% { opacity:.7; }
+  75% { opacity:.7; }
+  100% { transform:translate(7px,2.8px); opacity:0; }
+}
 @media(prefers-reduced-motion:reduce) { .republic *,.republic-dialog { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }

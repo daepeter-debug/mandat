@@ -1,16 +1,32 @@
 "use client";
 
-import { useEffect, useMemo, useState, type RefObject } from "react";
+import { useEffect, useId, useMemo, useState, type RefObject } from "react";
 import { livingScene, walkerPosition, type ResidentKind, type Walker } from "@/lib/republic-living";
 import type { Point, RepublicState } from "@/lib/republic";
 
 export const mapPoint=(p:Point)=>({x:280+(p.x-p.y)*43,y:100+(p.x+p.y)*24});
 /** Ripples follow the visible stream, below every playable map layer. */
 export function RiverFlow({active}:{active:boolean}) {
-  return <g className="republic-river" data-running={active} pointerEvents="none" aria-hidden="true" fill="none" stroke="#e4f5dd" strokeLinecap="round">
-    <path className="republic-river-current" d="M-25 354C20 376 65 375 115 397S195 426 258 440S366 468 450 474" strokeWidth="1.1" strokeDasharray="5 35 2 34" opacity=".5"/>
-    <path className="republic-river-current" d="M1 367C52 388 93 389 141 411S217 431 280 448S376 471 452 481" strokeWidth=".8" strokeDasharray="3 47 6 20" opacity=".45" style={{animationDelay:"-4s",animationDuration:"16s"}}/>
-    <path className="republic-river-current" d="M77 391C115 405 174 421 214 433S298 451 358 465" strokeWidth=".65" strokeDasharray="2 40 4 30" opacity=".6" style={{animationDelay:"-7s",animationDuration:"11s"}}/>
+  const id=`river-${useId().replaceAll(":","")}`;
+  return <g className="republic-river" data-running={active} pointerEvents="none" aria-hidden="true">
+    <defs>
+      {/* Derive the water matte from the terrain's cyan pixels: banks and rocks stay still. */}
+      <filter id={`${id}-water`} filterUnits="userSpaceOnUse" x="-40" y="328" width="640" height="152" colorInterpolationFilters="sRGB">
+        <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -4 2 2 0 -.35"/>
+        <feComponentTransfer><feFuncA type="linear" slope="3" intercept="-.3"/></feComponentTransfer>
+      </filter>
+      <mask id={`${id}-mask`} maskUnits="userSpaceOnUse" x="-40" y="328" width="640" height="152" style={{maskType:"alpha"}}>
+        <image href="/images/games/republic-terrain-v1.webp" x="-40" y="0" width="640" height="480" preserveAspectRatio="none" filter={`url(#${id}-water)`}/>
+      </mask>
+    </defs>
+    <g mask={`url(#${id}-mask)`}>
+      {[0,1].map(i=><image key={i} className="republic-river-texture" href="/images/games/republic-terrain-v1.webp" x="-40" y="0" width="640" height="480" preserveAspectRatio="none" style={{animationDelay:`${i* -1.8}s`}}/>)}
+      <g fill="none" stroke="#f0ffed" strokeLinecap="round">
+        <path className="republic-river-current" d="M-25 354C20 376 65 375 115 397S195 426 258 440S366 468 450 474" strokeWidth="1.5" strokeDasharray="6 20 4 16" opacity=".65"/>
+        <path className="republic-river-current" d="M1 367C52 388 93 389 141 411S217 431 280 448S376 471 452 481" strokeWidth="1.1" strokeDasharray="3 22 7 14" opacity=".5" style={{animationDelay:"-2s",animationDuration:"5.5s"}}/>
+        <path className="republic-river-current" d="M77 391C115 405 174 421 214 433S298 451 358 465" strokeWidth=".9" strokeDasharray="2 15 6 23" opacity=".6" style={{animationDelay:"-1s",animationDuration:"3.8s"}}/>
+      </g>
+    </g>
   </g>;
 }
 export function useLivingScene(town:RepublicState,host:RefObject<HTMLDivElement|null>,preview:string) {

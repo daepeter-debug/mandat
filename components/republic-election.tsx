@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import Image from "next/image";
 import { AlertTriangle, ArrowRight, Check, RotateCcw, Vote } from "lucide-react";
 import type { RepublicState } from "@/lib/republic";
 import { COUNCIL_SEATS, ELECTION_DAY, LAW, candidateLabel, checkCouncil, checkMayor, councilCandidates, countElection, electionPhase, electionRules, interestNames, interestScores, mayorCandidates, parseStoredElection, type Ballot, type ElectionResult, type Invalid, type StoredElection } from "@/lib/republic-election";
@@ -41,19 +42,17 @@ function Ballots({ ballot, setBallot }: { ballot: Ballot; setBallot: Dispatch<Se
 
 function Count({ result, reveal }: { result: ElectionResult; reveal: number }) {
   const step = result.steps[Math.min(reveal, result.steps.length - 1)], finished = reveal >= result.steps.length - 1;
-  const max = Math.max(1, ...Object.values(result.council.votes), ...Object.values(result.mayor.votes));
-  const bars = (votes: Record<string, number>, ids: string[], win: string[]) => <ul className="election-bars">{ids.map(id => <li key={id} className={finished && win.includes(id) ? "is-winner" : ""}><span>{names[id]}</span><span className="election-bar"><span style={{ width: `${(votes[id] / max) * 100}%` }}/></span><b>{votes[id]}</b></li>)}</ul>;
-  return <div className="election-count" aria-live="polite">
-    <p className="election-progress">{finished ? "Sčítané" : "Sčítava sa"}: {step.counted} z {result.voted} obálok · účasť {result.turnout} %</p>
-    <h4>Starosta</h4>{bars(step.mayor, mayorCandidates.map(c => c.id), result.mayor.winner ? [result.mayor.winner] : [])}
-    <h4>Poslanci ({COUNCIL_SEATS} mandáty)</h4>{bars(step.council, councilCandidates.map(c => c.id).sort((a, b) => step.council[b] - step.council[a]), result.council.elected)}
+  const tally = (votes: Record<string, number>, ids: string[], winners: string[]) => <ol className="election-tally">{ids.map(id => <li key={id} data-elected={finished && winners.includes(id)}><span>{names[id]}</span><b>{votes[id]}<small>{votes[id]===1?"hlas":votes[id]>1&&votes[id]<5?"hlasy":"hlasov"}</small></b>{finished && winners.includes(id) && <Check size={17} aria-label="Zvolený kandidát"/>}</li>)}</ol>;
+  return <div className="election-count">
+    <div className="election-night-scene"><Image unoptimized src="/images/games/republic/election-room-v1.webp" alt="" loading="lazy" width="960" height="640"/><div className="election-night-caption"><h3>{finished ? "Štvrť rozhodla" : "Volebná noc"}</h3><p aria-live="polite" aria-atomic="true">{finished ? "Sčítané" : "Sčítava sa"}: <b>{step.counted} z {result.voted}</b> obálok</p><small>Účasť {result.turnout} % · {finished ? "Konečné počty hlasov" : "Priebežné počty hlasov"}</small></div></div>
+    <div className="election-count-board"><section><h4>Starosta</h4>{tally(step.mayor, mayorCandidates.map(c=>c.id), result.mayor.winner ? [result.mayor.winner] : [])}</section><section><h4>Poslanci · {COUNCIL_SEATS} mandáty</h4>{tally(step.council, councilCandidates.map(c=>c.id).sort((a,b)=>step.council[b]-step.council[a]),result.council.elected)}</section></div>
   </div>;
 }
 
 function Results({ result, practice }: { result: ElectionResult; practice: boolean }) {
   return <div className="election-results">
-    <p className="plan-kicker">{practice ? "Skúšobné hlasovanie" : `Výsledky volieb ${skDate(ELECTION_DAY)}`}</p>
     <h4>{result.mayor.winner ? `${feminine.has(result.mayor.winner) ? "Starostkou" : "Starostom"} je ${names[result.mayor.winner]}.` : `Remíza ${result.mayor.tie.map(id => names[id]).join(" a ")}: podľa zákona sa konajú nové voľby (§ 189 ods. 4).`}</h4>
+    <p>{practice ? "Skúšobné hlasovanie" : `Výsledky volieb ${skDate(ELECTION_DAY)}`}</p>
     <p>Do zastupiteľstva: <b>{result.council.elected.map(id => names[id]).join(", ")}</b>. Náhradníci v poradí: {result.council.substitutes.map(id => names[id]).join(", ")} (§ 192 ods. 1).</p>
     {result.council.lots.map(l => <p key={l.among.join()} className="election-lot">Rovnosť hlasov ({l.among.map(id => names[id]).join(", ")}) rozhodol žreb, poradie: {l.order.map(id => names[id]).join(", ")} (§ 189 ods. 3).</p>)}
     <p className="election-meta">Odovzdaných obálok {result.voted} z {result.registered + (result.player ? 1 : 0)} voličov. Neplatné lístky (§ 184): starosta {invalidText(result.mayor.invalid, result.mayor.reasons)}; poslanci {invalidText(result.council.invalid, result.council.reasons)}.</p>
@@ -84,10 +83,11 @@ export default function RepublicElection({ town, today }: { town: RepublicState;
     setStored(next); startCount();
   }
   return <section className="republic-election" id="republic-election" aria-labelledby="republic-election-title">
-    <p className="plan-kicker"><Vote size={14} aria-hidden="true"/> Komunálne voľby · sobota {skDate(ELECTION_DAY)}</p>
+
     <h2 id="republic-election-title">Voľby v Lipovej štvrti</h2>
     <p>{phase.phase === "pred" ? `O ${phase.days} ${phase.days === 1 ? "deň" : phase.days < 5 ? "dni" : "dní"} si štvrť volí starostu a ${COUNCIL_SEATS} poslancov. Susedia budú voliť podľa toho, ako sa im v štvrti žije: spokojnosť je teraz ${sat.value} %.` : stored ? "Voľby sa skončili. Takto rozhodli susedia." : "Volebná miestnosť je otvorená. Odovzdaj aj svoje lístky."}
       {" "}V ten istý deň sa konajú aj skutočné voľby do miestnych a krajských zastupiteľstiev.</p>
+    {!live&&<div className="election-room"><Image unoptimized src="/images/games/republic/election-room-v1.webp" alt="Ilustrovaná volebná miestnosť: plenta, urna a hlasovací lístok s krúžkami." loading="lazy" width="960" height="640"/><div><h3><Vote size={19} aria-hidden="true"/> Volebná miestnosť</h3><p>Sobota {skDate(ELECTION_DAY)} · jeden starosta, {COUNCIL_SEATS} poslanci</p><p>Za plentou vyber kandidátov, skontroluj lístky a sleduj, ako rozhodli susedia.</p></div></div>}
     {stored ? <><Count result={stored.result} reveal={shown}/>{shown >= stored.result.steps.length - 1 && <Results result={stored.result} practice={false}/>}<button className="election-secondary" onClick={startCount}><RotateCcw size={15} aria-hidden="true"/> Pozrieť sčítanie znova</button></>
       : practice ? <><Count result={practice} reveal={shown}/>{shown >= practice.steps.length - 1 && <Results result={practice} practice/>}<button className="election-secondary" onClick={() => { setPractice(null); setBallot({ mayor: [], council: [] }); }}><RotateCcw size={15} aria-hidden="true"/> Hlasovať znova (skúška)</button></>
       : open ? <><Ballots ballot={ballot} setBallot={setBallot}/><button className="plan-now-button election-vote" onClick={vote}>{phase.phase === "pred" ? "Vyskúšať sčítanie (skúška)" : "Vložiť lístky do obálky a do urny"}<ArrowRight size={16} aria-hidden="true"/></button></>
