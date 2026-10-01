@@ -175,3 +175,12 @@ Peter požiadal o pokračovanie po úvode, väčšiu výzvu a možnosť posunú�
 - TypeScript, cielený ESLint, produkčný build, Impeccable detector (`[]`) a Wrangler dry-run PASS. Nezávislý vizuálny review: **ship**, rozsah úvod a karta, nie nezmenená herná mapa. Dokumentácia rozšírená v DESIGN.md.
 - Lokálny produkčný náhľad: desktop 1280 × 900 a mobil 390 × 844, bez horizontálneho pretekania; primárne tlačidlo 46 px, preskočenie 44 px. Overené oba vstupy na mapu a presun klávesnicového fokusu. Screenshoty `previews/cover-desktop.png`, `previews/cover-mobile.png`.
 - Na pokyn „ok pokracuj a nasad“ nasadené na existujúci Workers web; verzia `eb9289f0-dd8a-4dd6-a0db-fdbc53366755`. Online sa nová ilustrácia načítava. Nejde o zjednotenie všetkých budov na hernej mape; to zostáva samostatnou možnou úpravou.
+
+## 1. 10. 2026 — Sol: dokončený súvislý terén (lokálne)
+
+- `components/republic-map.tsx`, `app/republic-game.css`, `public/images/games/republic-terrain-v1.webp`: ilustrovaná lúka s okolitou zeleňou a potokom nahrádza drevenú platformu a trvalú šachovnicu. Domy aj cesty ostávajú skutočné uložené objekty. Mriežka je voliteľná, pri stavbe automatická; odporúčané miesta a klávesnicový výber zostali zachované. Obrázok sa načíta až v okolí viditeľnej mapy; pri chybe ostáva použiteľný zelený podklad.
+- Náhľady: `previews/terrain-desktop.png`, `previews/terrain-mobile.png`. Mobilná emulácia nastavená na 375 px (IAB raster 360 px): bez vodorovného posunu stránky. Pri zoom 1,5 je vodorovný posun iba v mape; zvislá mapa má scrollHeight = clientHeight. Koliesko nad mapou posunulo stránku z 545 na 681 px. Ťah na fyzickom telefóne zatiaľ NEOVERENÝ.
+- PASS: verify-republic (73 ciest + úložisko), verify-festival (2250 plánov), verify-journey (3866 plánov), verify-data (38 meraní), tsc --noEmit, ESLint nad mapou a npm run build. Build má existujúce upozornenie na veľké balíky. Impeccable detector: []; nezávislá kontrola terénu: ship, bez materiálnych opráv.
+- Presný prompt a pôvod ilustrácie: `research/republic-terrain-v1.prompt.txt`, sidecar pri WebP. Ekonomika, save ani politická časť sa nemenili. Bez pushu a nasadenia.
+
+**Ďalší krok:** rozšírenie 1 — Živá štvrť, najprv čisté časové/cestné jadro a verify-living, potom obyvatelia a sezónna grafika. Rozšírenia 2/3/4 čakajú v poradí; nasadenie až po Petrovom OK. Fyzický mobil treba otestovať pri lokálnej ukážke/následnom schválenom nasadení.

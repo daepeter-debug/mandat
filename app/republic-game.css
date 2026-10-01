@@ -22,10 +22,18 @@
 .republic-view-switch button[aria-pressed=true] { background:#e4e9dc; color:var(--rep-ink); font-weight:600; }
 .republic-view-switch>span { font-size:11px; margin-left:auto; color:var(--rep-muted); }
 .republic-map { border-radius:12px; overflow:hidden; background:radial-gradient(ellipse 85% 75% at 50% 40%, #f7f4e8 0%, #eaecdc 62%, #dfe4cf 100%); }
-.republic-map-window { aspect-ratio:572 / 386; max-height:560px; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#a1b18d #e9eddc; }
+.republic-map-window { overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; overscroll-behavior-y:auto; touch-action:pan-x pan-y pinch-zoom; scrollbar-width:thin; scrollbar-color:#a1b18d #e9eddc; }
 .republic-map-window svg { display:block; height:auto; margin:auto; max-width:none; }
-.republic-map-sign { font:600 6.4px "IBM Plex Sans Variable",sans-serif; fill:#5b3d22; letter-spacing:1.3px; }
-.republic-map-sign.is-shade { fill:#dcb07a; }
+.republic-landscape-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; background:#edf0e4; }
+.republic-landscape-heading strong { min-width:0; overflow-wrap:anywhere; font-size:13px; font-weight:600; }
+.republic-landscape-heading span { max-width:55%; text-align:right; font-size:11px; color:#4c6050; font-variant-numeric:tabular-nums; }
+.republic-landscape .republic-map-window { background:#b5c58c; }
+.republic-plot-grid { fill:#f8f7d8; fill-opacity:.09; stroke:#fdf8da; stroke-opacity:.7; stroke-width:.8; }
+.republic-plot-suggested { fill:#fcf2c0; fill-opacity:.85; stroke:#315c48; stroke-width:2; stroke-dasharray:4 2; }
+.republic-plot-selected { fill:#e8f6c0; fill-opacity:.8; stroke:#1c4937; stroke-width:2.5; }
+.republic-landscape .republic-map-tools { background:#edf0e4; border-top:0; }
+.republic-map-tools button[aria-pressed=true] { background:#d3dfc5; color:#203e2e; }
+.republic-map-tools button[aria-pressed=true]:disabled { opacity:1; }
 .republic-hit { fill:transparent; stroke:transparent; stroke-width:2; cursor:pointer; }
 .republic-input-layer [role=button]:hover .republic-hit { fill:#fffce927; stroke:#4b745b; }
 .republic-input-layer [role=button]:focus { outline:none; }
