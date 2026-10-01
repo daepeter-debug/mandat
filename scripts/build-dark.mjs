@@ -12,7 +12,7 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const OUT = 'app/theme-dark.css';
 const OUT_COLORS = 'lib/theme-colors.ts';
-const SKIP_FILES = new Set(['theme-dark.css', 'daily-game.css', 'december-game.css', 'december-town-art.css', 'republic-game.css']);
+const SKIP_FILES = new Set(['theme-dark.css', 'daily-game.css', 'december-game.css', 'december-town-art.css', 'republic-game.css', 'republic-festival.css', 'republic-guide.css']);
 // Poradie ako v aplikácii: layout (globals → magazine → news), potom komponenty.
 const FIRST = ['globals.css', 'magazine.css', 'news.css'];
 // Podklady pod logami, portrétmi a mapkou ostávajú presne ako vo svetlom režime (logá strán sú kreslené na svetlú):

@@ -10,6 +10,7 @@ import { activeFestival, preparationImpact, preparedMood, festivalLayoutReady, f
 import "@/app/republic-festival.css";
 import { festivalPostcardData } from "@/lib/republic-celebration";
 import { downloadPostcard, festivalPostcardImage } from "@/components/republic-postcard";
+import { FestivalGaps } from "@/components/republic-plan";
 
 const icons={books:BookOpen,food:Utensils,music:Music};
 const supportIcons={shelter:Tent,welcome:Users,quiet:Armchair};
@@ -81,6 +82,7 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
           <div className="festival-reactions">{neighbours.map((n,i)=><p key={n}><b>{n}<span>{result.mood[i]}/5</span></b>{result.reactions[i]}</p>)}</div>
           {f.discovery&&<p className="festival-discovery">Objavené spojenie · {f.discovery}</p>}
           <p className="festival-tip">Najlepší výsledok tohto {journey?"herného":"kalendárneho"} dňa: {f.best}/3. Ďalší pokus má rovnakú komplikáciu.{journey&&f.best<3?" Na ďalší deň potrebuješ všetky tri ciele. Zmeň program, polohu alebo zázemie.":""}</p>
+          {journey&&!graduated&&f.best<3&&<FestivalGaps festival={f} nextDay={stage+2}/>}
           {journey&&!graduated&&<div className="festival-next-day"><p>{stage<6?`Ďalej: ${journeyDays[stage+1].title}`:"Sedem dní je za tebou. Prevezmi odmenu do zbierky."}</p><button className="republic-primary" disabled={blocked||f.best<3} onClick={()=>void send({type:"festival-next"})}>{stage<6?`Prejsť na deň ${stage+2}`:"Prevziať slávnostnú bránu"}<ArrowRight size={17}/></button>{f.best<3&&<small>Najprv splň 3/3 cieľov. Pokus zopakuješ hneď.</small>}</div>}
           {journey&&graduated&&<div className="festival-gift"><RepublicArt id="ceremonial-gate"/><div><h4>Tvoja štvrť si ju zaslúžila.</h4><p>Slávnostná brána je odomknutá. Postav ju zadarmo na voľné miesto.</p><button className="republic-primary" disabled={blocked} onClick={onReward}>Umiestniť bránu do štvrte<ArrowRight size={17}/></button></div></div>}
           <div className="festival-result-actions"><button disabled={blocked} onClick={()=>void send({type:"festival-retry"})}><Undo2 size={16}/> Skúsiť iný plán</button>

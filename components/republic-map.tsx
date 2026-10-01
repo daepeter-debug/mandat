@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type RefObject } from "react";
-import { Grid2X2, LocateFixed, Minus, Plus } from "lucide-react";
+import { AlertTriangle, Grid2X2, LocateFixed, Minus, Plus } from "lucide-react";
 import { catalog, connected, distance, network, type ItemId, type Placed, type Point, type RepublicState } from "@/lib/republic";
 import type { Gathering } from "@/lib/republic-living";
 import { TownPiece, seg, type V } from "@/components/republic-art";
@@ -21,6 +21,16 @@ const layers=(town:RepublicState,people:Gathering[]):Layer[]=>[
   ...town.placed.map(piece=>({kind:"piece" as const,piece,depth:piece.x+piece.y,tie:piece.x})),
   ...people.map(person=>({kind:"person" as const,person,depth:person.point.x+person.point.y+.5,tie:person.point.x})),
 ].sort((a,b)=>a.depth-b.depth||a.tie-b.tie);
+/** Bublinka s prianím domu (dočasná kresba; ilustrovanú verziu môže dodať Codex). */
+function WishGlyph({wish}:{wish:string}) {
+  return <g className="republic-wish-bob"><path d="M-12-12h24a5 5 0 0 1 5 5v11a5 5 0 0 1-5 5h-8l-4 5-4-5h-8a5 5 0 0 1-5-5v-11a5 5 0 0 1 5-5z" fill="#fffaf0" stroke="#6f5d3c" strokeWidth="1.1"/>
+    {wish==="zelen"&&<g><circle cy="-3" r="5.4" fill="#5e8f45"/><circle cx="-3" cy="-1" r="3.4" fill="#6fa152"/><rect x="-1" y="1" width="2" height="5" fill="#7a5638"/></g>}
+    {wish==="lekar"&&<path d="M-1.8-6.5h3.6v4.2h4.2v3.6h-4.2v4.2h-3.6v-4.2h-4.2v-3.6h4.2z" fill="#c8443a"/>}
+    {wish==="skola"&&<path d="M-7-5h6q1 0 1 1v9q-.8-.8-2-.8h-5zM7-5h-6q-1 0-1 1v9q.8-.8 2-.8h5z" fill="#3e6d8e"/>}
+    {wish==="obchod"&&<g><path d="M-3.6-2q3.6-6.4 7.2 0" fill="none" stroke="#7a5638" strokeWidth="1.4"/><path d="M-6.5-2h13l-1.8 7.5h-9.4z" fill="#c4934e"/></g>}
+    {wish==="cesta"&&<g stroke="#6f5d3c" strokeWidth="1.6" strokeLinecap="round" fill="none"><path d="M-6 6l3.5-12M6 6l-3.5-12"/><path d="M0 5v-10" strokeDasharray="2 2.2"/></g>}
+  </g>;
+}
 function GatheringPerson({person,active}:{person:Gathering;active:boolean}) {
   const p=at(person.point);
   return <g className="republic-gatherings" data-running={active}><g transform={`translate(${p.x-10+person.offset*14} ${p.y+18})`} data-activity={person.activity}>
@@ -29,8 +39,8 @@ function GatheringPerson({person,active}:{person:Gathering;active:boolean}) {
   </g></g>;
 }
 
-export default function RepublicMap({town,editing,selected,target,suggested=[],onCell,onObject,captureRef,festivalReplay=0,festivalStill=false}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void;captureRef?:RefObject<SVGSVGElement|null>;festivalReplay?:number;festivalStill?:boolean}) {
-  const [zoom,setZoom]=useState(1),[focus,setFocus]=useState(14),[grid,setGrid]=useState(false);
+export default function RepublicMap({town,editing,selected,target,suggested=[],onCell,onObject,captureRef,festivalReplay=0,festivalStill=false,notice=null,wishes=[]}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void;captureRef?:RefObject<SVGSVGElement|null>;festivalReplay?:number;festivalStill?:boolean;notice?:{title:string;detail:string}|null;wishes?:{instanceId:string;x:number;y:number;wish:string|null}[]}) {
+  const [zoom,setZoom]=useState(()=>typeof window!=="undefined"&&window.matchMedia?.("(max-width: 560px)").matches?1.5:1),[focus,setFocus]=useState(14),[grid,setGrid]=useState(false);
   const [hover,setHover]=useState<Point|null>(null),[terrainFailed,setTerrainFailed]=useState(false);
   const [terrainReady,setTerrainReady]=useState(false);
   const [scenePreview,setScenePreview]=useState("");
@@ -71,6 +81,7 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
   const timeLabel=(time:number)=>new Intl.DateTimeFormat("sk",{timeZone:"Europe/Bratislava",hour:"2-digit",minute:"2-digit"}).format(new Date(time));
   return <div className="republic-map republic-landscape" data-editing={editing} data-scene-period={scene?.time.period}>
     <div className="republic-landscape-heading"><strong>{town.name}</strong><span>{inspectedLabel}</span></div>
+    {notice&&<div className="republic-map-notice" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{notice.title}</b><span>{notice.detail}</span></div></div>}
     <div className="republic-map-window" ref={viewport} tabIndex={0} aria-label="Mapa štvrte. Šípkami vyber políčko; Enter otvorí detail. Pri priblížení posúvaj mapu prstom.">
       <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox="-40 0 640 480" style={{width:`${zoom*100}%`,minWidth:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
         <defs>
@@ -119,6 +130,7 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
           {visible&&<SeasonalScene scene={scene} active={active}/>}
         </>}
         {celebration&&(visible||festivalStill)&&<CelebrationLanterns scene={celebration} seconds={celebrationSeconds} active={active&&!festivalStill}/>}
+        {wishes.filter(w=>w.wish).map(w=>{const p=at(w);return <g key={w.instanceId} className="republic-wish" data-wish={w.wish} transform={`translate(${p.x+18} ${p.y-60})`} aria-hidden="true" pointerEvents="none"><WishGlyph wish={w.wish!}/></g>;})}
         <g className="republic-input-layer">
           {cells.map((p,i)=>{const o=town.placed.find(x=>distance(x,p)===0),road=town.roads.some(x=>distance(x,p)===0);
             return <g key={i} role="button" tabIndex={focus===i?0:-1} data-cell={`${p.x}-${p.y}`} aria-label={`${String.fromCharCode(65+p.x)}${p.y+1}: ${o?catalog[o.id].name:road?"cesta":"voľné miesto"}${suggested.some(s=>distance(s,p)===0)?", odporúčané pre úlohu":""}`} aria-pressed={target?distance(p,target)===0:undefined} onFocus={()=>{setFocus(i);setHover(p);}} onPointerEnter={()=>setHover(p)} onClick={()=>pick(p)} onKeyDown={e=>keyDown(e,p)}>
