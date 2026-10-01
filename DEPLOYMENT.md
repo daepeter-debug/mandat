@@ -58,3 +58,7 @@ Online kontrola mobilného viewportu: domovská adresa otvorí Prehľad, Viac za
 Na pokyn „ok nasad“ nasadené plynulé pokračovanie z úvodu do siedmich herných dní, rozdielne ciele/rozpočty, okamžitý posun po splnení 3/3 cieľov a jednorazová slávnostná brána. Použitý overený produkčný build tejto revízie; Wrangler dry-run aj deploy PASS. Priama Worker verzia `0db06e43-b1a4-4dc8-9479-c661a1c659cb`, rovnaká workers.dev adresa.
 
 Online overené načítanie nového UI, dohranie existujúcej dennej slávnosti, otvorenie príbehu a zachovanie prvého rozpracovaného herného dňa po obnovení stránky. Mobilný viewport 390 × 844 bez horizontálneho pretekania (obsah 375 px), konzola bez chýb. Snímka `docs/mala-republika/previews/journey-online-mobile.png`. Herné uloženia sa neresetujú; posledné lokálne testy a rozsah sú v STATUS.md. Zdrojová revízia sa synchronizuje do `main`; Cloudflare Builds môže následne vydať rovnaký kód pod ďalším identifikátorom verzie.
+
+## Nasadenie novej úvodnej ilustrácie 1. 10. 2026
+
+Na pokyn „ok pokracuj a nasad“ nasadený nový cover Malej republiky do Herne a prvého privítania. TypeScript, cielený ESLint, build, vizuálna kontrola desktop/mobil a dry-run PASS. Worker verzia `eb9289f0-dd8a-4dd6-a0db-fdbc53366755`, adresa zostáva https://mandat-preview.mandat.workers.dev. Nová verzovaná WebP ilustrácia sa online načítava. Stav hry ani service worker sa nemenia. Zdrojová revízia sa synchronizuje s main; Cloudflare Builds môže rovnaký kód vydať pod ďalším ID.

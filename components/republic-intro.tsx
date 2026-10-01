@@ -2,6 +2,7 @@
 
 import { ArrowRight, Check, Move, Sprout } from "lucide-react";
 import RepublicArt from "@/components/republic-art";
+import RepublicCover from "@/components/republic-cover";
 import { catalog, type ItemId } from "@/lib/republic";
 
 type Props={
@@ -13,9 +14,11 @@ type Props={
 export default function RepublicIntro(p:Props) {
   const first=p.chapter===0;
   const celebrating=!!p.celebration;
-  return <section className={`republic-intro${celebrating?" is-celebrating":""}`} aria-label="Prvé kroky v štvrti">
+  const welcome=first&&!p.started&&!celebrating;
+  return <section className={`republic-intro${celebrating?" is-celebrating":""}${welcome?" republic-welcome":""}`} aria-label="Prvé kroky v štvrti">
+    {welcome&&<div className="republic-welcome-scene"><RepublicCover eager/></div>}
     <div className="republic-intro-copy" aria-live="polite">
-      <h2>{celebrating?p.celebration:first&&!p.started?"Vráť život štvrti pri starej stanici.":first?"Miesto, kde sa deti stretnú.":"A čo keby mali knihy na dosah?"}</h2>
+      <h2 tabIndex={-1}>{celebrating?p.celebration:first&&!p.started?"Vráť život štvrti pri starej stanici.":first?"Miesto, kde sa deti stretnú.":"A čo keby mali knihy na dosah?"}</h2>
       <p>{celebrating?(p.chapter===1?"Eva: „Teraz máme kde byť aj po vyučovaní. Pomôžeš nám ešte s knižnicou?“":"Eva: „Z dvora a knižnice je už miesto pre celú školu. Takto sa začína naša nová štvrť.“"):first&&!p.started?"Zo starej stanice raz môže byť múzeum, tržnica alebo susedská hala. Začni malou pomocou ľuďom, ktorí tu žijú.":first?"Eva, učiteľka: „Po škole nám chýba kúsok zelene. Vyberieš pre deti park alebo záhradu?“":"Eva, učiteľka: „Nájdime knižnici miesto blízko školy. Aj jedna dobre umiestnená budova môže zmeniť celú štvrť.“"}</p>
       {celebrating?<>
         <div className="republic-intro-reward"><Check size={18}/> Hotovo · +2 mince a +1 materiál</div>
@@ -36,6 +39,6 @@ export default function RepublicIntro(p:Props) {
       </>}
       {!celebrating&&<button className="republic-intro-skip" onClick={p.onExplore}>Chcem objavovať sám</button>}
     </div>
-    <div className="republic-intro-art" aria-hidden="true"><RepublicArt id={celebrating?(p.chapter===1?"park":"library"):first&&!p.started?"station":first?"school":"library"}/>{celebrating&&<span><Sprout size={20}/> Štvrť ožíva</span>}</div>
+    {!welcome&&<div className="republic-intro-art" aria-hidden="true"><RepublicArt id={celebrating?(p.chapter===1?"park":"library"):first?"school":"library"}/>{celebrating&&<span><Sprout size={20}/> Štvrť ožíva</span>}</div>}
   </section>;
 }

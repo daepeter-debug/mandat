@@ -5,10 +5,9 @@
 .games-collection { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .games-entry { min-width: 0; background: #fffefa; border: 1px solid #d9dfd4; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
 .games-parliament, .games-town { height: 220px; position: relative; overflow: hidden; }
-/* Karta Malej republiky: tri kúsky zo skutočnej sady (škola, stanica ako múzeum, park) na trávniku so slnkom. */
-.games-republic-art { height: 220px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; gap: 4px; padding: 0 10px 14px; background: linear-gradient(180deg, #eef2e2 0%, #dbe5c8 46%, #b9cc98 100%); }
-.games-republic-art::before { content: ""; position: absolute; left: 50%; top: 28%; width: 150%; height: 120%; transform: translateX(-50%) rotate(-6deg); background: repeating-linear-gradient(90deg, #cfdcb7 0 22px, #c4d3ab 22px 44px); opacity: .55; clip-path: polygon(0 34%, 100% 4%, 100% 100%, 0 100%); }
-.games-republic-art::after { content: ""; position: absolute; right: 14%; top: 12%; width: 34px; height: 34px; border-radius: 50%; background: #f6e3a4; box-shadow: 0 0 0 10px #f6e3a433; }
+/* Cover art shares the warm miniature-town style of Do decembra. */
+.games-republic-art { height:220px; overflow:hidden; background:#d7dfc0; }
+.republic-cover { display:block; width:100%; height:100%; object-fit:cover; object-position:50% 53%; }
 .games-parliament { background: #20392f; display: grid; place-items: center; padding: 26px 30px 12px; }
 .games-parliament svg { width: 100%; height: 100%; }
 .games-parliament > span { position: absolute; bottom: 18px; color: #fffefa; font-size: 32px; font-weight: 500; display: flex; flex-direction: column; text-align: center; line-height: 1; }
@@ -33,11 +32,9 @@
   .games-room-heading { margin-bottom: 20px; }
   .games-room-heading p { font-size: 15px; }
   .games-collection { grid-template-columns: 1fr; gap: 20px; }
-  .games-parliament, .games-town { height: 180px; }
+  .games-parliament, .games-town, .games-republic-art { height: 200px; }
   .games-town svg { width: 128%; }
   .games-entry-body { padding: 20px; }
   .games-entry h2 { font-size: 25px; }
 }
 @media (max-width: 1050px) and (min-width: 761px) { .games-collection { grid-template-columns: 1fr 1fr; } }
-.games-republic-art > .republic-art { position: relative; width: 36%; height: auto; flex: none; margin: 0 -3%; filter: drop-shadow(0 8px 10px rgba(46, 78, 46, .18)); }
-.games-republic-art > .republic-art:nth-child(2) { width: 46%; z-index: 1; margin-bottom: -6px; }

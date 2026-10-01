@@ -113,6 +113,7 @@ export default function RepublicGame() {
   const festivalOpen=!!town.festival&&(festivalVisible??town.festival.response===null);
   const guided=!festivalOpen&&((!exploring&&town.completed.length<2)||!!celebration);
   const green=town.placed.find(o=>o.id==="park"||o.id==="garden");
+  const welcome=guided&&town.completed.length===0&&!introStarted&&!green&&!celebration;
   const librarySites=guided&&step?.id==="books"?introSites(town,{kind:"build",id:"library"},today):[];
   const suggested=guided&&intent&&intent.kind!=="road"?introSites(town,intent,today):[];
   const nextBuild=town.completed.length===0?"park":"library";
@@ -137,12 +138,12 @@ export default function RepublicGame() {
     </div>}
     {festivalOpen&&<RepublicFestival town={town} blocked={blocked} onCommand={async c=>{const ok=await run(c);if(ok)setFestivalVisible(true);return ok;}} onClose={()=>setFestivalVisible(false)} onReward={()=>{setFestivalVisible(false);setExploring(true);setCelebration(null);selectBuild("ceremonial-gate");requestAnimationFrame(()=>document.querySelector(".republic-stage")?.scrollIntoView({block:"start",behavior:"instant"}));}}/>}{festivalOpen&&<p className="republic-notice" role="status">{notice}</p>}
     {guided&&<RepublicIntro chapter={town.completed.length} started={introStarted||!!green||town.completed.length>0} ready={ready} placing={!!intent} moving={intent?.kind==="move"} celebration={celebration} needsSpace={librarySites.length===0&&!!green} hasGreen={!!green} blocked={blocked} needsFunds={needsFunds}
-      onStart={()=>setIntroStarted(true)} onBuild={selectBuild} onMove={startMove} onFinish={()=>void run({type:"step"})}
+      onStart={()=>{setIntroStarted(true);requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-intro h2")?.focus({preventScroll:true}));}} onBuild={selectBuild} onMove={startMove} onFinish={()=>void run({type:"step"})}
       onContinue={()=>{if(town.completed.length>=2)void openStory();else {setCelebration(null);setIntroStarted(true);}}}
-      onExplore={()=>{setExploring(true);setCelebration(null);cancel();}}/>}
+      onExplore={()=>{setExploring(true);setCelebration(null);cancel();requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-stage")?.focus({preventScroll:true}));}}/>}
     {!festivalOpen&&!guided&&town.completed.length<2&&<button className="republic-resume-guide" onClick={()=>{setExploring(false);setIntroStarted(true);cancel();}}>Ukázať prvé kroky s Evou<ArrowRight size={15}/></button>}
-    {!festivalOpen&&<div className="republic-layout">
-      <div className="republic-stage">
+    {!festivalOpen&&!welcome&&<div className="republic-layout">
+      <div className="republic-stage" tabIndex={-1}>
         <div className="republic-art-switch" role="group" aria-label="Grafika štvrte"><span>Grafika</span><button aria-pressed={illustrated} onClick={()=>setIllustrated(true)}>Ilustrácie</button><button aria-pressed={!illustrated} onClick={()=>setIllustrated(false)}>Pôvodná kresba</button><small>Ukážka 4 objektov</small></div>
         <a className="republic-current-goal" href="#republic-project"><Flag size={19}/><span><b>{dailyDone?"Dnešný krok je hotový":step?step.name:"Stanica znova žije"}</b><small>{dailyDone?"Môžeš ďalej stavať a plniť objednávky.":step?.goal??"Uprav si štvrť a objav ďalšie kombinácie."}</small></span><ArrowRight size={17}/></a>
         <div className="republic-view-switch" role="group" aria-label="Zobrazenie štvrte"><button aria-pressed={view==="map"} onClick={()=>setView("map")}><Map size={15}/> Mapa</button><button aria-pressed={view==="list"} onClick={()=>setView("list")}><List size={15}/> Zoznam a políčka</button><span>6 × 6 políčok</span></div>

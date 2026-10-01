@@ -4,7 +4,7 @@ import { lazy, Suspense, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { hemicycleSeats } from "@/lib/parliament";
 import DecemberTown from "@/components/december-town-art";
-import RepublicArt from "@/components/republic-art";
+import RepublicCover from "@/components/republic-cover";
 import "@/app/games-room.css";
 import SectionArt from "@/components/section-art";
 
@@ -51,7 +51,7 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
           <div className="games-entry-body"><h2>Do decembra</h2><div className="games-entry-meta"><span>Malé mesto, veľké rozhodnutia</span><span>5–8 min</span></div><p>Postaraj sa o Mandátovce. Dvanásť mesačných správ, tri možnosti pri každej — a rozpočet, ktorý nestačí na všetko.</p><p className="games-entry-detail">Denná sezóna rovnaká pre všetkých + tréning.</p><button type="button" className="games-play" data-game="december" onClick={() => open("december")}>Zahrať si <ArrowRight size={17} aria-hidden="true"/></button></div>
         </article>
         <article className="games-entry games-republic">
-          <div className="games-republic-art" aria-hidden="true"><RepublicArt id="school"/><RepublicArt id="station" branch="museum"/><RepublicArt id="park"/></div>
+          <div className="games-republic-art"><RepublicCover/></div>
           <div className="games-entry-body"><h2>Malá republika</h2><div className="games-entry-meta"><span>Staviteľská logika</span><span>Denná výzva</span></div><p>Vytvor vlastnú štvrť pri starej stanici. Stavaj, objavuj spojenia a priprav slávnosť, ktorá poteší susedov.</p><p className="games-entry-detail">Bez účtu · mesto aj výzva sa ukladajú v tomto zariadení.</p><button type="button" className="games-play" data-game="republic" onClick={() => open("republic")}>Otvoriť štvrť <ArrowRight size={17} aria-hidden="true"/></button></div>
         </article>
       </div>

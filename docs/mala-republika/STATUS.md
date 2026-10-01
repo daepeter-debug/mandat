@@ -166,3 +166,12 @@ Peter požiadal o pokračovanie po úvode, väčšiu výzvu a možnosť posunú�
 - Zdrojové súbory, test a dokumentácia tejto revízie sa synchronizujú do GitHub `main`; následný Cloudflare Build nasadzuje rovnakú implementáciu. Účty ani cloudové uloženie sa nepridávajú.
 
 **Nasadené.** Ďalší krok: Peter si zahrá viac dní na mobile a posúdi rozhodovanie, tempo a zábavnosť; až potom rozširovať druhy udalostí.
+
+## 1. 10. 2026 — ilustrovaný vstup do Malej republiky
+
+- Nová AI ilustrácia štvrte pri stanici, výtvarne zladená s `town-seasons-v2.webp` hry Do decembra. Nahrádza tri samostatné objekty na karte Herne a malú kresbu vo vstupnom privítaní.
+- Privítanie je na desktope dvojstĺpcové, na mobile obrázok nad textom. Po „Pomôcť Eve pri škole“ alebo „Chcem objavovať sám“ sa zobrazí skutočná mapa. Rozpracovaná štvrť privítanie preskočí podľa existujúceho postupu; herné jadro, uloženie a grafika samotných objektov ostali nezmenené.
+- Asset má 1440 px a 720 px WebP variant (506 / 157 KiB), `srcSet`, rozmery pre stabilný layout a prioritné načítanie len v úvode. Exact prompt je `research/republic-cover-v2.prompt.txt`, pôvod a prompt sú zaznamenané aj pri obrázkoch.
+- TypeScript, cielený ESLint, produkčný build, Impeccable detector (`[]`) a Wrangler dry-run PASS. Nezávislý vizuálny review: **ship**, rozsah úvod a karta, nie nezmenená herná mapa. Dokumentácia rozšírená v DESIGN.md.
+- Lokálny produkčný náhľad: desktop 1280 × 900 a mobil 390 × 844, bez horizontálneho pretekania; primárne tlačidlo 46 px, preskočenie 44 px. Overené oba vstupy na mapu a presun klávesnicového fokusu. Screenshoty `previews/cover-desktop.png`, `previews/cover-mobile.png`.
+- Na pokyn „ok pokracuj a nasad“ nasadené na existujúci Workers web; verzia `eb9289f0-dd8a-4dd6-a0db-fdbc53366755`. Online sa nová ilustrácia načítava. Nejde o zjednotenie všetkých budov na hernej mape; to zostáva samostatnou možnou úpravou.
