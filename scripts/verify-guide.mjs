@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { createTown, execute, readSave } from "../lib/republic.ts";
+import { catalog, connected, createTown, distance, execute, readSave } from "../lib/republic.ts";
+import { categories, cellReport, info, objectReport, usefulSites } from "../lib/republic-info.ts";
 import { festivalSites, prepSites, supports, festivalResult, themes } from "../lib/republic-festival.ts";
 import { blockers, connectableCells, festivalGaps, freeCells, placementOptions, playerPlan, rewardText, stepItem, taskItem } from "../lib/republic-plan.ts";
 import { homeWishes, townSatisfaction } from "../lib/republic-trust.ts";
@@ -111,5 +112,41 @@ const broken = [null, "", "{", "null", "[]", JSON.stringify({ ...stored, day: "2
   JSON.stringify({ ...stored, result: { ...r1, council: { ...r1.council, elected: ["jakub", "maria"] } } }), JSON.stringify({ ...stored, result: { ...r1, mayor: { ...r1.mayor, winner: "x" } } }),
   JSON.stringify({ ...stored, result: { ...r1, voted: -1 } }), JSON.stringify({ ...stored, result: { ...r1, council: { ...r1.council, reasons: undefined } } })];
 for (const text of broken) assert.equal(parseStoredElection(text), null, `Poškodené uloženie volieb sa zahodí: ${String(text).slice(0, 60)}`);
+// ── Čo je na mape a čo robí (detail po ťuknutí) ───────────────────────────────────────────────────
+for (const id of Object.keys(catalog)) assert(info[id]?.short && info[id].tagline && info[id].does && categories[info[id].category], `Popis pre ${id}`);
+const home = objectReport(fresh, "house-1");
+assert.deepEqual(home.checks.map(c => c.ok), [true, false, false, true, false], "Dom: cesta a škola áno, zeleň, lekár a tržnica nie");
+assert.equal(home.summary, "Splnené priania: 2 z 5.");
+assert.deepEqual(home.quick.map(q => q.id), ["park", "clinic", "market"], "Dom ponúkne postaviť, čo mu chýba");
+assert(home.highlight.reach.every(p => distance(p, home.point) <= 2 && distance(p, home.point) > 0), "Dosah domu = 2 políčka");
+const withPark = ok(execute(fresh, { type: "build", id: "park", target: { x: 3, y: 3 } }, day));
+const parkId = withPark.placed.find(o => o.id === "park").instanceId, park = objectReport(withPark, parkId);
+assert.equal(park.summary, "Pomáha 2 domom: D2, E4.", "Park povie, komu pomáha");
+assert.deepEqual(park.highlight.good.map(p => `${p.x},${p.y}`).sort(), ["3,1", "4,3"]);
+assert.equal(objectReport(withPark, "house-3").checks[1].ok, true, "Dom pri parku má zeleň");
+const lonely = ok(execute(fresh, { type: "build", id: "clinic", target: { x: 0, y: 4 } }, day));
+const clinic = objectReport(lonely, lonely.placed.find(o => o.id === "clinic").instanceId);
+assert.equal(clinic.checks[0].ok, false, "Ambulancia bez cesty nefunguje");
+assert(clinic.quick.some(q => q.kind === "road"), "Ponúkne položiť cestu");
+assert.equal(objectReport(fresh, "plaza").summary, "Na námestie je napojených 6 z 6 budov.");
+assert(objectReport(fresh, "school-1").related.some(r => r.text.startsWith("Krok projektu „Školský dvor“")), "Škola súvisí s krokom projektu");
+assert.equal(objectReport(fresh, "nic"), null);
+const freeCell = cellReport(fresh, { x: 2, y: 3 });
+assert.equal(freeCell.title, "Voľný pozemok C4"); assert.equal(freeCell.quick[0].kind, "build-here", "Pri ceste: najprv Postaviť sem");
+assert.match(freeCell.summary, /1 napojený dom \(E4\)/);
+assert.equal(cellReport(fresh, { x: 0, y: 5 }).quick[0].kind, "road-here", "Bez cesty: najprv Cesta sem");
+assert.equal(cellReport(fresh, { x: 1, y: 2 }).summary, "Spojená s námestím.");
+// ── Kde stavba hneď pomôže (fajky na mape) ─────────────────────────────────────────────────────────
+const yard = usefulSites(fresh, "park");
+assert(yard.length && yard.every(p => distance(p, { x: 1, y: 1 }) <= 2 && connected(fresh, p)), "Pri kroku Školský dvor: park pri škole a pri ceste");
+const care = usefulSites(fresh, "clinic");
+assert(care.length && care.every(p => fresh.placed.filter(o => o.id === "house" && distance(o, p) <= 2).length === 2), "Ambulancia: miesta pre najviac domov");
+assert(usefulSites(fresh, "market").every(p => distance(p, { x: 2, y: 2 }) <= 2), "Tržnica: pri námestí");
+assert(usefulSites(fresh, "library").every(p => distance(p, { x: 1, y: 1 }) <= 2), "Knižnica: pri škole");
+assert.equal(usefulSites(fresh, "school").length, 0, "Druhá škola netreba");
+assert(usefulSites(fresh, "house").length > 0);
+// ── Prečo: každá položka plánu má vetu z pohľadu susedov ─────────────────────────────────────────
+assert(plan.step.why.startsWith("Eva: „"), "Krok projektu: slová postavy");
+assert(plan.tasks.every(x => x.why.startsWith("Objednávka susedov.")) && plan.parcel.why && plan.story.why);
 assert(readSave(fresh), "Plán, spokojnosť ani voľby nemenia uloženie");
-console.log(`PASS guide: next action, rewards, missing, blockers (full / no road), festival gaps; satisfaction ${base.value} → ${greener.value} %; election § 182/184 ods. 1–2/189/192, strict stored result (turnout ${r1.turnout} %)`);
+console.log(`PASS guide: map details (building, plot, road), useful sites, why; next action, rewards, missing, blockers (full / no road), festival gaps; satisfaction ${base.value} → ${greener.value} %; election § 182/184 ods. 1–2/189/192, strict stored result (turnout ${r1.turnout} %)`);

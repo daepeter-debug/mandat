@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle, ArrowRight, Boxes, Check, Circle, Coins, Flag, Sparkles, Vote, X } from "lucide-react";
+import { AlertTriangle, ArrowRight, Boxes, Check, Circle, CircleHelp, Coins, Flag, Smile, Sparkles, TrainFront, Vote, X } from "lucide-react";
 import { rewardText, type PlanAction, type PlanItem, type Reward, type playerPlan } from "@/lib/republic-plan";
 import type { townSatisfaction } from "@/lib/republic-trust";
 import type { Festival } from "@/lib/republic-festival";
@@ -30,40 +30,47 @@ export const actionLabel = (a: PlanAction, item?: PlanItem) => a.type === "step"
 const statusIcon = (s: PlanItem["status"]) => s === "done" ? <Check size={15} aria-hidden="true"/> : s === "ready" ? <Sparkles size={15} aria-hidden="true"/> : s === "later" ? <Check size={15} aria-hidden="true"/> : <Circle size={13} aria-hidden="true"/>;
 const statusText = { ready: "dá sa hneď", todo: "ešte chýba", done: "hotové", later: "hotové na dnes" };
 
-function Meter({ label, value, max, text }: { label: string; value: number; max: number; text: string }) {
-  return <div className="plan-meter"><span>{label}</span><b>{text}</b><span className="plan-bar" aria-hidden="true"><span style={{ width: `${Math.round(Math.min(1, value / max) * 100)}%` }}/></span></div>;
+const plural = (n: number, one: string, few: string, many: string) => n === 1 ? one : n >= 2 && n <= 4 ? few : many;
+
+/** Stav štvrte v jednom páse: zdroje, spokojnosť, projekt, slávnosti a voľby. Cieľ hry je v podnadpise. */
+export function StatusBar({ name, coins, materials, satisfaction, project, journey, electionDays, compact = false, help = null }: {
+  name: string; coins: number; materials: number; satisfaction: Satisfaction; project: number; journey: number; electionDays: number | null; compact?: boolean;
+  help?: { open: boolean; onToggle: () => void } | null;
+}) {
+  return <section className="republic-status" aria-label="Stav štvrte">
+    <div className="republic-status-title"><div><strong>{name}</strong><span><Flag size={13} aria-hidden="true"/> Cieľ: vráť život štvrti pri starej stanici</span></div>
+      {help && <button type="button" className="republic-howto-toggle" aria-expanded={help.open} aria-controls="republic-howto" onClick={help.onToggle}><CircleHelp size={16} aria-hidden="true"/>Ako hra funguje</button>}</div>
+    <ul className="republic-status-chips" data-compact={compact || undefined}>
+      <li><Coins size={18} aria-hidden="true"/><b>{coins}</b><span>{plural(coins, "minca", "mince", "mincí")}</span></li>
+      <li><Boxes size={18} aria-hidden="true"/><b>{materials}</b><span>{plural(materials, "materiál", "materiály", "materiálov")}</span></li>
+      {!compact && <li title={satisfaction.label}><Smile size={18} aria-hidden="true"/><b>{satisfaction.value} %</b><span>spokojnosť</span></li>}
+      <li><TrainFront size={18} aria-hidden="true"/><b>{project}/7</b><span>projekt</span></li>
+      {!compact && <li><Flag size={18} aria-hidden="true"/><b>{journey}/7</b><span>slávnosti</span></li>}
+      {!compact && electionDays !== null && <li className="is-link"><a href="#republic-election"><Vote size={18} aria-hidden="true"/><b>{electionDays > 0 ? `o ${electionDays} ${plural(electionDays, "deň", "dni", "dní")}` : "dnes"}</b><span>voľby</span></a></li>}
+    </ul>
+  </section>;
 }
 
-export function PlanPanel({ plan, satisfaction, project, journey, electionDays, blocked, onAction }: {
-  plan: Plan; satisfaction: Satisfaction; project: number; journey: number; electionDays: number | null; blocked: boolean; onAction: (a: PlanAction, item: PlanItem) => void;
-}) {
+/** Jedna hlavná akcia: čo môžem urobiť teraz, prečo, čo presne treba a akú odmenu dostanem. Nad ňou upozornenia. */
+export function PlanPanel({ plan, blocked, onAction }: { plan: Plan; blocked: boolean; onAction: (a: PlanAction, item: PlanItem) => void }) {
   const next = plan.next;
-  return <section className="republic-plan" aria-label="Kde som a čo ďalej">
-    <div className="plan-goal">
-      <h2><Flag size={20} aria-hidden="true"/> Vráť život štvrti pri starej stanici</h2>
-      <p className="plan-goal-text">Sedem krokov projektu, sedem dní slávností a spokojní susedia{electionDays !== null ? " pred voľbami v štvrti" : ""}.</p>
-      <div className="plan-meters">
-        <Meter label="Projekt" value={project} max={7} text={`${project}/7`}/>
-        <Meter label="Slávnosti" value={journey} max={7} text={`${journey}/7`}/>
-        <Meter label="Spokojnosť" value={satisfaction.value} max={100} text={`${satisfaction.value} %`}/>
+  return <section className="republic-plan" aria-label="Čo teraz">
+    {plan.blockers.map(b => <div key={b.key} className="plan-blocker" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{b.title}</b><p>{b.detail}</p></div></div>)}
+    {next && !(plan.idle && next.key === "story") ? <div className="plan-now" data-status={next.status}>
+      <div className="plan-now-text">
+        <div className="plan-now-title"><h3>{next.title}</h3><p className="plan-next-status">{next.status === "ready" ? "Teraz môžeš" : "Ďalší krok"}</p></div>
+        {next.why && <p className="plan-why">{next.why}</p>}
+        <p className="plan-now-detail">{next.detail}{next.progress ? <> <b className="plan-progress">({next.progress.have}/{next.progress.need})</b></> : null}</p>
       </div>
-      {electionDays !== null && <a className="plan-election-link" href="#republic-election"><Vote size={15} aria-hidden="true"/>{electionDays > 0 ? `Voľby v štvrti o ${electionDays} ${electionDays === 1 ? "deň" : electionDays < 5 ? "dni" : "dní"}` : "Voľby v štvrti sú otvorené"}<ArrowRight size={14} aria-hidden="true"/></a>}
-    </div>
-    <div className="plan-now-column">
-      {plan.blockers.map(b => <div key={b.key} className="plan-blocker" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{b.title}</b><p>{b.detail}</p></div></div>)}
-      {next && !(plan.idle && next.key === "story") ? <div className="plan-now" data-status={next.status}>
-        <h3>{next.title}</h3>
-        <p className="plan-next-status">{next.status === "ready" ? "Teraz môžeš" : "Ďalší krok"}</p>
-        <p>{next.detail}</p>
-        {next.progress && <p className="plan-progress">Stav: <b>{next.progress.have}/{next.progress.need}</b></p>}
-        <div className="plan-now-footer"><RewardChips reward={next.reward} cost={next.cost}/>
-          {next.action.type !== "none" && <button className="plan-now-button" disabled={blocked} onClick={() => onAction(next.action, next)}>{actionLabel(next.action, next)}<ArrowRight size={16} aria-hidden="true"/></button>}</div>
-      </div> : <div className="plan-now is-idle">
+      <div className="plan-now-footer"><RewardChips reward={next.reward} cost={next.cost}/>
+        {next.action.type !== "none" && <button className="plan-now-button" disabled={blocked} onClick={() => onAction(next.action, next)}>{actionLabel(next.action, next)}<ArrowRight size={16} aria-hidden="true"/></button>}</div>
+    </div> : <div className="plan-now is-idle">
+      <div className="plan-now-text">
         <h3>Na dnes máš projekt aj objednávky hotové.</h3>
-        <p>Zajtra príde nová zásielka, ďalší krok projektu a nové objednávky. Medzitým môžeš štvrť preplánovať (presuny sú zadarmo) alebo zahrať slávnosť.</p>
-        <div className="plan-now-footer"><button className="plan-now-button" disabled={blocked} onClick={() => onAction(plan.story.action, plan.story)}>{plan.story.title}<ArrowRight size={16} aria-hidden="true"/></button></div>
-      </div>}
-    </div>
+        <p className="plan-now-detail">Zajtra príde nová zásielka, ďalší krok projektu a nové objednávky. Medzitým môžeš štvrť preplánovať (presuny sú zadarmo) alebo zahrať slávnosť.</p>
+      </div>
+      <div className="plan-now-footer"><button className="plan-now-button" disabled={blocked} onClick={() => onAction(plan.story.action, plan.story)}>{plan.story.title}<ArrowRight size={16} aria-hidden="true"/></button></div>
+    </div>}
   </section>;
 }
 

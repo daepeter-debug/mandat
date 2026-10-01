@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type RefObject } from "react";
-import { AlertTriangle, Grid2X2, LocateFixed, Minus, Plus } from "lucide-react";
+import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
+import { AlertTriangle, Grid2X2, LocateFixed, Minus, Plus, Tag } from "lucide-react";
 import { catalog, connected, distance, network, type ItemId, type Placed, type Point, type RepublicState } from "@/lib/republic";
 import type { Gathering } from "@/lib/republic-living";
 import { TownPiece, seg, type V } from "@/components/republic-art";
@@ -9,6 +9,13 @@ import { LivingWalkers, NightWindows, ResidentSprite, SeasonalScene, RiverFlow, 
 import { CelebrationGuests, CelebrationLanterns, useCelebrationOpening } from "@/components/republic-celebration";
 import { celebrationScene, CELEBRATION_SECONDS } from "@/lib/republic-celebration";
 import { needs, type Need } from "@/lib/republic-trust";
+import { MapBadges } from "@/components/republic-info";
+import type { Highlight } from "@/lib/republic-info";
+
+const labelsKey = "mandat:republic:v1:labels";
+const readLabels = () => { try { return localStorage.getItem(labelsKey) !== "off"; } catch { return true; } };
+/** Čo je vybrané na mape (budova alebo políčko) a čo k tomu zvýrazniť. */
+export type MapInspect = { key: string; point: Point; highlight: Highlight; selected: string | null };
 
 const at=(p:Point)=>({x:280+(p.x-p.y)*43,y:100+(p.x+p.y)*24});
 const diamond=(p:Point,inset=0)=>{const c=at(p);return `${c.x},${c.y-24+inset} ${c.x+43-inset},${c.y} ${c.x},${c.y+24-inset} ${c.x-43+inset},${c.y}`;};
@@ -37,11 +44,15 @@ function WishGlyph({wish}:{wish:string}) {
   </g></g>;
 }
 
-export default function RepublicMap({town,editing,selected,target,suggested=[],onCell,onObject,captureRef,festivalReplay=0,festivalStill=false,notice=null,wishes=[]}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void;captureRef?:RefObject<SVGSVGElement|null>;festivalReplay?:number;festivalStill?:boolean;notice?:{title:string;detail:string}|null;wishes?:{instanceId:string;x:number;y:number;wish:string|null}[]}) {
+export default function RepublicMap({town,editing,selected,target,suggested=[],onCell,onObject,captureRef,festivalReplay=0,festivalStill=false,notice=null,wishes=[],inspect=null,suggestHint,children}:{town:RepublicState;editing:boolean;selected:ItemId|null;target:Point|null;suggested?:Point[];onCell:(p:Point)=>void;onObject:(id:string)=>void;captureRef?:RefObject<SVGSVGElement|null>;festivalReplay?:number;festivalStill?:boolean;notice?:{title:string;detail:string}|null;wishes?:{instanceId:string;x:number;y:number;wish:string|null}[];inspect?:MapInspect|null;suggestHint?:string;children?:ReactNode}) {
   const [zoom,setZoom]=useState(()=>typeof window!=="undefined"&&window.matchMedia?.("(max-width: 560px)").matches?1.5:1),[focus,setFocus]=useState(14),[grid,setGrid]=useState(false);
   const [hover,setHover]=useState<Point|null>(null),[terrainFailed,setTerrainFailed]=useState(false);
   const [terrainReady,setTerrainReady]=useState(false);
   const [scenePreview,setScenePreview]=useState("");
+  // Popisy budov (štítok s ikonou a názvom) sú predvolene zapnuté; vypnutie si zariadenie pamätá. Pri pohľadnici sa nekreslia.
+  const [labels,setLabelsState]=useState(readLabels);
+  const setLabels=(on:boolean)=>{setLabelsState(on);try{localStorage.setItem(labelsKey,on?"on":"off");}catch{/* bez úložiska len do obnovenia */}};
+  const showLabels=labels&&!festivalStill;
   const uid=useId().replaceAll(":","");
   const showGrid=grid||editing;
   const viewport=useRef<HTMLDivElement>(null),svg=useRef<SVGSVGElement>(null);
@@ -54,6 +65,15 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
   const paved=(x:number,y:number)=>isRoad(x,y)||x===2&&y===2;
   function centre(){const el=viewport.current;if(el)el.scrollTo({left:(el.scrollWidth-el.clientWidth)/2,top:(el.scrollHeight-el.clientHeight)/2,behavior:"instant"});}
   useEffect(()=>{centre();},[zoom,editing]);
+  // Vybraná budova mimo výrezu priblíženej mapy sa posunie do zorného poľa (ťuknutie v zozname alebo z plánu).
+  const inspectKey=inspect?`${inspect.point.x}-${inspect.point.y}`:"";
+  useEffect(()=>{
+    const el=viewport.current,s=svg.current;if(!inspectKey||!el||!s)return;
+    const [x,y]=inspectKey.split("-").map(Number),scale=s.getBoundingClientRect().width/640,c=at({x,y});
+    const px=(c.x+40)*scale,py=c.y*scale,margin=48;
+    const visible=px>el.scrollLeft+margin&&px<el.scrollLeft+el.clientWidth-margin&&py>el.scrollTop+margin&&py<el.scrollTop+el.clientHeight-margin;
+    if(!visible)el.scrollTo({left:px-el.clientWidth/2,top:py-el.clientHeight/2,behavior:"smooth"});
+  },[inspectKey]);
   useEffect(()=>{
     const host=viewport.current;if(!host)return;
     const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){setTerrainReady(true);observer.disconnect();}},{rootMargin:"200px"});
@@ -105,6 +125,8 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
             {reach&&<polygon points={diamond(p,3)} fill="#b2dcce" opacity=".32"/>}
             {suggested.some(s=>distance(s,p)===0)&&<polygon points={diamond(p,3)} className="republic-plot-suggested"/>}
             {target&&distance(p,target)===0&&<polygon points={diamond(p,2)} className="republic-plot-selected"/>}
+            {!editing&&inspect?.highlight.reach.some(r=>distance(r,p)===0)&&<polygon points={diamond(p,3)} className="republic-plot-reach"/>}
+            {!editing&&inspect&&distance(inspect.point,p)===0&&<polygon points={diamond(p,1)} className="republic-plot-focus"/>}
           </g>;
         })}
         {scene&&visible&&<LivingWalkers scene={scene} active={active}/>}
@@ -112,7 +134,7 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
         <g pointerEvents="none" aria-hidden="true">
           {layers(town,scene&&visible?scene.gatherings:[]).map(layer=>{if(layer.kind==="person")return <GatheringPerson key={layer.person.key} person={layer.person} active={active}/>;const o=layer.piece,c=at(o);return <g className="republic-piece" key={o.instanceId} transform={`translate(${c.x} ${c.y})`}>
             <TownPiece id={o.id} branch={o.id==="station"?town.branch:null} finished={town.completed.includes("opening")} variant={hash(o.instanceId)}/>
-            {!o.fixed&&catalog[o.id].kind==="building"&&<g transform="translate(30 10)"><circle r="5" fill={connected(town,o)?"#315e4b":"#a86343"} stroke="#fff9df" strokeWidth="1.6"/>{!connected(town,o)&&<path d="M-2.2 0h4.4" stroke="#fff9df" strokeWidth="1.3"/>}</g>}
+            {!showLabels&&!o.fixed&&catalog[o.id].kind==="building"&&<g transform="translate(30 10)"><circle r="5" fill={connected(town,o)?"#315e4b":"#a86343"} stroke="#fff9df" strokeWidth="1.6"/>{!connected(town,o)&&<path d="M-2.2 0h4.4" stroke="#fff9df" strokeWidth="1.3"/>}</g>}
           </g>;})}
           {target&&selected&&!town.placed.some(p=>distance(p,target)===0)&&<g opacity=".65" transform={`translate(${at(target).x} ${at(target).y})`}><TownPiece id={selected} variant={0}/></g>}
         </g>
@@ -130,6 +152,7 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
         </>}
         {celebration&&(visible||festivalStill)&&<CelebrationLanterns scene={celebration} seconds={celebrationSeconds} active={active&&!festivalStill}/>}
         {wishes.filter(w=>w.wish).map(w=>{const p=at(w);return <g key={w.instanceId} className="republic-wish" data-wish={w.wish} transform={`translate(${p.x+18} ${p.y-60})`} aria-hidden="true" pointerEvents="none"><WishGlyph wish={w.wish!}/></g>;})}
+        {!festivalStill&&<MapBadges town={town} labels={showLabels} selected={editing?null:inspect?.selected??null} highlight={editing?null:inspect?.highlight??null}/>}
         <g className="republic-input-layer">
           {cells.map((p,i)=>{const o=town.placed.find(x=>distance(x,p)===0),road=town.roads.some(x=>distance(x,p)===0);
             const wish=wishes.find(w=>w.instanceId===o?.instanceId)?.wish;
@@ -140,7 +163,9 @@ export default function RepublicMap({town,editing,selected,target,suggested=[],o
         </g>
       </svg>
     </div>
-    <div className="republic-map-tools"><span>{editing?suggested.length?"Miesta s fajkou pomôžu splniť úlohu.":"Vyber pozemok. Stavbu ešte potvrdíš.":"Ťukni na budovu a preskúmaj ju."}</span><div>
+    {children}
+    <div className="republic-map-tools"><span>{editing?suggested.length?suggestHint??"Políčka s fajkou: tu stavba hneď pomôže.":"Vyber pozemok. Stavbu ešte potvrdíš.":"Ťukni na budovu: uvidíš, čo robí a komu pomáha."}</span><div>
+      <button type="button" aria-label={labels?"Skryť popisy budov":"Zobraziť popisy budov"} aria-pressed={labels} onClick={()=>setLabels(!labels)}><Tag size={16}/></button>
       <button type="button" aria-label={editing?"Mriežka je pri výbere miesta zapnutá":"Zobraziť mriežku pozemkov"} aria-pressed={showGrid} disabled={editing} onClick={()=>setGrid(v=>!v)}><Grid2X2 size={16}/></button>
       <button type="button" aria-label="Oddialiť mapu" disabled={zoom<=1} onClick={()=>setZoom(z=>Math.max(1,z-.5))}><Minus size={16}/></button>
       <button type="button" aria-label="Priblížiť mapu" disabled={zoom>=2} onClick={()=>setZoom(z=>Math.min(2,z+.5))}><Plus size={16}/></button>

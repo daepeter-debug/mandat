@@ -12,6 +12,8 @@ export type PlanAction =
   | { type: "parcel" } | { type: "story" } | { type: "build"; id: ItemId } | { type: "road" } | { type: "none" };
 export type PlanItem = {
   key: string; title: string; detail: string; status: "ready" | "todo" | "done" | "later";
+  /** Prečo to robíme: jedna veta z pohľadu susedov (pri krokoch projektu slová postavy). */
+  why?: string;
   reward?: Reward | null; cost?: Reward | null; progress?: { have: number; need: number } | null; action: PlanAction;
 };
 export type Blocker = { key: string; title: string; detail: string; tone: "warning" | "info" };
@@ -38,6 +40,16 @@ function pairMissing(s: RepublicState, a: ItemId, b: ItemId, label: string) {
 }
 const bestClinic = (s: RepublicState) => Math.max(0, ...items(s, "clinic").map(c => homesServed(s, c).length));
 
+const taskWhy: Record<Task, string> = {
+  "school-link": "Bez cesty sa deti do školy nedostanú.",
+  "green-home": "Susedia chcú mať park alebo záhradu blízko domu.",
+  "three-homes": "Dom bez cesty je odrezaný od zvyšku štvrte.",
+  "care-two": "K lekárovi to má byť blízko, aspoň pre dva domy.",
+  "market-square": "Trh pri námestí oživí centrum štvrte.",
+  "school-pair": "Deti chcú chodiť zo školy do knižnice pešo.",
+  "craft-pair": "Dielňa pri škole: deti sa naučia remeslo.",
+  "green-two": "Viac zelene pre viac domov.",
+};
 /** Úloha dňa (objednávka): stav, odmena a čo chýba. */
 export function taskItem(s: RepublicState, t: Task): PlanItem {
   const claimed = taskClaimed(s, t), ready = taskReady(s, t), homes = items(s, "house").filter(h => connected(s, h)).length;
@@ -52,7 +64,7 @@ export function taskItem(s: RepublicState, t: Task): PlanItem {
     case "craft-pair": detail = pairMissing(s, "school", "workshop", "dielňu"); action = { type: "build", id: "workshop" }; break;
     case "green-two": progress = { have: Math.min(2, coveredHomes(s, ["park", "garden"])), need: 2 }; detail = "Zeleň s cestou, ktorá dosiahne na dva napojené domy."; action = { type: "build", id: "garden" }; break;
   }
-  return { key: `task:${t}`, title: taskNames[t], detail: claimed ? "Vyzdvihnuté dnes." : ready ? "Splnené, stačí vyzdvihnúť odmenu." : detail,
+  return { key: `task:${t}`, title: taskNames[t], why: `Objednávka susedov. ${taskWhy[t]}`, detail: claimed ? "Vyzdvihnuté dnes." : ready ? "Splnené, stačí vyzdvihnúť odmenu." : detail,
     status: claimed ? "done" : ready ? "ready" : "todo", reward: { coins: 2, materials: 1 }, progress: claimed || ready ? null : progress, action: ready && !claimed ? { type: "task", task: t } : action };
 }
 
@@ -82,7 +94,7 @@ export function stepItem(s: RepublicState): PlanItem | null {
   const affordable = s.coins >= c && s.materials >= m, reward = step.reward[0] || step.reward[1] ? { coins: step.reward[0], materials: step.reward[1] } : null;
   const status: PlanItem["status"] = today ? "later" : step.id === "discovery" || done && affordable ? "ready" : "todo";
   const detail = today ? "Dnešný krok projektu je hotový. Ďalší krok otvoríš zajtra." : step.id === "discovery" ? "Vyber podobu starej haly." : done && !affordable ? `Na krok potrebuješ ${c} mincí a ${m} materiály. Máš ${s.coins} a ${s.materials}.` : done ? "Splnené. Potvrď krok." : stepMissing(s);
-  return { key: `step:${step.id}`, title: step.name, detail, status, reward, cost: c || m ? { coins: c, materials: m } : null, progress: null,
+  return { key: `step:${step.id}`, title: step.name, why: `${step.speaker}: „${step.text}“`, detail, status, reward, cost: c || m ? { coins: c, materials: m } : null, progress: null,
     action: status === "ready" ? (step.id === "discovery" ? { type: "branch" } : { type: "step" }) : { type: "none" } };
 }
 
@@ -100,17 +112,19 @@ export function festivalGaps(f: Festival) {
   return gaps;
 }
 
+const PARCEL_WHY = "Denný príjem: ozdoba do zbierky a mince s materiálom na ďalšie stavby.";
+const STORY_WHY = "Slávnosti spájajú susedov a zvyšujú spokojnosť štvrte.";
 /** Celý plán hráča pre aktuálny deň. */
 export function playerPlan(s: RepublicState) {
   const step = stepItem(s), tasks = tasksFor(s).map(t => taskItem(s, t));
-  const parcel: PlanItem = s.pending ? { key: "parcel", title: "Vybrať ozdobu zo zásielky", detail: "Zásielka je otvorená a čaká na tvoj výber.", status: "ready", reward: { coins: 8, materials: 4 }, action: { type: "parcel" } }
-    : s.charges ? { key: "parcel", title: s.charges > 1 ? `Otvoriť zásielku (čakajú ${s.charges})` : "Otvoriť zásielku", detail: "Vyber jednu ozdobu do zbierky.", status: "ready", reward: { coins: 8, materials: 4 }, action: { type: "parcel" } }
+  const parcel: PlanItem = s.pending ? { key: "parcel", title: "Vybrať ozdobu zo zásielky", why: PARCEL_WHY, detail: "Zásielka je otvorená a čaká na tvoj výber.", status: "ready", reward: { coins: 8, materials: 4 }, action: { type: "parcel" } }
+    : s.charges ? { key: "parcel", title: s.charges > 1 ? `Otvoriť zásielku (čakajú ${s.charges})` : "Otvoriť zásielku", why: PARCEL_WHY, detail: "Vyber jednu ozdobu do zbierky.", status: "ready", reward: { coins: 8, materials: 4 }, action: { type: "parcel" } }
     : { key: "parcel", title: "Zásielka", detail: "Nová zásielka príde zajtra.", status: "later", reward: { coins: 8, materials: 4 }, action: { type: "none" } };
-  const finalReward: PlanItem | null = s.completed.includes("opening") && !s.finalReward ? { key: "final", title: "Vybrať finálnu dekoráciu", detail: "Kapitola je hotová. Vyber si ľubovoľnú ozdobu.", status: "ready", action: { type: "final" } } : null;
+  const finalReward: PlanItem | null = s.completed.includes("opening") && !s.finalReward ? { key: "final", title: "Vybrať finálnu dekoráciu", why: "Stanica znova žije a štvrť si zaslúži svoj podpis.", detail: "Kapitola je hotová. Vyber si ľubovoľnú ozdobu.", status: "ready", action: { type: "final" } } : null;
   const stage = s.festivalJourney?.stage ?? 0, inProgress = !!s.festival && s.festival.response === null;
   const story: PlanItem = stage >= 7
-    ? { key: "story", title: "Dnešná výzva slávnosti", detail: s.festival?.mode !== "journey" && s.festival?.day === s.lastDay ? `Najlepší dnešný výsledok: ${s.festival.best}/3.` : "Nové denné zadanie.", status: s.festival?.mode !== "journey" && s.festival?.day === s.lastDay && s.festival.best === 3 ? "done" : "ready", action: { type: "story" } }
-    : { key: "story", title: inProgress ? "Dokončiť rozpracovanú slávnosť" : `Slávnosť · deň ${stage + 1} zo 7: ${journeyDays[stage].title}`, detail: "Splň 3 ciele a príbeh sa posunie. Na konci získaš slávnostnú bránu.", status: "ready", progress: { have: stage, need: 7 }, action: { type: "story" } };
+    ? { key: "story", title: "Dnešná výzva slávnosti", why: STORY_WHY, detail: s.festival?.mode !== "journey" && s.festival?.day === s.lastDay ? `Najlepší dnešný výsledok: ${s.festival.best}/3.` : "Nové denné zadanie.", status: s.festival?.mode !== "journey" && s.festival?.day === s.lastDay && s.festival.best === 3 ? "done" : "ready", action: { type: "story" } }
+    : { key: "story", why: STORY_WHY, title: inProgress ? "Dokončiť rozpracovanú slávnosť" : `Slávnosť · deň ${stage + 1} zo 7: ${journeyDays[stage].title}`, detail: "Splň 3 ciele a príbeh sa posunie. Na konci získaš slávnostnú bránu.", status: "ready", progress: { have: stage, need: 7 }, action: { type: "story" } };
   const all = [step, finalReward, ...tasks, parcel, story].filter((x): x is PlanItem => !!x);
   const ready = all.filter(x => x.status === "ready"), todo = all.filter(x => x.status === "todo"), done = all.filter(x => x.status === "done" || x.status === "later" && x.key.startsWith("step"));
   // Ďalší krok: najprv to, čo dá odmenu hneď (krok projektu, objednávky, zásielka), potom slávnosť, potom čo chýba.

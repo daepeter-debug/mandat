@@ -23,7 +23,7 @@
 .republic-view-switch>span { font-size:11px; margin-left:auto; color:var(--rep-muted); }
 .republic-map { border-radius:12px; overflow:hidden; background:radial-gradient(ellipse 85% 75% at 50% 40%, #f7f4e8 0%, #eaecdc 62%, #dfe4cf 100%); }
 .republic-map-window { overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; overscroll-behavior-y:auto; touch-action:pan-x pan-y pinch-zoom; scrollbar-width:thin; scrollbar-color:#a1b18d #e9eddc; }
-.republic-map-window svg { display:block; height:auto; margin:auto; max-width:none; }
+.republic-map-window>svg { display:block; height:auto; margin:auto; max-width:none; }
 .republic-landscape-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; background:#edf0e4; }
 .republic-landscape-heading strong { min-width:0; overflow-wrap:anywhere; font-size:13px; font-weight:600; }
 .republic-landscape-heading span { max-width:55%; text-align:right; font-size:11px; color:#4c6050; font-variant-numeric:tabular-nums; }
