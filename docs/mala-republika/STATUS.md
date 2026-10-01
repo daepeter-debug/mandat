@@ -202,3 +202,12 @@ Peter požiadal o pokračovanie po úvode, väčšiu výzvu a možnosť posunú�
 - Lokálny produkčný náhľad: http://127.0.0.1:5176/?v=game&g=republic . Bez pushu/nasadenia; Git push by cez existujúce Cloudflare prepojenie mohol spustiť deploy, preto tiež čaká na OK.
 
 **Konkrétny ďalší krok:** Peter si pozrie rozšírenie1 a potvrdí nasadenie (alebo úpravy). Potom pull --rebase pred pushom vlastných commitov, kontrola fyzického telefónu, následne rozšírenie2: scénická slávnosť a PNGpohľadnica. Úplný kontrakt a poradie2→3→4 v `LIVING-EXPANSIONS.md`; voľby majú termín pred24.10.2026. Tieto tri rozšírenia ešte nie sú implementované.
+
+## 1. 10. 2026 — terén a Živá štvrť nasadené
+
+- Peter potvrdil nasadenie slovom „Ok“. Pred pushom vykonaný `git pull --rebase` (main už aktuálny), potom push vlastných commitov `30b235f` (terén) a `256121c` (Živá štvrť). Existujúce Cloudflare Workers Builds prepojenie nasadilo verejný web: https://mandat-preview.mandat.workers.dev/?v=game&g=republic .
+- Oba verejné WebP súbory vracajú HTTP 200; SHA-256 nasadeného terénu aj atlasu obyvateľov zodpovedá lokálnym súborom. Obnovený verejný prehliadač zobrazuje nový terén a ovládač Živej štvrte. V rannom náhľade sa vykreslilo 9 chodcov; po kontrole vrátený predvolený skutočný čas. Existujúca štvrť a rozpracovaný príbeh zostali dostupné, bez resetu uloženia.
+- Mobilný viewport 375 × 844: scrollWidth stránky 360 px, bez horizontálneho pretekania. Dôkaz verejnej verzie: `previews/living-deployed-mobile.png`. Predchádzajúce overenia jadra, dát, TypeScriptu, ESLintu a produkčného buildu sú uvedené vyššie; od ich vykonania sa kód nemenil.
+- Ťah cez mapu na fyzickom telefóne naďalej NEOVERENÝ; Peter ho má vyskúšať na verejnom odkaze. Ručné prepnutie systémového reduced-motion a skrytie karty zostávajú neoverené manuálne skúšky.
+
+**Ďalší krok:** rozšírenie 2 — slávnosť na mape a zdieľateľná PNG pohľadnica, najprv čisté jadro a testy, potom UI a lokálna ukážka. Nasadenie tejto ďalšej časti až po novom Petrovom OK. Návšteva suseda a komunálne voľby ešte nie sú implementované; zachovať poradie 2 → 3 → 4 a termín volieb pred 24. 10. 2026.
