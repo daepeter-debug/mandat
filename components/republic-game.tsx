@@ -125,9 +125,11 @@ function OwnRepublicGame() {
   function selectBuild(id:ItemId){setIntent({kind:"build",id});setTarget(pendingTarget);setPendingTarget(null);clearInspect();setPanel(null);}
   function selectCell(p:Point) {
     if(intent){setTarget(p);return;}
-    const obj=town?.placed.find(o=>distance(o,p)===0);setObjectId(obj?.instanceId??null);setCell(obj?null:p);
+    const obj=town?.placed.find(o=>distance(o,p)===0);
+    if(obj){inspectObject(obj.instanceId);return;}
+    setObjectId(null);setCell(old=>old&&distance(old,p)===0?null:p);
   }
-  function inspectObject(id:string){setObjectId(id);setCell(null);}
+  function inspectObject(id:string){setObjectId(old=>old===id?null:id);setCell(null);}
   function cancel(){setIntent(null);setTarget(null);}
   function backup(){if(snapshot?.raw)downloadBackup(snapshot.raw);}
   if(!snapshot)return <p className="chart-loading" role="status">Načítavame tvoju štvrť…</p>;
@@ -178,7 +180,7 @@ function OwnRepublicGame() {
     else if(q.kind==="build-here"&&cell){setPendingTarget(cell);setPanel("build");clearInspect();requestAnimationFrame(()=>document.querySelector(".republic-catalog")?.scrollIntoView({block:"nearest",behavior:"smooth"}));}
     else if(q.kind==="road-here"&&cell)void run({type:"road",target:cell});
   }
-  const infoCard=report&&<InfoCard report={report} blocked={blocked} onClose={clearInspect} onQuick={quick}
+  const infoCard=report&&<InfoCard report={report} blocked={blocked} branch={town.branch} finished={town.completed.includes("opening")} onClose={clearInspect} onQuick={quick}
     onMove={()=>{if(object){setIntent({kind:"move",id:object.id,instanceId:object.instanceId});setTarget(null);}}}
     onStore={async()=>{if(object&&await run({type:"store",instanceId:object.instanceId}))clearInspect();}}/>;
   function planAction(a:PlanAction) {

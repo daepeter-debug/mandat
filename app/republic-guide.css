@@ -180,20 +180,31 @@
   .plan-now-footer .plan-now-button { flex:none; }
 }
 
-/* Mapa: dosah vybranej budovy a vybrané políčko (pod budovami), štítky budov (nad všetkým). */
+/* Pokojná mapa bez názvov. Dosah a napojenie sa zvýraznia až pri výbere. */
 .republic-plot-reach { fill:#fff3bf; fill-opacity:.78; stroke:#d9a925; stroke-width:1.6; }
 .republic-plot-focus { fill:#f2c94c; fill-opacity:.4; stroke:#f2c94c; stroke-width:3.5; }
-.republic-badges text { font-family:inherit; letter-spacing:0; }
+.republic-plot-helped { fill:none; stroke:#317347; stroke-width:2.4; }
+.republic-plot-unlinked { fill:none; stroke:#a86343; stroke-width:2.4; stroke-dasharray:4 3; }
+.republic-building-hit { fill:transparent; stroke:none; cursor:pointer; }
+.republic-input-layer [role=button]:focus-visible .republic-building-hit { stroke:#163f30; stroke-width:2; }
+.republic-map-stage { position:relative; }
+.republic-map-detail { background:#fffefa; }
+@media (min-width:960px) {
+  .republic-map-detail { position:absolute; top:12px; right:12px; z-index:4; width:min(300px,40%); max-height:calc(100% - 24px); overflow:auto; overscroll-behavior:contain; border-radius:14px; box-shadow:0 8px 26px rgba(29,48,33,.23); scrollbar-width:thin; scrollbar-color:#a1b18d #fffefa; }
+  .republic-map-stage[data-detail-side=left] .republic-map-detail { right:auto; left:12px; }
+}
 
 /* Detail pod mapou: čo to je, čo robí, komu pomáha a čo chýba. */
 .info-badge { display:inline-grid; place-items:center; flex:none; border-radius:50%; box-shadow:0 0 0 2px #fffefa, 0 0 0 3px rgba(32,57,47,.18); }
 .info-badge.is-plot { width:30px; height:30px; border-radius:8px; background:repeating-linear-gradient(45deg,#d9cdb6 0 4px,#efe6d3 4px 8px); }
-.info-card { position:relative; padding:12px 14px 14px; background:#fffefa; border-top:3px solid var(--cat); scroll-margin-bottom:104px; }
+.info-card { position:relative; padding:12px 14px 14px; background:#fffefa; color:#20392f; border-top:1px solid #d8decf; scroll-margin-bottom:104px; overflow-wrap:anywhere; }
 .info-card-head { display:flex; align-items:center; gap:10px; }
 .info-card-head>div { flex:1; min-width:0; }
+.info-card-head>.info-card-art { flex:none; width:62px; }
+.info-card-art .republic-art { width:100%; height:68px; }
 .info-card h3 { margin:0; font-size:17px; font-weight:650; line-height:1.25; }
 .info-card-label { margin:1px 0 0; font-size:12px; color:var(--rep-muted); }
-.info-card-close { flex:none; display:grid; place-items:center; width:40px; height:40px; border:0; border-radius:8px; background:#eef1e6; color:var(--rep-ink); cursor:pointer; }
+.info-card-close { flex:none; display:grid; place-items:center; width:44px; height:44px; border:0; border-radius:8px; background:#eef1e6; color:var(--rep-ink); cursor:pointer; }
 .info-card-does { margin:10px 0 0; font-size:13px; line-height:1.55; }
 .info-card-summary { margin:8px 0 0; padding:8px 10px; border-radius:8px; background:#eef6e2; color:#244933; font-size:13px; font-weight:600; line-height:1.45; }
 .info-card-checks, .info-card-related { list-style:none; margin:8px 0 0; padding:0; display:grid; gap:4px; }
@@ -204,12 +215,18 @@
 .info-card-related { margin-top:10px; padding-top:8px; border-top:1px dashed var(--rep-line); }
 .info-card-related li { font-size:12px; color:#4f5d4c; }
 .info-card-related li[data-ok=true]>svg { color:#2f6b34; } .info-card-related li[data-ok=false]>svg { color:#b06b00; }
+.info-card-more { margin-top:10px; border-block:1px solid var(--rep-line); }
+.info-card-more summary { padding:12px 0; min-height:44px; cursor:pointer; font-size:12px; color:#425d49; font-weight:600; }
+.info-card-more .info-card-related { margin-top:0; border-top:0; padding-top:0; }
+.info-card-more[open] { padding-bottom:10px; }
+.info-card-close:hover { background:#dce7ce; }
+.info-card-close:focus-visible,.info-card-more summary:focus-visible,.info-card-actions button:focus-visible { outline:2px solid #245c48; outline-offset:2px; }
 .info-card-note { margin:8px 0 0; padding:8px 10px; border-radius:8px; background:#fff1d6; color:#5a3d00; font-size:12px; line-height:1.5; }
 .info-card-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
 .info-card-actions button { display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:8px 12px; border:1px solid var(--rep-line); border-radius:9px; background:var(--rep-paper); color:var(--rep-ink); font:inherit; font-size:13px; font-weight:600; cursor:pointer; }
 .info-card-actions button.is-primary { background:#245c48; border-color:#245c48; color:#fffefa; }
 .info-card-actions button:disabled { opacity:.5; cursor:default; }
-.republic-list-view .info-card { margin-top:12px; border:1px solid var(--rep-line); border-top:3px solid var(--cat); border-radius:12px; }
+.republic-list-view .info-card { margin-top:12px; border:1px solid var(--rep-line); border-radius:12px; }
 
 /* Prečo staviame: príbeh, tri pravidlá, legenda budov a bonusy (zbalené, aby nezakrylo mapu). */
 .republic-howto { margin:0 0 12px; border:1px solid #b9cba3; border-radius:12px; background:var(--rep-paper); }
@@ -240,4 +257,3 @@
 .republic-side .festival-launch { padding:14px; }
 .republic-side .republic-share { margin-top:16px; }
 .republic-help .republic-art-switch { margin-top:16px; }
-

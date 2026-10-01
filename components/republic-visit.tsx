@@ -38,10 +38,10 @@ export function ShareNeighbourhood({ town }: { town: RepublicState }) {
 export default function RepublicVisit({ code, onReturn }: { code: string; onReturn: ()=>void }) {
   const town = decodeVisit(code), [selected, setSelected] = useState<string|null>(null);
   const report = town && selected ? objectReport(town, selected) : null;
-  return <RepublicIllustrations.Provider value><section className="republic republic-visit" data-focus="true">
+  return <RepublicIllustrations.Provider value><section className="republic republic-visit" data-focus="true" onKeyDown={e=>{if(e.key==="Escape")setSelected(null);}}>
     <header className="republic-visit-heading"><div><h1>{town?.name ?? "Odkaz je poškodený"}</h1><p><Users size={17} aria-hidden="true"/> Štvrť od suseda · iba na prezeranie</p></div><button type="button" className="republic-share-button" onClick={onReturn}><ArrowLeft size={16}/> Späť do mojej štvrte</button></header>
     {town ? <><p className="republic-visit-note">Prezri si, čo sused postavil. Jeho štvrť tu neupravuješ a tvoj vlastný postup ostáva nedotknutý.</p>
-      <RepublicMap town={town} editing={false} selected={null} target={null} onCell={()=>setSelected(null)} onObject={setSelected} wishes={homeWishes(town)} inspect={report?{key:report.key,point:report.point,highlight:report.highlight,selected}:null}>{report&&<InfoCard report={report} readOnly onClose={()=>setSelected(null)}/>}</RepublicMap>
+      <RepublicMap town={town} editing={false} selected={null} target={null} onCell={()=>setSelected(null)} onObject={id=>setSelected(old=>old===id?null:id)} wishes={homeWishes(town)} inspect={report?{key:report.key,point:report.point,highlight:report.highlight,selected}:null}>{report&&<InfoCard report={report} readOnly branch={town.branch} finished={town.completed.includes("opening")} onClose={()=>setSelected(null)}/>}</RepublicMap>
       <div className="republic-visit-caption"><p>Projekt <b>{town.completed.length} zo 7 krokov</b>{town.branch && <> · {branchNames[town.branch]}</>}</p></div>
     </> : <p className="republic-visit-note" role="alert">Tento odkaz je neúplný alebo neplatný. Vyžiadaj si od suseda nový. Tvoja uložená štvrť sa nezmenila.</p>}
     <div className="republic-visit-footer"><div><h2>Aká bude tvoja štvrť?</h2><p>Postav domy, prepoj susedov a priprav vlastnú slávnosť.</p></div><button type="button" className="plan-now-button" onClick={onReturn}><House size={18}/> Postaviť si vlastnú</button></div>

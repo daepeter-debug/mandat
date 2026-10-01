@@ -2,14 +2,14 @@
 
 import { createElement, useEffect, useRef } from "react";
 import { AlertTriangle, ArrowRight, BookOpen, Check, Drama, Flower2, Hammer, House, Landmark, Move, Archive, Route, School, Sparkles, Sprout, Stethoscope, Store, TrainFront, Trees, X, type LucideIcon } from "lucide-react";
-import { catalog, combos, connected, type ItemId, type Placed, type Point, type RepublicState } from "@/lib/republic";
-import { categories, info, type Highlight, type Quick, type Report } from "@/lib/republic-info";
+import { catalog, combos, type Branch, type ItemId, type RepublicState } from "@/lib/republic";
+import { categories, info, type Quick, type Report } from "@/lib/republic-info";
+import RepublicArt from "@/components/republic-art";
 import "@/app/republic-guide.css";
 
 /*
-  Čo je na mape: farebná značka s ikonou a krátkym názvom pri každej budove, karta detailu po ťuknutí
-  (čo to je, čo robí, komu pomáha, čo chýba) a vysvetlivka „Ako hra funguje“. Dáta: lib/republic-info.ts.
-  Značky sú zámerne jednoduché (ikony lucide); ilustrované verzie môže dokresliť Codex.
+  Mapa ostáva bez trvalých názvov. Po ťuknutí sa otvorí ilustrovaný detail
+  (čo to je, čo robí, komu pomáha, čo chýba). Dáta: lib/republic-info.ts.
 */
 const icons: Partial<Record<ItemId, LucideIcon>> = {
   house: House, school: School, library: BookOpen, clinic: Stethoscope, park: Trees, garden: Sprout, market: Store, workshop: Hammer,
@@ -24,60 +24,34 @@ export function CategoryBadge({ id, size = 18 }: { id: ItemId; size?: number }) 
   return <span className="info-badge" style={{ background: colorOf(id), width: size + 12, height: size + 12 }} aria-hidden="true">{icon(id, { size, color: "#fffefa", strokeWidth: 2.2 })}</span>;
 }
 
-const at = (p: Point) => ({ x: 280 + (p.x - p.y) * 43, y: 100 + (p.x + p.y) * 24 });
-const same = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
-// Šírka textu v SVG (IBM Plex Sans 11 px, priemerná šírka znaku), aby štítok sedel bez merania v prehliadači.
-const textWidth = (s: string) => Math.round([...s].reduce((w, c) => w + (/[mwMWÁÄÔ]/.test(c) ? 9 : /[iljíĺľ.\s]/.test(c) ? 3.6 : /[A-ZÁČĎÉÍĽĹŇÓŔŠŤÚÝŽ]/.test(c) ? 7.4 : 6.2), 0));
-
-/**
- * Vrstva značiek v mape (nad budovami aj nočným závojom, aby bola čitateľná vždy).
- * Bez popisov: krúžok s ikonou. S popismi: štítok s ikonou, krátkym názvom a bodkou napojenia.
- * Vybraná budova je tmavá, domy a služby, ktorým pomáha, majú zelený okraj, nefunkčné oranžový.
- */
-export function MapBadges({ town, labels, selected, highlight }: { town: RepublicState; labels: boolean; selected: string | null; highlight: Highlight | null }) {
-  const isIn = (list: Point[] | undefined, p: Point) => !!list?.some(q => same(q, p));
-  return <g className="republic-badges" aria-hidden="true" pointerEvents="none">
-    {town.placed.filter(o => catalog[o.id].kind === "building" || o.instanceId === selected).map((o: Placed) => {
-      const c = at(o), color = colorOf(o.id), chosen = o.instanceId === selected;
-      const good = isIn(highlight?.good, o), bad = isIn(highlight?.bad, o), linked = o.fixed || catalog[o.id].kind !== "building" || connected(town, o);
-      const ring = chosen ? "#f2c94c" : good ? "#2f7d3c" : bad ? "#c4651b" : null;
-      if (!labels && !chosen) return <g key={o.instanceId} transform={`translate(${c.x} ${c.y + 14})`} className="republic-badge">
-        {ring && <circle r="12.5" fill="none" stroke={ring} strokeWidth="3"/>}
-        <circle r="9.5" fill="#fffefa" stroke={color} strokeWidth="2.2"/>
-        {icon(o.id, { x: -6, y: -6, size: 12, color, strokeWidth: 2.4 })}
-      </g>;
-      const name = info[o.id].short, w = 30 + textWidth(name);
-      return <g key={o.instanceId} transform={`translate(${c.x - w / 2} ${c.y + 6})`} className="republic-badge" data-selected={chosen || undefined}>
-        {ring && <rect x="-3" y="-3" width={w + 6} height="24" rx="12" fill="none" stroke={ring} strokeWidth="3"/>}
-        <rect width={w} height="18" rx="9" fill={chosen ? "#20392f" : "#fffefa"} stroke={chosen ? "#20392f" : color} strokeWidth="1.3"/>
-        <circle cx="9" cy="9" r="7" fill={color}/>
-        {icon(o.id, { x: 4.5, y: 4.5, size: 9, color: "#fffefa", strokeWidth: 2.6 })}
-        <text x="20" y="12.6" fontSize="11" fontWeight="600" fill={chosen ? "#fffefa" : "#20392f"}>{name}</text>
-        {catalog[o.id].kind === "building" && !o.fixed && <circle cx={w - 6} cy="9" r="3.2" fill={linked ? "#3e8a5a" : "#b8613f"}/>}
-      </g>;
-    })}
-  </g>;
-}
-
-/** Karta detailu pod mapou: čo to je, čo robí, komu pomáha, čo chýba a rýchle akcie. */
-export function InfoCard({ report, blocked = false, readOnly = false, onClose, onQuick, onMove, onStore }: {
-  report: Report; blocked?: boolean; readOnly?: boolean; onClose: () => void; onQuick?: (q: Quick) => void; onMove?: () => void; onStore?: () => void;
+/** Detail pri mape; na mobile pod ňou, aby zostala priechodná pre dotyk aj posúvanie stránky. */
+export function InfoCard({ report, blocked = false, readOnly = false, branch=null, finished=false, onClose, onQuick, onMove, onStore }: {
+  report: Report; blocked?: boolean; readOnly?: boolean; branch?: Branch|null; finished?: boolean; onClose: () => void; onQuick?: (q: Quick) => void; onMove?: () => void; onStore?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  // Karta sa objaví pod mapou; ak je mimo obrazovky, stránka sa k nej jemne posunie (mapa ostane na mieste).
-  useEffect(() => { ref.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, [report.key]);
-  const color = report.category ? categories[report.category].color : "#6b7a68";
-  return <div ref={ref} className="info-card" style={{ ["--cat" as string]: color }} role="region" aria-label={`Detail: ${report.title}`} aria-live="polite">
-    <div className="info-card-head">
-      {report.id ? <CategoryBadge id={report.id}/> : <span className="info-badge is-plot" aria-hidden="true"/>}
+  useEffect(() => {
+    const head=ref.current;
+    if (!head || head.closest(".republic-map-detail") && window.matchMedia("(min-width: 960px)").matches) return;
+    const rect=head.getBoundingClientRect();
+    if(rect.top<0||rect.bottom>window.innerHeight-80) head.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+  }, [report.key]);
+  function close() {
+    const cell=ref.current?.closest(".republic")?.querySelector<SVGGElement>(`[data-cell="${report.point.x}-${report.point.y}"]`);
+    onClose();cell?.focus({preventScroll:true});
+  }
+  return <div className="info-card" role="region" aria-label={`Detail: ${report.title}`} aria-live="polite" onKeyDown={e=>{if(e.key==="Escape"){e.stopPropagation();close();}}}>
+    <div ref={ref} className="info-card-head">
+      {report.id ? <div className="info-card-art" aria-hidden="true"><RepublicArt id={report.id} branch={report.id==="station"?branch:null} finished={finished}/></div> : <span className="info-badge is-plot" aria-hidden="true"/>}
       <div><h3>{report.title}</h3><p className="info-card-label">{report.label}</p></div>
-      <button type="button" className="info-card-close" onClick={onClose} aria-label="Zavrieť detail"><X size={18}/></button>
+      <button type="button" className="info-card-close" onClick={close} aria-label="Zavrieť detail"><X size={18}/></button>
     </div>
     <p className="info-card-does">{report.does}</p>
     {report.summary && <p className="info-card-summary">{report.summary}</p>}
     {report.checks.length > 0 && <ul className="info-card-checks">{report.checks.map(c => <li key={c.text} data-ok={c.ok}>{c.ok ? <Check size={15} aria-hidden="true"/> : <X size={15} aria-hidden="true"/>}<span>{c.text}</span><span className="sr-only">{c.ok ? " (splnené)" : " (chýba)"}</span></li>)}</ul>}
-    {!readOnly && report.related.length > 0 && <ul className="info-card-related">{report.related.map(c => <li key={c.text} data-ok={c.ok}>{c.ok ? <Check size={14} aria-hidden="true"/> : <AlertTriangle size={14} aria-hidden="true"/>}<span>{c.text}</span></li>)}</ul>}
-    {!readOnly && report.notes.map(n => <p key={n} className="info-card-note">{n}</p>)}
+    {!readOnly && (report.related.length>0||report.notes.length>0) && <details key={report.key} className="info-card-more"><summary>Úlohy a odporúčania</summary>
+      {report.related.length>0&&<ul className="info-card-related">{report.related.map(c => <li key={c.text} data-ok={c.ok}>{c.ok ? <Check size={14} aria-hidden="true"/> : <AlertTriangle size={14} aria-hidden="true"/>}<span>{c.text}</span></li>)}</ul>}
+      {report.notes.map(n => <p key={n} className="info-card-note">{n}</p>)}
+    </details>}
     {!readOnly && (report.quick.length > 0 || report.movable) && <div className="info-card-actions">
       {report.quick.map(q => <button key={q.label} type="button" className={q.kind === "build" || q.kind === "build-here" ? "is-primary" : ""} disabled={blocked} onClick={() => onQuick?.(q)}>{q.label}<ArrowRight size={15} aria-hidden="true"/></button>)}
       {report.movable && <><button type="button" onClick={onMove}><Move size={15} aria-hidden="true"/> Presunúť</button><button type="button" disabled={blocked} onClick={onStore}><Archive size={15} aria-hidden="true"/> Odložiť</button></>}
@@ -96,7 +70,7 @@ export function HowItWorks({ town, onClose, onGuide }: { town: RepublicState; on
     <div className="howto-body">
       <p className="howto-story">Stará stanica chátra a štvrť sa vyprázdňuje. Ako plánovač ju oživíš: postavíš, čo susedia potrebujú, a sedem krokov projektu stanicu znova otvorí.</p>
       <ol className="howto-rules">
-        <li><b>Spoj všetko s námestím.</b> Budova funguje, len keď má vedľa cestu, ktorá vedie na námestie (C3). Bodka na štítku: zelená = napojené, hnedá = bez cesty.</li>
+        <li><b>Spoj všetko s námestím.</b> Budova funguje, len keď má vedľa cestu, ktorá vedie na námestie (C3). Hnedá bodka označuje budovu bez cesty; po ťuknutí uvidíš jej napojenie a účinky.</li>
         <li><b>Daj susedom, čo potrebujú.</b> Každý dom chce zeleň a ambulanciu do 2 políčok a v štvrti napojenú školu a tržnicu. Chýbajúce prianie je bublina nad domom.</li>
         <li><b>Spokojní susedia posúvajú štvrť.</b> Objednávky a zásielky dávajú mince a materiál na ďalšie stavby, kroky projektu otvoria stanicu a spokojnosť rozhodne voľby 24. 10.</li>
       </ol>
