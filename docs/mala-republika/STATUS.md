@@ -310,3 +310,49 @@ Podnet: Petrova spätná väzba z testovania hry — hráč má vždy vedieť, *
 - Implementácia commitnutá menovite v `3ece01a`, pred pushom `git pull --rebase` (bez nových zmien), push do main úspešný. Nasadené cez `npm run deploy:preview`, Worker `mandat-preview`, verzia `e908803d-09b8-489e-a0de-9c90c111c645`.
 - Verejná ilustrácia miestnosti aj nový herný chunk odpovedajú HTTP 200. Na workers.dev overený skutočný návštevný odkaz: „Štvrť od suseda · iba na prezeranie“, správna mapa a návrat do pôvodne rozpracovaného príbehu Pozvánka pre susedov (8/8 prípravných bodov). Konzola bez chýb a varovaní. Fyzický mobil zostáva na Petrovo overenie.
 - Dokumenter dokončil lokálny DESIGN.md a evidenciu documentation.md; globálne PRODUCT.md, DESIGN.md a design.json ostali zachované. Návrh ekonomiky sa stále neimplementuje bez Petrovho OK.
+
+## 2. 10. 2026 — prehľadnosť obrazovky a mapy (Claude, commit `ca4865a`)
+
+Podnet od Petra: informácie sú „nahádzané“, človek ich musí hľadať; nevie, ktorá budova je aká a čo robí; po kliknutí na budovu sa na mape nič neukáže; budovy sa ťažko rozlišujú.
+
+- **Poradie obrazovky** (`components/republic-game.tsx`):
+  - pás stavu (`StatusBar`): mince, materiál, spokojnosť, projekt, slávnosti a voľby; cieľ v podnadpise; tlačidlo „Ako hra funguje“;
+  - jedna hlavná akcia (`PlanPanel`): názov, štítok, veta „prečo“ z pohľadu susedov (pri krokoch projektu slová postavy), čo presne treba urobiť a odmena;
+  - hneď pod tým mapa. Na mobile začína na 606 px, predtým na 982 px.
+- **Presunuté prvky:**
+  - slávnosť a „Pozvať suseda“ sú v bočnom paneli pod projektom;
+  - „Čo spolu funguje“ je vo vysvetlivke a v detaile budov;
+  - prepínač grafiky (ukážka ilustrácií) je v nastaveniach;
+  - „Ukázať prvé kroky s Evou“ je vo vysvetlivke.
+- **Štítky budov** (`MapBadges` v `components/republic-info.tsx`):
+  - každá budova má ikonu, krátky názov a bodku napojenia; farba podľa druhu (bývanie, vzdelanie, zdravie, zeleň, obchod, kultúra, srdce štvrte, stanica; farby v `categories` v `lib/republic-info.ts`);
+  - tlačidlo so štítkom v nástrojoch mapy ich skryje (kľúč `mandat:republic:v1:labels`). Potom ostane krúžok s ikonou a pôvodná bodka napojenia;
+  - na pohľadnici sa nekreslia.
+- **Detail po ťuknutí** (`InfoCard`, dáta v `lib/republic-info.ts`) sa zobrazí pod mapou:
+  - pri budove: čo to je a čo robí; komu pomáha (domy so súradnicami); čo jej chýba (✓/✗); súvis s krokom projektu a s dnešnými objednávkami; rady;
+  - rýchle akcie pri budove: Postaviť park/ambulanciu/tržnicu, Položiť cestu, Presunúť, Odložiť;
+  - pri voľnom políčku: či je pri ceste, koľko napojených domov je do 2 políčok, „Postaviť sem“ (katalóg s predvoleným políčkom) a „Cesta sem“;
+  - pri ceste: či je spojená s námestím a „Odstrániť cestu“;
+  - na mape sa podfarbí dosah 2 políčok. Štítky toho, komu budova pomáha, majú zelený okraj, nefunkčné budovy oranžový.
+- **Kde to pomôže** (`siteAdvice`): pri stavaní aj mimo úvodu s Evou dostanú fajku políčka, kde stavba hneď niečo splní. Pod mapou a pri potvrdení je dôvod, napr. „pri škole splní krok projektu Školský dvor“ alebo „dosiahne na najviac domov bez lekára“.
+- **Katalóg** má pri každej stavbe vetu o účinku. Ceny sú v správnom tvare (3 mince, 5 mincí).
+- **Oprava:** pravidlo `.republic-map-window svg` zasahovalo aj do vnorených SVG, preto boli medailóny prianí menšie a mimo stredu. Teraz je to `.republic-map-window>svg`.
+- **Návšteva suseda:** rovnaký detail, iba na čítanie (bez rád a úloh pre majiteľa).
+- **Testy:** `verify-guide` pokrýva aj detail budov, políčok a ciest, „kde to pomôže“ a vety „prečo“. Všetkých 9 verify skriptov, tsc, ESLint, `build-dark --check` aj build PASS.
+- **Overené lokálne** na produkčnom builde (mobil 375 px, desktop 1280 px):
+  - úvod s Evou (zjednodušený pás);
+  - návšteva suseda (detail bez akcií);
+  - „Postaviť sem“ → „Čo postavíme na C4?“;
+  - fajky pri parku a ambulancii.
+- **Overené naživo:** chunk `republic-game-B7_PEX6m.js`, pás stavu, „Teraz“ s vetou prečo, mapa od 606 px, 7 štítkov, detail domu po ťuknutí, konzola bez chýb, šírka stránky 375 px.
+
+**Pre Codex — grafika (odporúčané poradie):**
+1. **Rozlíšiteľnosť budov priamo v kresbe** — dnes najväčší problém. Domy, škola, knižnica, ambulancia a dielňa sú si tvarom aj farbou podobné.
+   - Farba strechy alebo fasády podľa druhu, ideálne v odtieňoch z `categories`.
+   - Jeden typický prvok: kríž na ambulancii, hodiny alebo zvonček na škole, knihy vo výklade knižnice, markíza tržnice, komín a drevo pri dielni.
+2. **Štítky na mape** (`MapBadges`):
+   - ilustrované odznaky namiesto ikon lucide;
+   - typografia a jemný tieň;
+   - zvýraznenie vybranej budovy (dnes žltý okraj podstavy) napríklad svetlom.
+3. **Karta detailu a vysvetlivka** (`InfoCard`, `HowItWorks`): vizuálne doladenie, prípadne malá kresba budovy (`RepublicArt`) v hlavičke karty.
+4. **Pás stavu a karta „Teraz“:** fungujú, ale sú nakreslené jednoducho.
