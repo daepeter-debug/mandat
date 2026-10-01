@@ -184,3 +184,21 @@ Peter požiadal o pokračovanie po úvode, väčšiu výzvu a možnosť posunú�
 - Presný prompt a pôvod ilustrácie: `research/republic-terrain-v1.prompt.txt`, sidecar pri WebP. Ekonomika, save ani politická časť sa nemenili. Bez pushu a nasadenia.
 
 **Ďalší krok:** rozšírenie 1 — Živá štvrť, najprv čisté časové/cestné jadro a verify-living, potom obyvatelia a sezónna grafika. Rozšírenia 2/3/4 čakajú v poradí; nasadenie až po Petrovom OK. Fyzický mobil treba otestovať pri lokálnej ukážke/následnom schválenom nasadení.
+
+## 1. 10. 2026 — Sol: rozšírenie 1, Živá štvrť (lokálna ukážka)
+
+- Najprv hotové a overené čisté `lib/republic-living.ts` + `scripts/verify-living.mjs`, potom UI v `components/republic-living.tsx`, zapojenie do `components/republic-map.tsx` a scoped `app/republic-game.css`. Bez nových saved polí, bez zmien ekonomiky alebo politickej časti.
+- Deterministické napojené domy/destinácie a najkratšie ortogonálne cestné trasy vrátane námestia. Najviac14 chodcov, v noci najviac1venčiaci sused so psom. Školáci idú ráno do školy len v pracovné dni; dospelí do dielne/trhu/stanice, seniori do ambulancie/parku; popoludní park/záhrada/knižnica, večer kultúrny dom/námestie. Chodci idú pod budovami, ľudia pri parku/záhrade/trhu/fontáne sú pri prednom okraji objektu. Pri parku sa deti hrajú s loptou.
+- Skutočný Bratislavský čas cez Intl, bez pevného UTC posunu; NOAA východ/západ48.149N17.108E a plynulý súmrak. Päť kontrolných októbrových dátumov vrátane24./25.10. porovnaných s timeanddate ±5min; zdroje a konkrétne hodnoty v `research/republic-sunlight.md`. Večer sa rozsvietia okná domov/školy. Pôvodná opustená stanica so zabednenými oknami zostáva bez nového osvetlenia.
+- Jeseň lístie s maximom koncom októbra, niektoré zimné dni sneh, jar kvety, leto svetlušky pri súmraku. Efekty sú herné dekorácie, nie predpoveď počasia. Voliteľný jasne označený náhľad rána/popoludnia/súmraku/noci nemení postup ani zdroje a predvolený režim je skutočný čas.
+- Raster atlas `public/images/games/republic/residents-v1.webp`: dieťa/dospelá/senior/pes, každý3fázy,384×640, skutočný alpha,71976B. Pôvod/exaktný prompt/reference/ořez normalizácie: sidecar a `research/republic-residents-v1.*`. Obrázok sa žiada iba pri viditeľnej scéne. Chôdza má limit12FPS; IntersectionObserver + visibilitychange zastavia rAF, mimo mapy sa živé vrstvy nevykresľujú. Reduced-motion ruší rAF a všetky nové CSS animácie.
+
+### Overenie tejto verzie
+
+- PASS: verify-republic73ciest+úložisko, verify-festival2250plánov, verify-journey3866plánov, verify-data38meraní, nový verify-living (deterministické trasy/interpolácia, nočné limity, pracovné dni, DST, slnko/sezóny, nezmenený save), tsc --noEmit, celý `npm run lint`, `npm run build`. Existujúce upozornenie buildu na veľké chunky zostáva.
+- Impeccable detector [] (raz nad novým UI); nezávislý finish reviewer: ship, žiadne materiálne opravy. Documenter doplnil lokálne DESIGN.md, globálne dizajnové súbory zostali zachované.
+- Ukážky: `previews/living-desktop.png`, `living-desktop-night.png`, `living-mobile.png`, `living-mobile-night.png`, `living-mobile-park.png`. Desktop1280×900; mobil375×844 (IAB raster360px), stránka nepresahuje viewport. Stavanie parkuB4 cez náhľad/potvrdenie funguje; v reálnom popoludní9chodcov a2deti pri parku. Pri editácii mapa640px vodorovne posuvná, clientHeight=scrollHeight480px, stránka bez overflow. Testované v samostatnej lokálnej testovacej štvrti na5176, produkčné uloženie nebolo resetované.
+- Reálne odrolovanie mapy mimo viewport: mapBottom=-251.78px, počet vykreslených chodcov0; návrat ich obnoví. Fyzický telefón a manuálna zmena systémového reduced-motion/skrytie karty zatiaľ NEOVERENÉ; podpora je v zdrojovom kóde. Nevyhlasovať tieto manuálne skúšky za hotové.
+- Lokálny produkčný náhľad: http://127.0.0.1:5176/?v=game&g=republic . Bez pushu/nasadenia; Git push by cez existujúce Cloudflare prepojenie mohol spustiť deploy, preto tiež čaká na OK.
+
+**Konkrétny ďalší krok:** Peter si pozrie rozšírenie1 a potvrdí nasadenie (alebo úpravy). Potom pull --rebase pred pushom vlastných commitov, kontrola fyzického telefónu, následne rozšírenie2: scénická slávnosť a PNGpohľadnica. Úplný kontrakt a poradie2→3→4 v `LIVING-EXPANSIONS.md`; voľby majú termín pred24.10.2026. Tieto tri rozšírenia ešte nie sú implementované.

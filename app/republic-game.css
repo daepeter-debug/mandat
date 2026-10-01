@@ -28,6 +28,27 @@
 .republic-landscape-heading strong { min-width:0; overflow-wrap:anywhere; font-size:13px; font-weight:600; }
 .republic-landscape-heading span { max-width:55%; text-align:right; font-size:11px; color:#4c6050; font-variant-numeric:tabular-nums; }
 .republic-landscape .republic-map-window { background:#b5c58c; }
+.republic-daylight { background:#edf0e4; font-size:12px; color:#38503d; }
+.republic-daylight summary { display:flex; align-items:center; gap:7px; min-height:44px; padding:6px 14px; cursor:pointer; }
+.republic-daylight summary>span:last-child { margin-left:auto; font-variant-numeric:tabular-nums; }
+.republic-daylight-dot { width:7px; height:7px; background:#ab8341; border-radius:50%; flex:none; }
+.republic-daylight-dot.night { background:#596883; }
+.republic-daylight>div { padding:0 14px 14px; }
+.republic-daylight p { margin:0 0 12px; line-height:1.6; }
+.republic-daylight label { display:grid; gap:6px; font-weight:600; }
+.republic-daylight select { max-width:100%; width:100%; min-height:44px; padding:8px 10px; background:#fffefa; color:#20392f; border:1px solid #809273; border-radius:8px; font:inherit; }
+.republic-daylight .republic-daylight-note { margin:10px 0 0; font-size:11px; color:#4c6050; }
+.republic-daylight summary:focus-visible,.republic-daylight select:focus-visible { outline:2px solid #245c48; outline-offset:-3px; }
+.republic-season-particle { animation:republic-leaf-fall 12s linear infinite; }
+.republic-season[data-running=false] .republic-season-particle { animation-play-state:paused; }
+.republic-season-flowers .republic-season-particle { animation:none; }
+.republic-season-fireflies .republic-season-particle { animation:republic-firefly 7s ease-in-out infinite; }
+@keyframes republic-leaf-fall { 0% { transform:translate(0,-20px) rotate(-20deg); opacity:0; } 15% { opacity:.9; } 85% { opacity:.9; } 100% { transform:translate(15px,40px) rotate(70deg); opacity:0; } }
+@keyframes republic-firefly { 0%,100% { opacity:.15; transform:translate(0,0); } 50% { opacity:1; transform:translate(4px,-7px); } }
+.republic-play-ball { animation:republic-ball-play 4s ease-in-out infinite; }
+.republic-gatherings[data-running=false] .republic-play-ball { animation-play-state:paused; }
+@keyframes republic-ball-play { 0%,100% { transform:translate(-3px,0); } 50% { transform:translate(4px,-2px); } }
+@media (prefers-reduced-motion:reduce) { .republic-season-particle,.republic-play-ball { animation:none!important; } }
 .republic-plot-grid { fill:#f8f7d8; fill-opacity:.09; stroke:#fdf8da; stroke-opacity:.7; stroke-width:.8; }
 .republic-plot-suggested { fill:#fcf2c0; fill-opacity:.85; stroke:#315c48; stroke-width:2; stroke-dasharray:4 2; }
 .republic-plot-selected { fill:#e8f6c0; fill-opacity:.8; stroke:#1c4937; stroke-width:2.5; }
