@@ -5,6 +5,14 @@ import { livingScene, walkerPosition, type ResidentKind, type Walker } from "@/l
 import type { Point, RepublicState } from "@/lib/republic";
 
 export const mapPoint=(p:Point)=>({x:280+(p.x-p.y)*43,y:100+(p.x+p.y)*24});
+/** Ripples follow the visible stream, below every playable map layer. */
+export function RiverFlow({active}:{active:boolean}) {
+  return <g className="republic-river" data-running={active} pointerEvents="none" aria-hidden="true" fill="none" stroke="#e4f5dd" strokeLinecap="round">
+    <path className="republic-river-current" d="M-25 354C20 376 65 375 115 397S195 426 258 440S366 468 450 474" strokeWidth="1.1" strokeDasharray="5 35 2 34" opacity=".5"/>
+    <path className="republic-river-current" d="M1 367C52 388 93 389 141 411S217 431 280 448S376 471 452 481" strokeWidth=".8" strokeDasharray="3 47 6 20" opacity=".45" style={{animationDelay:"-4s",animationDuration:"16s"}}/>
+    <path className="republic-river-current" d="M77 391C115 405 174 421 214 433S298 451 358 465" strokeWidth=".65" strokeDasharray="2 40 4 30" opacity=".6" style={{animationDelay:"-7s",animationDuration:"11s"}}/>
+  </g>;
+}
 export function useLivingScene(town:RepublicState,host:RefObject<HTMLDivElement|null>,preview:string) {
   const [now,setNow]=useState<Date|null>(null),[visible,setVisible]=useState(false),[reduced,setReduced]=useState(true);
   useEffect(()=>{

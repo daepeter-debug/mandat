@@ -147,3 +147,7 @@ Na používateľovu požiadavku plynulého pokračovania po úvode nadväzuje pr
 - Save v1 má voliteľné `festivalJourney: { stage, scores[7] }` a voliteľné `festival.mode/stage`. Staré slávnosti bez režimu sa považujú za denné; staré mestá fungujú bez resetu. Validátor kontroluje rozsahy, dokončené predchádzajúce dni a zhodu najlepšieho skóre.
 
 Je to sedem variantov jedného priestorového hlavolamu s príbehovými textami a odmenou, nie sedem rôznych minihier ani nekonečný príbehový generátor. Overenie `scripts/verify-journey.mjs` nachádza konkrétne riešenia po parkovom aj záhradnom úvode pre všetky tri druhy komplikácií; nehľadá vyčerpávajúco všetky možné cesty.
+
+### Slávnosť na mape a pohľadnica (1. 10. 2026)
+
+Po potvrdení reakcie sa odohrá krátke otvorenie slávnosti podľa programu. Dav rastie podľa počtu spokojných susedov a kapacity napojených ciest; po 24 sekundách ostáva pokojná scéna. Tlačidlo „Prehrať scénu“ zopakuje iba vizuálny priebeh, bez ďalšej odmeny alebo príkazu. Dokončená slávnosť ponúka pohľadnicu zo skutočného aktuálneho pokusu — PNG s mapou, výsledkom a reakciami susedov, ktoré možno zdieľať alebo stiahnuť. Ani pohľadnica, prehratie scény, ani dekoratívne tečúci potok nemenia ekonomiku či uložené údaje.
