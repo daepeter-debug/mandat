@@ -1,5 +1,22 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Parlament v 3D: rokovacia sála, úvodná animácia, strany, bloky a voľby 2023 (Claude)
+
+Namiesto kvádrov na polkruhu je v 3D rokovacia sála: šesť stupňovitých radov so štyrmi uličkami, zaoblené lavice a 150 kresiel s operadlom vo farbách strán.
+- Vpredu je predsedníctvo s rečníckym pultom, v strede koberec.
+- Vzadu je obložená stena so štátnym znakom a vlajkami SR a EÚ.
+
+**Ako sa správa:**
+- Po otvorení kamera priletí zhora a kreslá sa zaplnia zľava doprava.
+- **Strany:** nad klinom každej strany je počet kresiel. Ťuknutie na stranu ju zvýrazní, ostatné stíchnu a kamera sa k nej priblíži.
+- **Bloky:** koalícia, opozícia a ostatní v troch farbách, s pásikom k väčšine 76. Voliteľní partneri (Republika, Hnutie Slovensko) sa dajú vypnúť, rovnako ako v titulku vydania.
+- **Voľby 2023:** prepínač prefarbí kreslá v tej istej sále podľa oficiálneho výsledku.
+
+**Technicky:**
+- Geometria a miesta kresiel sú v `lib/parliament-model.ts`; model generuje `scripts/build-parliament-glb.mjs`.
+- Obe obsadenia sú v jednom súbore ako varianty glTF (`KHR_materials_variants`) a animácia „obsadenie“ je v ňom tiež.
+- Súbor má 537 kB a načíta sa až po otvorení. verify-data ďalej stráži, že kreslá v súbore zodpovedajú scenáru.
+
 ## 2. 10. 2026 — Model Mandát: dátum aktualizácie popri dátume zberu (Claude)
 
 Po doplnení septembrového AKO sa Model Mandát prepočítal. PS 19,3 → 19,0 %, Smer-SD 17,3 → 17,2 %, Republika 12,4 → 11,8 %, Hlas-SD 7,3 → 7,6 %, SNS 3,0 → 3,4 %. ZA ĽUDÍ (1,1 %) ho po novom uvádza väčšina meraní v bode, preto vstupuje do priemeru. Kreslá: Smer-SD 31, Republika 21.
