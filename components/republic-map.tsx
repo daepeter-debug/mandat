@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
-import { AlertTriangle, Grid2X2, LocateFixed, Minus, Plus } from "lucide-react";
+import { AlertTriangle, Grid2X2, LocateFixed, Maximize2, Minus, Plus } from "lucide-react";
+import { usePlayfield } from "@/components/republic-playfield";
 import { catalog, connected, distance, network, type ItemId, type Placed, type Point, type RepublicState } from "@/lib/republic";
 import type { Gathering } from "@/lib/republic-living";
 import { TownPiece, seg, type V } from "@/components/republic-art";
@@ -49,7 +50,18 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
   const uid=useId().replaceAll(":","");
   const showGrid=grid||editing;
   const showInspect=!editing||inspectBuildingsWhileEditing;
+  const playfield=usePlayfield();
+  const [expandedZoom,setExpandedZoom]=useState(1);
+  const [expandedBase,setExpandedBase]=useState(600);
+  const currentZoom=playfield?.expanded?expandedZoom:zoom;
+  const setCurrentZoom=playfield?.expanded?setExpandedZoom:setZoom;
   const viewport=useRef<HTMLDivElement>(null),svg=useRef<SVGSVGElement>(null);
+  useEffect(()=>{
+    const el=viewport.current;if(!playfield?.expanded||!el)return;
+    const measure=()=>setExpandedBase(Math.max(600,Math.ceil(el.clientHeight*640/480)));
+    measure();const observer=new ResizeObserver(measure);observer.observe(el);
+    return()=>observer.disconnect();
+  },[playfield?.expanded]);
   const {scene,active,visible}=useLivingScene(town,viewport,scenePreview);
   const celebration=celebrationScene(town);
   const openingSeconds=useCelebrationOpening(celebration,active,festivalReplay);
@@ -58,7 +70,7 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
   const isRoad=(x:number,y:number)=>town.roads.some(r=>r.x===x&&r.y===y);
   const paved=(x:number,y:number)=>isRoad(x,y)||x===2&&y===2;
   function centre(){const el=viewport.current;if(el)el.scrollTo({left:(el.scrollWidth-el.clientWidth)/2,top:(el.scrollHeight-el.clientHeight)/2,behavior:"instant"});}
-  useEffect(()=>{centre();},[zoom,editing]);
+  useEffect(()=>{centre();},[currentZoom,editing,playfield?.expanded,expandedBase]);
   // Vybraná budova mimo výrezu priblíženej mapy sa posunie do zorného poľa (ťuknutie v zozname alebo z plánu).
   const inspectKey=inspect?`${inspect.point.x}-${inspect.point.y}`:"";
   useEffect(()=>{
@@ -97,7 +109,7 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
     {notice&&<div className="republic-map-notice" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{notice.title}</b><span>{notice.detail}</span></div></div>}
     <div className="republic-map-stage" data-detail-side={inspect&&at(inspect.point).x>280?"left":"right"}>
     <div className="republic-map-window" ref={viewport} tabIndex={0} aria-label="Mapa štvrte. Šípkami vyber políčko; Enter otvorí detail. Pri priblížení posúvaj mapu prstom.">
-      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox="-40 0 640 480" style={{width:`${zoom*100}%`,minWidth:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
+      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox="-40 0 640 480" style={{width:`${currentZoom*100}%`,minWidth:playfield?.expanded?expandedBase*currentZoom:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
         <defs>
           <pattern id={`${uid}-paving`} width="8" height="6" patternUnits="userSpaceOnUse" patternTransform="matrix(1 .558 -1 .558 0 0)">
             <rect width="8" height="6" fill="#d9cdb6"/><path d="M0 0H8M0 3H8M0 0V3M4 3V6" stroke="#b7aa94" strokeWidth=".45"/><path d="M.6.7H7.5M.6 3.7H7.5" stroke="#f4e9d2" strokeWidth=".5" opacity=".8"/>
@@ -164,9 +176,10 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
     </div>
     <div className="republic-map-tools"><span>{editing?suggested.length?suggestHint??"Políčka s fajkou: tu stavba hneď pomôže.":"Vyber pozemok. Stavbu ešte potvrdíš.":"Ťukni na budovu: uvidíš, čo robí a komu pomáha."}</span><div>
       <button type="button" aria-label={editing?"Mriežka je pri výbere miesta zapnutá":"Zobraziť mriežku pozemkov"} aria-pressed={showGrid} disabled={editing} onClick={()=>setGrid(v=>!v)}><Grid2X2 size={16}/></button>
-      <button type="button" aria-label="Oddialiť mapu" disabled={zoom<=1} onClick={()=>setZoom(z=>Math.max(1,z-.5))}><Minus size={16}/></button>
-      <button type="button" aria-label="Priblížiť mapu" disabled={zoom>=2} onClick={()=>setZoom(z=>Math.min(2,z+.5))}><Plus size={16}/></button>
+      <button type="button" aria-label="Oddialiť mapu" disabled={currentZoom<=1} onClick={()=>setCurrentZoom(z=>Math.max(1,z-.5))}><Minus size={16}/></button>
+      <button type="button" aria-label="Priblížiť mapu" disabled={currentZoom>=2} onClick={()=>setCurrentZoom(z=>Math.min(2,z+.5))}><Plus size={16}/></button>
       <button type="button" aria-label="Centrovať mapu" onClick={centre}><LocateFixed size={17}/></button>
+      {playfield&&!playfield.expanded&&<button type="button" data-playfield-open aria-label="Otvoriť herný plán na celú obrazovku" title="Herný plán na celú obrazovku" onClick={event=>playfield.open(event.currentTarget)}><Maximize2 size={17}/></button>}
     </div></div>
     {scene&&<details className="republic-daylight"><summary><span className={`republic-daylight-dot ${scene.time.period}`}/>{scenePreview?"Náhľad scény": "Živá štvrť"}<span>{periods[scene.time.period]} · {clock}</span></summary>
       <div><p>Čas v Bratislave · východ {timeLabel(scene.time.sunrise)} · západ {timeLabel(scene.time.sunset)}. Napojené domy a budovy ožívajú podľa dennej doby.</p>

@@ -31,7 +31,7 @@ export function InfoCard({ report, blocked = false, readOnly = false, branch=nul
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const head=ref.current;
-    if (!head || head.closest(".republic-map-detail") && window.matchMedia("(min-width: 960px)").matches) return;
+    if (!head || head.closest(".republic-playfield[data-expanded]") || head.closest(".republic-map-detail") && window.matchMedia("(min-width: 960px)").matches) return;
     const rect=head.getBoundingClientRect();
     if(rect.top<0||rect.top>window.innerHeight*.45) head.scrollIntoView({block:"center",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
   }, [report.key]);

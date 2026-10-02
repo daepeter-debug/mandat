@@ -13,6 +13,7 @@ import { homeWishes, townSatisfaction } from "@/lib/republic-trust";
 import { electionPhase } from "@/lib/republic-election";
 import { play, setSoundEnabled, soundEnabled } from "@/lib/republic-sound";
 import RepublicMap from "@/components/republic-map";
+import RepublicPlayfield from "@/components/republic-playfield";
 import RepublicFestival from "@/components/republic-festival";
 import { dailyBrief, journeyDays } from "@/lib/republic-festival";
 import RepublicIntro from "@/components/republic-intro";
@@ -201,7 +202,7 @@ function OwnRepublicGame() {
     }
   }
 
-  return <RepublicIllustrations.Provider value={illustrated}><section className="republic" data-focus={focusMode} data-guided={guided} data-festival={festivalOpen} onKeyDown={e=>{if(e.key==="Escape"){cancel();setPanel(null);clearInspect();}}}>
+  return <RepublicIllustrations.Provider value={illustrated}><section className="republic" data-focus={focusMode} data-guided={guided} data-festival={festivalOpen} onKeyDown={e=>{if(e.key==="Escape"&&!e.defaultPrevented&&!(e.target instanceof Element&&e.target.closest(".republic-dialog"))){cancel();setPanel(null);clearInspect();}}}>
     <button className="republic-focus-toggle" aria-pressed={focusMode} onClick={()=>setFocusMode(!focusMode)}>{focusMode?<Minimize2 size={15}/>:<Maximize2 size={15}/>} {focusMode?"Zobraziť celý web":"Sústrediť sa na hru"}</button>
     <header className="republic-heading"><div><h1>Malá republika<span>.</span></h1><p>Veľké veci začínajú v malej štvrti.</p></div><span className={saveError?"republic-save has-error":"republic-save"}>{saveError?<AlertCircle size={15}/>:<Check size={15}/>} {busy?"Ukladám…":saveError?"Neuložené":conflict?"Novší postup v inej karte":"Uložené v zariadení"}</span><button className="republic-sound-toggle" aria-pressed={sound} aria-label={sound?"Vypnúť zvuky hry":"Zapnúť zvuky hry"} onClick={()=>{const on=!sound;setSound(on);setSoundEnabled(on);if(on)play("success");}}>{sound?<Volume2 size={16}/>:<VolumeX size={16}/>}<span>{sound?"Zvuk":"Bez zvuku"}</span></button></header>
     <WinBanner win={win} onClose={closeWin}/>
@@ -214,7 +215,7 @@ function OwnRepublicGame() {
       onStart={()=>{setIntroStarted(true);requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-intro h2")?.focus({preventScroll:true}));}} onBuild={selectBuild} onMove={startMove} onFinish={()=>void run({type:"step"})}
       onContinue={()=>{if(town.completed.length>=2)void openStory();else {setCelebration(null);setIntroStarted(true);}}}
       onExplore={()=>{setExploring(true);setCelebration(null);cancel();requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-stage")?.focus({preventScroll:true}));}}/>}
-    {!festivalOpen&&!welcome&&<div className="republic-layout">
+    {!festivalOpen&&!welcome&&<RepublicPlayfield town={town} plan={plan} blocked={blocked} onAction={planAction}>
       <div className="republic-stage" tabIndex={-1}>
         <div className="republic-view-switch" role="group" aria-label="Zobrazenie štvrte"><button aria-pressed={view==="map"} onClick={()=>setView("map")}><Map size={15}/> Mapa</button><button aria-pressed={view==="list"} onClick={()=>setView("list")}><List size={15}/> Zoznam a políčka</button><span>6 × 6 políčok</span></div>
         {view==="map"?<RepublicMap town={town} editing={!!intent} inspectBuildingsWhileEditing selected={selected} target={target} suggested={suggested} onCell={selectCell} onObject={inspectObject} notice={mapNotice} wishes={homeWishes(town)} inspect={inspect} suggestHint={advice?.why?`Fajka: ${advice.why}`:undefined}>{infoCard}</RepublicMap>:<div className="republic-list-view">
@@ -260,7 +261,7 @@ function OwnRepublicGame() {
         </div>}
         {!guided&&<ShareNeighbourhood town={town}/>}
       </aside>
-    </div>}
+    </RepublicPlayfield>}
     {!festivalOpen&&!guided&&<RepublicElection town={town} today={today}/>}
     <details className="republic-help"><summary>Pravidlá, nastavenia a uloženie</summary><div>
       <p>Budovy potrebujú susednú cestu spojenú s námestím. Dosah 2 sa počíta po vodorovných a zvislých políčkach, nie diagonálne. Hnedá bodka pri budove znamená chýbajúcu cestu. Ťuknutím na budovu otvoríš jej účinky a napojenie aj počas stavania; voľné políčko vyberie miesto pre stavbu.</p>
