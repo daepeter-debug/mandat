@@ -1,5 +1,17 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Parlament v 3D: Večerná sála a značky strán (Codex)
+
+Peter vybral smer C z troch koncepčných renderov: orechové drevo, tlmené čalúnenie a teplé svetlo. Kreslá dostali svetlé štítky s existujúcimi zdrojovanými logami (`lib/party-logos.json`); značky sa menia spolu s obsadením. Koalícia OĽANO a priatelia z roku 2023 má textový štítok s rokom, nie dnešné logo hnutia Slovensko.
+
+- Pôvodné počty, poradie a farby strán, `chamberSeats` a `seatParty` zostávajú bez zmeny. Oba varianty majú 150 kresiel; materiály ostávajú `strana:<id>`, značky majú osobitné materiály `logo:<id>`.
+- Generátor pridáva neutrálne textúry a normálové mapy dreva, tkaniny a kameňa, UV/tangenty a jemné statické tieňovanie, zaoblené čalúnenie, podrúčky, mikrofóny, schodíky a svetelnú škáru. Opravená orientácia plôch pôvodných oblúkov. Bez stropu a bez zmeny mierky (šírka približne 70 cm).
+- Vlastné malé lokálne HDR prostredie; animácia `obsadenie` dosadá jemnejšie a drží koniec do 12 s. Výber strany má rovnaké jemné svetlo pre každý subjekt, prepnutie variantu krátku vlnu. Automatické otáčanie nahradil stabilný pohľad; používateľ môže scénu otáčať sám.
+- Ovládanie a štítky používajú papier/šalviu; na štítkoch je počet a farebná značka, pri výbere aj skratka. Pod scénou ostáva textový zoznam s počtami. Reduced-motion preskočí úvod a dekoratívny pohyb, skrytá scéna pozastaví animáciu.
+- `scripts/parliament-textures.mjs` vytvára deterministické podklady; regenerovanie vytvorilo identický GLB. Súbor má **1 326 400 B**, načíta sa až po otvorení. `scripts/verify-parliament-glb.mjs` používa oficiálny Khronos validátor a kontroluje 150 kresiel aj logo/farbu každého kresla v oboch variantoch: **0 chýb, 0 varovaní**.
+- Overené `verify-data`, TypeScript, ESLint, kontrola generovaného tmavého CSS a produkčný build. Viditeľný prehliadač: 1280 × 800, 402 × 874 a 375 px, svetlý/tmavý režim, výber strany, bloky s partnermi aj bez a rok 2023; bez chýb konzoly. Knižnica model-viewer upozorňuje na vlastný deprecated RGBELoader, funkciu to neblokuje.
+- Fyzický Safari/Android, 60 fps a AR ostávajú **neoverené na skutočných zariadeniach**. Web upozorňuje, že Android Scene Viewer stiahne pôvodný GLB prieskumov, zatiaľ čo iOS Quick Look exportuje aktuálnu scénu. Geometria je ilustratívna sála, nie presná rekonštrukcia interiéru NR SR.
+
 ## 2. 10. 2026 — Parlament v 3D: rokovacia sála, úvodná animácia, strany, bloky a voľby 2023 (Claude)
 
 Namiesto kvádrov na polkruhu je v 3D rokovacia sála: šesť stupňovitých radov so štyrmi uličkami, zaoblené lavice a 150 kresiel s operadlom vo farbách strán.

@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (33460e2365) — needitovať ručne. Pravidiel: 1372, prefarbených: 1076. */
+/* Generované scripts/build-dark.mjs z 30 súborov (a658f5e7fd) — needitovať ručne. Pravidiel: 1374, prefarbených: 1075. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3507,7 +3507,7 @@ html[data-theme="dark"] .par3d-open:focus-visible,html[data-theme="dark"] .par3d
     outline-offset: 2px
 }
 html[data-theme="dark"] .par3d-overlay {
-    background: #0a110ecc
+    background: #0a110ee0
 }
 html[data-theme="dark"] .par3d {
     background: #1c221f;
@@ -3523,10 +3523,11 @@ html[data-theme="dark"] .par3d-close {
     color: #d1e7de
 }
 html[data-theme="dark"] .par3d-stage {
-    background: radial-gradient(120% 80% at 50% 8%,#1d1b17 0%,#2d281e 55%,#3a3428 100%)
+    background: radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)
 }
 html[data-theme="dark"] .par3d-loading {
-    color: #bfcec6
+    color: #f5f4ee;
+    background: #343b36
 }
 html[data-theme="dark"] .par3d-ar {
     border: 0;
@@ -3547,6 +3548,9 @@ html[data-theme="dark"] .par3d-legend button[aria-pressed=true] {
     background: #20392f;
     color: #fff
 }
+html[data-theme="dark"] .par3d-party-logo {
+    background: #fffefa
+}
 html[data-theme="dark"] .par3d-note {
     color: #bccac2
 }
@@ -3556,8 +3560,7 @@ html[data-theme="dark"] .par3d-note {
     }
 }
 html[data-theme="dark"] .par3d-seg {
-    background: #262c29e6;
-    box-shadow: 0 2px 10px #20392f1f
+    background: #262c29
 }
 html[data-theme="dark"] .par3d-seg button {
     border: 0;
@@ -3570,18 +3573,21 @@ html[data-theme="dark"] .par3d-seg button[aria-pressed=true] {
 }
 html[data-theme="dark"] .par3d-replay {
     border: 0;
-    background: #262c29e6;
-    box-shadow: 0 2px 10px #20392f1f;
+    background: #262c29;
     color: #d1e7de
 }
 html[data-theme="dark"] .par3d-tag {
-    border: 2px solid #2f3432;
-    background: var(--c);
-    color: #fff;
-    box-shadow: 0 3px 10px #0004
+    border: 0;
+    background: #262c29;
+    color: #d1e7de;
+    box-shadow: 0 4px 10px #0004
+}
+html[data-theme="dark"] .par3d-tag i {
+    background: var(--c)
 }
 html[data-theme="dark"] .par3d-tag[aria-pressed=true] {
-    box-shadow: 0 0 0 3px var(--c),0 6px 14px #0005
+    background: #262c29;
+    box-shadow: 0 5px 15px #0007
 }
 html[data-theme="dark"] .par3d-caption {
     color: #bfcec6
