@@ -80,3 +80,10 @@ node scripts/smoke-quiz-api.mjs http://127.0.0.1:8787
 ```
 
 Lokálne úložisko je v `.wrangler/state` (mimo gitu). Skúšobný skript odmietne iný ako lokálny server, aby sa skúšobné kolá nedostali do ostrého rebríčka.
+
+## Nová verzia po návrate aplikácie z pozadia (2. 10. 2026, Claude)
+
+Nainštalovaná aplikácia mohla v pozadí bežať celé dni so starým kódom aj údajmi; novú verziu ukázala až po zatvorení a novom otvorení.
+- Každý build dostane značku `__MANDAT_BUILD__` (`define` vo `vite.config.ts`), rovnakú v prehliadači aj na serveri; `/api/verzia` ju vracia.
+- Keď sa stránka vráti z pozadia po aspoň 10 minútach a značka na serveri je iná, stránka sa obnoví (`useFreshVersion` v `components/app-install.tsx`).
+- Adresa (sekcia, hra) ostane a rozohrané hry sú uložené v zariadení. Neobnovuje sa, keď je fokus v poli na písanie alebo keď hrá nahrávka.

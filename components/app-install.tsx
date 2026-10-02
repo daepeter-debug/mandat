@@ -34,6 +34,33 @@ export function useServiceWorker() {
     if (document.readyState === "complete") register();
     else window.addEventListener("load", register, { once: true });
   }, []);
+  useFreshVersion();
+}
+
+/*
+  Nová verzia po návrate z pozadia. Nainštalovaná aplikácia môže v pozadí bežať celé dni so starým kódom aj údajmi
+  (prieskumy, správy); bez tohto by ich hráč videl až po zatvorení a novom otvorení aplikácie. Keď sa vráti po aspoň
+  10 minútach a web má novšiu verziu (/api/verzia vráti značku buildu), stránka sa obnoví. Adresa (sekcia, hra) ostane
+  a rozohrané hry sú uložené v zariadení; neobnovuje sa počas písania do poľa ani keď hrá nahrávka.
+*/
+const AWAY = 10 * 60_000;
+function useFreshVersion() {
+  useEffect(() => {
+    let hiddenAt = 0;
+    const onChange = () => {
+      if (document.visibilityState === "hidden") { hiddenAt = Date.now(); return; }
+      if (!hiddenAt || Date.now() - hiddenAt < AWAY) return;
+      hiddenAt = 0;
+      void fetch("/api/verzia", { cache: "no-store" }).then(r => r.ok ? r.json() as Promise<{ v?: unknown }> : null).then(data => {
+        if (!data || typeof data.v !== "string" || data.v === __MANDAT_BUILD__) return;
+        const typing = document.activeElement?.matches("input, textarea, select, [contenteditable]") ?? false;
+        const playing = [...document.querySelectorAll("audio, video")].some(m => !(m as HTMLMediaElement).paused);
+        if (!typing && !playing) window.location.reload();
+      }).catch(() => { /* bez spojenia ostáva bežiaca verzia */ });
+    };
+    document.addEventListener("visibilitychange", onChange);
+    return () => document.removeEventListener("visibilitychange", onChange);
+  }, []);
 }
 
 export default function InstallApp({ onPrepareHome }: { onPrepareHome: () => void }) {

@@ -12,6 +12,8 @@
   .mobile-dock button[aria-current=page] svg{color:#2f6b3f;transform:translateY(-1px)}
   .mobile-dock button:active svg{transform:scale(.88)}
   .mobile-dock button:focus-visible{outline:2px solid var(--focus);outline-offset:-3px}
+  /* počas písania do poľa (otvorená klávesnica) lišta nezavadzia a nepláva nad klávesnicou */
+  html:has(:is(input:not([type=checkbox],[type=radio],[type=range],[type=button],[type=submit],[type=reset]),textarea,select,[contenteditable=true]):focus) .mobile-dock{visibility:hidden}
   /* pri čítaní len ikony */
   .mobile-dock.is-compact{--dock-h:50px}
   .mobile-dock.is-compact button span{opacity:0;max-height:0}

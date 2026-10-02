@@ -52,15 +52,51 @@ function useCompactOnScroll() {
   return compact;
 }
 
+/*
+  iOS (najmä aplikácia nainštalovaná na ploche) po zatvorení klávesnice občas nechá prvky s position: fixed posunuté
+  a lišta potom visí v strede obrazovky, kým sa aplikácia nereštartuje. Lištu preto posúvame k spodku viditeľnej plochy
+  podľa visualViewport (bez rozdielu je posun 0); pri priblížení prstami sa nehýbe. Kým je otvorená klávesnica,
+  lištu skryje CSS (app/mobile-dock.css).
+*/
+function useViewportShift() {
+  const [shift, setShift] = useState(0);
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    let frame = 0, late = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const gap = vv.scale > 1.01 ? 0 : Math.round(vv.offsetTop + vv.height - window.innerHeight);
+        setShift(Math.abs(gap) < 2 ? 0 : gap);
+      });
+    };
+    // Po zatvorení klávesnice sa rozmery ustália až po animácii; skontrolovať aj o chvíľu neskôr.
+    const settle = () => { update(); clearTimeout(late); late = window.setTimeout(update, 450); };
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    window.addEventListener("focusout", settle);
+    window.addEventListener("orientationchange", settle);
+    update();
+    return () => {
+      vv.removeEventListener("resize", update); vv.removeEventListener("scroll", update);
+      window.removeEventListener("focusout", settle); window.removeEventListener("orientationchange", settle);
+      cancelAnimationFrame(frame); clearTimeout(late);
+    };
+  }, []);
+  return shift;
+}
+
 export default function MobileDock({ views, active, onView }: { views: { id: string; label: string }[]; active: string; onView: (id: string) => void }) {
   const [more, setMore] = useState(false);
   const compact = useCompactOnScroll();
+  const shift = useViewportShift();
   const rest = views.filter(v => !primary.some(p => p.id === v.id));
   const inRest = rest.some(v => v.id === active);
   const index = inRest || more ? primary.length : Math.max(0, primary.findIndex(p => p.id === active));
   const go = (id: string) => { setMore(false); onView(id); };
   return <>
-    <nav className={`mobile-dock${compact && !more ? " is-compact" : ""}`} aria-label="Hlavné sekcie" style={{ "--dock-index": index, "--dock-count": primary.length + 1 } as CSSProperties}>
+    <nav className={`mobile-dock${compact && !more ? " is-compact" : ""}`} aria-label="Hlavné sekcie" style={{ "--dock-index": index, "--dock-count": primary.length + 1, ...(shift ? { translate: `0 ${shift}px` } : {}) } as CSSProperties}>
       <span className="mobile-dock-glider" aria-hidden="true"/>
       {primary.map(p => <button key={p.id} type="button" aria-current={active === p.id ? "page" : undefined} onClick={() => go(p.id)}>{p.icon}<span>{p.label}</span></button>)}
       <button type="button" aria-expanded={more} aria-current={inRest ? "page" : undefined} onClick={() => setMore(true)}><LayoutGrid/><span>Viac</span></button>

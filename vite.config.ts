@@ -7,6 +7,9 @@ const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
 
 const { d1, r2 } = hostingConfig;
+// Značka buildu (nová pri každom builde, rovnaká v prehliadači aj na serveri): podľa nej aplikácia po návrate
+// z pozadia zistí, že web má novšiu verziu (/api/verzia, components/app-install.tsx).
+const buildStamp = Date.now().toString(36);
 
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
@@ -55,6 +58,7 @@ export default defineConfig(async ({ command }) => {
     // Vinext's build also optimizes dependencies. Keep it from replacing the
     // files still referenced by a running development server and its browser.
     cacheDir: command === "serve" ? "node_modules/.vite-dev" : "node_modules/.vite-build",
+    define: { __MANDAT_BUILD__: JSON.stringify(buildStamp) },
     // VINEXT_KEEP_DIST=1 skips emptying dist/ when another local process (e.g. a leftover
     // `wrangler dev`) holds it open on Windows; files are overwritten in place instead.
     build: process.env.VINEXT_KEEP_DIST ? { emptyOutDir: false } : undefined,
