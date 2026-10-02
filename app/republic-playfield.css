@@ -122,9 +122,9 @@
 .playfield-rotate { display:none; }
 /* Landscape phone: map left, controls safely right of the iPhone sensor housing. */
 @media (max-width:1100px) and (orientation:landscape) {
-  .republic .republic-playfield:is(.republic-layout,.festival-playfield)[data-expanded] { grid-template-columns:minmax(0,1fr) var(--playfield-rail); grid-template-rows:minmax(0,1fr); padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); }
+  .republic .republic-playfield:is(.republic-layout,.festival-playfield)[data-expanded] { grid-template-columns:minmax(0,1fr) var(--playfield-rail); grid-template-rows:minmax(0,1fr); padding:0; }
   .republic .republic-playfield[data-expanded]>.republic-stage,.festival-playfield[data-expanded]>.festival-layout { grid-column:1; grid-row:1; }
-  .republic-playfield[data-expanded] .playfield-rail { grid-column:2; grid-row:1; border-right:0; border-left:1px solid #d1d9c4; }
+  .republic-playfield[data-expanded] .playfield-rail { grid-column:2; grid-row:1; border-right:0; border-left:1px solid #d1d9c4; padding-right:env(safe-area-inset-right); padding-bottom:env(safe-area-inset-bottom); }
   .playfield-header { position:absolute; top:4px; left:calc(6px + env(safe-area-inset-left)); right:calc(var(--playfield-rail) + 6px + env(safe-area-inset-right)); z-index:10; padding:0; background:transparent; pointer-events:none; }
   .playfield-header>* { pointer-events:auto; }
   .playfield-header>strong,.playfield-header>button,.playfield-funds { background:#245c48; border-radius:8px; }
@@ -135,10 +135,18 @@
   .festival-playfield[data-expanded] .festival-scene-heading>span { display:none; }
   .festival-playfield[data-expanded] .festival-scene-heading button { padding:8px 12px; background:#fffaf0; border-radius:8px; }
   .republic-playfield[data-expanded] .republic-map { position:relative; }
-  .republic-playfield[data-expanded] .republic-map-tools { position:absolute; bottom:0; left:0; right:0; z-index:5; border-radius:0; }
+  .republic .republic-playfield[data-expanded] .republic-map-window { scrollbar-width:none; --map-safe-left:env(safe-area-inset-left,0px); }
+  .republic-playfield[data-expanded] .republic-map-window::-webkit-scrollbar { display:none; }
+  .republic .republic-playfield[data-expanded] .republic-map-tools { position:absolute; bottom:max(12px,env(safe-area-inset-bottom)); left:max(12px,env(safe-area-inset-left)); right:auto; z-index:5; width:44px; min-height:0; padding:0; background:transparent; border:0; }
+  .republic-playfield[data-expanded] .republic-map-tools>div { flex-direction:column; gap:4px; }
+  .republic-playfield[data-expanded] .republic-map-tools button { flex:none; background:#fffaf0; color:#245c48; box-shadow:0 2px 8px rgba(29,48,33,.16); }
+  .republic-playfield[data-expanded] .republic-map-tools button:disabled { opacity:1; color:#6e7b62; background:#e2e7d5; box-shadow:none; }
+  .republic .republic-playfield[data-expanded] .republic-actions { inset:auto calc(var(--playfield-rail) + 10px + env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) auto; display:flex; flex-direction:column; gap:5px; width:54px; padding:0; background:transparent; box-shadow:none; }
+  .republic .republic-playfield[data-expanded] .republic-actions button { min-height:48px; flex-direction:column; gap:2px; padding:4px 2px; border:0; font-size:9px; box-shadow:0 2px 8px rgba(29,48,33,.16); }
+  .republic .republic-playfield[data-expanded] .republic-actions b { position:static; font-size:8px; }
   .republic-playfield[data-expanded] .playfield-rail-content { padding:12px; }
   .playfield-festival-tasks .festival-options button>span { min-width:60%; }
-  .republic .republic-playfield[data-expanded] :is(.republic-map-detail,.republic-catalog,.republic-placement) { left:max(8px,env(safe-area-inset-left)); right:calc(var(--playfield-rail) + max(8px,env(safe-area-inset-right))); width:auto; max-height:65dvh; }
+  .republic .republic-playfield[data-expanded] :is(.republic-map-detail,.republic-catalog,.republic-placement) { left:max(68px,calc(env(safe-area-inset-left) + 54px)); right:calc(var(--playfield-rail) + 74px + env(safe-area-inset-right)); bottom:max(12px,env(safe-area-inset-bottom)); width:auto; max-height:65dvh; }
 }
 @media (max-width:600px) and (orientation:portrait) {
   .republic .republic-playfield:is(.republic-layout,.festival-playfield)[data-expanded] { grid-template-columns:minmax(0,1fr); padding:0 max(16px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(16px,env(safe-area-inset-left)); }

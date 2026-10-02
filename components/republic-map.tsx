@@ -11,7 +11,7 @@ import { CelebrationGuests, CelebrationLanterns, useCelebrationOpening } from "@
 import { celebrationScene, CELEBRATION_SECONDS } from "@/lib/republic-celebration";
 import { needs, type Need } from "@/lib/republic-trust";
 import type { Highlight } from "@/lib/republic-info";
-import { fittedMapWidth } from "@/lib/republic-display";
+import { mapFrame } from "@/lib/republic-display";
 
 /** Čo je vybrané na mape (budova alebo políčko) a čo k tomu zvýrazniť. */
 export type MapInspect = { key: string; point: Point; highlight: Highlight; selected: string | null };
@@ -53,13 +53,14 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
   const showInspect=!editing||inspectBuildingsWhileEditing;
   const playfield=usePlayfield();
   const [expandedZoom,setExpandedZoom]=useState(1);
-  const [expandedBase,setExpandedBase]=useState(600);
+  const [expandedFrame,setExpandedFrame]=useState(()=>mapFrame(600,450,false));
+  const frame=playfield?.expanded?expandedFrame:{x:-40,y:0,width:640,height:480,pixels:640};
   const currentZoom=playfield?.expanded?expandedZoom:zoom;
   const setCurrentZoom=playfield?.expanded?setExpandedZoom:setZoom;
   const viewport=useRef<HTMLDivElement>(null),svg=useRef<SVGSVGElement>(null);
   useEffect(()=>{
     const el=viewport.current;if(!playfield?.expanded||!el)return;
-    const measure=()=>setExpandedBase(fittedMapWidth(el.clientWidth,el.clientHeight-1));
+    const measure=()=>setExpandedFrame(mapFrame(el.clientWidth,el.clientHeight,window.matchMedia("(max-width:1100px) and (orientation:landscape)").matches,parseFloat(getComputedStyle(el).getPropertyValue("--map-safe-left"))||0));
     measure();const observer=new ResizeObserver(measure);observer.observe(el);
     return()=>observer.disconnect();
   },[playfield?.expanded]);
@@ -71,16 +72,16 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
   const isRoad=(x:number,y:number)=>town.roads.some(r=>r.x===x&&r.y===y);
   const paved=(x:number,y:number)=>isRoad(x,y)||x===2&&y===2;
   function centre(){const el=viewport.current;if(el)el.scrollTo({left:(el.scrollWidth-el.clientWidth)/2,top:(el.scrollHeight-el.clientHeight)/2,behavior:"instant"});}
-  useEffect(()=>{centre();},[currentZoom,editing,playfield?.expanded,expandedBase]);
+  useEffect(()=>{centre();},[currentZoom,editing,playfield?.expanded,expandedFrame]);
   // Vybraná budova mimo výrezu priblíženej mapy sa posunie do zorného poľa (ťuknutie v zozname alebo z plánu).
   const inspectKey=inspect?`${inspect.point.x}-${inspect.point.y}`:"";
   useEffect(()=>{
     const el=viewport.current,s=svg.current;if(!inspectKey||!el||!s)return;
-    const [x,y]=inspectKey.split("-").map(Number),scale=s.getBoundingClientRect().width/640,c=at({x,y});
-    const px=(c.x+40)*scale,py=c.y*scale,margin=48;
+    const [x,y]=inspectKey.split("-").map(Number),rect=s.getBoundingClientRect(),pane=el.getBoundingClientRect(),scale=rect.width/frame.width,c=at({x,y});
+    const px=rect.left-pane.left+el.scrollLeft+(c.x-frame.x)*scale,py=rect.top-pane.top+el.scrollTop+(c.y-frame.y)*scale,margin=48;
     const visible=px>el.scrollLeft+margin&&px<el.scrollLeft+el.clientWidth-margin&&py>el.scrollTop+margin&&py<el.scrollTop+el.clientHeight-margin;
     if(!visible)el.scrollTo({left:px-el.clientWidth/2,top:py-el.clientHeight/2,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
-  },[inspectKey]);
+  },[inspectKey,frame.width,frame.x,frame.y]);
   useEffect(()=>{
     const host=viewport.current;if(!host)return;
     const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){setTerrainReady(true);observer.disconnect();}},{rootMargin:"200px"});
@@ -110,17 +111,17 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
     {notice&&<div className="republic-map-notice" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{notice.title}</b><span>{notice.detail}</span></div></div>}
     <div className="republic-map-stage" data-detail-side={inspect&&at(inspect.point).x>280?"left":"right"}>
     <div className="republic-map-window" ref={viewport} tabIndex={0} aria-label="Mapa štvrte. Šípkami vyber políčko; Enter otvorí detail. Pri priblížení posúvaj mapu prstom.">
-      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox="-40 0 640 480" style={{width:playfield?.expanded?expandedBase*currentZoom:`${currentZoom*100}%`,minWidth:playfield?.expanded?undefined:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
+      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox={`${frame.x} ${frame.y} ${frame.width} ${frame.height}`} style={{width:playfield?.expanded?frame.pixels*currentZoom:`${currentZoom*100}%`,minWidth:playfield?.expanded?undefined:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
         <defs>
           <pattern id={`${uid}-paving`} width="8" height="6" patternUnits="userSpaceOnUse" patternTransform="matrix(1 .558 -1 .558 0 0)">
             <rect width="8" height="6" fill="#d9cdb6"/><path d="M0 0H8M0 3H8M0 0V3M4 3V6" stroke="#b7aa94" strokeWidth=".45"/><path d="M.6.7H7.5M.6 3.7H7.5" stroke="#f4e9d2" strokeWidth=".5" opacity=".8"/>
           </pattern>
         </defs>
-        <g aria-hidden="true" pointerEvents="none">
+        <g aria-hidden="true" pointerEvents="none" transform={`translate(${frame.x} 0) scale(${frame.width/640} ${Math.max(1,frame.height/480)}) translate(40 0)`}>
           <rect x="-40" width="640" height="480" fill="#b5c58c"/>
           {(terrainReady||festivalStill)&&!terrainFailed&&<image href="/images/games/republic-terrain-v1.webp" x="-40" y="0" width="640" height="480" preserveAspectRatio="none" onError={()=>setTerrainFailed(true)}/>}
         </g>
-        {terrainReady&&!terrainFailed&&visible&&<RiverFlow active={active}/>}
+        {terrainReady&&!terrainFailed&&visible&&<g transform={`translate(${frame.x} 0) scale(${frame.width/640} ${Math.max(1,frame.height/480)}) translate(40 0)`}><RiverFlow active={active}/></g>}
         {cells.map(p=>{
           const road=isRoad(p.x,p.y),joined=roads.some(r=>r.x===p.x&&r.y===p.y);
           const reach=target&&selected&&distance(p,target)<=2;
@@ -156,7 +157,7 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
           </g>
         </g>}
         {scene&&<>
-          <rect aria-hidden="true" pointerEvents="none" x="-40" y="0" width="640" height="480" fill="#172641" opacity={scene.time.night*.48}/>
+          <rect aria-hidden="true" pointerEvents="none" x={frame.x} y={frame.y} width={frame.width} height={frame.height} fill="#172641" opacity={scene.time.night*.48}/>
           <NightWindows town={town} night={scene.time.night}/>
           {visible&&<SeasonalScene scene={scene} active={active}/>}
         </>}
