@@ -63,7 +63,7 @@ function variant(id: VariantId, label: string, entries: SeatEntry[]): Parliament
     const mine = chamberSeats.filter(s => seatParty[s.index] === m.id);
     const angle = mine.reduce((a, s) => a + s.angle, 0) / mine.length, r = rowRadius(CHAMBER.ROWS - 1) - 0.006;
     level = prev - angle < 0.26 ? (level + 1) % 3 : 0; prev = angle;
-    const y = tierTop(CHAMBER.ROWS - 1) + 0.036 + level * 0.03;
+    const y = tierTop(CHAMBER.ROWS - 1) + 0.036 + level * 0.052;
     return { id: m.id, short: m.short, color: m.color, seats: m.seats, position: [round6(Math.cos(angle) * r), round6(y), round6(-Math.sin(angle) * r)] as [number, number, number] };
   });
   return { id, label, ordered, seatParty, blocs, withPartners: blocSeats(entries, optionalIds), labels };
