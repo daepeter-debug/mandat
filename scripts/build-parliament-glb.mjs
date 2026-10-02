@@ -186,6 +186,12 @@ async function buildGlb() {
   const inner = rowRadius(0) - ROW_DEPTH / 2 - 0.004;
   solid("koberec", g => { ring(g, 0.0001, inner, FLOOR, FLOOR + 0.0008, Math.PI, 0, { seg: 64, sides: false }); box(g, 0, FLOOR + 0.0004, 0.045, inner * 2, 0.0008, 0.09); }, M.carpet);
   solid('lem koberca', g => ring(g, inner - .0012, inner, FLOOR, FLOOR + .0009, Math.PI, 0, { sides: false, seg: 64 }), M.trim);
+  // Quiet floor inlay, lit only when a user's own selection reaches 76 seats.
+  const majorityLight = material('väčšina:svetlo', '#565347', { rough: .6 });
+  solid('svetelná cesta k väčšine', g => {
+    ring(g, inner - .0042, inner - .0024, FLOOR, FLOOR + .001, Math.PI, 0, { sides: false, seg: 64 });
+    box(g, 0, FLOOR + .0005, -.022, .0018, .001, .10);
+  }, majorityLight);
 
   // Stupne (každý rad o niečo vyššie), lavice pred kreslami v piatich sektoroch medzi uličkami
   const sectorSpan = (k, s) => {
@@ -249,6 +255,14 @@ async function buildGlb() {
   solid("predsednícky stôl", g => { box(g, 0, FLOOR + 0.016 + 0.009, 0.074, 0.13, 0.018, 0.012); }, M.deskTop);
   solid("kreslá predsedníctva", g => { for (const x of [-0.03, 0, 0.03]) { box(g, x, FLOOR + 0.016 + 0.0065, 0.09, 0.016, 0.005, 0.014); box(g, x, FLOOR + 0.016 + 0.016, 0.0975, 0.016, 0.016, 0.004, { tilt: -0.18 }); } }, M.dark);
   solid("rečnícky pult", g => { box(g, 0, FLOOR + 0.011, 0.036, 0.024, 0.022, 0.016); box(g, 0, FLOOR + 0.023, 0.034, 0.028, 0.003, 0.02, { tilt: 0.25 }); }, M.dais);
+  // One-sided interior backdrop: visible from a seat, culled in the usual view from outside.
+  // An illustrative front wall, not a claim about the real NR SR chamber.
+  const frontPlate = (g, cx, cy, z, w, h) => quad(g, [[cx - w / 2, cy - h / 2, z], [cx - w / 2, cy + h / 2, z], [cx + w / 2, cy + h / 2, z], [cx + w / 2, cy - h / 2, z]], [0, 0, -1]);
+  solid('vnútorná stena predsedníctva', g => frontPlate(g, 0, .085, .128, outer * 2, .162), M.wall);
+  solid('vnútorné obloženie predsedníctva', g => {
+    for (let i = -28; i <= 28; i++) frontPlate(g, i * .012, .07, .1278, .003, .128);
+  }, M.slat);
+  solid('vnútorná svetelná škára', g => frontPlate(g, 0, .139, .1275, outer * 2 - .025, .0018), M.light);
   solid("mikrofón", g => cylinder(g, 0, FLOOR + 0.024, 0.028, 0.0006, 0.012, 8), M.chairBase);
   solid('štít predsedníctva', g => { plate(g, 0, .034, .0678, .012, .009); halfDiscXY(g, 0, .0295, .0678, .006, false); }, M.red);
   solid('kríž predsedníctva', g => { plate(g, 0, .033, .0675, .0015, .01); plate(g, 0, .036, .0675, .005, .0015); plate(g, 0, .033, .0675, .007, .0015); }, M.white);
@@ -278,6 +292,12 @@ async function buildGlb() {
     const mappings = mModel === m2023 ? [{ material: mModel, variants: [0, 1] }] : [{ material: mModel, variants: [0] }, { material: m2023, variants: [1] }];
     const lModel = logoMat.get(model.seatParty[seat.index]), l2023 = logoMat.get(v2023.seatParty[seat.index]);
     const logoMappings = lModel === l2023 ? [{ material: lModel, variants: [0, 1] }] : [{ material: lModel, variants: [0] }, { material: l2023, variants: [1] }];
+    // Internal third variant: independent seat materials allow a genuine colour/logo sweep.
+    // Textures and geometry are shared; the two factual allocations are left unchanged.
+    const sweepMat = material(`prechod:${seat.index}`, colorOf(model.seatParty[seat.index]), { rough: .72, texture: 'fabric' });
+    const sweepLogo = material(`prechod-logo:${seat.index}`, '#ffffff', { rough: .85, texture: `logo:${model.seatParty[seat.index]}` });
+    mappings.push({ material: sweepMat, variants: [2] });
+    logoMappings.push({ material: sweepLogo, variants: [2] });
     return node(`kreslo ${seat.index + 1}`, [{ ...prim(upG, mModel), extensions: { KHR_materials_variants: { mappings } } }, prim(baseG, M.chairBase), { ...prim(badgeG, lModel), extensions: { KHR_materials_variants: { mappings: logoMappings } } }],
       { translation: [seat.x, seat.y, seat.z], rotation: [0, Math.sin(seat.yaw / 2), 0, Math.cos(seat.yaw / 2)] });
   });
@@ -297,7 +317,7 @@ async function buildGlb() {
   const json = {
     asset: { version: "2.0", generator: "Mandát · scripts/build-parliament-glb.mjs", extras: { asOf: seats.asOf, updated: seats.updated, seats: seats.seats, seats2023: Object.fromEntries(v2023.ordered.map(m => [m.id, m.seats])) } },
     extensionsUsed: ["KHR_materials_variants"],
-    extensions: { KHR_materials_variants: { variants: variants.map(v => ({ name: v.id })) } },
+    extensions: { KHR_materials_variants: { variants: [...variants.map(v => ({ name: v.id })), { name: 'prechod' }] } },
     scene: 0, scenes: [{ name: "Rokovacia sála", nodes: nodes.map((_, i) => i) }],
     nodes, meshes, materials, images, textures, samplers: [{ magFilter: 9729, minFilter: 9987, wrapS: 10497, wrapT: 10497 }, { magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 }], accessors, bufferViews, buffers: [{ byteLength: offset }],
     animations: [{ name: "obsadenie", samplers, channels }],

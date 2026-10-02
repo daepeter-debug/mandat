@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState, type DetailedHTMLProps, type HTMLAttributes, type Ref } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import Image from 'next/image';
-import { ArrowLeft, Box, Check, RotateCcw, ScanLine, X } from "lucide-react";
+import { ArrowLeft, Armchair, Box, Check, RotateCcw, ScanLine, X } from "lucide-react";
 import { date } from "@/lib/polls";
 import { MAJORITY, type BlocSummary } from "@/lib/blocs";
 import { partnerWording } from "@/lib/edition";
 import { PARLIAMENT_MODEL, parliamentSeats, parliamentVariants, type ParliamentVariant, type VariantId } from "@/lib/parliament-model";
-import { coalitionSelection, partyFocus } from '@/lib/parliament-experience';
+import { coalitionSelection, partyFocus, seatChanges, seatSweep, SEAT_SWEEP_MS, deputyView } from '@/lib/parliament-experience';
+import type { TextureInfo } from '@google/model-viewer/lib/features/scene-graph/api.js';
 import { track } from "@/lib/track";
 import partyLogos from '@/lib/party-logos.json';
 import "@/app/parliament-ar.css";
@@ -28,7 +29,7 @@ declare module "react" {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX { interface IntrinsicElements { "model-viewer": ModelViewerProps } }
 }
-type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string) => void }; setEmissiveFactor: (c: string | number[]) => void };
+type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; setEmissiveFactor: (c: string | number[]) => void };
 type Viewer = HTMLElement & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null };
 const logos = partyLogos as Record<string, { src: string }>;
 
@@ -36,6 +37,10 @@ const variants = parliamentVariants();
 const seatsNow = parliamentSeats();
 const BLOC_COLOR = { coalition: "#c4553f", opposition: "#3c6db4", others: "#aab2ac" } as const;
 const DIM = "#d6d9d2";
+const linearColor = (hex: string) => [0, 2, 4].map(i => { const v = parseInt(hex.slice(i + 1, i + 3), 16) / 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
+const changes = seatChanges(variants[1], variants[0]);
+// A historical coalition is not a current party: don't display its disappearance as a party's loss.
+const biggestGain = changes.find(p => p.delta > 0), biggestLoss = changes.find(p => p.delta < 0 && variants[0].ordered.some(m => m.id === p.id));
 /** Kamera tak, aby sa celá sála zmestila na šírku aj na úzkom mobile (zorné pole 32°, polovičná šírka sály ~0,37 m). */
 function fit(el: HTMLElement | null) {
   const aspect = el && el.clientHeight ? el.clientWidth / el.clientHeight : 1.3, r = Math.min(2.4, Math.max(0.8, 0.385 / (Math.tan(16 * Math.PI / 180) * aspect)));
@@ -73,6 +78,10 @@ export default function ParliamentAR() {
   const [selected, setSelected] = useState<string | null>(null), [partners, setPartners] = useState(true), [camera, setCamera] = useState(INTRO);
   const [reduced, setReduced] = useState(false), [visible, setVisible] = useState(true);
   const [combination, setCombination] = useState<string[]>([]), [touring, setTouring] = useState(false);
+  const [immersive, setImmersive] = useState(false);
+  const [displayVariant, setDisplayVariant] = useState<VariantId | 'prechod'>('prieskumy');
+  const [transition, setTransition] = useState<{ from: VariantId; to: VariantId } | null>(null);
+  const majorityWasOn = useRef(false);
   const introTimers = useRef<number[]>([]), introActive = useRef(false);
   const pointerStart = useRef<{ x: number; y: number; at: number; moved: boolean; multi: boolean } | null>(null);
   const pointers = useRef(new Set<number>());
@@ -97,10 +106,10 @@ export default function ParliamentAR() {
   }, [viewer, reduced]);
   useEffect(() => {
     if (!viewer || !loaded) return;
-    const observer = new ResizeObserver(() => { if (!selected && !introActive.current) setCamera(fit(viewer).view); });
+    const observer = new ResizeObserver(() => { if (!selected && !immersive && !introActive.current) setCamera(fit(viewer).view); });
     observer.observe(viewer);
     return () => observer.disconnect();
-  }, [viewer, loaded, selected]);
+  }, [viewer, loaded, selected, immersive]);
   useEffect(() => {
     if (!viewer || !loaded || !reduced) return;
     const timer = window.setTimeout(() => viewer.dispatchEvent(new Event('par3d-replay')), 0);
@@ -138,6 +147,53 @@ export default function ParliamentAR() {
     const raf = viewer.loaded ? requestAnimationFrame(start) : 0;   // model už bol načítaný skôr (napr. z vyrovnávacej pamäte)
     return () => { viewer.removeEventListener("load", onLoad); viewer.removeEventListener("par3d-replay", onLoad); cancelAnimationFrame(raf); introTimers.current.forEach(clearTimeout); introActive.current = false; };
   }, [viewer]);
+  // One independent material per seat in the internal transition variant. Final variants stay factual.
+  useEffect(() => {
+    if (!viewer || !loaded || !transition || !viewer.model) return;
+    let alive = true, frame = 0, fallback = 0, running = false;
+    const materials = new Map(viewer.model.materials.map(m => [m.name, m]));
+    const from = variants.find(v => v.id === transition.from)!, to = variants.find(v => v.id === transition.to)!;
+    const finish = () => { if (alive) { setDisplayVariant(transition.to); setTransition(null); } };
+    const animate = () => {
+      if (!alive || running || viewer.getAttribute('variant-name') !== 'prechod') return;
+      running = true;
+      const seats = to.seatParty.map((id, i) => ({
+        material: materials.get(`prechod:${i}`)!, logo: materials.get(`prechod-logo:${i}`)!,
+        start: linearColor(from.ordered.find(p => p.id === from.seatParty[i])!.color), end: linearColor(to.ordered.find(p => p.id === id)!.color),
+        texture: materials.get(`logo:${id}`)!.pbrMetallicRoughness.baseColorTexture!.texture, swapped: false,
+      }));
+      const started = performance.now();
+      const tick = (now: number) => {
+        if (!alive) return;
+        if (document.hidden) { finish(); return; }
+        const elapsed = now - started;
+        seats.forEach((seat, i) => {
+          const p = seatSweep(i, elapsed);
+          seat.material.pbrMetallicRoughness.setBaseColorFactor([...seat.start.map((v, k) => v + (seat.end[k] - v) * p), 1]);
+          const glow = Math.sin(p * Math.PI) * .09;
+          seat.material.setEmissiveFactor([glow, glow * .9, glow * .7]);
+          if (!seat.swapped && p >= .5) { seat.logo.pbrMetallicRoughness.baseColorTexture!.setTexture(seat.texture); seat.swapped = true; }
+        });
+        if (elapsed < SEAT_SWEEP_MS) frame = requestAnimationFrame(tick); else finish();
+      };
+      frame = requestAnimationFrame(tick);
+    };
+    const prepare = async () => {
+      if (reduced || !visible) { finish(); return; }
+      await Promise.all([...materials.values()].filter(m => /^(prechod:|prechod-logo:|logo:)/.test(m.name)).map(m => m.isLoaded === false ? m.ensureLoaded?.() : undefined));
+      if (!alive) return;
+      from.seatParty.forEach((id, i) => {
+        materials.get(`prechod:${i}`)!.pbrMetallicRoughness.setBaseColorFactor(from.ordered.find(p => p.id === id)!.color);
+        materials.get(`prechod:${i}`)!.setEmissiveFactor([0, 0, 0]);
+        materials.get(`prechod-logo:${i}`)!.pbrMetallicRoughness.baseColorTexture!.setTexture(materials.get(`logo:${id}`)!.pbrMetallicRoughness.baseColorTexture!.texture);
+      });
+      viewer.addEventListener('variant-applied', animate);
+      setDisplayVariant('prechod');
+      fallback = window.setTimeout(animate, 300);
+    };
+    void prepare().catch(finish);
+    return () => { alive = false; cancelAnimationFrame(frame); clearTimeout(fallback); viewer.removeEventListener('variant-applied', animate); };
+  }, [viewer, loaded, transition, reduced, visible]);
   // Rovnaké jemné svetlo pre každú vybranú stranu; logá sú samostatné materiály a nemenia farbu.
   useEffect(() => {
     const materials = viewer?.model?.materials;
@@ -172,9 +228,38 @@ export default function ParliamentAR() {
     }).catch(() => {});
     return () => { alive = false; cancelAnimationFrame(frame); };
   }, [viewer, loaded, mode, selected, summary, current, variantId, reduced, visible, combination]);
+  // A single, bounded authored moment at the 76-seat crossing; equal treatment for every combination.
+  useEffect(() => {
+    if (!viewer?.model || !loaded) return;
+    const on = mode === 'koalicia' && coalition.majority, crossed = on && !majorityWasOn.current;
+    majorityWasOn.current = on;
+    const light = viewer.model.materials.find(m => m.name === 'väčšina:svetlo');
+    if (!light) return;
+    const chosen = viewer.model.materials.filter(m => m.name.startsWith('strana:') && combination.includes(m.name.slice(7)));
+    let alive = true, frame = 0;
+    const apply = (pulse: number) => {
+      light.pbrMetallicRoughness.setBaseColorFactor(on ? '#d7c49b' : '#565347');
+      const strength = on ? .18 + pulse * .85 : 0;
+      light.setEmissiveFactor([strength, strength * .74, strength * .38]);
+      if (on) chosen.forEach(m => { const glow = .055 + pulse * .18; m.setEmissiveFactor([glow, glow * .92, glow * .8]); });
+    };
+    void Promise.resolve(light.isLoaded === false ? light.ensureLoaded?.() : undefined).then(() => {
+      if (!alive) return;
+      if (!crossed || reduced || !visible) { apply(0); return; }
+      const start = performance.now();
+      const tick = (now: number) => {
+        if (!alive) return;
+        const t = Math.min(1, (now - start) / 1500);
+        apply(document.hidden ? 0 : Math.exp(-4 * t) * (1 - t));
+        if (t < 1 && !document.hidden) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+    }).catch(() => {});
+    return () => { alive = false; cancelAnimationFrame(frame); };
+  }, [viewer, loaded, mode, coalition.majority, combination, reduced, visible]);
   // Kamera k zvolenej strane (bližšie, so stredom v jej kline); bez výberu späť na celú sálu.
   function choose(id: string | null) {
-    stopIntro();
+    stopIntro(); settleTransition(); setImmersive(false);
     setSelected(id);
     const focus = id ? partyFocus(current, id) : null;
     const cam = fit(viewer);
@@ -182,10 +267,23 @@ export default function ParliamentAR() {
     if (id) track("ar", `party:${id}`);
   }
   function stopIntro() { introTimers.current.forEach(clearTimeout); introActive.current = false; setTouring(false); viewer?.pause(); }
-  function switchVariant(id: VariantId) { stopIntro(); setVariantId(id); setCombination([]); setSelected(null); setCamera(fit(viewer).view); track("ar", `variant:${id}`); }
-  function switchMode(next: "strany" | "bloky" | "koalicia") { stopIntro(); setMode(next); setSelected(null); setCamera(fit(viewer).view); }
-  function toggleCoalition(id: string) { stopIntro(); setCombination(ids => ids.includes(id) ? ids.filter(p => p !== id) : [...ids, id]); }
+  function settleTransition() { setTransition(null); setDisplayVariant(variantId); }
+  function switchVariant(id: VariantId) {
+    if (id === variantId) return;
+    stopIntro(); setImmersive(false); setVariantId(id); setCombination([]); setSelected(null); setCamera(fit(viewer).view);
+    if (loaded && visible && !reduced && mode === 'strany') setTransition({ from: variantId, to: id });
+    else { setTransition(null); setDisplayVariant(id); }
+    track("ar", `variant:${id}`);
+  }
+  function switchMode(next: "strany" | "bloky" | "koalicia") { stopIntro(); settleTransition(); setImmersive(false); setMode(next); setSelected(null); setCamera(fit(viewer).view); }
+  function toggleCoalition(id: string) { stopIntro(); settleTransition(); setCombination(ids => ids.includes(id) ? ids.filter(p => p !== id) : [...ids, id]); }
+  function toggleImmersive() {
+    stopIntro(); settleTransition(); setSelected(null); setImmersive(!immersive);
+    const view = deputyView();
+    setCamera(immersive ? fit(viewer).view : { orbit: view.orbit, target: view.target.map(v => `${v}m`).join(' ') });
+  }
   function pickSeat(x: number, y: number) {
+    if (transition) return;
     const material = viewer?.materialFromPoint(x, y), id = material?.name.replace(/^(strana|logo):/, '');
     if (!id || !current.ordered.some(p => p.id === id)) return;
     if (mode === 'koalicia') toggleCoalition(id); else if (mode === 'strany') choose(selected === id ? null : id);
@@ -205,7 +303,7 @@ export default function ParliamentAR() {
     return { title: variantId === "prieskumy" ? `Scenár podľa Modelu Mandát · aktualizované ${date(seatsNow.updated)}` : "Výsledok volieb 30. septembra 2023", note: "Ťukni na kreslo alebo vyber stranu zo zoznamu a pozri si ju zblízka." };
   })();
 
-  return <DialogPrimitive.Root open={open} onOpenChange={next => { setOpen(next); if (next) track("ar", "open"); else { setViewer(null); setLoaded(false); setSelected(null); setCamera(INTRO); } }}>
+  return <DialogPrimitive.Root open={open} onOpenChange={next => { setOpen(next); if (next) track("ar", "open"); else { setViewer(null); setLoaded(false); setSelected(null); setImmersive(false); settleTransition(); majorityWasOn.current = false; setCamera(INTRO); } }}>
     <DialogPrimitive.Trigger asChild>
       <button type="button" className="par3d-open" onPointerEnter={() => { void import("@google/model-viewer").catch(() => {}); }}><Box size={17} aria-hidden="true"/>Pozrieť v 3D a na stole</button>
     </DialogPrimitive.Trigger>
@@ -220,16 +318,17 @@ export default function ParliamentAR() {
         <div className="par3d-controls">
           <div className="par3d-seg" role="group" aria-label="Obsadenie sály">{variants.map(v => <button key={v.id} type="button" aria-pressed={variantId === v.id} onClick={() => switchVariant(v.id)}>{v.label}</button>)}</div>
           <div className="par3d-seg" role="group" aria-label="Režim sály">{(["strany", "koalicia", "bloky"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => switchMode(m)}>{m === "strany" ? "Strany" : m === 'koalicia' ? 'Koalícia' : "Bloky"}</button>)}</div>
-          <button type="button" className="par3d-replay" aria-label="Prehrať úvod znova" onClick={() => { setSelected(null); viewer?.dispatchEvent(new Event("par3d-replay")); }}><RotateCcw size={16} aria-hidden="true"/></button>
+          <button type="button" className="par3d-seat-view" aria-label="Z kresla poslanca" aria-pressed={immersive} disabled={!loaded} onClick={toggleImmersive}><Armchair size={16} aria-hidden="true"/><span>Z kresla<span className="par3d-seat-long"> poslanca</span></span></button>
+          <button type="button" className="par3d-replay" aria-label="Prehrať úvod znova" onClick={() => { setSelected(null); setImmersive(false); settleTransition(); viewer?.dispatchEvent(new Event("par3d-replay")); }}><RotateCcw size={16} aria-hidden="true"/></button>
         </div>
         <div className="par3d-stage" data-detail={!!selected}>
           {ready
-            ? <model-viewer ref={setViewer as unknown as Ref<HTMLElement>} src={PARLIAMENT_MODEL} variant-name={variantId} animation-name="obsadenie"
+            ? <model-viewer ref={setViewer as unknown as Ref<HTMLElement>} src={PARLIAMENT_MODEL} variant-name={displayVariant} animation-name="obsadenie"
                 alt={`3D rokovacia sála: ${current.ordered.map(m => `${m.short} ${m.seats}`).join(", ")}`}
                 ar="" ar-modes="webxr scene-viewer quick-look" ar-scale="auto" ar-placement="floor"
                 camera-controls="" touch-action="none" interaction-prompt="none" reveal="manual" loading="eager"
-                camera-orbit={camera.orbit} camera-target={camera.target} field-of-view="30deg" interpolation-decay={reduced ? '0' : touring ? '220' : '100'}
-                min-camera-orbit="auto 10deg 0.35m" max-camera-orbit="auto 86deg 3.2m"
+                camera-orbit={camera.orbit} camera-target={camera.target} field-of-view={immersive ? '68deg' : '30deg'} interpolation-decay={reduced ? '0' : touring ? '220' : '100'}
+                min-camera-orbit={immersive ? 'auto 35deg 0.015m' : 'auto 10deg 0.35m'} max-camera-orbit="auto 86deg 3.2m"
                 tone-mapping="aces" shadow-intensity="1.1" shadow-softness="0.7" exposure="1.2" environment-image="/models/parlament-evening.hdr" class="par3d-viewer"
                 onPointerDown={e => { pointers.current.add(e.pointerId); pointerStart.current = { x: e.clientX, y: e.clientY, at: e.timeStamp, moved: false, multi: pointers.current.size > 1 }; if (touring) { stopIntro(); setCamera(fit(viewer).view); } }}
                 onPointerMove={e => { if (pointerStart.current && Math.hypot(e.clientX - pointerStart.current.x, e.clientY - pointerStart.current.y) > 7) pointerStart.current.moved = true; }}
@@ -240,6 +339,8 @@ export default function ParliamentAR() {
               </model-viewer>
             : <p className="par3d-loading" role="status">{failed ? "3D model sa nepodarilo načítať. Skúste to znova neskôr." : "Staviame rokovaciu sálu…"}</p>}
           {touring && <button type="button" className="par3d-skip" onClick={() => { stopIntro(); setCamera(fit(viewer).view); }}>Preskočiť úvod</button>}
+          {transition && <div className="par3d-transition" role="status"><span>{transition.from === 'volby-2023' ? 'Voľby 2023' : 'Model Mandát'} → {transition.to === 'volby-2023' ? 'Voľby 2023' : 'Model Mandát'}</span><button type="button" onClick={settleTransition}>Preskočiť</button></div>}
+          {immersive && <div className="par3d-detail"><Armchair size={22} aria-hidden="true"/><span><b>Pohľad z kresla</b><small>Ilustračná sála · rozhliadni sa prstom</small></span><button type="button" onClick={toggleImmersive}><ArrowLeft size={16} aria-hidden="true"/>Celá sála</button></div>}
           {selectedParty && mode === 'strany' && <div className="par3d-detail" style={{ ['--party-color' as string]: selectedParty.color }}>
             {logos[selectedParty.id]?.src && <Image src={logos[selectedParty.id].src} alt="" width={40} height={30} unoptimized/>}
             <span><b>{selectedParty.short}</b><small>{selectedParty.seats} {plural(selectedParty.seats)}</small></span>
@@ -261,6 +362,7 @@ export default function ParliamentAR() {
             </div>
             <label className="par3d-partners"><input type="checkbox" checked={partners} onChange={e => setPartners(e.target.checked)}/><span>Republika ku koalícii, Hnutie Slovensko (OĽANO) k opozícii <small>· redakčný predpoklad</small></span></label>
           </>}
+          {mode === 'strany' && !selected && <div className="par3d-changes"><span>2023 → Model Mandát</span>{[biggestGain, biggestLoss].filter(p => !!p).map(p => <span key={p.id}><i style={{ background: p.color }} aria-hidden="true"/>{p.short} <b>{p.delta > 0 ? '+' : '−'}{Math.abs(p.delta)}</b></span>)}<span>kresiel</span></div>}
         </div>
         {mode !== "bloky"
           ? <ul className="par3d-legend" aria-label={mode === 'koalicia' ? 'Strany do vlastnej koalície' : 'Kreslá strán'}>{current.ordered.map(m => <li key={m.id}><button type="button" aria-pressed={mode === 'koalicia' ? combination.includes(m.id) : selected === m.id} onClick={() => mode === 'koalicia' ? toggleCoalition(m.id) : choose(selected === m.id ? null : m.id)}><i style={{ background: m.color }} aria-hidden="true"/>{logos[m.id]?.src && <Image className="par3d-party-logo" src={logos[m.id].src} alt="" width={23} height={18} unoptimized loading="lazy"/>}{m.short}<b>{m.seats}</b>{mode === 'koalicia' && combination.includes(m.id) && <Check size={13} aria-hidden="true"/>}</button></li>)}</ul>

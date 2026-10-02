@@ -20,7 +20,12 @@ for (const [v, variant] of variants.entries()) for (const [i, chair] of chairs.e
     assert.equal(json.materials[map.material].name, prefix + variant.seatParty[i]);
   }
 }
-assert.deepEqual(json.extensions.KHR_materials_variants.variants.map(v => v.name), variants.map(v => v.id));
+assert.deepEqual(json.extensions.KHR_materials_variants.variants.map(v => v.name), [...variants.map(v => v.id), 'prechod']);
+for (const [i, chair] of chairs.entries()) for (const [p, prefix] of [[0, 'prechod:'], [2, 'prechod-logo:']]) {
+  const mapping = json.meshes[chair.mesh].primitives[p].extensions.KHR_materials_variants.mappings.find(m => m.variants.includes(2));
+  assert.equal(json.materials[mapping.material].name, prefix + i, 'Independent transition material for each physical seat');
+}
+assert.ok(json.materials.some(m => m.name === 'väčšina:svetlo'));
 assert.equal(json.animations[0].name, 'obsadenie');
 assert.equal(json.animations[0].channels.length, 150);
 console.log(`Parlament GLB: ${bytes.length} B, 150 kresiel, farby/logá v oboch variantoch; ${report.issues.numErrors} chýb, ${report.issues.numWarnings} varovaní.`);

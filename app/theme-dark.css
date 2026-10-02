@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (092e1cd9ab) — needitovať ručne. Pravidiel: 1385, prefarbených: 1083. */
+/* Generované scripts/build-dark.mjs z 30 súborov (b608f67f13) — needitovať ručne. Pravidiel: 1391, prefarbených: 1087. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3574,6 +3574,32 @@ html[data-theme="dark"] .par3d-seg button[aria-pressed=true] {
 html[data-theme="dark"] .par3d-replay {
     border: 0;
     background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-seat-view {
+    border: 0;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-seat-view[aria-pressed=true] {
+    background: #20392f;
+    color: #fffefa
+}
+html[data-theme="dark"] .par3d-transition {
+    background: #262c29;
+    color: #d1e7de;
+    box-shadow: 0 6px 20px #0004
+}
+html[data-theme="dark"] .par3d-transition button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-decoration: underline
+}
+html[data-theme="dark"] .par3d-changes {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-changes b {
     color: #d1e7de
 }
 html[data-theme="dark"] .par3d-caption {

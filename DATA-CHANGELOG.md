@@ -1,5 +1,14 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Parlament v 3D: prechod kresiel, moment väčšiny a pohľad poslanca (Codex)
+
+- Pri prepnutí obsadenia v režime Strany sa cez 150 skutočných miest postupne mení farba a logo. Prechod trvá 1 050 ms, možno ho preskočiť a iné ovládanie ho preruší. Dve faktické obsadenia ostávajú nezmenené; interný glTF variant `prechod` slúži len animácii.
+- Porovnanie 2023 → Model Mandát ukazuje najväčší zisk a pri stále zastúpených subjektoch aj najväčšiu stratu. Historická koalícia OĽANO sa nezamieňa s dnešným Slovenskom a jej zánik sa nezobrazuje ako strata mandátov jednej strany.
+- Pri vlastnej kombinácii nad hranicou 76 sa na 1 500 ms jemne zvýraznia vybrané kreslá a podlahová intarzia k pultu, potom ostáva pokojné svetlo. Rovnaká reakcia pre všetky kombinácie, bez slučky, zvuku či politického odporúčania.
+- „Z kresla poslanca“ použije bod nad skutočným stredovým kreslom a širšie zorné pole smerom k predsedníctvu. Jednostranné vnútorné obloženie dopĺňa pohľad zvnútra bez zakrytia bežného celku. Ilustračná architektúra, nie rekonštrukcia NR SR; návrat „Celá sála“ je viditeľný.
+- Model má 1 417 048 B (pod 1,5 MB); textúry a geometria prechodových materiálov sú zdieľané. Khronos: 0 chýb/0 varovaní. Čisté testy overujú súčty ziskov/strát, monotónny sweep, deterministický bod kamery a všetky pôvodné invarianty.
+- Prešli dáta, TypeScript, ESLint, generované tmavé CSS a produkčný build. Lokálne overené rýchle prepínanie, preskočenie, kombinácie 81/79, návrat kamery, mobil 375/402 px a témy; bez chýb konzoly. Fyzické AR/Safari/Android/FPS a živá emulácia reduced-motion ostávajú neoverené.
+
 ## 2. 10. 2026 — Tridsiatka: rebríček kvízu dňa, porovnanie s ostatnými a výzvy (Claude)
 
 Kvíz má po novom spoločnú online časť:

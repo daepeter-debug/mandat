@@ -32,6 +32,16 @@
 .par3d-seg button{min-height:38px;padding:0 10px;border:0;border-radius:7px;background:transparent;font:inherit;font-size:12.5px;font-weight:650;color:#4f6057;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .par3d-seg button[aria-pressed=true]{background:#20392f;color:#fff}
 .par3d-replay{display:grid;place-items:center;width:44px;height:44px;margin-left:auto;border:0;border-radius:10px;background:#fffefa;color:#20392f;cursor:pointer}
+.par3d-seat-view{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 10px;border:0;border-radius:10px;background:#fffefa;color:#20392f;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.par3d-seat-view[aria-pressed=true]{background:#20392f;color:#fffefa}
+.par3d-seat-view:disabled{opacity:.45;cursor:default}
+@media(max-width:760px){.par3d-seat-long{display:none}}
+.par3d-transition{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 12px;border-radius:10px;background:#fffefa;color:#20392f;font-size:12px;box-shadow:0 6px 20px #0004}
+.par3d-transition button{min-height:40px;padding:0 4px;border:0;background:transparent;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.par3d-changes{display:flex;flex-wrap:wrap;align-items:center;gap:5px 12px;font-size:11px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.par3d-changes>span{display:inline-flex;align-items:center;gap:5px}
+.par3d-changes i{width:7px;height:7px;border-radius:2px}
+.par3d-changes b{color:var(--mag-ink)}
 /* Popis pod sálou: čo práve vidíš, pri blokoch pásik k väčšine 76 */
 .par3d-caption{display:grid;gap:6px;min-height:38px;font-size:13px;line-height:1.4;color:var(--text-2);transition:opacity .3s}
 .par3d-caption[data-ready=false]{opacity:0}
