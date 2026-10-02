@@ -116,3 +116,44 @@
 .par3d{scrollbar-color:#8a9c8e #e9eee3}
 @media(min-width:761px){.par3d{height:min(800px,calc(100dvh - 40px));width:min(900px,calc(100vw - 48px))}}
 @media(max-width:760px){.par3d-stage{width:calc(100% + 20px);margin-left:-10px;height:min(calc((100vw - 12px) * .86),48dvh);border-radius:12px}.par3d-timeline-head button{padding:0 9px;font-size:11px}.par3d-seg button{padding:0 7px}.par3d-timeline-head b{font-size:14px}}
+
+/* Hlasovania NR SR (režim Hlasovania, lib/votes.ts): tabuľa v sále, karta poslanca, kluby a výber hlasovania */
+.par3d-modes{flex-wrap:wrap}
+.par3d-board{position:absolute;top:10px;left:10px;right:10px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:7px 10px;border-radius:10px;background:#101511e6;color:#e8eadf;font-size:11.5px;font-variant-numeric:tabular-nums;box-shadow:0 6px 18px #0005;pointer-events:none}
+.par3d-board span{display:inline-flex;align-items:center;gap:5px}
+.par3d-board i{width:8px;height:8px;border-radius:50%;box-shadow:0 0 6px currentColor}
+.par3d-board b{font-size:14px;font-weight:750;color:#fff}
+.par3d-board strong{margin-left:auto;padding:2px 8px;border-radius:6px;font-size:11.5px;font-weight:750;letter-spacing:.04em;text-transform:uppercase;background:#d14b4533;color:#ffb3ad}
+.par3d-board strong[data-passed=true]{background:#2f9e5b33;color:#a4ecbf}
+.par3d-detail-dot{width:14px;height:14px;border-radius:50%;flex:none}
+.par3d-detail em{font-style:normal;font-weight:700}
+.par3d-vote{display:grid;gap:6px}
+.par3d-vote p{margin:0}
+.par3d-vote-meta{font-size:11.5px;color:var(--text-3)}
+.par3d-vote-title{font-size:15px;line-height:1.35}
+.par3d-vote-rule{font-size:12.5px;color:var(--text-2)}
+.par3d-vote-rule a{display:inline-flex;align-items:center;gap:3px;color:#33679e}
+.par3d-clubs{list-style:none;display:grid;gap:6px;margin:4px 0 0;padding:0}
+.par3d-clubs li{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);align-items:center;gap:2px 10px;font-size:12px}
+.par3d-clubs li>span:first-child{display:flex;justify-content:space-between;gap:6px;font-weight:650;color:var(--mag-ink);overflow-wrap:anywhere}
+.par3d-clubs li>span:first-child small{font-weight:500;color:var(--text-3);font-variant-numeric:tabular-nums}
+.par3d-club-bar{display:flex;height:10px;border-radius:4px;overflow:hidden;background:#e5ebd8}
+.par3d-club-bar i{flex-basis:0;min-width:2px}
+.par3d-clubs li>small{grid-column:2;font-size:11px;color:var(--text-3)}
+.par3d-votes{display:grid;gap:8px}
+.par3d-vote-search{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border:1px solid var(--border);border-radius:10px;background:#fffefa;color:var(--text-3)}
+.par3d-vote-search input{flex:1;min-width:0;min-height:42px;border:0;background:transparent;font:inherit;font-size:16px;color:var(--mag-ink);outline:none}
+.par3d-vote-search:focus-within{border-color:var(--mag-ink)}
+.par3d-vote-kinds{display:flex;flex-wrap:wrap;gap:5px}
+.par3d-vote-kinds button{display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:0 10px;border:1px solid var(--border);border-radius:99px;background:#fffefa;font:inherit;font-size:12px;font-weight:600;color:var(--mag-ink);cursor:pointer}
+.par3d-vote-kinds button small{font-weight:500;color:var(--text-3);font-variant-numeric:tabular-nums}
+.par3d-vote-kinds button[aria-pressed=true]{border-color:#20392f;background:#20392f;color:#fff}
+.par3d-vote-kinds button[aria-pressed=true] small{color:#cfe0d6}
+.par3d-vote-list{list-style:none;display:grid;gap:6px;margin:0;padding:0}
+.par3d-vote-list button{display:grid;gap:3px;width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:12px;background:#fffefa;font:inherit;text-align:left;color:var(--mag-ink);cursor:pointer}
+.par3d-vote-list button[aria-pressed=true]{border-color:#20392f;box-shadow:inset 0 0 0 1px #20392f;background:#f1f5e9}
+.par3d-vote-list b{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;font-weight:600;line-height:1.35}
+.par3d-vote-result{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:650;color:#a8402e;font-variant-numeric:tabular-nums}
+.par3d-vote-result[data-passed=true]{color:#2f7a4b}
+.par3d-vote-more{justify-self:start;min-height:40px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:#fffefa;font:inherit;font-size:12.5px;font-weight:650;color:var(--mag-ink);cursor:pointer}
+@media(min-width:761px){.par3d-clubs{grid-template-columns:1fr 1fr;column-gap:18px}}

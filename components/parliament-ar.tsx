@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState, type DetailedHTMLProps, type HTMLAttributes, type Ref } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import Image from 'next/image';
-import { ArrowLeft, Armchair, Box, Check, RotateCcw, ScanLine, X, Play, Pause, Share2, TriangleAlert } from "lucide-react";
+import { ArrowLeft, Armchair, Box, Check, ExternalLink, RotateCcw, ScanLine, Search, X, Play, Pause, Share2, TriangleAlert } from "lucide-react";
+import { VOTES_INDEX, clubLabel, clubTotals, kindNames, markColors, markNames, marks, matchesQuery, required, seatMembers, skDay, voteFile, voteSource, type SeatedMember, type VoteDetail, type VoteIndex, type VoteKind } from "@/lib/votes";
+import { chamberSeats } from "@/lib/parliament-model";
 import { date } from "@/lib/polls";
 import { MAJORITY, type BlocSummary } from "@/lib/blocs";
 import { partnerWording } from "@/lib/edition";
@@ -32,8 +34,25 @@ declare module "react" {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX { interface IntrinsicElements { "model-viewer": ModelViewerProps } }
 }
-type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; setEmissiveFactor: (c: string | number[]) => void };
-type Viewer = HTMLElement & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob> };
+type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; emissiveTexture?: TextureInfo | null; setEmissiveFactor: (c: string | number[]) => void };
+type Viewer = HTMLElement & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
+  createTexture: (uri: string) => Promise<Parameters<TextureInfo["setTexture"]>[0]>; positionAndNormalFromPoint: (x: number, y: number) => { position: { x: number; y: number; z: number } } | null };
+type Mode = "strany" | "bloky" | "koalicia" | "vyvoj" | "hlasovania";
+// Hlasovania NR SR (lib/votes.ts): zoznam a detaily sa načítajú až v režime Hlasovania, potom ostanú v pamäti.
+let voteIndex: Promise<VoteIndex> | null = null;
+const loadVoteIndex = () => voteIndex ??= fetch(VOTES_INDEX).then(r => r.ok ? r.json() as Promise<VoteIndex> : Promise.reject(new Error(`${r.status}`))).catch(e => { voteIndex = null; throw e; });
+const voteDetails = new Map<number, Promise<VoteDetail>>();
+const loadVote = (id: number) => { if (!voteDetails.has(id)) voteDetails.set(id, fetch(voteFile(id)).then(r => r.ok ? r.json() as Promise<VoteDetail> : Promise.reject(new Error(`${r.status}`))).catch(e => { voteDetails.delete(id); throw e; })); return voteDetails.get(id)!; };
+const VOTE_KINDS: (VoteKind | "vsetky")[] = ["vsetky", "ustavny", "nedovera", "rozpocet", "veto", "zakon"];
+const VOTE_PAGE = 20;
+// Stĺpiky hlasovania sa v klipe „obsadenie“ vysúvajú medzi 4 a 5,5 s (scripts/build-parliament-glb.mjs).
+const VOTE_RISE_FROM = 3.9, CLIP_END = 12;
+/** Klip „obsadenie“ na čas t: najprv ho aktivovať (inak posun nemá stopy), potom hrať ďalej alebo zastaviť. */
+function seekClip(viewer: Viewer, t: number, keepPlaying: boolean) {
+  viewer.play({ repetitions: 1 });
+  if (!keepPlaying) viewer.pause();
+  viewer.currentTime = t;
+}
 const logos = partyLogos as Record<string, { src: string }>;
 
 const variants = parliamentVariants();
@@ -85,7 +104,11 @@ function useSeatCounter(value: number, reduced: boolean, visible: boolean) {
 export default function ParliamentAR() {
   const [open, setOpen] = useState(false), [ready, setReady] = useState(false), [failed, setFailed] = useState(false);
   const [viewer, setViewer] = useState<Viewer | null>(null), [loaded, setLoaded] = useState(false);
-  const [variantId, setVariantId] = useState<VariantId>("prieskumy"), [mode, setMode] = useState<"strany" | "bloky" | "koalicia" | "vyvoj">("strany");
+  const [variantId, setVariantId] = useState<VariantId>("prieskumy"), [mode, setMode] = useState<Mode>("strany");
+  const [votes, setVotes] = useState<VoteIndex | null>(null), [voteError, setVoteError] = useState(false);
+  const [voteId, setVoteId] = useState<number | null>(null), [voteDetail, setVoteDetail] = useState<VoteDetail | null>(null);
+  const [voteQuery, setVoteQuery] = useState(""), [voteKind, setVoteKind] = useState<VoteKind | "vsetky">("vsetky"), [voteLimit, setVoteLimit] = useState(VOTE_PAGE);
+  const [voteSeat, setVoteSeat] = useState<SeatedMember | null>(null);
   const [playing, setPlaying] = useState(false), [touch, setTouch] = useState(false);
   const [sharing, setSharing] = useState(false), [shareMessage, setShareMessage] = useState('');
   const [sharePreview, setSharePreview] = useState<string | null>(null);
@@ -96,7 +119,7 @@ export default function ParliamentAR() {
   const [reduced, setReduced] = useState(false), [visible, setVisible] = useState(true);
   const [combination, setCombination] = useState<string[]>([]), [touring, setTouring] = useState(false);
   const [immersive, setImmersive] = useState(false);
-  const [displayVariant, setDisplayVariant] = useState<VariantId | 'prechod'>('prieskumy');
+  const [displayVariant, setDisplayVariant] = useState<VariantId | 'prechod' | 'hlasovanie'>('prieskumy');
   const [transition, setTransition] = useState<{ from: VariantId; to: VariantId } | null>(null);
   const majorityWasOn = useRef(false);
   const introTimers = useRef<number[]>([]), introActive = useRef(false);
@@ -114,6 +137,9 @@ export default function ParliamentAR() {
   const coalition = coalitionSelection(current, combination);
   const displayedSeats = useSeatCounter(coalition.seats, reduced, visible);
   const selectedParty = current.ordered.find(p => p.id === selected);
+  const vote = votes?.hlasovania.find(v => v.id === voteId) ?? null;
+  const seated = mode === 'hlasovania' && voteDetail && voteDetail.id === voteId ? seatMembers(voteDetail) : null;
+  const voteList = votes ? votes.hlasovania.filter(v => (voteKind === 'vsetky' || v.druh === voteKind) && matchesQuery(v, voteQuery)) : [];
 
   useEffect(() => {
     const media = matchMedia('(pointer: coarse)'), update = () => setTouch(media.matches);
@@ -299,6 +325,54 @@ export default function ParliamentAR() {
     }).catch(() => {});
     return () => { alive = false; cancelAnimationFrame(frame); };
   }, [viewer, loaded, mode, coalition.majority, combination, reduced, visible]);
+  // Hlasovania: zoznam pri prvom otvorení režimu (predvolené je najnovšie hlasovanie), potom detail vybraného.
+  useEffect(() => {
+    if (mode !== 'hlasovania' || votes) return;
+    let alive = true;
+    loadVoteIndex().then(index => { if (alive) { setVotes(index); setVoteError(false); setVoteId(id => id ?? index.hlasovania[0]?.id ?? null); } }).catch(() => { if (alive) setVoteError(true); });
+    return () => { alive = false; };
+  }, [mode, votes]);
+  useEffect(() => {
+    if (voteId === null) return;
+    let alive = true;
+    loadVote(voteId).then(detail => { if (alive) { setVoteDetail(detail); setVoteError(false); } }).catch(() => { if (alive) setVoteError(true); });
+    return () => { alive = false; };
+  }, [voteId]);
+  // Hlasovanie v sále: kreslá vo farbe hlasu, na operadlách logá klubov, nad prítomnými svetelné stĺpiky (atlas 32 × 32,
+  // blok 2 × 2 na kreslo), ktoré sa vysunú vlnou zľava doprava. Ostatné režimy variant „hlasovanie“ nepoužívajú.
+  useEffect(() => {
+    if (!viewer?.model || !loaded || mode !== 'hlasovania' || !voteDetail) return;
+    let alive = true;
+    const materials = new Map(viewer.model.materials.map(m => [m.name, m]));
+    const members = seatMembers(voteDetail);
+    void (async () => {
+      await Promise.all([...materials.values()].filter(m => /^(prechod:|prechod-logo:|logo:|hlasovanie:)/.test(m.name)).map(m => m.isLoaded === false ? m.ensureLoaded?.() : undefined));
+      if (!alive) return;
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 32;
+      const atlas = canvas.getContext('2d');
+      members.forEach((m, i) => {
+        const color = markColors[m.mark], seat = materials.get(`prechod:${i}`), logo = materials.get(`prechod-logo:${i}`);
+        seat?.pbrMetallicRoughness.setBaseColorFactor(color);
+        seat?.setEmissiveFactor(m.mark === '0' ? [0, 0, 0] : linearColor(color).map(v => v * .12));
+        // Logo klubu (nezaradení bez loga); materiály logo:<strana> sú v modeli pre všetky strany sály.
+        logo?.pbrMetallicRoughness.baseColorTexture?.setTexture(materials.get(`logo:${m.party}`)?.pbrMetallicRoughness.baseColorTexture?.texture ?? null);
+        if (atlas && m.mark !== '0') { atlas.fillStyle = color; atlas.fillRect((i % 16) * 2, Math.floor(i / 16) * 2, 2, 2); }
+      });
+      const beams = materials.get('hlasovanie:stlpiky'), texture = await viewer.createTexture(canvas.toDataURL('image/png'));
+      if (!alive) return;
+      beams?.pbrMetallicRoughness.baseColorTexture?.setTexture(texture);
+      beams?.emissiveTexture?.setTexture(texture);
+      setDisplayVariant('hlasovanie');
+      // Stĺpiky sa vysunú vlnou; pri obmedzenom pohybe (alebo skrytej scéne) hneď stoja.
+      if (reduced || !visible) seekClip(viewer, CLIP_END, false); else seekClip(viewer, VOTE_RISE_FROM, true);
+    })().catch(() => {});
+    return () => { alive = false; };
+  }, [viewer, loaded, mode, voteDetail, reduced, visible]);
+  function chooseVote(id: number) {
+    if (shareLock.current) return;
+    setVoteSeat(null); setVoteId(id); setCamera(fit(viewer).view);
+    track("ar", "vote");
+  }
   // Kamera k zvolenej strane (bližšie, so stredom v jej kline); bez výberu späť na celú sálu.
   function choose(id: string | null) {
     if (shareLock.current) return;
@@ -310,7 +384,7 @@ export default function ParliamentAR() {
     if (id) track("ar", `party:${id}`);
   }
   function stopIntro() { introTimers.current.forEach(clearTimeout); introActive.current = false; setTouring(false); viewer?.pause(); }
-  function settleTransition() { setTransition(null); setDisplayVariant(variantId); }
+  function settleTransition() { setTransition(null); setDisplayVariant(mode === 'hlasovania' && seated ? 'hlasovanie' : variantId); }
   function switchVariant(id: VariantId) {
     if (shareLock.current) return;
     if (id === variantId) return;
@@ -319,7 +393,17 @@ export default function ParliamentAR() {
     else { setTransition(null); setDisplayVariant(id); }
     track("ar", `variant:${id}`);
   }
-  function switchMode(next: "strany" | "bloky" | "koalicia" | "vyvoj") { if (shareLock.current) return; setPlaying(false); stopIntro(); settleTransition(); setImmersive(false); setMode(next); setSelected(null); setCamera(fit(viewer).view); if (next === 'vyvoj') { setVariantId(timeline[0].variant.id); setDisplayVariant(timeline[0].variant.id); setCombination([]); } }
+  function switchMode(next: Mode) {
+    if (shareLock.current) return;
+    setPlaying(false); stopIntro(); setTransition(null); setImmersive(false); setMode(next); setSelected(null); setVoteSeat(null); setCamera(fit(viewer).view);
+    if (next === 'vyvoj') { setVariantId(timeline[0].variant.id); setDisplayVariant(timeline[0].variant.id); setCombination([]); }
+    else if (next !== 'hlasovania') {
+      setDisplayVariant(variantId);
+      // Z Hlasovaní späť: stĺpiky skryje materiál, klip ostane v pokojovom čase ako po úvode.
+      if (mode === 'hlasovania' && viewer) seekClip(viewer, 3, false);
+    }
+    if (next === 'hlasovania') track("ar", "votes");
+  }
   function toggleCoalition(id: string) { if (shareLock.current) return; setSharePreview(null); stopIntro(); settleTransition(); setCombination(ids => ids.includes(id) ? ids.filter(p => p !== id) : [...ids, id]); }
   function toggleImmersive() {
     if (shareLock.current) return;
@@ -329,6 +413,18 @@ export default function ParliamentAR() {
   }
   function pickSeat(x: number, y: number) {
     if (transition) return;
+    if (mode === 'hlasovania') {
+      if (!viewer || !seated) return;
+      // Kreslo z materiálu (každé má vlastný), stĺpik (spoločný materiál) podľa najbližšieho kresla k bodu dotyku.
+      const own = viewer.materialFromPoint(x, y)?.name.match(/^prechod(?:-logo)?:(\d+)$/);
+      let seat = own ? Number(own[1]) : -1;
+      if (seat < 0) {
+        const hit = viewer.positionAndNormalFromPoint(x, y)?.position;
+        if (hit) { let best = Infinity; chamberSeats.forEach((s, i) => { const d = (s.x - hit.x) ** 2 + (s.z - hit.z) ** 2; if (d < best && d < .0004) { best = d; seat = i; } }); }
+      }
+      setVoteSeat(seat >= 0 ? seated[seat] : null);
+      return;
+    }
     const material = viewer?.materialFromPoint(x, y), id = material?.name.replace(/^(strana|logo):/, '');
     if (!id || !current.ordered.some(p => p.id === id)) return;
     if (mode === 'koalicia') toggleCoalition(id); else if (mode === 'strany' || mode === 'vyvoj') choose(selected === id ? null : id);
@@ -398,12 +494,12 @@ export default function ParliamentAR() {
       <DialogPrimitive.Content className="par3d" aria-describedby="par3d-desc">
         <div className="par3d-head">
           <div><DialogPrimitive.Title className="par3d-title">Parlament v 3D</DialogPrimitive.Title>
-            <p id="par3d-desc" className="par3d-desc">150 kresiel · {current.label}{variantId === 'prieskumy' ? ` · ${date(seatsNow.updated)}` : ''}. {touch ? 'Otáčaj prstom, približuj dvoma prstami.' : 'Otáčaj myšou, približuj kolieskom.'}</p></div>
+            <p id="par3d-desc" className="par3d-desc">150 kresiel · {mode === 'hlasovania' ? 'Hlasovania NR SR' : current.label}{mode !== 'hlasovania' && variantId === 'prieskumy' ? ` · ${date(seatsNow.updated)}` : ''}. {touch ? 'Otáčaj prstom, približuj dvoma prstami.' : 'Otáčaj myšou, približuj kolieskom.'}</p></div>
           <DialogPrimitive.Close className="par3d-close" aria-label="Zavrieť"><X size={20}/></DialogPrimitive.Close>
         </div>
         <fieldset className="par3d-controls" disabled={sharing}>
-          <div className="par3d-seg" role="group" aria-label="Obsadenie sály">{variants.map(v => <button key={v.id} type="button" aria-pressed={variantId === v.id} onClick={() => { setPlaying(false); if (mode === 'vyvoj') setMode('strany'); switchVariant(v.id); }}>{v.label}</button>)}</div>
-          <div className="par3d-seg" role="group" aria-label="Režim sály">{(["strany", "koalicia", "bloky", "vyvoj"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => switchMode(m)}>{m === "strany" ? "Strany" : m === 'koalicia' ? 'Koalícia' : m === 'vyvoj' ? 'Vývoj 2026' : "Bloky"}</button>)}</div>
+          {mode !== 'hlasovania' && <div className="par3d-seg" role="group" aria-label="Obsadenie sály">{variants.map(v => <button key={v.id} type="button" aria-pressed={variantId === v.id} onClick={() => { setPlaying(false); if (mode === 'vyvoj') setMode('strany'); switchVariant(v.id); }}>{v.label}</button>)}</div>}
+          <div className="par3d-seg par3d-modes" role="group" aria-label="Režim sály">{(["strany", "koalicia", "bloky", "vyvoj", "hlasovania"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => switchMode(m)}>{m === "strany" ? "Strany" : m === 'koalicia' ? 'Koalícia' : m === 'vyvoj' ? 'Vývoj 2026' : m === 'hlasovania' ? 'Hlasovania' : "Bloky"}</button>)}</div>
           <button type="button" className="par3d-seat-view" aria-label="Z kresla poslanca" aria-pressed={immersive} disabled={!loaded} onClick={toggleImmersive}><Armchair size={16} aria-hidden="true"/><span>Z kresla<span className="par3d-seat-long"> poslanca</span></span></button>
           <button type="button" className="par3d-replay" aria-label="Prehrať úvod znova" onClick={() => { setPlaying(false); setSelected(null); setImmersive(false); settleTransition(); viewer?.dispatchEvent(new Event("par3d-replay")); }}><RotateCcw size={16} aria-hidden="true"/></button>
         </fieldset>
@@ -434,8 +530,31 @@ export default function ParliamentAR() {
             <button type="button" onClick={() => choose(null)}><ArrowLeft size={16} aria-hidden="true"/>Celá sála</button>
           </div>}
           {failed && ready && <p className="par3d-loading" role="alert">Model sa nepodarilo načítať. Zavri okno a skús ho otvoriť znova.</p>}
+          {mode === 'hlasovania' && vote && seated && <div className="par3d-board" role="img" aria-label={`Výsledok: za ${vote.za}, proti ${vote.proti}, zdržalo sa ${vote.zdrzalo}, nehlasovalo ${vote.nehlasovalo}, neprítomní ${vote.nepritomni}. ${vote.preslo ? 'Návrh prešiel' : 'Návrh neprešiel'}.`}>
+            {(["Z", "P", "?", "N", "0"] as const).map(k => <span key={k} data-mark={k}><i style={{ background: markColors[k] }} aria-hidden="true"/>{k === "Z" ? "Za" : k === "P" ? "Proti" : k === "?" ? "Zdržalo sa" : k === "N" ? "Nehlasovalo" : "Neprítomní"}<b>{k === "Z" ? vote.za : k === "P" ? vote.proti : k === "?" ? vote.zdrzalo : k === "N" ? vote.nehlasovalo : vote.nepritomni}</b></span>)}
+            <strong data-passed={vote.preslo}>{vote.preslo ? 'Návrh prešiel' : 'Návrh neprešiel'}</strong>
+          </div>}
+          {mode === 'hlasovania' && voteSeat && <div className="par3d-detail" style={{ ['--party-color' as string]: markColors[voteSeat.mark] }}>
+            {logos[voteSeat.party]?.src ? <Image src={logos[voteSeat.party].src} alt="" width={40} height={30} unoptimized/> : <i className="par3d-detail-dot" style={{ background: markColors[voteSeat.mark] }} aria-hidden="true"/>}
+            <span><b>{voteSeat.name}</b><small>{clubLabel(voteSeat.club)} · <em style={{ color: markColors[voteSeat.mark] }}>{markNames[voteSeat.mark]}</em></small></span>
+            <button type="button" onClick={() => setVoteSeat(null)}><X size={16} aria-hidden="true"/>Zavrieť</button>
+          </div>}
         </div>
         <div className="par3d-caption" data-ready={loaded} aria-live="polite">
+          {mode === 'hlasovania' && <div className="par3d-vote">
+            {voteError && <p role="alert">Hlasovanie sa nepodarilo načítať. Skontroluj pripojenie a skús to znova.</p>}
+            {!votes && !voteError && <p role="status">Načítavam hlasovania NR SR…</p>}
+            {vote && <>
+              <p className="par3d-vote-meta">{skDay(vote.datum)} · {vote.schodza}. schôdza · {kindNames[vote.druh]}</p>
+              <b className="par3d-vote-title">{vote.nazov}</b>
+              <p className="par3d-vote-rule">Na prijatie {vote.druh === 'nedovera' ? 'nedôvery' : 'návrhu'} treba {required(vote).votes} hlasov ({required(vote).rule}). Za hlasovalo {vote.za}. <a href={voteSource(vote.id)} target="_blank" rel="noopener noreferrer">nrsr.sk <ExternalLink size={12} aria-hidden="true"/></a></p>
+              {seated && voteDetail && <ul className="par3d-clubs" aria-label="Hlasovanie podľa klubov">{clubTotals(voteDetail).map(row => <li key={row.club}>
+                <span>{clubLabel(row.club)}<small>{row.total}</small></span>
+                <span className="par3d-club-bar" aria-hidden="true">{marks.map(k => row.counts[k] > 0 && <i key={k} style={{ flexGrow: row.counts[k], background: markColors[k] }}/>)}</span>
+                <small>{marks.filter(k => row.counts[k] > 0).map(k => `${markNames[k]} ${row.counts[k]}`).join(' · ')}</small>
+              </li>)}</ul>}
+            </>}
+          </div>}
           {mode === 'vyvoj' && <div className="par3d-timeline">
             <div className="par3d-timeline-head"><span><b>{month.variant.label}</b><small>Bod k {date(month.point.date)} · {month.agencies} {agencyWord(month.agencies)}{monthIndex === timeline.length - 1 ? ' · posledný dostupný mesiac' : ''}</small></span><button type="button" disabled={!loaded || reduced || sharing} onClick={() => { if (playing) setPlaying(false); else { choose(null); if (monthIndex === timeline.length - 1) switchVariant(timeline[0].variant.id); setPlaying(true); } }}>{playing ? <Pause size={16} aria-hidden="true"/> : <Play size={16} aria-hidden="true"/>}{playing ? 'Pozastaviť' : 'Prehrať vývoj'}</button></div>
             <input type="range" min="0" max={timeline.length - 1} step="1" value={monthIndex} disabled={sharing} aria-label="Mesiac modelu" aria-valuetext={`${month.variant.label}, bod k ${date(month.point.date)}`} onChange={e => { setPlaying(false); switchVariant(timeline[Number(e.target.value)].variant.id); }}/>
@@ -453,7 +572,7 @@ export default function ParliamentAR() {
             {shareMessage && <span role="status">{shareMessage}</span>}
             {sharePreview && <div className="par3d-share-preview"><Image unoptimized src={sharePreview} alt="Vytvorená karta koalície, obsahuje záber sály a súčet vybraných strán" width="72" height="90"/><span>Obrázok tvojej kombinácie{nativeShareReady && <button className="par3d-share" type="button" onClick={sharePrepared}><Share2 size={14}/>Zdieľať obrázok</button>}<a href={sharePreview} download="moja-koalicia-mandat.png">Stiahnuť PNG</a></span><button type="button" aria-label="Skryť náhľad obrázka" onClick={() => setSharePreview(null)}><X size={16}/></button></div>}
             <p>Vlastná kombinácia, nie odporúčanie ani predpoveď dohody strán.</p>
-          </div> : mode !== 'vyvoj' || selected ? <><b>{caption.title}</b>{"note" in caption && caption.note && <span>{caption.note}</span>}</> : null}
+          </div> : mode === 'hlasovania' ? null : mode !== 'vyvoj' || selected ? <><b>{caption.title}</b>{"note" in caption && caption.note && <span>{caption.note}</span>}</> : null}
           {selectedEdge && range && <p className="par3d-range"><TriangleAlert size={14} aria-hidden="true"/>Na hrane 5 % · postúpi v {Math.round(range.entry * 100)} % prepočtov · rozpätie {range.low}–{range.high} kresiel (stredných 80 %). Orientačná neistota, nie pravdepodobnosť výsledku volieb.</p>}
           {mode === 'strany' && (variantId === 'prieskumy' || exclusion) && <details className="par3d-uncertainty"><summary><TriangleAlert size={15} aria-hidden="true"/>Na hrane 5 % · čo ak nepostúpia?{exclusion && ` · bez ${exclusion.party.short}`}</summary><p>Jemne rozjasnené kreslá označujú strany, ktorých pásmo pretína hranicu 5 %. Rovnaký efekt pre každú stranu. Prepočty neistoty nie sú predpoveď.</p><div className="par3d-edge-buttons">{edges.map(p => <button key={p.party.id} type="button" disabled={sharing} aria-pressed={variantId === p.variant.id} onClick={() => switchVariant(variantId === p.variant.id ? 'prieskumy' : p.variant.id)}>Bez {p.party.short}</button>)}{exclusion && <button type="button" onClick={() => switchVariant('prieskumy')}>Späť na Model Mandát</button>}</div></details>}
           {mode === "bloky" && "c" in caption && <>
@@ -465,10 +584,22 @@ export default function ParliamentAR() {
           </>}
           {mode === 'strany' && !selected && (variantId === 'prieskumy' || variantId === 'volby-2023') && <div className="par3d-changes"><span>2023 → Model Mandát</span>{[biggestGain, biggestLoss].filter(p => !!p).map(p => <span key={p.id}><i style={{ background: p.color }} aria-hidden="true"/>{p.short} <b>{p.delta > 0 ? '+' : '−'}{Math.abs(p.delta)}</b></span>)}<span>kresiel</span></div>}
         </div>
-        {mode !== "bloky"
+        {mode === 'hlasovania' ? <section className="par3d-votes" aria-label="Výber hlasovania">
+          <label className="par3d-vote-search"><Search size={16} aria-hidden="true"/><span className="sr-only">Hľadať hlasovanie</span>
+            <input type="search" value={voteQuery} placeholder="Hľadať v názvoch, napr. rozpočet, trestný" enterKeyHint="search" onChange={e => { setVoteQuery(e.target.value); setVoteLimit(VOTE_PAGE); }}/></label>
+          <div className="par3d-vote-kinds" role="group" aria-label="Druh hlasovania">{VOTE_KINDS.map(k => <button key={k} type="button" aria-pressed={voteKind === k} onClick={() => { setVoteKind(k); setVoteLimit(VOTE_PAGE); }}>{k === 'vsetky' ? 'Všetky' : kindNames[k]}{votes && <small>{k === 'vsetky' ? votes.hlasovania.length : votes.hlasovania.filter(v => v.druh === k).length}</small>}</button>)}</div>
+          {votes && <ol className="par3d-vote-list">{voteList.slice(0, voteLimit).map(v => <li key={v.id}><button type="button" aria-pressed={voteId === v.id} onClick={() => chooseVote(v.id)}>
+            <span className="par3d-vote-meta">{skDay(v.datum)} · {kindNames[v.druh]}</span>
+            <b>{v.nazov}</b>
+            <span className="par3d-vote-result" data-passed={v.preslo}>{v.preslo ? <Check size={13} aria-hidden="true"/> : <X size={13} aria-hidden="true"/>}{v.preslo ? 'Prešiel' : 'Neprešiel'} · za {v.za}, proti {v.proti}</span>
+          </button></li>)}</ol>}
+          {votes && !voteList.length && <p className="par3d-note">Nič sa nenašlo. Skús iné slovo alebo druh hlasovania.</p>}
+          {voteList.length > voteLimit && <button type="button" className="par3d-vote-more" onClick={() => setVoteLimit(n => n + VOTE_PAGE)}>Zobraziť ďalšie ({voteList.length - voteLimit})</button>}
+          {votes && <p className="par3d-note">Hlasovania o zákonoch ako celku, ústavných zákonoch a nedôvere v 9. volebnom období podľa nrsr.sk (aktualizované {skDay(votes.aktualizovane)}). Poslanci sedia podľa klubov v čase hlasovania, nie podľa skutočného zasadacieho poriadku. Ťukni na kreslo a uvidíš meno a hlas.</p>}
+        </section> : mode !== "bloky"
           ? <ul className="par3d-legend" aria-label={mode === 'koalicia' ? 'Strany do vlastnej koalície' : 'Kreslá strán'}>{current.ordered.map(m => <li key={m.id}><button type="button" disabled={sharing} data-edge={variantId === 'prieskumy' && edges.some(p => p.party.id === m.id)} aria-pressed={mode === 'koalicia' ? combination.includes(m.id) : selected === m.id} onClick={() => mode === 'koalicia' ? toggleCoalition(m.id) : choose(selected === m.id ? null : m.id)}><i style={{ background: m.color }} aria-hidden="true"/>{logos[m.id]?.src && <Image className="par3d-party-logo" src={logos[m.id].src} alt="" width={23} height={18} unoptimized loading="lazy"/>}{m.short}<b>{m.seats}</b>{variantId === 'prieskumy' && edges.some(p => p.party.id === m.id) && <TriangleAlert size={12} aria-label="Na hrane 5 %"/>}{mode === 'koalicia' && combination.includes(m.id) && <Check size={13} aria-hidden="true"/>}</button></li>)}</ul>
           : <ul className="par3d-legend" aria-label="Bloky">{(["coalition", "others", "opposition"] as const).filter(b => summary[b].seats > 0).map(b => <li key={b}><span className="par3d-bloc"><i style={{ background: BLOC_COLOR[b] }} aria-hidden="true"/>{b === "others" ? "Ostatní" : blocLabel(summary, b, partners)}<b>{summary[b].seats}</b></span></li>)}</ul>}
-        <p className="par3d-note">Scenár, nie predpoveď. Farba kresla a značka na operadle rozlišujú strany. „Položiť na stôl“ otvorí AR na podporovanom telefóne; Android Scene Viewer používa pôvodný model prieskumov, iOS prenáša aktuálny výber.</p>
+        {mode !== 'hlasovania' && <p className="par3d-note">Scenár, nie predpoveď. Farba kresla a značka na operadle rozlišujú strany. „Položiť na stôl“ otvorí AR na podporovanom telefóne; Android Scene Viewer používa pôvodný model prieskumov, iOS prenáša aktuálny výber.</p>}
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
   </DialogPrimitive.Root>;

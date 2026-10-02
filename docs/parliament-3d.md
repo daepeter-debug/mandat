@@ -127,3 +127,34 @@ Prešli čisté kontroly zážitku (monotónny sweep, zachovanie súčtu zmien, 
 **Kontrola:** `node scripts/verify-parliament-evolution.mjs` overuje mesiace (posledný bod mesiaca, súčet zmien 0, zhoda so `scenarioFromPoll`), scenáre bez strany a prítomnosť všetkých variantov v modeli.
 
 **Neoverené:** Claudov prehliadač pri skrytom okne nevykresľuje snímky WebGL. Animácia vývoja, karta koalície a priblíženie na stranu sú overené v kóde a v Codexových snímkach (`.impeccable/review/parliament-evolution/`, mimo repa), nie na skutočnom telefóne.
+
+## Hlasovania NR SR (2. 10. 2026, Claude)
+
+Režim **Hlasovania** ukazuje skutočné hlasovania 9. volebného obdobia: kreslá vo farbe hlasu, svetelné stĺpiky nad prítomnými, tabuľa s výsledkom a súhrn po kluboch.
+
+**Dáta** (`public/data/hlasovania/index.json` a `<id>.json`):
+- Generuje ich `node scripts/fetch-votes.mjs [--cache ../hlasovania-praca/cache]` z nrsr.sk.
+  - Vyhľadávanie „celku“ a „nedôvery“ za 9. obdobie, stránkovanie cez ASP.NET postback.
+  - Stránky hlasovaní ostávajú v cache mimo repa, ďalší beh dotiahne len nové hlasovania. Jedna požiadavka za sekundu.
+- **Výber podľa názvu hlasovania:**
+  - záverečné hlasovanie o zákone, ústavnom zákone alebo zákone po vete;
+  - samotné hlasovanie o návrhu na vyslovenie nedôvery, nie procedurálne hlasovania k nemu.
+  - Ústavný zákon = „ústavného zákona / ústavnom zákone“, teda nie zákon o Ústavnom súde.
+- Pri každom poslancovi je `PoslanecID` z nrsr.sk, meno, klub v čase hlasovania a hlas (Z, P, ?, N, 0).
+- **Kontrola:** `node scripts/verify-votes.mjs`.
+  - Súčty sedia s oficiálnym súhrnom.
+  - Výsledok zodpovedá väčšine podľa ústavy (`required` v `lib/votes.ts`).
+  - 150 rôznych poslancov a známe kluby.
+  - Nový klub treba doplniť do `CLUBS` a `SEAT_ORDER` v `lib/votes.ts`, inak kontrola zlyhá.
+- **Aktualizácia:** po schôdzi NR SR spustiť `fetch-votes`, potom `verify-votes` a commit. Nové hlasovania sa objavia hneď, model netreba meniť.
+
+**Sála:**
+- **Kreslá:** variant `hlasovanie` mapuje čalúnenie a značku každého kresla na materiály `prechod:<i>` a `prechod-logo:<i>`. Web im nastaví farbu hlasu a textúru loga klubu (`logo:<strana>`); nezaradení sú bez loga.
+- **Stĺpiky:** `stĺpiky 1–15` sú po 10 kreslách zľava doprava, dve prekrížené obojstranné plôšky na kreslo bez normál.
+  - Farbu a priehľadnosť (neprítomný = priehľadný) nesie atlas `hlasovanie:atlas` 32 × 32 s blokom 2 × 2 na kreslo, ktorý web pre každé hlasovanie prekreslí cez `createTexture`.
+  - Mimo variantu je materiál stĺpikov `hlasovanie:skryte`.
+- **Animácia:** stĺpiky majú kanály v klipe `obsadenie`, do 4 s sú zapustené v sedadlách a medzi 4 a 5,5 s sa vysunú. Web v režime Hlasovania pustí klip od 3,9 s (`seekClip`); pri obmedzenom pohybe skočí na koniec.
+- **Ťuknutie:** kreslo sa určí podľa vlastného materiálu. Stĺpik má spoločný materiál, preto sa berie najbližšie kreslo k bodu dotyku (`positionAndNormalFromPoint`).
+- **Rozsadenie:** `seatMembers` v `lib/votes.ts` zoradí kluby v poradí sály z volieb 2023, nezaradených medzi koalíciu a Hnutie Slovensko a v klube podľa hlasu. Je to ilustrácia, nie zasadací poriadok NR SR.
+
+**Neoverené:** Claudov prehliadač nevykresľuje WebGL animácie, takže vlnu stĺpikov a ich vzhľad v pohybe treba pozrieť na telefóne. Farby a výber sú overené cez API model-viewer a statický vzhľad offline renderom.

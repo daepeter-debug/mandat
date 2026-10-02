@@ -20,14 +20,19 @@ for (const [v, variant] of variants.entries()) for (const [i, chair] of chairs.e
     assert.equal(json.materials[map.material].name, prefix + variant.seatParty[i]);
   }
 }
-assert.deepEqual(json.extensions.KHR_materials_variants.variants.map(v => v.name), [...variants.map(v => v.id), 'prechod']);
+assert.deepEqual(json.extensions.KHR_materials_variants.variants.map(v => v.name), [...variants.map(v => v.id), 'prechod', 'hlasovanie']);
 for (const [i, chair] of chairs.entries()) for (const [p, prefix] of [[0, 'prechod:'], [2, 'prechod-logo:']]) {
   const mapping = json.meshes[chair.mesh].primitives[p].extensions.KHR_materials_variants.mappings.find(m => m.variants.includes(variants.length));
   assert.equal(json.materials[mapping.material].name, prefix + i, 'Independent transition material for each physical seat');
 }
 assert.ok(json.materials.some(m => m.name === 'väčšina:svetlo'));
 assert.equal(json.animations[0].name, 'obsadenie');
-assert.equal(json.animations[0].channels.length, 150);
+assert.equal(json.animations[0].channels.length, 165, '150 kresiel + 15 skupín stĺpikov hlasovania');
+// Hlasovanie: kreslá cez materiály prechodu, stĺpiky (15 × 10) skryté mimo variantu, farby z atlasu.
+const vote = variants.length + 1, beams = json.nodes.filter(n => /^stĺpiky \d+$/.test(n.name));
+assert.equal(beams.length, 15);
+for (const [i, chair] of chairs.entries()) assert.equal(json.materials[json.meshes[chair.mesh].primitives[0].extensions.KHR_materials_variants.mappings.find(m => m.variants.includes(vote)).material].name, 'prechod:' + i, 'Kreslo v hlasovaní');
+for (const b of beams) { const p = json.meshes[b.mesh].primitives[0]; assert.equal(json.materials[p.material].name, 'hlasovanie:skryte'); assert.equal(json.materials[p.extensions.KHR_materials_variants.mappings.find(m => m.variants.includes(vote)).material].name, 'hlasovanie:stlpiky'); }
 console.log(`Parlament GLB: ${bytes.length} B, 150 kresiel, farby/logá v oboch variantoch; ${report.issues.numErrors} chýb, ${report.issues.numWarnings} varovaní.`);
 const codes = [...new Set(report.issues.messages.map(m => m.code))];
 console.log('Diagnostika:', codes.join(', ') || 'žiadna');

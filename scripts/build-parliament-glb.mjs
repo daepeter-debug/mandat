@@ -10,7 +10,11 @@
 // Regeneruje aj lokálny HDR. Logá: lib/party-logos.json; historická koalícia 2023 má textový štítok.
 // Oficiálne overenie: node scripts/verify-parliament-glb.mjs. Model musí ostať pod 1 500 000 B.
 // 2. 10. 2026 doplnenie: mäkšie rádiusy čalúnenia, lesk orecha a hlbší statický kontakt pre detail kamery.
+// 2. 10. 2026 (Claude): režim Hlasovania. Variant „hlasovanie“ (kreslá cez materiály prechodu, prefarbí ich web podľa
+// hlasu) a nad každým kreslom svetelný stĺpik vo farbe hlasu: 15 skupín po 10 kreslách, farby z malého atlasu, ktorý
+// web prekreslí pre každé hlasovanie; animácia „obsadenie“ ich v čase 4 – 5,5 s vysunie zo sedadiel vlnou zľava doprava.
 import fs from "node:fs";
+import sharp from "sharp";
 import { parliamentTextures, writeParliamentEnvironment } from './parliament-textures.mjs';
 import { CHAMBER, ROW_DEPTH, chamberSeats, parliamentSeats, allParliamentVariants, parliamentTimeline, parliamentEdges, rowRadius, tierTop } from "../lib/parliament-model.ts";
 
@@ -304,11 +308,44 @@ async function buildGlb() {
     // Textures and geometry are shared; the two factual allocations are left unchanged.
     const sweepMat = material(`prechod:${seat.index}`, colorOf(model.seatParty[seat.index]), { rough: .72, texture: 'fabric' });
     const sweepLogo = material(`prechod-logo:${seat.index}`, '#ffffff', { rough: .85, texture: `logo:${model.seatParty[seat.index]}` });
-    mappings.push({ material: sweepMat, variants: [variants.length] });
-    logoMappings.push({ material: sweepLogo, variants: [variants.length] });
+    // Rovnaké materiály kresla používa aj variant „hlasovanie“ (farbu hlasu a logo klubu nastaví web).
+    mappings.push({ material: sweepMat, variants: [variants.length, variants.length + 1] });
+    logoMappings.push({ material: sweepLogo, variants: [variants.length, variants.length + 1] });
     return node(`kreslo ${seat.index + 1}`, [{ ...prim(upG, mModel), extensions: { KHR_materials_variants: { mappings } } }, prim(baseG, M.chairBase), { ...prim(badgeG, lModel), extensions: { KHR_materials_variants: { mappings: logoMappings } } }],
       { translation: [seat.x, seat.y, seat.z], rotation: [0, Math.sin(seat.yaw / 2), 0, Math.cos(seat.yaw / 2)] });
   });
+
+  // Hlasovanie: svetelné stĺpiky nad kreslami. Atlas 32 × 32 (blok 2 × 2 na kreslo, index kresla po riadkoch po 16)
+  // nesie farbu aj priehľadnosť (neprítomný = priehľadný blok); mimo variantu „hlasovanie“ je stĺpik skrytý.
+  const VOTE = variants.length + 1, GROUP = 10, BEAM_R = .0022, BEAM_H = .03, SINK = .036;
+  const atlas = await sharp({ create: { width: 32, height: 32, channels: 4, background: { r: 255, g: 255, b: 255, alpha: 1 } } }).png().toBuffer();
+  images.push({ name: "hlasovanie:atlas", bufferView: pushView(new Uint8Array(atlas)), mimeType: "image/png" });
+  textures.push({ source: images.length - 1, sampler: 2 });
+  materials.push({ name: "hlasovanie:stlpiky", alphaMode: "MASK", alphaCutoff: .5, doubleSided: true, pbrMetallicRoughness: { baseColorFactor: [1, 1, 1, 1], baseColorTexture: { index: textures.length - 1 }, metallicFactor: 0, roughnessFactor: .55 }, emissiveTexture: { index: textures.length - 1 }, emissiveFactor: [.8, .8, .8] });
+  const beamMat = materials.length - 1;
+  materials.push({ name: "hlasovanie:skryte", alphaMode: "MASK", alphaCutoff: .5, pbrMetallicRoughness: { baseColorFactor: [1, 1, 1, 0], metallicFactor: 0, roughnessFactor: 1 } });
+  const hiddenMat = materials.length - 1;
+  const beamNodes = [];
+  for (let g0 = 0; g0 < chamberSeats.length; g0 += GROUP) {
+    // Stĺpik = dve prekrížené svietiace plôšky (obojstranný materiál), bez normál: svieti vlastnou farbou a je ľahký.
+    const pos = [], uv = [], idx = [];
+    for (const seat of chamberSeats.slice(g0, g0 + GROUP)) {
+      // Stred sedadla (kreslo je natočené o yaw), stĺpik od sedadla nahor.
+      const cx = seat.x + Math.sin(seat.yaw) * .001, cz = seat.z + Math.cos(seat.yaw) * .001, y0 = seat.y + .01, y1 = y0 + BEAM_H;
+      const u = ((seat.index % 16) * 2 + 1) / 32, v = (Math.floor(seat.index / 16) * 2 + 1) / 32;
+      for (const a of [seat.yaw, seat.yaw + Math.PI / 2]) {
+        const dx = Math.cos(a) * BEAM_R, dz = -Math.sin(a) * BEAM_R, base = pos.length / 3;
+        pos.push(cx - dx, y0, cz - dz, cx + dx, y0, cz + dz, cx + dx, y1, cz + dz, cx - dx, y1, cz - dz); uv.push(u, v, u, v, u, v, u, v);
+        idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
+      }
+    }
+    const axis = k => pos.filter((_, i) => i % 3 === k);
+    const P = accessor(new Float32Array(pos), "VEC3", { target: 34962, min: [0, 1, 2].map(k => Math.min(...axis(k))), max: [0, 1, 2].map(k => Math.max(...axis(k))) });
+    const T = accessor(new Float32Array(uv), "VEC2", { target: 34962 }), I = accessor(new Uint16Array(idx), "SCALAR", { target: 34963 });
+    meshes.push({ name: `hlasovanie ${g0 / GROUP + 1}`, primitives: [{ attributes: { POSITION: P, TEXCOORD_0: T }, indices: I, material: hiddenMat, extensions: { KHR_materials_variants: { mappings: [{ material: beamMat, variants: [VOTE] }] } } }] });
+    nodes.push({ name: `stĺpiky ${g0 / GROUP + 1}`, mesh: meshes.length - 1 });
+    beamNodes.push(nodes.length - 1);
+  }
 
   // Animácia obsadenia: kreslo vyrastie (mierne prekmitne) v poradí zľava doprava; potom drží do konca klipu.
   const STEP = 0.012, POP = 0.3, END = 12;
@@ -320,14 +357,22 @@ async function buildGlb() {
     samplers.push({ input, output: out, interpolation: "LINEAR" });
     channels.push({ sampler: samplers.length - 1, target: { node: n, path: "scale" } });
   });
+  // Stĺpiky hlasovania: do 4 s ukryté v sedadlách, potom sa skupiny zľava doprava vysunú (s miernym prekmitom).
+  // Web v režime Hlasovania pustí klip od 3,9 s; inde sú stĺpiky skryté materiálom, ich pohyb nevidno.
+  const beamOut = accessor(new Float32Array([0, -SINK, 0, 0, -SINK, 0, 0, .003, 0, 0, 0, 0, 0, 0, 0]), "VEC3");
+  beamNodes.forEach((n, g) => {
+    const t = 4 + g * .08, input = accessor(new Float32Array([0, t, t + .2, t + .32, END]), "SCALAR", { min: [0], max: [END] });
+    samplers.push({ input, output: beamOut, interpolation: "LINEAR" });
+    channels.push({ sampler: samplers.length - 1, target: { node: n, path: "translation" } });
+  });
 
   const seats = parliamentSeats();
   const json = {
     asset: { version: "2.0", generator: "Mandát · scripts/build-parliament-glb.mjs", extras: { asOf: seats.asOf, updated: seats.updated, seats: seats.seats, seats2023: Object.fromEntries(v2023.ordered.map(m => [m.id, m.seats])), timeline: parliamentTimeline().map(p => ({ id: p.variant.id, date: p.point.date, agencies: p.agencies, missing: p.missing, seats: Object.fromEntries(p.variant.ordered.map(m => [m.id, m.seats])) })), exclusions: parliamentEdges().map(p => ({ id: p.variant.id, excluded: p.party.id, seats: Object.fromEntries(p.variant.ordered.map(m => [m.id, m.seats])) })) } },
     extensionsUsed: ["KHR_materials_variants"],
-    extensions: { KHR_materials_variants: { variants: [...variants.map(v => ({ name: v.id })), { name: 'prechod' }] } },
+    extensions: { KHR_materials_variants: { variants: [...variants.map(v => ({ name: v.id })), { name: 'prechod' }, { name: 'hlasovanie' }] } },
     scene: 0, scenes: [{ name: "Rokovacia sála", nodes: nodes.map((_, i) => i) }],
-    nodes, meshes, materials, images, textures, samplers: [{ magFilter: 9729, minFilter: 9987, wrapS: 10497, wrapT: 10497 }, { magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 }], accessors, bufferViews, buffers: [{ byteLength: offset }],
+    nodes, meshes, materials, images, textures, samplers: [{ magFilter: 9729, minFilter: 9987, wrapS: 10497, wrapT: 10497 }, { magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 }, { magFilter: 9728, minFilter: 9728, wrapS: 33071, wrapT: 33071 }], accessors, bufferViews, buffers: [{ byteLength: offset }],
     animations: [{ name: "obsadenie", samplers, channels }],
   };
   const jsonBuf = Buffer.from(JSON.stringify(json)), jsonPad = Buffer.alloc((4 - (jsonBuf.length % 4)) % 4, 0x20), binBuf = Buffer.concat(bin);

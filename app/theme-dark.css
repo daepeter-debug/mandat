@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (d68e6799e3) — needitovať ručne. Pravidiel: 1408, prefarbených: 1098. */
+/* Generované scripts/build-dark.mjs z 30 súborov (bff23f7ac2) — needitovať ručne. Pravidiel: 1432, prefarbených: 1116. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3736,6 +3736,97 @@ html[data-theme="dark"] .par3d-legend button[data-edge=true] {
 html[data-theme="dark"] .par3d ::selection {
     background: #dcf59b;
     color: #20392f
+}
+html[data-theme="dark"] .par3d-board {
+    background: #101511e6;
+    color: #e8eadf;
+    box-shadow: 0 6px 18px #0005
+}
+html[data-theme="dark"] .par3d-board i {
+    box-shadow: 0 0 6px currentColor
+}
+html[data-theme="dark"] .par3d-board b {
+    color: #fff
+}
+html[data-theme="dark"] .par3d-board strong {
+    background: #d14b4533;
+    color: #ffb3ad
+}
+html[data-theme="dark"] .par3d-board strong[data-passed=true] {
+    background: #2f9e5b33;
+    color: #a4ecbf
+}
+html[data-theme="dark"] .par3d-vote-meta {
+    color: #bccac2
+}
+html[data-theme="dark"] .par3d-vote-rule {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-vote-rule a {
+    color: #91bdeb
+}
+html[data-theme="dark"] .par3d-clubs li>span:first-child {
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-clubs li>span:first-child small {
+    color: #bccac2
+}
+html[data-theme="dark"] .par3d-club-bar {
+    background: #2a2f20
+}
+html[data-theme="dark"] .par3d-clubs li>small {
+    color: #bccac2
+}
+html[data-theme="dark"] .par3d-vote-search {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #bccac2
+}
+html[data-theme="dark"] .par3d-vote-search input {
+    border: 0;
+    background: transparent;
+    color: #d1e7de;
+    outline: none
+}
+html[data-theme="dark"] .par3d-vote-search:focus-within {
+    border-color: #97aba3
+}
+html[data-theme="dark"] .par3d-vote-kinds button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-vote-kinds button small {
+    color: #bccac2
+}
+html[data-theme="dark"] .par3d-vote-kinds button[aria-pressed=true] {
+    border-color: #97aba3;
+    background: #20392f;
+    color: #fff
+}
+html[data-theme="dark"] .par3d-vote-kinds button[aria-pressed=true] small {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .par3d-vote-list button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-vote-list button[aria-pressed=true] {
+    border-color: #97aba3;
+    box-shadow: inset 0 0 0 1px #20392f;
+    background: #22251c
+}
+html[data-theme="dark"] .par3d-vote-result {
+    color: #f19889
+}
+html[data-theme="dark"] .par3d-vote-result[data-passed=true] {
+    color: #a8e8c0
+}
+html[data-theme="dark"] .par3d-vote-more {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
 }
 html[data-theme="dark"] .pc-head h2 {
     color: #d1e7de

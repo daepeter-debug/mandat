@@ -1,5 +1,25 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Parlament v 3D: skutočné hlasovania NR SR (Claude)
+
+Nový režim **Hlasovania** v 3D sále: vyberieš hlasovanie zo zoznamu a sála ukáže, ako hlasoval každý zo 150 poslancov.
+- Kreslá sa rozsvietia farbou hlasu: za zelená, proti červená, zdržanie sa žltá, nehlasovanie sivá. Neprítomní ostanú tmaví.
+- Nad prítomnými vyrastú svetelné stĺpiky vo vlne zľava doprava, hore je tabuľa ako v rokovacej sále („Za 90 · Proti 7 · … · Návrh prešiel“).
+- Na operadlách sú logá klubov v čase hlasovania. Ťuknutie na kreslo ukáže meno poslanca a jeho hlas.
+- Pod sálou je pravidlo väčšiny podľa Ústavy SR, súhrn po kluboch a odkaz na nrsr.sk. Zoznam má vyhľadávanie bez diakritiky a filtre podľa druhu.
+
+**Dáta:** 345 hlasovaní 9. volebného obdobia (od 25. 10. 2023 do 1. 10. 2026) z nrsr.sk (`scripts/fetch-votes.mjs`, `public/data/hlasovania/`).
+- **Výber podľa pravidiel, nie ručne:** záverečné hlasovania o zákonoch (315) a ústavných zákonoch (3), štátne rozpočty (3), opätovné hlasovania po vete prezidenta (13) a hlasovania o nedôvere vláde alebo ministrom (11).
+- **Kontrola (`scripts/verify-votes.mjs`):**
+  - súčty za, proti, zdržalo sa a nehlasovalo sa pri každom hlasovaní zhodujú so súhrnom NR SR;
+  - výsledok vždy zodpovedá väčšine, ktorú vyžaduje ústava: zákon nadpolovičná väčšina prítomných, ústavný zákon 90, zákon po vete a nedôvera 76.
+- **Výnimka v súhrne NR SR:** od 9. 9. do 22. 10. 2025 súhrn ráta 152 poslancov, neprítomných o dvoch viac. Počítame zo zoznamu 150 mien, rovnako ako v kreslách.
+- **Rozsadenie:** poslanci sedia podľa klubov v poradí sály z volieb 2023 (SMER, HLAS, SNS, nezaradení, SLOVENSKO, PS, KDH, SaS). Nie je to skutočný zasadací poriadok NR SR.
+
+**Model:** variant `hlasovanie` (kreslá cez materiály prechodu) a 15 skupín svetelných stĺpikov s farbami z atlasu 32 × 32; animácia `obsadenie` ich vysunie v čase 4 – 5,5 s. GLB 1 444 616 B, Khronos 0 chýb.
+
+**Neoverené:** vykreslenie 3D na telefóne. Prehliadač v Claudovom okne nevykresľuje WebGL animácie. Farby kresiel, logá, atlas a výber sú overené cez API model-viewer, vzhľad offline renderom.
+
 ## 2. 10. 2026 — Parlament v 3D: vývoj 2026, zdieľanie koalície a strany na hrane (Codex, dokončil Claude)
 
 Päť rozšírení podľa zadania `outputs/PROMPT-codex-parlament-3d-dalsie.md`. Codex ich naprogramoval a otestoval, no pri záverečných snímkach narazil na limit používania. Kontroly, dokumentáciu a nasadenie dokončil Claude.
