@@ -6,6 +6,7 @@ import {
   CONSTITUTIONAL, FREE_COUNT, MAJORITY, MAX_WORDS, POOL_SIZE, SEATS, addDays, bestCoalition, canForm, checkWord, emptySave, evaluate, goalsOf, mandates, parseHistory,
   parsePuzzle, parseSave, record, remaining, seatsFor, shareText, slovakDay, starsOf, streak, values,
 } from "../lib/word-game.ts";
+import { GEOGRAPHY } from "./word-forms.mjs";
 
 // ── Mandáty a kontrola slova ───────────────────────────────────────────────────────────────────────
 assert.equal(Object.keys(values).length, 40, "40 písmen slovenskej abecedy (bez q, w, x a spojeniek dz, dž, ch)");
@@ -69,6 +70,9 @@ assert.match(text.split("\n")[1], /^[🟩🟦🟧🟪 ]+$/u, "Zdieľanie neprezr
 assert.equal([...text.split("\n")[1].replaceAll(" ", "")].length, POOL_SIZE, "Štvorček za každé písmeno");
 
 // ── Všetky vygenerované zadania ────────────────────────────────────────────────────────────────────
+// Názvy štátov a svetadielov platia (malými písmenami), mená ľudí a mestá nie.
+const countries = new Set([...GEOGRAPHY].map(g => g.toLocaleLowerCase("sk"))), countryHits = new Set();
+assert(countries.has("omán") && countries.has("slovensko") && !countries.has("bratislava"), "Zoznam štátov a svetadielov");
 const BLOCKED = /kurv|jeb|kokot|^hovn|sračk|buzerant|cigán|negr(?!am)|židák|^aids|^žid$|^sps$|^prib$|^zav$|^kotv$|^mazaco$|^hahoj$|^hotent$|^príd$|tmme$|^neazorsk|^nemaltsk|^nevaduzsk/;
 const days = readdirSync(dir).filter(f => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).map(f => f.slice(0, 10)).sort();
 assert(days.length >= 365, `Aspoň rok denných zadaní (je ${days.length})`);
@@ -91,10 +95,12 @@ for (const [index, [name, key]] of files.entries()) {
   if (index % 20 === 0) assert.equal(bestCoalition(p.letters, p.dictionary, p.dictionary.words.length).seats, p.best.seats, `Zadanie ${name}: najsilnejšia koalícia je presná`);
   words += p.dictionary.words.length; biggest = Math.max(biggest, statSync(url).size);
   stats.best.push(p.best.seats); stats.cover.push(p.cover.seats);
+  for (const w of p.dictionary.words) if (countries.has(w)) countryHits.add(w);
 }
 assert(biggest <= 16_000, `Súbor zadania najviac 16 kB (najväčší ${biggest} B)`);
 const source = readFileSync(new URL("ZDROJ.txt", dir), "utf8");
 assert(source.includes("MPL 1.1") && source.startsWith("﻿"), "Zdroj slovníka a licencia sú pri dátach (s BOM, inak prehliadač pokazí diakritiku)");
 const med = a => a.slice().sort((x, y) => x - y)[Math.floor(a.length / 2)];
+assert(countryHits.size >= 20, `Názvy štátov sú v zadaniach (${countryHits.size})`);
 const ustavna = stats.cover.filter(s => s >= CONSTITUTIONAL).length;
 console.log(`PASS words: ${days.length} denných (${days[0]} – ${days.at(-1)}) + ${FREE_COUNT} voľných zadaní, ${Math.round(words / files.length)} slov na zadanie, najlepšia koalícia medián ${med(stats.best)}, všetkých 12 písmen medián ${med(stats.cover)} (ústavná väčšina z 12 písmen v ${ustavna} zadaniach), najväčší súbor ${(biggest / 1024).toFixed(1)} kB; mandáty, kontrola slova, hviezdy, uloženie, séria, zdieľanie`);

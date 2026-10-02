@@ -203,11 +203,11 @@ function Game({ puzzle, day, mode, onFree, onDaily }: { puzzle: Puzzle; day: str
       <ul>
         <li>Mandáty slova = súčet bodov jeho písmen × (počet písmen − 1). Slovo zo 6 písmen so súčtom 11 bodov dá 55 mandátov.</li>
         <li>Body písmen: 1 – a o e i n s t r v · 2 – l k d m p u j · 3 – z y h b c á í · 4 – č š ž ý ú é ť ľ · 5 – ň ď ô ä ó ĺ ŕ f g.</li>
-        <li>Slovo musí mať aspoň 3 písmená. Platia všetky tvary bežných slovenských slov (pády, osoby, časy, stupne), nie vlastné mená, skratky, citoslovcia ani vulgarizmy.</li>
+        <li>Slovo musí mať aspoň 3 písmená. Platia všetky tvary bežných slovenských slov (pády, osoby, časy, stupne) aj názvy štátov a svetadielov (omán, v ománe). Neplatia mená ľudí, mestá, skratky, citoslovcia ani vulgarizmy.</li>
         <li>Koalícia má najviac {MAX_WORDS} slová z {POOL_SIZE} písmen. Slovo môžeš kedykoľvek vyradiť a jeho písmená použiť inak.</li>
         <li>Ciele sa zbierajú počas hry: väčšinu a ústavnú väčšinu ti prinesie najsilnejšia koalícia, tretiu hviezdu aj iná koalícia, ktorá použije všetkých 12 písmen a má väčšinu.</li>
         <li>Písmená dňa sú pre všetkých rovnaké a každý deň sa dajú splniť všetky tri ciele. Výsledky a séria sa ukladajú len v tomto zariadení.</li>
-        <li>Slovník: slovenský slovník sk-spell (projekt LibreOffice), licencia MPL 1.1, bez vlastných mien, skratiek a vulgarizmov. <a href="/data/koalicia/ZDROJ.txt" target="_blank" rel="noopener">Zdroj a úpravy</a>.</li>
+        <li>Slovník: slovenský slovník sk-spell (projekt LibreOffice), licencia MPL 1.1, z vlastných mien len štáty a svetadiely, bez skratiek a vulgarizmov. <a href="/data/koalicia/ZDROJ.txt" target="_blank" rel="noopener">Zdroj a úpravy</a>.</li>
       </ul>
     </details>
   </section>;

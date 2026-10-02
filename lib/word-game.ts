@@ -50,7 +50,7 @@ export function checkWord(word: string, pool: readonly string[], words: readonly
   if (words.length >= MAX_WORDS) return { ok: false, reason: `Koalícia môže mať najviac ${MAX_WORDS} strany. Vráť niektoré slovo.` };
   if (words.map(normalize).includes(w)) return { ok: false, reason: "Toto slovo už v koalícii je." };
   if (!canForm(w, remaining(pool, words))) return { ok: false, reason: "Na toto slovo nemáš voľné písmená." };
-  if (!dictionary.has(w)) return { ok: false, reason: "Toto slovo v slovníku nemáme. Platia všetky tvary bežných slov, nie mená a skratky." };
+  if (!dictionary.has(w)) return { ok: false, reason: "Toto slovo v slovníku nemáme. Platia všetky tvary bežných slov aj názvy štátov, nie mená ľudí, mestá a skratky." };
   return { ok: true, seats: seatsFor(w) };
 }
 export function evaluate(pool: readonly string[], words: readonly string[]) {

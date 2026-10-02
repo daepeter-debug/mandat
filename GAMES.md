@@ -62,10 +62,10 @@ Slovná hra v `?v=game&g=words`: z 12 písmen poskladať koalíciu najviac štyr
   - 200 voľných `public/data/koalicia/volne/<n>.json`; hra ponúkne najprv tie, ktoré hráč ešte neotvoril;
   - každé zadanie má aspoň 120 slov, najlepšiu koalíciu aspoň 100 mandátov a všetkých 12 písmen sa dá použiť s väčšinou (tri ciele vždy splniteľné).
 - **Slovník:** sk-spell 2.4.8 (LibreOffice dictionaries, licencia MPL 1.1, zdroj v `public/data/koalicia/ZDROJ.txt`). Do repa ide len odvodený zoznam slov v zadaniach, nie slovník.
-  - `scripts/word-forms.mjs` rozbalí tvary (koncovky, ne-, naj-) a vynechá vlastné mená, skratky, citoslovcia, vulgarizmy a nadávky;
+  - `scripts/word-forms.mjs` rozbalí tvary (koncovky, ne-, naj-) a vynechá vlastné mená (okrem jednoslovných štátov a svetadielov, `GEOGRAPHY`), skratky, citoslovcia, vulgarizmy a nadávky;
   - opravuje chyby pravidiel slovníka: rozkazy bez slabiky (zabi nie zab, pomsti nie pomsť), nesprávne skupiny spoluhlások (kotvi nie kotv), príslovky typu pso či sovietsko a zápory prídavných mien od miestnych mien (nemaltský, neazorský).
 - **Nové zadania:** stiahnuť `sk_SK.aff` a `sk_SK.dic` z https://github.com/LibreOffice/dictionaries/tree/master/sk_SK do priečinka mimo repa a spustiť
-  `node --max-old-space-size=6144 scripts/build-word-game.mjs <priečinok> 2028-12-31 200` (približne 7 minút). Generovanie je deterministické; existujúce dni sa prepíšu rovnakými písmenami len pri rovnakom slovníku a filtri.
+  `node --max-old-space-size=6144 scripts/build-word-game.mjs <priečinok> 2028-12-31 200` (približne 7 minút). Existujúce zadania si nechajú písmená (hráči ich mohli hrať), prepočítajú sa len slová a koalície; nové dni sa generujú deterministicky zo zrnka dátumu. Úplne nové písmená všade: `--fresh`.
 - **Uloženie v zariadení:** `mandat:words:v1:day:<deň>` a `…:free:<n>` (slová, najsilnejšia koalícia, koalícia zo všetkých písmen, odhalenie), `…:history` (denné výsledky pre sériu dní) a `…:free-current`. Čítanie je prísne: slová sa overia proti zadaniu a najlepší výsledok sa prepočíta.
 - **Zdieľanie:** hlavička s dátumom, mandáty, hviezdy a farebné štvorčeky za písmená (zelená, modrá, oranžová, fialová podľa strán), bez slov.
 - **Grafika pre Codex:** polkruh snemovne a kachličky sú funkčné, ale jednoduché. Chýba animácia pridania slova (kreslá sa vyplnia farbou strany), oslava väčšiny a ústavnej väčšiny a titulná grafika karty v Herni (`.games-words-art`).

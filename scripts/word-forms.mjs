@@ -1,6 +1,6 @@
 // Tvary slov zo slovenského slovníka sk-spell (Hunspell .aff/.dic) pre Koalíciu slov.
 // Rozbalí koncovky (SFX), predponu ne- (PFX N) a 3. stupeň naj-/najne- (PFX F, cirkumfix s). Vynechá
-// vlastné mená (veľké písmeno), skratky, citoslovcia, slová s cudzími znakmi a vulgarizmy (zoznamy nižšie)
+// vlastné mená (veľké písmeno) okrem štátov a svetadielov, skratky, citoslovcia, slová s cudzími znakmi a vulgarizmy (zoznamy nižšie)
 // a tvary, ktoré pravidlá slovníka tvoria chybne (pozri imperativeOk a adverbOk).
 // Použitie: import { readForms } from "./word-forms.mjs"; const { forms, stats } = readForms("<priečinok so sk_SK.aff a sk_SK.dic>").
 import fs from "node:fs";
@@ -16,6 +16,17 @@ const BLOCK_ROOTS = /kurv|kurev|(?<![aáäeéiíoóôuúyýš])pič|jeb|chuj|kok
 const BLOCK_LEMMAS = /^(?:aids|aidsový|aidsy|žid|židia|prd|prdel)$|^(?:vy|na|po|za|o|pre|roz|ob|od|do|pri|u)?(?:šťať|drístať|prdnúť|prdieť)$/;
 // Holé heslá, ktoré sú useknuté časti slov, skratky bez bodky alebo citoslovcia bez označenia.
 const BAD_BARE = new Set("ahá jáj uhú fiu ajaj ejha spôs neskl potrm rehabilita týžd vozvysok grmanu anatomicko importno duí arí prí telzon nedostato hahoj hotent príd daždi tromp press".split(" "));
+// Vlastné mená neplatia, výnimkou sú jednoslovné názvy štátov a svetadielov so všetkými tvarmi (omán, ománu, v ománe).
+export const GEOGRAPHY = new Set(("Afganistan Albánsko Alžírsko Andorra Angola Anglicko Argentína Arménsko Austrália Azerbajdžan Bahamy Bahrajn Bangladéš " +
+  "Barbados Belgicko Belize Benin Bhután Bielorusko Bolívia Bosna Botswana Brazília Británia Brunej Bulharsko Burundi Cyprus Čad Česko Čile Čína Dánsko " +
+  "Dominika Džibutsko Egypt Ekvádor Eritrea Estónsko Etiópia Fidži Filipíny Fínsko Francúzsko Gabon Gambia Ghana Grécko Grenada Gruzínsko Guatemala Guinea " +
+  "Guyana Haiti Hercegovina Holandsko Honduras Chorvátsko India Indonézia Irak Irán Írsko Island Izrael Jamajka Japonsko Jemen Jordánsko Kambodža Kamerun " +
+  "Kanada Kapverdy Katar Kazachstan Keňa Kirgizsko Kolumbia Komory Kongo Kórea Kosovo Kostarika Kuba Kuvajt Laos Lesotho Libanon Libéria Líbya " +
+  "Lichtenštajnsko Litva Lotyšsko Luxembursko Macedónsko Madagaskar Maďarsko Malajzia Maldivy Mali Malta Maroko Maurícius Mauritánia Mexiko Mikronézia " +
+  "Mjanmarsko Moldavsko Monako Mongolsko Mozambik Namíbia Nemecko Nepál Niger Nigéria Nikaragua Nórsko Omán Pakistan Palestína Panama Paraguaj Peru Poľsko " +
+  "Portugalsko Rakúsko Rumunsko Rusko Rwanda Salvádor Samoa Senegal Seychely Singapur Slovensko Slovinsko Somálsko Srbsko Sudán Surinam Sýria Škótsko " +
+  "Španielsko Švajčiarsko Švédsko Tadžikistan Taliansko Tanzánia Thajsko Togo Tonga Tunisko Turecko Turkménsko Uganda Ukrajina Uruguaj Uzbekistan Vatikán " +
+  "Venezuela Vietnam Zambia Zéland Afrika Amerika Antarktída Ázia Európa Oceánia").split(" "));
 // Holé heslá (bez koncoviek aj bez druhu slova) sú zväčša platné tvary, ale medzi krátkymi sú aj skratky bez bodky
 // (adj, okt, tzn), citoslovcia (aha, fuj) a anglické slová (and, the). Krátke holé heslo prejde iba s dlhou samohláskou
 // alebo dvojhláskou (rúk, žien, nôh, kôr) alebo zo zoznamu bežných krátkych slov; holé heslo bez samohlásky nikdy.
@@ -90,14 +101,16 @@ export function readForms(dir) {
     if (!line.trim()) continue;
     const [entry, ...morph] = line.split(/\s+/), [word, flags = ""] = entry.split("/");
     if (!word) continue;
-    if (word[0] !== word[0].toLocaleLowerCase("sk")) { stats.skipped.proper++; continue; }
-    if (![...word].every(c => allowed.has(c))) { stats.skipped.letters++; continue; }
+    const geo = GEOGRAPHY.has(word);
+    if (!geo && word[0] !== word[0].toLocaleLowerCase("sk")) { stats.skipped.proper++; continue; }
+    if (![...word.toLocaleLowerCase("sk")].every(c => allowed.has(c))) { stats.skipped.letters++; continue; }
+    if (geo) stats.geography = (stats.geography ?? 0) + 1;
     if (morph.some(m => m === "po:acronym" || m === "po:interjection")) { stats.skipped.pos++; continue; }
     if (BLOCK_ROOTS.test(word) || BLOCK_LEMMAS.test(word)) { stats.skipped.blocked++; if (stats.blockedSample.length < 40) stats.blockedSample.push(word); continue; }
     // Skratka zapísaná ako tvar plného slova (odd → oddelenie).
     const stem = morph.find(m => m.startsWith("st:"))?.slice(3);
     if (stem && stem.length > word.length + 2 && stem.startsWith(word)) { stats.skipped.abbreviation++; continue; }
-    if (!flags && !morph.some(Boolean) && (!bareOk(word) || BAD_BARE.has(word))) { stats.skipped.bare++; continue; }
+    if (!geo && !flags && !morph.some(Boolean) && (!bareOk(word) || BAD_BARE.has(word))) { stats.skipped.bare++; continue; }
     stats.lemmas++;
     const own = [word], negate = flags.includes("N") && !fromProper(word);
     if (flags.includes("N") && !negate) stats.dropped.properNegation = (stats.dropped.properNegation ?? 0) + 1;
@@ -113,11 +126,13 @@ export function readForms(dir) {
       }
     }
     if (negate && N) for (const p of N.rules) own.push(pfx(p, word));
-    for (const f of own) {
+    for (const raw of own) {
+      const f = geo ? raw.toLocaleLowerCase("sk") : raw;   // názov štátu sa v hre píše malými písmenami
       if (BLOCK_ROOTS.test(f) || ![...f].every(c => allowed.has(c))) continue;
       if (!syllabic(f)) { stats.dropped.syllable++; continue; }
       forms.add(f);
     }
   }
+  stats.geographyMissing = [...GEOGRAPHY].filter(g => !lemmas.has(g));
   return { forms, stats };
 }
