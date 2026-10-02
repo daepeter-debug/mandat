@@ -15,9 +15,10 @@ const legend:ItemId[]=["house","school","library","clinic","park","garden","mark
 const focusable='button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),summary,[tabindex="0"]';
 
 /** The same mounted map and game controls expand; the town and pending move never get copied. */
-export default function RepublicPlayfield({town,plan,blocked,onAction,children}:{
-  town:RepublicState;plan:ReturnType<typeof playerPlan>;blocked:boolean;
-  onAction:(a:PlanAction)=>void;children:ReactNode;
+export default function RepublicPlayfield({town,plan,blocked,onAction,children,taskContent,resources,kind="town"}:{
+  town:RepublicState;plan?:ReturnType<typeof playerPlan>;blocked:boolean;
+  onAction?:(a:PlanAction)=>void;children:ReactNode|((expanded:boolean)=>ReactNode);
+  taskContent?:ReactNode;resources?:ReactNode;kind?:"town"|"festival";
 }) {
   const [expanded,setExpanded]=useState(false),[tab,setTab]=useState<"tasks"|"legend">("tasks"),[rail,setRail]=useState(true);
   const host=useRef<HTMLDivElement>(null),closeButton=useRef<HTMLButtonElement>(null),trigger=useRef<HTMLElement|null>(null);
@@ -64,30 +65,30 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children}:
       document.body.classList.remove("republic-playfield-open");
       window.scrollTo({top:scrollY,behavior:"instant"});
       // The toolbar trigger is conditionally rendered, so closing may create a new node.
-      const returnTo=trigger.current?.isConnected?trigger.current:el.querySelector<HTMLButtonElement>("[data-playfield-open]");
+      const returnTo=trigger.current?.isConnected?trigger.current:el.querySelector<HTMLButtonElement>("[data-playfield-open]")??el.querySelector<HTMLButtonElement>("[data-playfield-return]");
       returnTo?.focus({preventScroll:true});
     };
   },[expanded,close]);
-  const items=[plan.step,...plan.tasks,plan.parcel,plan.story].filter((x):x is PlanItem=>!!x);
+  const items=[plan?.step,...(plan?.tasks??[]),plan?.parcel,plan?.story].filter((x):x is PlanItem=>!!x);
   function act(item:PlanItem){
-    if(["story","branch","final"].includes(item.action.type)){close();requestAnimationFrame(()=>onAction(item.action));}
-    else onAction(item.action);
+    if(["story","branch","final"].includes(item.action.type)){close();requestAnimationFrame(()=>onAction?.(item.action));}
+    else onAction?.(item.action);
   }
   return <PlayfieldContext.Provider value={{expanded,open}}>
-    <div ref={host} className="republic-layout republic-playfield" data-expanded={expanded||undefined} data-rail={rail||undefined} role={expanded?"dialog":undefined} aria-modal={expanded?true:undefined} aria-label={expanded?"Herný plán Malej republiky":undefined}>
+    <div ref={host} className={`${kind==="festival"?"festival-playfield":"republic-layout"} republic-playfield`} data-kind={kind} data-expanded={expanded||undefined} data-rail={rail||undefined} role={expanded?"dialog":undefined} aria-modal={expanded?true:undefined} aria-label={expanded?"Herný plán Malej republiky":undefined}>
       {expanded&&<>
         <header className="playfield-header">
           <button type="button" onClick={()=>setRail(v=>!v)} aria-label={rail?"Zbaliť ľavý panel":"Rozbaliť ľavý panel"} aria-expanded={rail}>{rail?<PanelLeftClose size={20}/>:<PanelLeftOpen size={20}/>}</button>
           <strong>{town.name}</strong>
-          <div className="playfield-funds"><span><Coins size={15} aria-hidden="true"/><b>{town.coins}</b><span className="sr-only">mincí</span></span><span><Boxes size={15} aria-hidden="true"/><b>{town.materials}</b><span className="sr-only">materiálov</span></span></div>
+          <div className="playfield-funds">{resources??<><span><Coins size={15} aria-hidden="true"/><b>{town.coins}</b><span className="sr-only">mincí</span></span><span><Boxes size={15} aria-hidden="true"/><b>{town.materials}</b><span className="sr-only">materiálov</span></span></>}</div>
           <button ref={closeButton} type="button" onClick={close} aria-label="Zavrieť herný plán"><Minimize2 size={20}/></button>
         </header>
         <aside className="playfield-rail" aria-label="Úlohy a legenda herného plánu">
           <nav aria-label="Panel herného plánu"><button type="button" aria-pressed={tab==="tasks"} aria-label="Úlohy" onClick={()=>{setTab("tasks");setRail(true);}}><ListTodo size={18}/><span>Úlohy</span></button><button type="button" aria-pressed={tab==="legend"} aria-label="Legenda" onClick={()=>{setTab("legend");setRail(true);}}><BookOpen size={18}/><span>Legenda</span></button></nav>
           {rail&&<div className="playfield-rail-content">
-            {tab==="tasks"?<>
+            {tab==="tasks"?taskContent??<>
               <h2>Dnes v štvrti</h2><p className="playfield-project">Projekt <b>{town.completed.length}/7</b></p>
-              {plan.blockers.map(b=><p className="playfield-blocker" key={b.key}>{b.title} {b.detail}</p>)}
+              {plan?.blockers.map(b=><p className="playfield-blocker" key={b.key}>{b.title} {b.detail}</p>)}
               <ol className="playfield-tasks">{items.map(item=><li key={item.key} data-status={item.status}>
                 <div className="playfield-task-title">{item.status==="done"||item.status==="later"?<Check size={14} aria-hidden="true"/>:item.status==="ready"?<Sparkles size={14} aria-hidden="true"/>:null}<h3>{item.title}</h3></div>
                 <p>{item.detail}{item.progress&&` (${item.progress.have}/${item.progress.need})`}</p>
@@ -97,13 +98,13 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children}:
             </>:<>
               <h2>Čo je na mape</h2><p>Ťukni na budovu a pozri jej účinky.</p>
               <ul className="playfield-legend">{legend.map(id=><li key={id}><RepublicArt id={id} branch={id==="station"?town.branch:null} finished={town.completed.includes("opening")}/><div><b>{catalog[id].name}</b><span>{info[id].tagline}</span></div></li>)}</ul>
-              <p>Hnedá bodka: chýba cesta. Bublina nad domom: prianie susedov. Fajka pri stavaní: odporúčané miesto.</p>
+              <p>{kind==="festival"?"Označené políčka: dostupné miesto programu alebo zázemia. Výber na mape ešte potvrď v Úlohách. Hnedá bodka: chýba cesta.":"Hnedá bodka: chýba cesta. Bublina nad domom: prianie susedov. Fajka pri stavaní: odporúčané miesto."}</p>
             </>}
             <button type="button" className="playfield-return" onClick={close}><ChevronLeft size={14}/>Späť na stránku</button>
           </div>}
         </aside>
       </>}
-      {children}
+      {typeof children==="function"?children(expanded):children}
     </div>
   </PlayfieldContext.Provider>;
 }

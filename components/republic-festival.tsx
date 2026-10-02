@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, Check, CloudRain, Flag, List, Map, Music, BookOpen, Utensils, Star, Tent, Armchair, Users, Zap, Undo2, Share2, Download, Play } from "lucide-react";
 import RepublicMap from "@/components/republic-map";
+import RepublicPlayfield from "@/components/republic-playfield";
 import RepublicArt from "@/components/republic-art";
 import { catalog, distance, type Point, type RepublicState } from "@/lib/republic";
 import { activeFestival, preparationImpact, preparedMood, festivalLayoutReady, festivalBrief, journeyDays, festivalBudget, festivalResult, festivalSites, incidents, neighbours, prepSites, responses, siteReport, supports, themes, type FestivalCommand, type Mood, type Support, type Theme } from "@/lib/republic-festival";
@@ -24,6 +25,13 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
   const [objectId,setObjectId]=useState<string|null>(null);
   const [replay,setReplay]=useState(0),[exporting,setExporting]=useState(false),[card,setCard]=useState<{blob:Blob;url:string;filename:string}|null>(null),[cardError,setCardError]=useState("");
   const capture=useRef<SVGSVGElement|null>(null);
+  const root=useRef<HTMLElement|null>(null);
+  function scrollToPart(selector:string,block:ScrollLogicalPosition="start"){
+    const el=root.current?.querySelector<HTMLElement>(selector);if(!el)return;
+    const full=root.current?.querySelector<HTMLElement>(".republic-playfield[data-expanded]");
+    if(full){const rail=el.closest<HTMLElement>(".playfield-rail-content");if(rail)rail.scrollTo({top:el.offsetTop-rail.offsetTop-8,behavior:"instant"});}
+    else el.scrollIntoView({block,behavior:"instant"});
+  }
   const mounted=useRef(false);
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
   const blocked=saving||exporting;
@@ -44,13 +52,13 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
     : town.placed.map(p=>({key:p.instanceId,point:p,name:catalog[p.id].name,role:catalog[p.id].kind==="decoration"?"Ozdoba štvrte":"Miesto v štvrti"}));
   const EventIcon=f.incident==="rain"?CloudRain:f.incident==="power"?Zap:Users;
   function clearCard(){setCard(null);setCardError("");}
-  async function send(c:FestivalCommand){if(await onCommand(c)){setTarget(null);setSupport(null);setAnswer(null);setObjectId(null);clearCard();const newDay=c.type==="festival-next"||c.type==="festival-journey"||c.type==="festival-start";requestAnimationFrame(()=>document.querySelector(newDay?".festival-heading":c.type==="festival-response"?".festival-scene":".festival-decisions")?.scrollIntoView({block:"start",behavior:"instant"}));}}
+  async function send(c:FestivalCommand){if(await onCommand(c)){setTarget(null);setSupport(null);setAnswer(null);setObjectId(null);clearCard();const newDay=c.type==="festival-next"||c.type==="festival-journey"||c.type==="festival-start";requestAnimationFrame(()=>scrollToPart(newDay?".festival-decisions":c.type==="festival-response"?".festival-scene":".festival-decisions"));}}
   async function makeCard(){
     const data=festivalPostcardData(town);if(!data||exporting)return;
     setList(false);setObjectId(null);setExporting(true);clearCard();
     try {
       await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
-      document.querySelector(".festival-scene")?.scrollIntoView({block:"start",behavior:"instant"});
+      scrollToPart(".festival-scene");
       await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
       if(!capture.current)throw new Error("Najprv otvor mapu slávnosti a skús znova.");
       const blob=await festivalPostcardImage(capture.current,data);
@@ -74,18 +82,10 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
     // Platné stanovište má prednosť (námestie môže byť miestom programu); ostatné budovy iba skúmame.
     if(object&&!available){setObjectId(old=>old===object.instanceId?null:object.instanceId);setTarget(null);return;}
     setObjectId(null);setTarget(p);
-    if(available)requestAnimationFrame(()=>document.querySelector(".festival-place-confirm")?.scrollIntoView({block:"center",behavior:"instant"}));
+    if(available)requestAnimationFrame(()=>scrollToPart(".festival-place-confirm","center"));
   }
-  function selectSupport(id:Support){setSupport(id);setTarget(null);setObjectId(null);requestAnimationFrame(()=>document.querySelector(".festival-scene")?.scrollIntoView({block:"start",behavior:"instant"}));}
-  return <section className="festival" aria-label={journey?"Príbeh štvrte: sedem herných dní":"Denná výzva: susedská slávnosť"} onKeyDown={e=>{if(e.key==="Escape")setObjectId(null);}}>
-    <header className="festival-heading"><div><h2>{brief.title}</h2><p>{journey?`Príbeh štvrte · deň ${stage+1} zo 7 · bez čakania na zajtra`:`Denná výzva na ${Number(f.day.slice(8,10))}. ${Number(f.day.slice(5,7))}. ${f.day.slice(0,4)}`} · postup sa ukladá</p></div><button disabled={exporting} onClick={onClose}><ArrowLeft size={16}/> Späť do štvrte</button></header>
-    {journey&&<div className="festival-journey"><div><ol aria-label="Sedem dní príbehu">{journeyDays.map((d,i)=><li key={d.title} aria-current={i===stage&&!graduated?"step":undefined} className={(town.festivalJourney?.scores[i]??0)===3?"is-complete":""} title={d.title}><span>{(town.festivalJourney?.scores[i]??0)===3?<Check size={15}/>:i+1}</span><span className="sr-only">{d.title}: {(town.festivalJourney?.scores[i]??0)===3?"splnené":i===stage?"aktuálny deň":"zamknuté"}</span></li>)}</ol><p>{graduated?"Sedem dní hotových. Štvrť má svoju slávnostnú bránu.":"Splň 3 ciele a posuň sa na ďalší herný deň. Kalendár ani zásielky tým nemeníš."}</p></div><div className="festival-journey-prize"><RepublicArt id="ceremonial-gate"/><strong>Slávnostná brána<span>Odmena za 7 dní</span></strong></div></div>}
-    <p className="festival-story">{brief.story}</p>
-    <div className="festival-mission"><Flag size={21}/><div><strong>{brief.goal}</strong><span>Dve rôzne stanovištia · {brief.happy} spokojní susedia · rezerva aspoň {brief.reserve} {brief.reserve===1?"bod":"body"}. Spokojný sused = 3 z 5.</span></div><span className="festival-budget"><b>{budget}</b> / {brief.budget}<span>prípravné body</span></span></div>
-    <ol className="festival-steps" aria-label="Priebeh výzvy">{["Program","Miesto","Zázemie","Udalosť","Slávnosť"].map((name,i)=><li key={name} aria-current={i===phase?"step":undefined} className={i<phase?"is-done":""}>{i<phase?<Check size={14}/>:<span>{i+1}</span>}{name}{i===2&&phase===2&&<b>{f.preparations.length}/2</b>}</li>)}</ol>
-    <div className="festival-readiness" aria-label="Spokojnosť susedov"><span>{done?"Výsledná spokojnosť":preview?"Po vybranom riešení":phase===3?"Po príchode komplikácie":"Spokojnosť pred komplikáciou"}</span>{neighbours.map((name,i)=><div key={name}><b>{name}</b><span>{Math.max(0,Math.min(5,moodNow[i]))}/5{moodNow[i]>5?` (+${moodNow[i]-5} rezerva)`:""}</span><progress max={5} value={Math.max(0,Math.min(5,moodNow[i]))} aria-label={`Spokojnosť: ${name}`}/></div>)}</div>
-    <div className="festival-layout" data-complete={done}>
-      <div className="festival-decisions" aria-live="polite">
+  function selectSupport(id:Support){setSupport(id);setTarget(null);setObjectId(null);requestAnimationFrame(()=>scrollToPart(".festival-scene"));}
+  const decisions=(<div className="festival-decisions" aria-live="polite">
         {phase===0&&<><h3>Čím pozveme susedov von?</h3><p>Nina: „Jedno popoludnie, tri predstavy. Vyber program, okolo ktorého postavíme celý deň.“</p><div className="festival-options">{(Object.keys(themes) as Theme[]).map(id=>{const t=themes[id],Icon=icons[id];return <button key={id} disabled={blocked} onClick={()=>void send({type:"festival-theme",theme:id})}><Icon size={23}/><span><b>{t.name}</b><small>{t.description}</small><Impact mood={t.mood}/></span><strong>{t.cost}<small>body</small></strong></button>;})}</div><p className="festival-tip">Každý sused začína s 2 bodmi spokojnosti. Miesto, zázemie aj nečakaná udalosť výsledok zmenia.</p></>}
         {phase===1&&<><h3>Kam dáme {f.theme==="books"?"čítanie":f.theme==="food"?"piknik":"koncert"}?</h3><p>{themes[f.theme!].wish} Vyber označené miesto na mape. V jeho okolí budeš potrebovať ešte dve voľné stanovištia.</p>{valid&&report?<div className="festival-site-preview festival-place-confirm"><strong>Miesto {coords(target!)}</strong>{report.notes.map(n=><p key={n}>{n}</p>)}{report.discovery&&<p className="festival-discovery">{report.discovery}</p>}<button className="republic-primary" disabled={blocked} onClick={()=>void send({type:"festival-site",target:target!})}>Rozložiť program tu<Check size={17}/></button></div>:<p className="festival-tip">Najprv porovnaj viac miest. Výber sa uloží až po potvrdení.</p>}</>}
         {phase===2&&<><h3>Zázemie robí dobrú slávnosť.</h3><p>Priprav dve rôzne stanovištia pri programe. Rozpočet budeš potrebovať aj pri komplikácii. Stanovište vyber tu, miesto potom na mape.</p><div className="festival-options">{(Object.keys(supports) as Support[]).map(id=>{const t=supports[id],Icon=supportIcons[id],placed=f.preparations.some(p=>p.kind===id);return <button key={id} aria-pressed={support===id} disabled={blocked||placed||budget<t.cost} onClick={()=>selectSupport(id)}><Icon size={22}/><span><b>{t.name}{placed?" · pripravené":""}</b><small>{t.hint}</small></span><strong>{placed?<Check size={17}/>:t.cost}<small>{placed?"":t.cost===1?"bod":"body"}</small></strong></button>;})}</div>{support&&<p className="festival-tip">{choices.length?"Vyber označené miesto do dvoch políčok od programu.":"Tu sa už zázemie nezmestí. Preplánuj slávnosť alebo v štvrti uvoľni miesto pri ceste."}</p>}{valid&&support&&<p className="festival-place-confirm">Vplyv tohto miesta na spokojnosť:<Impact mood={preparationImpact(f,{...target!,kind:support})}/></p>}{valid&&support&&<button className="republic-primary festival-place-confirm" disabled={blocked} onClick={()=>void send({type:"festival-prep",kind:support,target:target!})}>Pripraviť {supports[support].name.toLocaleLowerCase("sk")} na {coords(target!)}<Check size={17}/></button>}</>}
@@ -105,8 +105,24 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
           </div>
         </>}
         {!done&&f.theme&&<button className="festival-replan" disabled={blocked} onClick={()=>void send({type:"festival-replan"})}><Undo2 size={14}/> Preplánovať od začiatku · body sa vrátia</button>}
-      </div>
-      <div className="festival-scene"><div className="festival-scene-heading"><span>{f.theme?themes[f.theme].name:"Tvoja štvrť, tvoja slávnosť"}</span><button aria-pressed={list} disabled={exporting} onClick={()=>setList(!list)}>{list?<Map size={16}/>:<List size={16}/>} {list?"Mapa":"Miesta"}</button></div>
+      </div>);
+  return <section ref={root} className="festival" aria-label={journey?"Príbeh štvrte: sedem herných dní":"Denná výzva: susedská slávnosť"} onKeyDown={e=>{if(e.key==="Escape")setObjectId(null);}}>
+    <header className="festival-heading"><div><h2>{brief.title}</h2><p>{journey?`Príbeh štvrte · deň ${stage+1} zo 7 · bez čakania na zajtra`:`Denná výzva na ${Number(f.day.slice(8,10))}. ${Number(f.day.slice(5,7))}. ${f.day.slice(0,4)}`} · postup sa ukladá</p></div><button disabled={exporting} onClick={onClose}><ArrowLeft size={16}/> Späť do štvrte</button></header>
+    {journey&&<div className="festival-journey"><div><ol aria-label="Sedem dní príbehu">{journeyDays.map((d,i)=><li key={d.title} aria-current={i===stage&&!graduated?"step":undefined} className={(town.festivalJourney?.scores[i]??0)===3?"is-complete":""} title={d.title}><span>{(town.festivalJourney?.scores[i]??0)===3?<Check size={15}/>:i+1}</span><span className="sr-only">{d.title}: {(town.festivalJourney?.scores[i]??0)===3?"splnené":i===stage?"aktuálny deň":"zamknuté"}</span></li>)}</ol><p>{graduated?"Sedem dní hotových. Štvrť má svoju slávnostnú bránu.":"Splň 3 ciele a posuň sa na ďalší herný deň. Kalendár ani zásielky tým nemeníš."}</p></div><div className="festival-journey-prize"><RepublicArt id="ceremonial-gate"/><strong>Slávnostná brána<span>Odmena za 7 dní</span></strong></div></div>}
+    <p className="festival-story">{brief.story}</p>
+    <div className="festival-mission"><Flag size={21}/><div><strong>{brief.goal}</strong><span>Dve rôzne stanovištia · {brief.happy} spokojní susedia · rezerva aspoň {brief.reserve} {brief.reserve===1?"bod":"body"}. Spokojný sused = 3 z 5.</span></div><span className="festival-budget"><b>{budget}</b> / {brief.budget}<span>prípravné body</span></span></div>
+    <ol className="festival-steps" aria-label="Priebeh výzvy">{["Program","Miesto","Zázemie","Udalosť","Slávnosť"].map((name,i)=><li key={name} aria-current={i===phase?"step":undefined} className={i<phase?"is-done":""}>{i<phase?<Check size={14}/>:<span>{i+1}</span>}{name}{i===2&&phase===2&&<b>{f.preparations.length}/2</b>}</li>)}</ol>
+    <div className="festival-readiness" aria-label="Spokojnosť susedov"><span>{done?"Výsledná spokojnosť":preview?"Po vybranom riešení":phase===3?"Po príchode komplikácie":"Spokojnosť pred komplikáciou"}</span>{neighbours.map((name,i)=><div key={name}><b>{name}</b><span>{Math.max(0,Math.min(5,moodNow[i]))}/5{moodNow[i]>5?` (+${moodNow[i]-5} rezerva)`:""}</span><progress max={5} value={Math.max(0,Math.min(5,moodNow[i]))} aria-label={`Spokojnosť: ${name}`}/></div>)}</div>
+    <RepublicPlayfield town={town} blocked={blocked} kind="festival" resources={<span><Flag size={15} aria-hidden="true"/><b>{budget}/{brief.budget}</b><span className="sr-only">prípravných bodov</span></span>}
+      taskContent={<div className="playfield-festival-tasks"><h2>{brief.title}</h2><p>{brief.goal}</p><p>Dve rôzne stanovištia · {brief.happy} spokojní susedia · rezerva {brief.reserve}.</p>
+        <div className="playfield-festival-mood" aria-label="Spokojnosť susedov">{neighbours.map((name,i)=><div key={name}><b>{name}</b><span>{Math.max(0,Math.min(5,moodNow[i]))}/5</span></div>)}</div>
+        {decisions}
+        {f.site&&<div className="festival-prepared"><h4>Čo už stojí</h4><ul><li>{themes[f.theme!].name} · {coords(f.site)}</li>{f.preparations.map(p=><li key={p.kind}>{supports[p.kind].name} · {coords(p)}</li>)}</ul></div>}
+        {done&&<p>Pohľadnicu si vytvoríš po návrate pod mapou.</p>}
+      </div>}>
+    {expanded=><div className="festival-layout" data-complete={done}>
+      {!expanded&&decisions}
+      <div className="festival-scene"><div className="festival-scene-heading"><span>{f.theme?themes[f.theme].name:"Tvoja štvrť, tvoja slávnosť"}</span><button data-playfield-return aria-pressed={list} disabled={exporting} onClick={()=>setList(!list)}>{list?<Map size={16}/>:<List size={16}/>} {list?"Mapa":"Miesta"}</button></div>
         {done&&<div className="festival-celebration-caption"><p><strong>Slávnosť sa začala.</strong> {f.theme==="books"?"Deti otvárajú knihy a susedia sa pristavujú pri čítaní.":f.theme==="food"?"Susedia prinášajú jedlo a stretávajú sa pri pikniku.":"Koncert rozozvučal štvrť. Pod lampiónmi sa už tancuje."}</p><button disabled={exporting} onClick={()=>{setList(false);setReplay(n=>n+1);}}><Play size={15}/> Prehrať scénu</button></div>}
         {list?<div className="festival-place-list">
           <h4>{f.site?"Pripravené miesta slávnosti":"Miesta v tvojej štvrti"}</h4>
@@ -122,6 +138,7 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
         {target&&!valid&&choices.length>0&&<p className="festival-map-hint" role="status">Tu program ani zázemie teraz neumiestniš. Vyber označené miesto.</p>}
         <div className="festival-prepared"><h4>Čo už stojí</h4>{f.site?<ul><li><Check size={14}/>{themes[f.theme!].name} · {coords(f.site)}</li>{f.preparations.map(p=><li key={p.kind}><Check size={14}/>{supports[p.kind].name} · {coords(p)}</li>)}</ul>:<p>Najprv vyber program. Potom sa prípravy objavia priamo na mape.</p>}</div>
       </div>
-    </div>
+    </div>}
+    </RepublicPlayfield>
   </section>;
 }
