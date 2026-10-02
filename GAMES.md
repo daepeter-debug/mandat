@@ -27,6 +27,29 @@ Lokálna pokojná staviteľská hra v `?v=game&g=republic`. Hráč buduje Lipov�
 - **Vizuál a ovládanie.** Mapa je SVG postavené zo skutočného herného stavu, nie jeden ilustračný obrázok. Tlačidlá majú dotykové rozmery, klávesnicový fokus a pokojné live oznámenia o potvrdených zmenách.
 - **Stolová dioráma (`components/republic-art.tsx`).** Všetky kúsky sa kreslia v jednej izometrii s mapou (políčko 86 × 48 px, výška v px) zo spoločných stavebníc: kváder, sedlová a valbová strecha s radmi škridiel, rizalit napojený úžľabím, komín a vežička z hrebeňa, okná, dvere, hodiny, stromy. Svetlo ide zľava hore, tiene doprava dolu a nepresahujú políčko. Každá budova má vlastnú siluetu, dom tri podoby (podľa `instanceId`, takže sa nemení pri stavbe inde) a stanica štyri stavy. Mapa je drevená doska so zeminou, lesom za štvrťou, železnicou s priecestím, potokom a vyrytým názvom štvrte. Súradnice sa zaokrúhľujú a nepoužíva sa goniometria, aby server aj prehliadač vykreslili rovnaké čísla.
 
+## Tridsiatka (`components/quiz-game.tsx`, `lib/quiz.ts`, `lib/quiz-bank.ts`)
+
+Politický kvíz v `?v=game&g=quiz`: kolo má 30 otázok o slovenskej politike od roku 1989, od ľahkých po expertné.
+
+- **Banka:** 300 otázok v `lib/quiz-bank.ts`, každá má úroveň 1 – 4, tému, správnu odpoveď, tri nesprávne, vysvetlenie a zdroj.
+  - témy: štát a ústava, prezidenti, vlády, voľby, parlament, EÚ a svet, dejiny, ekonomika, samospráva, strany;
+  - zámerne bez káuz, trestných vecí a hodnotení, len overiteľné fakty k 1. 10. 2026;
+  - pred zverejnením ich nezávisle overili štyria overovatelia proti oficiálnym zdrojom (nrsr.sk, prezident.sk, vlada.gov.sk, volby.statistics.sk, Slov-Lex, Eurostat).
+- **Kolo:**
+  - 8 ľahkých + 9 stredných + 9 ťažkých + 4 expertné; z jednej témy najviac 3 na úroveň; poradie možností sa mieša;
+  - body 1/2/3/5 (najviac 73), titul od Voliča po Prezidenta;
+  - bez časového limitu, po každej odpovedi vysvetlenie a odkaz na zdroj;
+  - žolíky 50 : 50 a výmena otázky, každý raz za kolo.
+- **Kvíz dňa:** rovnakých 30 otázok pre všetkých (zrnko zo slovenského dátumu). Počíta sa raz za deň a výsledok sa dá zdieľať: body, titul a 30 štvorčekov bez otázok.
+- **Voľný kvíz:** náhodných 30 otázok; prednosť majú otázky, ktoré hráč nevidel v posledných 150.
+- **Uloženie v zariadení:** `mandat:quiz:v1:progress` (rozohrané kolo), `…:results` (posledných 60 výsledkov, z nich osobné poradie a séria dní) a `…:seen`. Čítanie je prísne; poškodené dáta sa zahodia.
+- **Spoločné poradie hráčov zatiaľ nie je.** Potrebovalo by serverové úložisko (Cloudflare D1 alebo KV, zmena nasadenia) a moderovanie prezývok; čaká na Petrovo rozhodnutie.
+- **Overenie:** `node scripts/verify-quiz.mjs`:
+  - tvar banky, duplicity a dĺžky;
+  - krížová kontrola s `lib/cabinets.ts`, voľbami 2023 v `lib/parliament.ts`, Eurostatom v `lib/public-finance.data.ts` a kalkulačkou daní;
+  - plán kola, žolíky, zdieľanie a uloženie.
+- **Aktualizácia faktov:** po zmene vlády, predsedu NR SR, prezidenta, sadzieb (január) či nových voľbách upraviť dotknuté otázky. Otázky s „od roku…“ či „v roku 2026“ prejsť každý rok.
+
 ## Overenie
 
 `node scripts/verify-data.mjs` stráži tri možnosti, lacnú voľbu, dĺžky textov, termíny, konkrétne víťazné cesty, neúspech opakovania jednej voľby, replay, nemennosť vstupu, opotrebovanie, rezervu a ignorovanie ťahov po konci. TypeScript, ESLint a dátové kontroly prešli pre V2. Pôvodná V1 bola vizuálne overená na 1280 a 375 px; toto NIE JE overenie V2. Lokálny Vite v Codexe zatiaľ blokuje `spawn EPERM`; vizuál V2 treba overiť pri funkčnom náhľade alebo po zostavení na Cloudflare. Používateľ autorizoval priame nasadenie po kontrolách.

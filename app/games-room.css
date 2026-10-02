@@ -7,6 +7,13 @@
 .games-parliament, .games-town { height: 220px; position: relative; overflow: hidden; }
 /* Cover art shares the warm miniature-town style of Do decembra. */
 .games-republic-art { height:220px; overflow:hidden; background:#d7dfc0; }
+/* Tridsiatka: jednoduchá titulná grafika (veľká tridsiatka a štyri úrovne); ilustráciu môže dokresliť Codex. */
+.games-quiz-art { position:relative; height:220px; overflow:hidden; display:grid; place-items:center; background:linear-gradient(140deg,#20392f,#245c48 60%,#2f6d4f); }
+.games-quiz-number { font-size:118px; font-weight:800; line-height:1; letter-spacing:-.06em; color:#fff3c4; text-shadow:0 10px 30px rgba(0,0,0,.25); }
+.games-quiz-dots { position:absolute; bottom:22px; display:flex; gap:8px; }
+.games-quiz-dots i { width:12px; height:12px; border-radius:50%; background:#3b8146; box-shadow:0 0 0 2px #fffefa; }
+.games-quiz-dots i:nth-child(2) { background:#33679e; } .games-quiz-dots i:nth-child(3) { background:#a86d12; } .games-quiz-dots i:nth-child(4) { background:#a3302a; }
+.games-quiz-mark { position:absolute; top:14px; right:22px; font-size:54px; font-weight:800; color:rgba(255,255,255,.12); }
 .republic-cover { display:block; width:100%; height:100%; object-fit:cover; object-position:50% 53%; }
 .games-parliament { background: #20392f; display: grid; place-items: center; padding: 26px 30px 12px; }
 .games-parliament svg { width: 100%; height: 100%; }
@@ -32,7 +39,7 @@
   .games-room-heading { margin-bottom: 20px; }
   .games-room-heading p { font-size: 15px; }
   .games-collection { grid-template-columns: 1fr; gap: 20px; }
-  .games-parliament, .games-town, .games-republic-art { height: 200px; }
+  .games-parliament, .games-town, .games-republic-art, .games-quiz-art { height: 200px; }
   .games-town svg { width: 128%; }
   .games-entry-body { padding: 20px; }
   .games-entry h2 { font-size: 25px; }
