@@ -392,3 +392,9 @@ Podnet od Petra: informácie sú „nahádzané“, človek ich musí hľadať; 
 - **NEOVERENÉ:** fyzický telefón, dotykové posúvanie a Safari/PWA. Režim zaberá plochu stránky; systémové lišty prehliadača ovláda prehliadač. Ďalší krok: Peter otvorí mobilný herný plán cez ikonu rozšírenia pri zoome a overí ovládanie prstom. Samostatná mapa slávnosti a návšteva sa nemenia.
 
 **Dokončenie a nasadenie:** nezávislý reviewer skóroval oba materiálne nálezy ako resolved, verdikt **ship** pre tieto opravy; dokumenter zachoval nadradený aj lokálny systém. Implementácia `412a504`, pull --rebase bez ďalších zmien, push main. Priame `npm run deploy:preview` úspešné: Worker `mandat-preview`, verzia `bb4860d5-9401-4b45-8663-bdac7ed30e35`. Na workers.dev po návrate z rozpracovanej slávnosti overené tlačidlo pod mapou a skutočný mobilný herný plán 375×844, šírka stránky 375, bez chýb/varovaní v konzole. Snímka `public-mobile.png` v rovnakom kontrolnom priečinku. Fyzický telefón stále na Petrovo overenie.
+
+### 2. 10. — oprava viditeľnosti vstupu do herného plánu
+
+- Peter na stavebnej mape nenašiel tlačidlo pod mapou. Na verejnom webe je pôvodná ikona v nástrojoch prítomná; fyzický telefón ani jeho obrazovka nie sú k dispozícii, preto cache alebo konkrétny mobilný problém nepotvrdzujeme.
+- Ikona nahradená viditeľným zeleným textovým tlačidlom **Hra na celú obrazovku**, priamo pod riadkom zoomu, výška 48 px. Rovnaký handler a návrat fokusu; žiadne nové pravidlá ani uložené polia. Zmenené iba republic-map.tsx a tri pravidlá republic-playfield.css.
+- Synchronizácia `2aca72d → 041c6ef` zachovala Claudovu slovnú hru aj denné údaje. Všetkých 11 verify skriptov, tsc, ESLint, build-dark --check, diff --check a build PASS. Mobil 375 px: tlačidlo čitateľné, otvorí plán bez vodorovného pretekania a po zatvorení dostane fokus. Snímky a nová nezávislá kontrola v `.impeccable/review/republic-playfield-entry/`.

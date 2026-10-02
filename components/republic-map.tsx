@@ -179,8 +179,8 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
       <button type="button" aria-label="Oddialiť mapu" disabled={currentZoom<=1} onClick={()=>setCurrentZoom(z=>Math.max(1,z-.5))}><Minus size={16}/></button>
       <button type="button" aria-label="Priblížiť mapu" disabled={currentZoom>=2} onClick={()=>setCurrentZoom(z=>Math.min(2,z+.5))}><Plus size={16}/></button>
       <button type="button" aria-label="Centrovať mapu" onClick={centre}><LocateFixed size={17}/></button>
-      {playfield&&!playfield.expanded&&<button type="button" data-playfield-open aria-label="Otvoriť herný plán na celú obrazovku" title="Herný plán na celú obrazovku" onClick={event=>playfield.open(event.currentTarget)}><Maximize2 size={17}/></button>}
     </div></div>
+    {playfield&&!playfield.expanded&&<button type="button" className="republic-expand-plan" data-playfield-open aria-label="Hra na celú obrazovku" onClick={event=>playfield.open(event.currentTarget)}><Maximize2 size={18} aria-hidden="true"/><span>Hra na celú obrazovku</span></button>}
     {scene&&<details className="republic-daylight"><summary><span className={`republic-daylight-dot ${scene.time.period}`}/>{scenePreview?"Náhľad scény": "Živá štvrť"}<span>{periods[scene.time.period]} · {clock}</span></summary>
       <div><p>Čas v Bratislave · východ {timeLabel(scene.time.sunrise)} · západ {timeLabel(scene.time.sunset)}. Napojené domy a budovy ožívajú podľa dennej doby.</p>
         <label>Prezrieť deň a noc<select value={scenePreview} onChange={e=>setScenePreview(e.target.value)}><option value="">Teraz · skutočný čas</option>

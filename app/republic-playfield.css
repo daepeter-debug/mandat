@@ -1,4 +1,7 @@
 /* Optional immersive plan. All rules are scoped to the expanded game. */
+.republic .republic-expand-plan { display:flex; align-items:center; justify-content:center; gap:8px; width:calc(100% - 20px); min-height:48px; margin:4px 10px 10px; padding:10px 14px; border:0; border-radius:8px; background:#245c48; color:#fffefa; font:600 13px/1.4 "IBM Plex Sans Variable",sans-serif; }
+.republic .republic-expand-plan:hover { background:#1c4939; }
+.republic .republic-expand-plan:focus-visible { outline:3px solid #dcf59b; outline-offset:2px; }
 .republic .republic-layout.republic-playfield[data-expanded] {
   --playfield-rail:146px;
   position:fixed; inset:0; z-index:500; width:100%; max-width:none; height:100dvh; margin:0;
