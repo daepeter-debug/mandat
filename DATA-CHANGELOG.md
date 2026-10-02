@@ -1,5 +1,15 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Deň v politike za 30. 9. a 1. 10. (Claude)
+
+Doplnených 12 správ: 6 za stredu 30. 9. a 6 za štvrtok 1. 10. Každý deň má poradie, vetu dňa a počet prejdených udalostí (po 35).
+- **30. 9.:** prezident odvolal Tarabu a rezort dočasne zveril Ficovi, štát odkúpi podiel ČEZ v JESS, skrátené konanie k zákonu proti radikalizácii, súd potvrdil odmietnutie obžaloby čurillovcov, polovičné cestovné v autobusoch a MHD, RRZ znížila odhad deficitu.
+- **1. 10.:** Slyško odišiel z Hlasu k Tarabovi, nový Občiansky zákonník, podnet opozície na Ústavný súd pre vyrovnaný rozpočet, SNS trvá na Kuffovi, Laššáková sa vzdala kandidatúry na prešovskú županku, prieskum AKO.
+
+**Postup:** podklady z Minúty po minúte a TASR. Na každý deň jeden pisateľ a jeden nezávislý overovateľ, ktorý si zdroje znova prečítal a opravil štylistiku a formulácie blízke zdroju. Nič nevyradil.
+
+**Stav:** `newsChecked` je 1. 10. Piatok 2. 10. je rozpracovaný deň a spracuje sa po jeho skončení; rokovanie Fica s Dankom bolo ohlásené na piatok.
+
 ## 2. 10. 2026 — septembrový prieskum AKO, kontrola ostatných agentúr (Claude)
 
 Doplnené septembrové meranie AKO pre JOJ 24 podľa pôvodnej tlačovej správy (PDF na ako.sk z 30. 9. 2026, verejne 1. 10. 2026, TASR 12:42).
