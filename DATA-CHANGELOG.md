@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Parlament v 3D: hlasovania bez stĺpikov (Codex)
+
+Peter prijal nahradenie zvislých stĺpikov jednorazovou vlnou farieb cez 150 kresiel počas **1 050 ms** a jemným zvýraznením vybraného poslanca. Vlna začína aktuálne zobrazenými farbami a končí presnými farbami hlasov; odhaľuje výsledok, nie chronológiu hlasovania. Výber kresla ju neopakuje, druhé ťuknutie výber zruší. Rovnaký prírastok emisívneho faktora **+0,16 v každom lineárnom farebnom kanáli** platí aj pre neprítomného. Rýchle prepnutie ruší starú prácu; skrytá scéna a reduced-motion dokončia cieľ bez vlny.
+
+Tento záznam **nahrádza skoršie nastavenie stĺpikov s alfou 0,32**; historický záznam zostáva nižšie. GLB sa nemenil: **1 444 616 B**, 150 kresiel, 165 animačných kanálov a nezmenené poradie variantov. Web používa alfa 0 a pozastavený klip v čase 3 s; atlas hlasovania sa neprekresľuje a `createTexture` sa pri hlasovaní nevolá. Bez novej bitmapy, zmien CSS, rozloženia, typografie, politických dát, hier či Worker bindingov. Zachovaných 348 hlasovaní; aktuálny výsledok **90/0/52/0/8**, rozpočet 2025 po rýchlom prepnutí **79/58/0/0/13** (za/proti/zdržali sa/nehlasovali/neprítomní).
+
+Všetkých 16 `verify-*.mjs`, TypeScript, úplný ESLint, tmavé CSS, produkčný build a `git diff --check` prešli; detector `[]`, Khronos 0 chýb/0 varovaní. Reviewer otvoril osem platných snímok a uzavrel **ship**. Statické snímky necertifikujú plynulosť; fyzický mobil, AR, FPS a živé reduced-motion zostávajú neoverené. Podrobnosti vrátane rozmerov providerových snímok sú v `docs/parliament-3d.md` a `.impeccable/review/parliament-vote-wave/`. Preview nasadilo verziu **`cfbda2a7-fbb3-4c66-96cf-437397997788`**; rodič verejne overil sálu bez stĺpikov, výsledok 90/0/52/0/8, poznámku o vlne, detail poslanca a konzolu `[]`. Kód je v commite `ec0863f`; `git pull --rebase` pred odoslaním potvrdil aktuálny `main`.
+
 ## 2. 10. 2026 — Parlament v 3D: čitateľnejšie hlasovania a detail (Codex)
 
 Tabuľa hlasovania je pod sálou s väčšími tabuľkovými počtami; detail strany aj poslanca je mimo scény. Mobil má všetkých päť režimov v jednej mriežke. Svetelné stĺpiky sú tlmenejšie a priehľadné (alfa 0,32), rovnako pri každom hlasovaní. Text hlasu poslanca používa farbu témy (kontrast 5,47 : 1 svetlá / 8,43 : 1 tmavá). Adaptívne vykresľovanie má minimum 0,6, v knižnici najnižší diskrétny krok 0,62; FPS na telefóne neboli merané.
