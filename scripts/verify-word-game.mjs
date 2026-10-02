@@ -93,7 +93,8 @@ for (const [index, [name, key]] of files.entries()) {
   stats.best.push(p.best.seats); stats.cover.push(p.cover.seats);
 }
 assert(biggest <= 16_000, `Súbor zadania najviac 16 kB (najväčší ${biggest} B)`);
-assert(readFileSync(new URL("ZDROJ.txt", dir), "utf8").includes("MPL 1.1"), "Zdroj slovníka a licencia sú pri dátach");
+const source = readFileSync(new URL("ZDROJ.txt", dir), "utf8");
+assert(source.includes("MPL 1.1") && source.startsWith("﻿"), "Zdroj slovníka a licencia sú pri dátach (s BOM, inak prehliadač pokazí diakritiku)");
 const med = a => a.slice().sort((x, y) => x - y)[Math.floor(a.length / 2)];
 const ustavna = stats.cover.filter(s => s >= CONSTITUTIONAL).length;
 console.log(`PASS words: ${days.length} denných (${days[0]} – ${days.at(-1)}) + ${FREE_COUNT} voľných zadaní, ${Math.round(words / files.length)} slov na zadanie, najlepšia koalícia medián ${med(stats.best)}, všetkých 12 písmen medián ${med(stats.cover)} (ústavná väčšina z 12 písmen v ${ustavna} zadaniach), najväčší súbor ${(biggest / 1024).toFixed(1)} kB; mandáty, kontrola slova, hviezdy, uloženie, séria, zdieľanie`);

@@ -56,7 +56,8 @@ const summary = { best: [], cover: [], words: [] };
 const t1 = Date.now();
 for (const day of days) { const p = puzzle(daySeed(day)); write(path.join(OUT, `${day}.json`), { day, ...p }); summary.best.push(p.best.seats); summary.cover.push(p.cover.seats); summary.words.push(p.words.length); }
 for (let i = 1; i <= Number(freeCount); i++) { const p = puzzle(mix(0x5eed0000 + i)); write(path.join(OUT, "volne", `${i}.json`), { free: i, ...p }); }
-fs.writeFileSync(path.join(OUT, "ZDROJ.txt"), [
+// BOM na začiatku: Cloudflare posiela .txt ako text/plain bez znakovej sady a prehliadač by diakritiku pokazil.
+fs.writeFileSync(path.join(OUT, "ZDROJ.txt"), "﻿" + [
   "Koalícia slov – zoznamy slov v tomto priečinku",
   "",
   "Slová sú odvodené zo slovenského slovníka projektu sk-spell (verzia 2.4.8, 2024-08-29),",

@@ -1,4 +1,4 @@
-Koalícia slov – zoznamy slov v tomto priečinku
+﻿Koalícia slov – zoznamy slov v tomto priečinku
 
 Slová sú odvodené zo slovenského slovníka projektu sk-spell (verzia 2.4.8, 2024-08-29),
 distribuovaného v repozitári LibreOffice dictionaries: https://github.com/LibreOffice/dictionaries/tree/master/sk_SK
