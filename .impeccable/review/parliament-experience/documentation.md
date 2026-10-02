@@ -1,6 +1,6 @@
 # Parliament experience — documentation handoff
 
-2 October 2026. Ordinary extension of the confirmed Večerná sála direction. Documentation and final browser evidence are recorded; reviewer disposition and deployment confirmation remain pending at this handoff.
+2 October 2026. Ordinary extension of the confirmed Večerná sála direction. Documentation, final browser evidence, reviewer disposition and deployment confirmation are recorded.
 
 ## Evidence checked
 
@@ -17,7 +17,7 @@ It documents any-party user coalition selection, retained selected party colors,
 
 Source recheck confirms explicit `animation-name="obsadenie"` and clip activation via `play()`, then `pause()` and seek to 3 seconds before the camera tour. The browser reopen check confirmed all 150 seats. This sequencing is documented to preserve the fix.
 
-Historical screenshots, hotspot review and deployment evidence are explicitly distinguished from the current interaction model. No pending review or deployment is presented as verified.
+Historical screenshots and hotspot review are explicitly distinguished from the current interaction model. The final review and deployment evidence below complete this documentation handoff.
 
 ## Inherited identity preserved
 
@@ -29,9 +29,15 @@ The parent supplied the final validated captures, opened individually and confir
 
 Actual UI checks supplied by the parent passed: blue-chair click at (735, 302) opened PS with 34 seats; drag from (735, 302) to (670, 352) did not select; “Celá sála”, replay/skip, clear to 0, PS + REPUBLIKA + SaS + KDH = 81, election 2023 SMER + HLAS + SNS = 79, variant reset to 0 and reopen with all 150 seats. Console errors were `[]`. These combinations are test inputs, not endorsements.
 
-## Remaining evidence
+## Final review and deployment
 
-Record the final reviewer report/disposition and deployment version/hash when supplied by the parent. The reviewer is running; no verdict is inferred from capture completion or passing interaction checks.
+Read `review.md`: **disposition: ship**, no material fixes within the confirmed five-part extension scope. The reviewer opened all fifteen required captures and assessed the inherited evening-chamber direction; the missing separate QUALITY BAR card limits comparison to the inherited direction and confirmed brief. Physical AR, device performance and live reduced motion remain outside the review evidence.
+
+The parent supplied successful `npm run deploy:preview`: version `137391a5-2663-4159-ae97-0b3582c93d92` at [Mandát preview](https://mandat-preview.mandat.workers.dev/). Functional commit after rebase: `01b203c`; evidence: `a8a79e9`. Merged Claude commit `2d015a8` (Tridsiatka online) was preserved. After rebase, all parliament/data/quiz checks, dark CSS check, TypeScript, ESLint for `app`, `components`, `lib`, `scripts`, `worker` and production build passed again.
+
+Public GLB size is 1,326,416 bytes; SHA-256 `41D82EC5F36DF932C882212208BD88E44E8FC24967B95E0895F46637795B588C` matches the local model. The parent verified the online coalition PS 34 + REPUBLIKA 21 + SaS 14 + KDH 12 = 81 and majority attained; `online.png` records this state, with console errors `[]`. This deployment evidence does not extend the physical-device or reduced-motion coverage.
+
+## Verification limits
 
 Reduced-motion handling is implemented and source-checked; browser emulation was unavailable. Physical Safari/Android, AR and 60 fps remain unverified on real devices. Those limits must remain explicit after deployment.
 
