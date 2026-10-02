@@ -2,7 +2,7 @@
 
 **Aktuálna adresa:** https://mandat-preview.mandat.workers.dev (Worker `mandat-preview`, účet Petra, subdoména `mandat`). Nové nasadenie: v `outputs/web` spustiť `npm run build` a `npm run deploy:preview` (prihlásenie wranglera musí byť aktívne).
 
-Používateľ zvolil priamy Cloudflare hosting. Konfigurácia `wrangler.preview.jsonc` nasadzuje Worker `mandat-preview` a statické súbory z `dist/client`. Aplikácia nepotrebuje D1, R2 ani aplikačné tajomstvá.
+Používateľ zvolil priamy Cloudflare hosting. Konfigurácia `wrangler.preview.jsonc` nasadzuje Worker `mandat-preview` a statické súbory z `dist/client`. Aplikácia nepotrebuje D1, R2 ani aplikačné tajomstvá; rebríček Tridsiatky je v Durable Object priamo vo Workeri (časť Tridsiatka online nižšie).
 
 ## Stav prípravy
 
@@ -62,3 +62,21 @@ Online overené načítanie nového UI, dohranie existujúcej dennej slávnosti,
 ## Nasadenie novej úvodnej ilustrácie 1. 10. 2026
 
 Na pokyn „ok pokracuj a nasad“ nasadený nový cover Malej republiky do Herne a prvého privítania. TypeScript, cielený ESLint, build, vizuálna kontrola desktop/mobil a dry-run PASS. Worker verzia `eb9289f0-dd8a-4dd6-a0db-fdbc53366755`, adresa zostáva https://mandat-preview.mandat.workers.dev. Nová verzovaná WebP ilustrácia sa online načítava. Stav hry ani service worker sa nemenia. Zdrojová revízia sa synchronizuje s main; Cloudflare Builds môže rovnaký kód vydať pod ďalším ID.
+
+## Tridsiatka online: Durable Object (2. 10. 2026, Claude)
+
+Rebríček kvízu dňa, porovnanie a výzvy ukladá jeden Durable Object `QuizBoard` so SQLite úložiskom (opis funkcií: GAMES.md, Tridsiatka).
+- Väzba `QUIZ` a migrácia `tridsiatka-v1` (`new_sqlite_classes`) sú vo `wrangler.preview.jsonc` aj vo `vite.config.ts` (lokálna konfigurácia buildu); musia sedieť.
+- Trieda musí byť exportovaná z hlavného modulu Workera. Vstup je preto `worker/index.ts`: celý web obsluhuje vinext (`vinext/server/fetch-handler`), súbor len pridáva `export { QuizBoard }`.
+- Inštancia je jedna, `tridsiatka` v jurisdikcii EÚ (`app/api/kviz/route.ts`), takže údaje ostávajú v EÚ. Lokálny workerd jurisdikcie nepozná, tam sa použije obyčajná inštancia.
+- Prečo nie D1: Workers Builds nasadzuje s automatickým tokenom bez oprávnenia na D1, takže väzba na D1 by zablokovala každé nasadenie (aj Codexove). Durable Object je súčasť Workera: žiadna nová databáza, token ani nastavenie v Cloudflare. Na pláne Workers Paid je v cene.
+- **Pozor pri zmenách:** triedu `QuizBoard` nepremenovať ani neodstrániť bez novej migrácie (`renamed_classes`, `deleted_classes`). Odstránenie zmaže všetky uložené výsledky a výzvy. Tvar tabuliek sa mení v `SCHEMA` v `lib/quiz-store.ts`, nie migráciou.
+
+**Lokálne skúšanie** (v `outputs/web`, po `npm run build`):
+
+```powershell
+node --import ./scripts/sites-env.mjs node_modules/wrangler/bin/wrangler.js dev --config wrangler.preview.jsonc --local --persist-to .wrangler/state --ip 127.0.0.1 --port 8787
+node scripts/smoke-quiz-api.mjs http://127.0.0.1:8787
+```
+
+Lokálne úložisko je v `.wrangler/state` (mimo gitu). Skúšobný skript odmietne iný ako lokálny server, aby sa skúšobné kolá nedostali do ostrého rebríčka.

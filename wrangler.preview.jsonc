@@ -9,5 +9,8 @@
   "no_bundle": true,
   "rules": [{ "type": "ESModule", "globs": ["**/*.js", "**/*.mjs"] }],
   "assets": { "directory": "./dist/client" },
+  // Tridsiatka online: rebríček kvízu dňa a výzvy v Durable Object so SQLite (worker/quiz-board.ts, údaje v EÚ).
+  "durable_objects": { "bindings": [{ "name": "QUIZ", "class_name": "QuizBoard" }] },
+  "migrations": [{ "tag": "tridsiatka-v1", "new_sqlite_classes": ["QuizBoard"] }],
   "observability": { "enabled": true }
 }

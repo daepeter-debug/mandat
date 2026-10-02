@@ -5,7 +5,8 @@ import { questions, type Level, type Question, type Topic } from "./quiz-bank.ts
   z banky (lib/quiz-bank.ts); z jednej témy najviac 3 otázky na úroveň, možnosti v náhodnom poradí.
   Kvíz dňa je pre všetkých rovnaký (zrnko zo slovenského dátumu), voľný kvíz uprednostní otázky, ktoré hráč
   v poslednom čase nevidel. Dva žolíky: 50 : 50 a výmena otázky (každý raz za kolo). Bez časového limitu.
-  Bez servera: rozohrané kolo, výsledky a osobné poradie sú v tomto zariadení (localStorage, prísne čítané).
+  Rozohrané kolo, výsledky a osobné poradie sú v tomto zariadení (localStorage, prísne čítané). Spoločný rebríček kvízu dňa,
+  porovnanie s ostatnými a výzvy pre kamarátov: lib/quiz-online.ts (server: lib/quiz-store.ts, worker/quiz-board.ts).
 */
 export const PLAN: Record<Level, number> = { 1: 8, 2: 9, 3: 9, 4: 4 };
 export const ROUND_SIZE = 30;
@@ -91,22 +92,30 @@ export function scoreRound(round: RoundQuestion[], answers: Answer[]) {
 }
 export const skDate = (day: string) => `${Number(day.slice(8, 10))}. ${Number(day.slice(5, 7))}. ${day.slice(0, 4)}`;
 /** Výsledok na zdieľanie: body, titul a 30 štvorčekov po desiatich (bez otázok, nič neprezradí). */
-export function shareText(mode: "daily" | "free", day: string, points: number, max: number, marks: string, url: string) {
+export function shareText(mode: Mode, day: string, points: number, max: number, marks: string, url: string, extra = "") {
   const rows = [0, 10, 20].map(i => [...marks.slice(i, i + 10)].map(m => m === "1" ? "🟩" : "🟥").join(""));
-  return [`Tridsiatka${mode === "daily" ? ` · kvíz dňa ${skDate(day)}` : ""}: ${points}/${max} bodov · ${titleFor(points, max).name}`, ...rows, url].join("\n");
+  const label = mode === "daily" ? ` · kvíz dňa ${skDate(day)}` : mode === "challenge" ? " · výzva" : "";
+  return [`Tridsiatka${label}: ${points}/${max} bodov · ${titleFor(points, max).name}${extra}`, ...rows, url].join("\n");
 }
 
 // ── Uloženie v zariadení (nedôveryhodný vstup, preto prísne čítanie) ─────────────────────────────
-export type Mode = "daily" | "free";
-export type Progress = { v: 1; mode: Mode; day: string; seed: number; items: RoundItem[]; answers: Answer[]; hidden: Record<number, number[]>; jokers: { half: boolean; swap: boolean } };
-export type Result = { mode: Mode; day: string; points: number; max: number; correct: number; marks: string; at: string };
+// Kvíz dňa, voľný kvíz a výzva (presne otázky z odkazu od kamaráta). Aj kvíz dňa môže patriť k výzve (`vyzva` = jej kód).
+export type Mode = "daily" | "free" | "challenge";
+export type Progress = { v: 1; mode: Mode; day: string; seed: number; items: RoundItem[]; answers: Answer[]; hidden: Record<number, number[]>; jokers: { half: boolean; swap: boolean }; vyzva?: string };
+export type Result = { mode: Mode; day: string; points: number; max: number; correct: number; marks: string; at: string; token?: string };
+/** Kód výzvy (7 znakov bez zameniteľných 0/O a 1/I/L) a náhodný kód odohraného kola, pod ktorým ho pozná server. */
+export const CODE_RE = /^[2-9A-HJKMNP-Z]{7}$/;
+export const TOKEN_RE = /^[a-z2-7]{16}$/;
+export const codeSeed = (code: string) => mix([...code].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619), 2166136261));
+const isMode = (v: unknown): v is Mode => v === "daily" || v === "free" || v === "challenge";
 const isObj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 const isDay = (v: unknown): v is string => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
 const isInt = (v: unknown, max: number) => Number.isInteger(v) && (v as number) >= 0 && (v as number) <= max;
 const json = (text: string | null) => { try { return JSON.parse(text ?? "null") as unknown; } catch { return null; } };
 export function parseProgress(text: string | null): Progress | null {
   const v = json(text);
-  if (!isObj(v) || v.v !== 1 || (v.mode !== "daily" && v.mode !== "free") || !isDay(v.day) || !isInt(v.seed, 4294967295)) return null;
+  if (!isObj(v) || v.v !== 1 || !isMode(v.mode) || !isDay(v.day) || !isInt(v.seed, 4294967295)) return null;
+  if (v.vyzva === undefined ? v.mode === "challenge" : typeof v.vyzva !== "string" || !CODE_RE.test(v.vyzva) || v.mode === "free") return null;
   if (!Array.isArray(v.items) || v.items.length !== ROUND_SIZE || !Array.isArray(v.answers) || v.answers.length > ROUND_SIZE || !isObj(v.hidden) || !isObj(v.jokers)) return null;
   const items = v.items as RoundItem[];
   if (!items.every(x => isObj(x) && typeof x.id === "string" && Array.isArray(x.order) && present(x) !== null) || new Set(items.map(x => x.id)).size !== ROUND_SIZE) return null;
@@ -115,8 +124,9 @@ export function parseProgress(text: string | null): Progress | null {
   if (typeof v.jokers.half !== "boolean" || typeof v.jokers.swap !== "boolean") return null;
   return v as Progress;
 }
-const isResult = (r: unknown): r is Result => isObj(r) && (r.mode === "daily" || r.mode === "free") && isDay(r.day) && isInt(r.points, 999) && isInt(r.max, 999)
-  && (r.points as number) <= (r.max as number) && isInt(r.correct, ROUND_SIZE) && typeof r.marks === "string" && /^[01]{30}$/.test(r.marks) && typeof r.at === "string" && r.at.length <= 40;
+const isResult = (r: unknown): r is Result => isObj(r) && isMode(r.mode) && isDay(r.day) && isInt(r.points, 999) && isInt(r.max, 999)
+  && (r.points as number) <= (r.max as number) && isInt(r.correct, ROUND_SIZE) && typeof r.marks === "string" && /^[01]{30}$/.test(r.marks) && typeof r.at === "string" && r.at.length <= 40
+  && (r.token === undefined || (typeof r.token === "string" && TOKEN_RE.test(r.token)));
 export function parseResults(text: string | null): Result[] {
   const v = json(text);
   return Array.isArray(v) ? v.filter(isResult).slice(-60) : [];
@@ -135,4 +145,4 @@ export function streak(results: Result[], today: string) {
   while (days.has(start)) { count++; start = back(start, 1); }
   return count;
 }
-export const keys = { progress: "mandat:quiz:v1:progress", results: "mandat:quiz:v1:results", seen: "mandat:quiz:v1:seen" };
+export const keys = { progress: "mandat:quiz:v1:progress", results: "mandat:quiz:v1:results", seen: "mandat:quiz:v1:seen", online: "mandat:quiz:v1:online" };

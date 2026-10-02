@@ -11,8 +11,9 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
+// Vstup Workera = vinext + export Durable Objects (worker/index.ts); väzby musia sedieť s wrangler.preview.jsonc.
 const localBindingConfig = {
-  main: "vinext/server/fetch-handler",
+  main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
     ? [
@@ -23,6 +24,8 @@ const localBindingConfig = {
         },
       ]
     : [],
+  durable_objects: { bindings: [{ name: "QUIZ", class_name: "QuizBoard" }] },
+  migrations: [{ tag: "tridsiatka-v1", new_sqlite_classes: ["QuizBoard"] }],
   r2_buckets: r2
     ? [
         {

@@ -1,5 +1,19 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Tridsiatka: rebríček kvízu dňa, porovnanie s ostatnými a výzvy (Claude)
+
+Kvíz má po novom spoločnú online časť:
+- **Porovnanie:** po kvíze dňa miesto medzi všetkými hráčmi dňa, podiel hráčov s menej bodmi a rozloženie bodov.
+- **Rebríček dňa:** prvých 10 hráčov s prezývkou; zapísať sa dá dobrovoľne a prezývka sa dá odstrániť.
+- **Úspešnosť otázok:** pri vysvetlení je, koľko hráčov otázku trafilo.
+- **Výzva pre kamaráta:** odkaz na tých istých 30 otázok, na konci súboj s výsledkami vedľa seba. Výsledky kamarátov vidí aj autor výzvy.
+
+**Údaje:**
+- Body počíta server z odpovedí; overí, že ide o kolo daného dňa alebo výzvy.
+- Ukladá sa len náhodný kód kola, body, ktoré otázky boli správne, a prezývka, ak ju hráč zadá. Bez mien, e-mailov a IP adries.
+- Úložisko je Durable Object so SQLite v jurisdikcii EÚ, priamo vo Workeri (DEPLOYMENT.md).
+- Prezývky sú bez vulgarizmov a bez mien politikov a strán. Moderácia sa robí doplnením slova do zoznamu.
+
 ## 2. 10. 2026 — Parlament v 3D: Večerná sála a značky strán (Codex)
 
 Peter vybral smer C z troch koncepčných renderov: orechové drevo, tlmené čalúnenie a teplé svetlo. Kreslá dostali svetlé štítky s existujúcimi zdrojovanými logami (`lib/party-logos.json`); značky sa menia spolu s obsadením. Koalícia OĽANO a priatelia z roku 2023 má textový štítok s rokom, nie dnešné logo hnutia Slovensko.
@@ -11,6 +25,7 @@ Peter vybral smer C z troch koncepčných renderov: orechové drevo, tlmené ča
 - `scripts/parliament-textures.mjs` vytvára deterministické podklady; regenerovanie vytvorilo identický GLB. Súbor má **1 326 400 B**, načíta sa až po otvorení. `scripts/verify-parliament-glb.mjs` používa oficiálny Khronos validátor a kontroluje 150 kresiel aj logo/farbu každého kresla v oboch variantoch: **0 chýb, 0 varovaní**.
 - Overené `verify-data`, TypeScript, ESLint, kontrola generovaného tmavého CSS a produkčný build. Viditeľný prehliadač: 1280 × 800, 402 × 874 a 375 px, svetlý/tmavý režim, výber strany, bloky s partnermi aj bez a rok 2023; bez chýb konzoly. Knižnica model-viewer upozorňuje na vlastný deprecated RGBELoader, funkciu to neblokuje.
 - Fyzický Safari/Android, 60 fps a AR ostávajú **neoverené na skutočných zariadeniach**. Web upozorňuje, že Android Scene Viewer stiahne pôvodný GLB prieskumov, zatiaľ čo iOS Quick Look exportuje aktuálnu scénu. Geometria je ilustratívna sála, nie presná rekonštrukcia interiéru NR SR.
+
 
 ## 2. 10. 2026 — Parlament v 3D: rokovacia sála, úvodná animácia, strany, bloky a voľby 2023 (Claude)
 

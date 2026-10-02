@@ -27,7 +27,7 @@ Lokálna pokojná staviteľská hra v `?v=game&g=republic`. Hráč buduje Lipov�
 - **Vizuál a ovládanie.** Mapa je SVG postavené zo skutočného herného stavu, nie jeden ilustračný obrázok. Tlačidlá majú dotykové rozmery, klávesnicový fokus a pokojné live oznámenia o potvrdených zmenách.
 - **Stolová dioráma (`components/republic-art.tsx`).** Všetky kúsky sa kreslia v jednej izometrii s mapou (políčko 86 × 48 px, výška v px) zo spoločných stavebníc: kváder, sedlová a valbová strecha s radmi škridiel, rizalit napojený úžľabím, komín a vežička z hrebeňa, okná, dvere, hodiny, stromy. Svetlo ide zľava hore, tiene doprava dolu a nepresahujú políčko. Každá budova má vlastnú siluetu, dom tri podoby (podľa `instanceId`, takže sa nemení pri stavbe inde) a stanica štyri stavy. Mapa je drevená doska so zeminou, lesom za štvrťou, železnicou s priecestím, potokom a vyrytým názvom štvrte. Súradnice sa zaokrúhľujú a nepoužíva sa goniometria, aby server aj prehliadač vykreslili rovnaké čísla.
 
-## Tridsiatka (`components/quiz-game.tsx`, `lib/quiz.ts`, `lib/quiz-bank.ts`)
+## Tridsiatka (`components/quiz-game.tsx`, `lib/quiz.ts`, `lib/quiz-bank.ts`, online: `lib/quiz-online.ts`, `lib/quiz-store.ts`)
 
 Politický kvíz v `?v=game&g=quiz`: kolo má 30 otázok o slovenskej politike od roku 1989, od ľahkých po expertné.
 
@@ -43,11 +43,38 @@ Politický kvíz v `?v=game&g=quiz`: kolo má 30 otázok o slovenskej politike o
 - **Kvíz dňa:** rovnakých 30 otázok pre všetkých (zrnko zo slovenského dátumu). Počíta sa raz za deň a výsledok sa dá zdieľať: body, titul a 30 štvorčekov bez otázok.
 - **Voľný kvíz:** náhodných 30 otázok; prednosť majú otázky, ktoré hráč nevidel v posledných 150.
 - **Uloženie v zariadení:** `mandat:quiz:v1:progress` (rozohrané kolo), `…:results` (posledných 60 výsledkov, z nich osobné poradie a séria dní) a `…:seen`. Čítanie je prísne; poškodené dáta sa zahodia.
-- **Spoločné poradie hráčov zatiaľ nie je.** Potrebovalo by serverové úložisko (Cloudflare D1 alebo KV, zmena nasadenia) a moderovanie prezývok; čaká na Petrovo rozhodnutie.
+- **Online (od 2. 10. 2026): rebríček kvízu dňa, porovnanie s ostatnými a výzvy pre kamarátov.**
+  - **Porovnanie:** po kvíze dňa sa hneď ukáže miesto („3. miesto z 412“), podiel ostatných hráčov s menej bodmi a rozloženie bodov dňa po päťbodových pásmach.
+  - **Rebríček dňa:** prvých 10 hráčov, ktorí sa zapísali prezývkou; miesto počíta všetkých hráčov dňa. Prezývka sa dá zmeniť aj odstrániť.
+  - **Úspešnosť otázok:** pri vysvetlení každej otázky je, koľko hráčov ju trafilo (kvíz dňa: dnes, voľný kvíz a výzvy: zo všetkých kôl). Od 5 odpovedí počty, od 20 percentá.
+  - **Výzva:** z dohraného kola vznikne odkaz `?v=game&g=quiz&vyzva=KÓD`.
+    - Kamarát dostane presne tie isté otázky (výmena otázky je vo výzve vypnutá).
+    - Pri vysvetlení vidí, ako odpovedal vyzývateľ, a na konci súboj „Ty : Jana“ s 30 štvorčekmi pod sebou.
+    - Výzva z dnešného kvízu dňa sa kamarátovi rovno počíta aj ako jeho kvíz dňa; kto ho už hral, zapíše sa svojím výsledkom.
+    - Autor vidí výsledky kamarátov na úvode Tridsiatky (posledná vlastná výzva za 7 dní) a po otvorení odkazu.
+  - **Body počíta server** z odpovedí (`verifyRound` v `lib/quiz-online.ts`):
+    - kvíz dňa musí sedieť s kolom dňa (najviac jedna výmena žolíkom), výzva s otázkami výzvy, voľné kolo s plánom úrovní;
+    - prijíma sa len dnešné a včerajšie kolo, opakované odoslanie nič nezdvojí.
+  - **Súkromie:**
+    - kolo má nový náhodný kód z prehliadača; server pozná len body, správne/nesprávne a prezývku, ak ju hráč zadá;
+    - žiadne mená, e-maily ani IP adresy, IP slúži iba ako odtlačok (SHA-256 s dátumom) na limit 60 zápisov za minútu v pamäti;
+    - pri „Do Not Track“ alebo GPC sa výsledok pošle až po kliknutí.
+  - **Prezývky:** 2 – 20 znakov, bez vulgarizmov a urážok, bez mien a skratiek strán a politikov (neutralita) a bez vydávania sa za web.
+    - Zoznamy sú v `lib/quiz-online.ts` (`BAD_PARTS` ako časti slov, `BAD_WORDS` ako celé slová).
+    - Test overuje všetkých politikov s portrétom v `public/people` a skratky strán.
+  - **Moderácia:** nevhodnú prezývku stačí doplniť do `BAD_PARTS` alebo `BAD_WORDS` a nasadiť. V úložisku sa nič nemení: zakázaná prezývka zmizne z rebríčka a vo výzvach sa ukáže ako „Hráč“.
+  - **Architektúra:**
+    - API `app/api/kviz/route.ts` → jedna inštancia Durable Object `QuizBoard` (`worker/quiz-board.ts`) so SQLite v jurisdikcii EÚ; SQL a logika sú v `lib/quiz-store.ts`.
+    - Tabuľky vytvára `SCHEMA` v `lib/quiz-store.ts` (`CREATE … IF NOT EXISTS` pri štarte objektu). Pri zmene tvaru doplniť `ALTER TABLE` tamtiež, staré údaje ostávajú.
+    - Nasadenie a lokálne skúšanie: DEPLOYMENT.md, časť Tridsiatka online.
+  - **V zariadení** navyše `mandat:quiz:v1:online`: prezývka, posledných 8 kôl s kódom a odpoveďami (aby sa dali poslať aj neskôr) a výzvy.
+  - **Vedomé limity:** banka otázok je v prehliadači, takže odhodlaný podvodník si odpovede nájde; rebríček je pre zábavu. Kvíz dňa sa dá zahrať znova v inom prehliadači.
 - **Overenie:** `node scripts/verify-quiz.mjs`:
   - tvar banky, duplicity a dĺžky;
   - krížová kontrola s `lib/cabinets.ts`, voľbami 2023 v `lib/parliament.ts`, Eurostatom v `lib/public-finance.data.ts` a kalkulačkou daní;
-  - plán kola, žolíky, zdieľanie a uloženie.
+  - plán kola, žolíky, zdieľanie a uloženie;
+  - online časť: prezývky, overenie kola, poradie, výzvy a moderácia v úložisku nad node:sqlite;
+  - API naživo len lokálne: `node scripts/smoke-quiz-api.mjs http://127.0.0.1:8787` proti `wrangler dev` (DEPLOYMENT.md).
 - **Aktualizácia faktov:** po zmene vlády, predsedu NR SR, prezidenta, sadzieb (január) či nových voľbách upraviť dotknuté otázky. Otázky s „od roku…“ či „v roku 2026“ prejsť každý rok.
 - **Grafika pre Codex:** hra je funkčná so štýlmi v `app/quiz-game.css`, ilustrácie zatiaľ nemá. Chýba titulná grafika karty v Herni (`.games-quiz-art`, teraz veľké „30“), ilustrácie titulov na konci kola (Volič … Prezident), jemná oslava pri vysokom skóre a prípadne ikony tém.
 
