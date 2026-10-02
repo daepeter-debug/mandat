@@ -1,5 +1,11 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Parlament v 3D: čitateľnejšie hlasovania a detail (Codex)
+
+Tabuľa hlasovania je pod sálou s väčšími tabuľkovými počtami; detail strany aj poslanca je mimo scény. Mobil má všetkých päť režimov v jednej mriežke. Svetelné stĺpiky sú tlmenejšie a priehľadné (alfa 0,32), rovnako pri každom hlasovaní. Text hlasu poslanca používa farbu témy (kontrast 5,47 : 1 svetlá / 8,43 : 1 tmavá). Adaptívne vykresľovanie má minimum 0,6, v knižnici najnižší diskrétny krok 0,62; FPS na telefóne neboli merané.
+
+Bez zmeny dát, dokončenej logiky vývoja/zdieľania/nepostúpenia od Claude alebo 348 hlasovaní. Bez kompresie či regenerovania GLB: 1 444 616 B, 150 kresiel, 165 animačných kanálov; Khronos 0 chýb / 0 varovaní. Všetkých 16 `verify-*.mjs`, TypeScript, úplný ESLint, aktuálnosť tmavého CSS a produkčný build prešli. Reviewer prijal 14 pôvodných snímok a štyri potvrdenia opraveného kontrastu, verdikt **ship** v úzkom grafickom rozsahu. Skutočný PNG koalície 1080 × 1350 a jeho náhľad boli overené; natívne zdieľanie/stiahnutie, fyzické mobilné AR/FPS a živé reduced-motion nie. Ustálené prvé/posledné mesačné snímky nie sú certifikované. Nasadenie sa eviduje osobitne v `docs/parliament-3d.md`.
+
 ## 2. 10. 2026 — Parlament v 3D: skutočné hlasovania NR SR (Claude)
 
 Nový režim **Hlasovania** v 3D sále: vyberieš hlasovanie zo zoznamu a sála ukáže, ako hlasoval každý zo 150 poslancov.
