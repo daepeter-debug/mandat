@@ -34,7 +34,7 @@ declare module "react" {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX { interface IntrinsicElements { "model-viewer": ModelViewerProps } }
 }
-type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; emissiveTexture?: TextureInfo | null; setEmissiveFactor: (c: string | number[]) => void };
+type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; emissiveTexture?: TextureInfo | null; setEmissiveFactor: (c: string | number[]) => void; setAlphaMode: (mode: 'BLEND' | 'MASK' | 'OPAQUE') => void };
 type Viewer = HTMLElement & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
   createTexture: (uri: string) => Promise<Parameters<TextureInfo["setTexture"]>[0]>; positionAndNormalFromPoint: (x: number, y: number) => { position: { x: number; y: number; z: number } } | null };
 type Mode = "strany" | "bloky" | "koalicia" | "vyvoj" | "hlasovania";
@@ -61,7 +61,10 @@ const posterPoints = hemicycleSeats(150, 6);
 let library: Promise<unknown> | null = null;
 // 1 agentúra, 2 – 4 agentúry, 5 a viac agentúr.
 const agencyWord = (n: number) => n === 1 ? "agentúra" : n >= 2 && n <= 4 ? "agentúry" : "agentúr";
-const loadLibrary = () => library ??= import('@google/model-viewer').then(() => {}).catch(e => { library = null; throw e; });
+const loadLibrary = () => library ??= import('@google/model-viewer').then(m => {
+  // Retain adaptive rendering, but keep small logos and vote columns legible.
+  m.ModelViewerElement.minimumRenderScale = .6;
+}).catch(e => { library = null; throw e; });
 // Model (1,4 MB) sa sťahuje až pri zámere otvoriť (prejdenie myšou nad tlačidlom alebo otvorenie), nie každému návštevníkovi úvodu.
 const prefetchModel = () => { void fetch(PARLIAMENT_MODEL, { cache: 'force-cache' }).catch(() => {}); };
 const seatsNow = parliamentSeats();
@@ -362,6 +365,10 @@ export default function ParliamentAR() {
       if (!alive) return;
       beams?.pbrMetallicRoughness.baseColorTexture?.setTexture(texture);
       beams?.emissiveTexture?.setTexture(texture);
+      // Quiet translucent light columns; the same treatment for every recorded vote.
+      beams?.setAlphaMode('BLEND');
+      beams?.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, .32]);
+      beams?.setEmissiveFactor([.45, .45, .45]);
       setDisplayVariant('hlasovanie');
       // Stĺpiky sa vysunú vlnou; pri obmedzenom pohybe (alebo skrytej scéne) hneď stoja.
       if (reduced || !visible) seekClip(viewer, CLIP_END, false); else seekClip(viewer, VOTE_RISE_FROM, true);
@@ -524,22 +531,22 @@ export default function ParliamentAR() {
           {touring && <button type="button" className="par3d-skip" onClick={() => { stopIntro(); setCamera(fit(viewer).view); }}>Preskočiť úvod</button>}
           {transition && <div className="par3d-transition" role="status"><span>{allVariants.find(v => v.id === transition.from)?.label} → {current.label}</span><button type="button" onClick={settleTransition}>Preskočiť</button></div>}
           {immersive && <div className="par3d-detail"><Armchair size={22} aria-hidden="true"/><span><b>Pohľad z kresla</b><small>Ilustračná sála · rozhliadni sa {touch ? 'prstom' : 'myšou'}</small></span><button type="button" onClick={toggleImmersive}><ArrowLeft size={16} aria-hidden="true"/>Celá sála</button></div>}
-          {selectedParty && (mode === 'strany' || mode === 'vyvoj') && <div className="par3d-detail" style={{ ['--party-color' as string]: selectedParty.color }}>
+          {failed && ready && <p className="par3d-loading" role="alert">Model sa nepodarilo načítať. Zavri okno a skús ho otvoriť znova.</p>}
+        </div>
+          {selectedParty && (mode === 'strany' || mode === 'vyvoj') && <div className="par3d-detail par3d-inspection" style={{ ['--party-color' as string]: selectedParty.color }}>
             {logos[selectedParty.id]?.src && <Image src={logos[selectedParty.id].src} alt="" width={40} height={30} unoptimized/>}
             <span><b>{selectedParty.short}</b><small>{selectedParty.seats} {plural(selectedParty.seats)}</small></span>
             <button type="button" onClick={() => choose(null)}><ArrowLeft size={16} aria-hidden="true"/>Celá sála</button>
           </div>}
-          {failed && ready && <p className="par3d-loading" role="alert">Model sa nepodarilo načítať. Zavri okno a skús ho otvoriť znova.</p>}
           {mode === 'hlasovania' && vote && seated && <div className="par3d-board" role="img" aria-label={`Výsledok: za ${vote.za}, proti ${vote.proti}, zdržalo sa ${vote.zdrzalo}, nehlasovalo ${vote.nehlasovalo}, neprítomní ${vote.nepritomni}. ${vote.preslo ? 'Návrh prešiel' : 'Návrh neprešiel'}.`}>
-            {(["Z", "P", "?", "N", "0"] as const).map(k => <span key={k} data-mark={k}><i style={{ background: markColors[k] }} aria-hidden="true"/>{k === "Z" ? "Za" : k === "P" ? "Proti" : k === "?" ? "Zdržalo sa" : k === "N" ? "Nehlasovalo" : "Neprítomní"}<b>{k === "Z" ? vote.za : k === "P" ? vote.proti : k === "?" ? vote.zdrzalo : k === "N" ? vote.nehlasovalo : vote.nepritomni}</b></span>)}
+            {(["Z", "P", "?", "N", "0"] as const).map(k => <span key={k} data-mark={k}><small><i style={{ background: markColors[k] }} aria-hidden="true"/>{k === "Z" ? "Za" : k === "P" ? "Proti" : k === "?" ? "Zdržalo sa" : k === "N" ? "Nehlasovalo" : "Neprítomní"}</small><b>{k === "Z" ? vote.za : k === "P" ? vote.proti : k === "?" ? vote.zdrzalo : k === "N" ? vote.nehlasovalo : vote.nepritomni}</b></span>)}
             <strong data-passed={vote.preslo}>{vote.preslo ? 'Návrh prešiel' : 'Návrh neprešiel'}</strong>
           </div>}
-          {mode === 'hlasovania' && voteSeat && <div className="par3d-detail" style={{ ['--party-color' as string]: markColors[voteSeat.mark] }}>
+          {mode === 'hlasovania' && voteSeat && <div className="par3d-detail par3d-inspection" style={{ ['--party-color' as string]: markColors[voteSeat.mark] }}>
             {logos[voteSeat.party]?.src ? <Image src={logos[voteSeat.party].src} alt="" width={40} height={30} unoptimized/> : <i className="par3d-detail-dot" style={{ background: markColors[voteSeat.mark] }} aria-hidden="true"/>}
-            <span><b>{voteSeat.name}</b><small>{clubLabel(voteSeat.club)} · <em style={{ color: markColors[voteSeat.mark] }}>{markNames[voteSeat.mark]}</em></small></span>
+            <span><b>{voteSeat.name}</b><small>{clubLabel(voteSeat.club)} · <em>{markNames[voteSeat.mark]}</em></small></span>
             <button type="button" onClick={() => setVoteSeat(null)}><X size={16} aria-hidden="true"/>Zavrieť</button>
           </div>}
-        </div>
         <div className="par3d-caption" data-ready={loaded} aria-live="polite">
           {mode === 'hlasovania' && <div className="par3d-vote">
             {voteError && <p role="alert">Hlasovanie sa nepodarilo načítať. Skontroluj pripojenie a skús to znova.</p>}

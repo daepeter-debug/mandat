@@ -10,6 +10,6 @@ FIRST VIEWPORT: väčšia sála na mobile, kompaktnejšie ovládanie nad ňou; �
 FORM: ordinary extension, code-led; bez novej identity alebo seed tournamentu. Autoplay je konečný a prerušiteľný, reduced motion zostáva manuálny.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-Mesačné body: posledný bod aggregateSeries v mesiaci, nedostatočné pokrytie označené, žiadna interpolácia. Neistota: orientačné prepočty, nie pravdepodobnosť volebného výsledku. Exclusion zachováva podporu ostatných strán, prepočíta všetkých 150 kresiel. Model komprimovaný meshopt (pozície zachované, normály filtrované) s menšími textúrami, lokálny dekodér, raw fallback pre Android Scene Viewer. Vyhodnotiť skutočnú veľkosť, nepredstierať fyzické mobilné/AR overenie.
+Mesačné body: posledný bod aggregateSeries v mesiaci, nedostatočné pokrytie označené, žiadna interpolácia. Neistota: orientačné prepočty, nie pravdepodobnosť volebného výsledku. Exclusion zachováva podporu ostatných strán, prepočíta všetkých 150 kresiel. Po Petrovej korekcii bez kompresie: jeden pôvodný GLB pre web aj AR, zachované varianty prechod a hlasovanie, materiály a 165 kanálov obsadenie. Nepredstierať fyzické mobilné/AR overenie.
 
 Evidencia: desktop1280×800, mobil375/402×874, obe témy; prvý/posledný mesiac, exclusion, exportovanýPNG. Jeden batched inspection/fix/confirmation, detector raz, potom čerstvý reviewer/documenter. Root PRODUCT.md/DESIGN.md existujú mimo repo; zachovať.

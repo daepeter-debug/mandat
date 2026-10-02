@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (bff23f7ac2) — needitovať ručne. Pravidiel: 1432, prefarbených: 1116. */
+/* Generované scripts/build-dark.mjs z 30 súborov (0358096b9c) — needitovať ručne. Pravidiel: 1433, prefarbených: 1117. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3738,12 +3738,11 @@ html[data-theme="dark"] .par3d ::selection {
     color: #20392f
 }
 html[data-theme="dark"] .par3d-board {
-    background: #101511e6;
-    color: #e8eadf;
-    box-shadow: 0 6px 18px #0005
+    background: #17271f;
+    color: #e8eadf
 }
-html[data-theme="dark"] .par3d-board i {
-    box-shadow: 0 0 6px currentColor
+html[data-theme="dark"] .par3d-board small {
+    color: #cfe0d6
 }
 html[data-theme="dark"] .par3d-board b {
     color: #fff
@@ -3755,6 +3754,10 @@ html[data-theme="dark"] .par3d-board strong {
 html[data-theme="dark"] .par3d-board strong[data-passed=true] {
     background: #2f9e5b33;
     color: #a4ecbf
+}
+html[data-theme="dark"] .par3d-inspection {
+    box-shadow: none;
+    background: #2a2f20
 }
 html[data-theme="dark"] .par3d-vote-meta {
     color: #bccac2
