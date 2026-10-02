@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, BookOpen, Boxes, Check, ChevronLeft, Coins, ListTodo, Minimize2, PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Boxes, Check, ChevronLeft, Coins, ListTodo, Minimize2, PanelRightClose, PanelRightOpen, RotateCw, Smartphone, Sparkles } from "lucide-react";
 import RepublicArt from "@/components/republic-art";
 import { actionLabel } from "@/components/republic-plan";
 import { catalog, type ItemId, type RepublicState } from "@/lib/republic";
@@ -22,13 +22,26 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children,t
 }) {
   const [expanded,setExpanded]=useState(false),[tab,setTab]=useState<"tasks"|"legend">("tasks"),[rail,setRail]=useState(true);
   const host=useRef<HTMLDivElement>(null),closeButton=useRef<HTMLButtonElement>(null),trigger=useRef<HTMLElement|null>(null);
+  const displayWanted=useRef(false),nativeEntered=useRef(false),orientationLocked=useRef(false);
   const close=useCallback(()=>{
+    displayWanted.current=false;
+    if(nativeEntered.current&&document.fullscreenElement===document.documentElement)void document.exitFullscreen().catch(()=>{});
+    nativeEntered.current=false;
+    if(orientationLocked.current){screen.orientation.unlock();orientationLocked.current=false;}
     setExpanded(false);
   },[]);
   const open=useCallback((button:HTMLElement)=>{
     trigger.current=button;
+    displayWanted.current=true;
     setExpanded(true);
-    // The full browser viewport works in Safari, normal tabs and installed apps alike.
+    // Native fullscreen is progressive: iPhone/standalone still use the entire page viewport.
+    if(Math.min(window.innerWidth,window.innerHeight)>600||document.fullscreenElement||!document.fullscreenEnabled)return;
+    void document.documentElement.requestFullscreen({navigationUI:"hide"}).then(async()=>{
+      if(!displayWanted.current){if(document.fullscreenElement===document.documentElement)await document.exitFullscreen();return;}
+      nativeEntered.current=true;
+      const orientation=screen.orientation as ScreenOrientation&{lock?:(value:"landscape")=>Promise<void>};
+      try{if(orientation.lock){await orientation.lock("landscape");orientationLocked.current=true;if(!displayWanted.current){orientation.unlock();orientationLocked.current=false;}}}catch{/* Manual rotation remains available. */}
+    }).catch(()=>{/* Unsupported/denied fullscreen never prevents opening the map. */});
   },[]);
   useEffect(()=>{
     if(!expanded)return;
@@ -58,8 +71,15 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children,t
       else if(!e.shiftKey&&(document.activeElement===last||!el!.contains(document.activeElement))){e.preventDefault();first?.focus();}
     }
     document.addEventListener("keydown",key);
+    const fullscreenChanged=()=>{if(nativeEntered.current&&!document.fullscreenElement)close();};
+    document.addEventListener("fullscreenchange",fullscreenChanged);
     return()=>{
+      displayWanted.current=false;
+      document.removeEventListener("fullscreenchange",fullscreenChanged);
       document.removeEventListener("keydown",key);
+      if(nativeEntered.current&&document.fullscreenElement===document.documentElement)void document.exitFullscreen().catch(()=>{});
+      nativeEntered.current=false;
+      if(orientationLocked.current){screen.orientation.unlock();orientationLocked.current=false;}
       background.forEach(b=>{b.el.inert=b.inert;});
       document.body.style.overflow=previousBody;document.documentElement.style.overflow=previousHtml;
       document.body.classList.remove("republic-playfield-open");
@@ -78,11 +98,12 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children,t
     <div ref={host} className={`${kind==="festival"?"festival-playfield":"republic-layout"} republic-playfield`} data-kind={kind} data-expanded={expanded||undefined} data-rail={rail||undefined} role={expanded?"dialog":undefined} aria-modal={expanded?true:undefined} aria-label={expanded?"Herný plán Malej republiky":undefined}>
       {expanded&&<>
         <header className="playfield-header">
-          <button type="button" onClick={()=>setRail(v=>!v)} aria-label={rail?"Zbaliť ľavý panel":"Rozbaliť ľavý panel"} aria-expanded={rail}>{rail?<PanelLeftClose size={20}/>:<PanelLeftOpen size={20}/>}</button>
           <strong>{town.name}</strong>
           <div className="playfield-funds">{resources??<><span><Coins size={15} aria-hidden="true"/><b>{town.coins}</b><span className="sr-only">mincí</span></span><span><Boxes size={15} aria-hidden="true"/><b>{town.materials}</b><span className="sr-only">materiálov</span></span></>}</div>
+          <button className="playfield-panel-toggle" type="button" onClick={()=>setRail(v=>!v)} aria-label={rail?"Zbaliť panel úloh":"Rozbaliť panel úloh"} aria-expanded={rail}>{rail?<PanelRightClose size={20}/>:<PanelRightOpen size={20}/>}</button>
           <button ref={closeButton} type="button" onClick={close} aria-label="Zavrieť herný plán"><Minimize2 size={20}/></button>
         </header>
+        <div className="playfield-rotate" role="status"><div className="playfield-rotate-icon"><Smartphone size={54} aria-hidden="true"/><RotateCw size={24} aria-hidden="true"/></div><h2>Otoč telefón na šírku</h2><p>Celá štvrť bude na mape a úlohy vpravo. Ak sa obraz neotočí, vypni zámok otáčania telefónu.</p><button type="button" onClick={close}>Späť k bežnej mape</button></div>
         <aside className="playfield-rail" aria-label="Úlohy a legenda herného plánu">
           <nav aria-label="Panel herného plánu"><button type="button" aria-pressed={tab==="tasks"} aria-label="Úlohy" onClick={()=>{setTab("tasks");setRail(true);}}><ListTodo size={18}/><span>Úlohy</span></button><button type="button" aria-pressed={tab==="legend"} aria-label="Legenda" onClick={()=>{setTab("legend");setRail(true);}}><BookOpen size={18}/><span>Legenda</span></button></nav>
           {rail&&<div className="playfield-rail-content">

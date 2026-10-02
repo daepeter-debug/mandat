@@ -11,6 +11,7 @@ import { CelebrationGuests, CelebrationLanterns, useCelebrationOpening } from "@
 import { celebrationScene, CELEBRATION_SECONDS } from "@/lib/republic-celebration";
 import { needs, type Need } from "@/lib/republic-trust";
 import type { Highlight } from "@/lib/republic-info";
+import { fittedMapWidth } from "@/lib/republic-display";
 
 /** Čo je vybrané na mape (budova alebo políčko) a čo k tomu zvýrazniť. */
 export type MapInspect = { key: string; point: Point; highlight: Highlight; selected: string | null };
@@ -58,7 +59,7 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
   const viewport=useRef<HTMLDivElement>(null),svg=useRef<SVGSVGElement>(null);
   useEffect(()=>{
     const el=viewport.current;if(!playfield?.expanded||!el)return;
-    const measure=()=>setExpandedBase(Math.max(600,Math.ceil(el.clientHeight*640/480)));
+    const measure=()=>setExpandedBase(fittedMapWidth(el.clientWidth,el.clientHeight-1));
     measure();const observer=new ResizeObserver(measure);observer.observe(el);
     return()=>observer.disconnect();
   },[playfield?.expanded]);
@@ -109,7 +110,7 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
     {notice&&<div className="republic-map-notice" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{notice.title}</b><span>{notice.detail}</span></div></div>}
     <div className="republic-map-stage" data-detail-side={inspect&&at(inspect.point).x>280?"left":"right"}>
     <div className="republic-map-window" ref={viewport} tabIndex={0} aria-label="Mapa štvrte. Šípkami vyber políčko; Enter otvorí detail. Pri priblížení posúvaj mapu prstom.">
-      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox="-40 0 640 480" style={{width:`${currentZoom*100}%`,minWidth:playfield?.expanded?expandedBase*currentZoom:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
+      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox="-40 0 640 480" style={{width:playfield?.expanded?expandedBase*currentZoom:`${currentZoom*100}%`,minWidth:playfield?.expanded?undefined:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
         <defs>
           <pattern id={`${uid}-paving`} width="8" height="6" patternUnits="userSpaceOnUse" patternTransform="matrix(1 .558 -1 .558 0 0)">
             <rect width="8" height="6" fill="#d9cdb6"/><path d="M0 0H8M0 3H8M0 0V3M4 3V6" stroke="#b7aa94" strokeWidth=".45"/><path d="M.6.7H7.5M.6 3.7H7.5" stroke="#f4e9d2" strokeWidth=".5" opacity=".8"/>
@@ -178,7 +179,7 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
       <button type="button" aria-label={editing?"Mriežka je pri výbere miesta zapnutá":"Zobraziť mriežku pozemkov"} aria-pressed={showGrid} disabled={editing} onClick={()=>setGrid(v=>!v)}><Grid2X2 size={16}/></button>
       <button type="button" aria-label="Oddialiť mapu" disabled={currentZoom<=1} onClick={()=>setCurrentZoom(z=>Math.max(1,z-.5))}><Minus size={16}/></button>
       <button type="button" aria-label="Priblížiť mapu" disabled={currentZoom>=2} onClick={()=>setCurrentZoom(z=>Math.min(2,z+.5))}><Plus size={16}/></button>
-      <button type="button" aria-label="Centrovať mapu" onClick={centre}><LocateFixed size={17}/></button>
+      <button type="button" aria-label={playfield?.expanded?"Zobraziť celú mapu":"Centrovať mapu"} onClick={()=>{if(playfield?.expanded)setExpandedZoom(1);centre();}}><LocateFixed size={17}/></button>
     </div></div>
     {playfield&&!playfield.expanded&&<button type="button" className="republic-expand-plan" data-playfield-open aria-label="Hra na celú obrazovku" onClick={event=>playfield.open(event.currentTarget)}><Maximize2 size={18} aria-hidden="true"/><span>Hra na celú obrazovku</span></button>}
     {scene&&<details className="republic-daylight"><summary><span className={`republic-daylight-dot ${scene.time.period}`}/>{scenePreview?"Náhľad scény": "Živá štvrť"}<span>{periods[scene.time.period]} · {clock}</span></summary>
