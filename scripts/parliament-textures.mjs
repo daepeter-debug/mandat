@@ -49,8 +49,9 @@ export function writeParliamentEnvironment() {
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const a = x / w * Math.PI * 2, v = y / h;
     const panel = Math.exp(-(((v - .23) / .075) ** 2)) * (Math.max(0, Math.cos(a - .7)) ** 12 + Math.max(0, Math.cos(a + 1.8)) ** 12);
-    const fill = .45 + .45 * Math.max(0, Math.cos(v * Math.PI));
-    const rgb = [fill + panel * 4.2, fill * .92 + panel * 3.5, fill * .84 + panel * 2.7];
+    const fill = .22 + .30 * Math.max(0, Math.cos(v * Math.PI));
+    const rim = Math.exp(-(((v - .42) / .065) ** 2)) * Math.max(0, Math.cos(a - 3.4)) ** 20;
+    const rgb = [fill + panel * 6.4 + rim * 2.8, fill * .94 + panel * 5.2 + rim * 2.2, fill * .9 + panel * 4.0 + rim * 1.65];
     const exp = Math.ceil(Math.log2(Math.max(...rgb))), factor = 256 / 2 ** exp, i = (y * w + x) * 4;
     rgb.forEach((c, k) => { pixels[i + k] = clamp(c * factor); }); pixels[i + 3] = exp + 128;
   }

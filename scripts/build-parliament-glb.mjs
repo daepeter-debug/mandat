@@ -9,6 +9,7 @@
 // zrazené čalúnenie a lavice, podrúčky, mikrofóny, schodíky, svetelná škára, logá v oboch variantoch.
 // Regeneruje aj lokálny HDR. Logá: lib/party-logos.json; historická koalícia 2023 má textový štítok.
 // Oficiálne overenie: node scripts/verify-parliament-glb.mjs. Model musí ostať pod 1 500 000 B.
+// 2. 10. 2026 doplnenie: mäkšie rádiusy čalúnenia, lesk orecha a hlbší statický kontakt pre detail kamery.
 import fs from "node:fs";
 import { parliamentTextures, writeParliamentEnvironment } from './parliament-textures.mjs';
 import { CHAMBER, ROW_DEPTH, chamberSeats, parliamentSeats, parliamentVariants, rowRadius, tierTop } from "../lib/parliament-model.ts";
@@ -127,7 +128,7 @@ async function buildGlb() {
       const n = g.nor.slice(i, i + 3), p = g.pos.slice(i, i + 3), axis = n.map(Math.abs).indexOf(Math.max(...n.map(Math.abs)));
       if (textured && !g.uv) uv.push(p[axis === 0 ? 2 : 0] / .055, p[axis === 1 ? 2 : 1] / .055);
       // Jemný statický kontakt: spodné a bočné plochy tmavšie; bez animovaného tieňa na 150 svetlách.
-      const ao = g.uv ? 1 : n[1] < -.5 ? .65 : n[1] > .5 ? 1 : .86;
+      const ao = g.uv ? 1 : n[1] < -.5 ? .55 : n[1] > .5 ? 1 : .76;
       colors.push(Math.round(ao * 255), Math.round(ao * 255), Math.round(ao * 255), 255);
     }
     let tangentAccessor;
@@ -169,9 +170,9 @@ async function buildGlb() {
   const M = {
     floor: material("podlaha", "#b4b0a5", { rough: 0.85, texture: 'stone' }), carpet: material("koberec", "#343b3b", { rough: 1, texture: 'fabric' }),
     tier: material("stupne", "#454b49", { rough: 0.95, texture: 'fabric' }), riser: material("čelá stupňov", "#6d4c35", { rough: 0.65, texture: 'wood' }),
-    deskTop: material("lavice", "#946d4e", { rough: 0.4, texture: 'wood' }), deskFront: material("čelo lavíc", "#63452f", { rough: 0.55, texture: 'wood' }),
+    deskTop: material("lavice", "#946d4e", { rough: 0.28, texture: 'wood' }), deskFront: material("čelo lavíc", "#63452f", { rough: 0.48, texture: 'wood' }),
     chairBase: material("podnož kresla", "#3a3f44", { rough: 0.4, metal: 0.5 }), wall: material("stena", "#393c38", { rough: 0.9, texture: 'stone' }),
-    slat: material("obklad", "#805b3d", { rough: 0.5, texture: 'wood' }), dais: material("pódium", "#63442e", { rough: 0.45, texture: 'wood' }),
+    slat: material("obklad", "#805b3d", { rough: 0.34, texture: 'wood' }), dais: material("pódium", "#63442e", { rough: 0.32, texture: 'wood' }),
     dark: material("predsedníctvo", "#2b2f33", { rough: 0.45 }), metal: material("žrď", "#cfc8b6", { rough: 0.3, metal: 0.85 }),
     red: material("štít", "#d72b23", { rough: 0.5 }), white: material("biela", "#f7f5ef", { rough: 0.6 }), blue: material("modrá", "#1351a5", { rough: 0.55 }),
     euBlue: material("EÚ modrá", "#0b3a92", { rough: 0.6 }), gold: material("zlatá", "#f2c230", { rough: 0.4, metal: 0.2 }),
@@ -254,17 +255,17 @@ async function buildGlb() {
 
   // Kreslá: čalúnenie vo farbe strany (dva varianty) a tmavá podnož; predok k predsedníctvu
   const upholstery = geo();
-  cushion(upholstery, 0, 0.0075, 0.001, 0.0145, 0.0045, 0.0135, .0012);
-  cushion(upholstery, 0, 0.017, -0.0062, 0.0145, 0.0145, 0.0034, .0012, -.2);
+  cushion(upholstery, 0, 0.0075, 0.001, 0.0145, 0.0045, 0.0135, .0017);
+  cushion(upholstery, 0, 0.017, -0.0062, 0.0145, 0.0145, 0.0038, .0016, -.2);
   const base = geo();
   box(base, 0, 0.003, 0.001, 0.0035, 0.006, 0.0035);
   box(base, 0, 0.0007, 0.001, 0.0095, 0.0014, 0.0095);
   for (const x of [-.0076, .0076]) { cushion(base, x, .0115, 0, .0015, .0018, .01, .0005); box(base, x, .007, -.002, .001, .008, .001); }
   const upG = geometry(upholstery, true, true), baseG = geometry(base);
   const colorOf = id => variants.flatMap(v => v.ordered).find(m => m.id === id).color;
-  const partyMat = new Map(partyIds.map(id => [id, material(`strana:${id}`, colorOf(id), { rough: 0.8, texture: 'fabric' })]));
+  const partyMat = new Map(partyIds.map(id => [id, material(`strana:${id}`, colorOf(id), { rough: 0.72, texture: 'fabric' })]));
   const logoMat = new Map(partyIds.map(id => [id, material(`logo:${id}`, '#ffffff', { rough: .85, texture: `logo:${id}` })]));
-  const badge = geo(); plate(badge, 0, .002, .00185, .0095, .00475);
+  const badge = geo(); plate(badge, 0, .002, .00205, .0095, .00475);
   for (let i = 0; i < badge.pos.length; i += 3) {
     const y = badge.pos[i + 1], z = badge.pos[i + 2];
     badge.pos[i + 1] = .017 + y * Math.cos(-.2) - z * Math.sin(-.2); badge.pos[i + 2] = -.0062 + y * Math.sin(-.2) + z * Math.cos(-.2);

@@ -14,6 +14,14 @@ Kvíz má po novom spoločnú online časť:
 - Úložisko je Durable Object so SQLite v jurisdikcii EÚ, priamo vo Workeri (DEPLOYMENT.md).
 - Prezývky sú bez vulgarizmov a bez mien politikov a strán. Moderácia sa robí doplnením slova do zoznamu.
 
+## 2. 10. 2026 — Parlament v 3D: filmový vstup, detail a vlastná koalícia (Codex)
+
+- Čistá sála bez plávajúcich čísiel; ovládanie je mimo scény. Približne trojsekundový, prerušiteľný prejazd od kresiel k celému parlamentu má opakovanie a preskočenie. Reduced-motion otvorí rovno celok.
+- Detail strany používa stred jej skutočných kresiel, miestne logo/názov/počet a tlačidlo „Celá sála“. Vybrať sa dá zo zoznamu aj ťuknutím na čalúnenie alebo značku kresla; otáčanie/pinch výber nespúšťa.
+- „Koalícia“ umožňuje ľubovoľný výber strán. Vybrané kreslá si zachovávajú stranícku farbu, ostatné sú neutrálne, súčet smeruje k hranici 76. Vlastná kombinácia je označená ako experiment používateľa, nie politické odporúčanie. Zmena obsadenia výber vymaže.
+- Mäkké čalúnenie, jemnejší lesk dreva, smerovejšie teplé HDR a výraznejšie kontaktné tienenie. Počty, poradie, farby, logá a varianty ostávajú bez zmeny; GLB má 1 326 416 B (pod 1,5 MB), Khronos 0 chýb/0 varovaní.
+- Nové čisté funkcie `coalitionSelection` a `partyFocus` overuje `verify-parliament-experience`: oba varianty, duplikáty, neznáme ID, prechod väčšiny a deterministický detail. Fyzické AR/Safari/Android a 60 fps ostávajú neoverené.
+
 ## 2. 10. 2026 — Parlament v 3D: Večerná sála a značky strán (Codex)
 
 Peter vybral smer C z troch koncepčných renderov: orechové drevo, tlmené čalúnenie a teplé svetlo. Kreslá dostali svetlé štítky s existujúcimi zdrojovanými logami (`lib/party-logos.json`); značky sa menia spolu s obsadením. Koalícia OĽANO a priatelia z roku 2023 má textový štítok s rokom, nie dnešné logo hnutia Slovensko.

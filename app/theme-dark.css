@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (be247cba36) — needitovať ručne. Pravidiel: 1376, prefarbených: 1075. */
+/* Generované scripts/build-dark.mjs z 30 súborov (092e1cd9ab) — needitovať ručne. Pravidiel: 1385, prefarbených: 1083. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3560,7 +3560,7 @@ html[data-theme="dark"] .par3d-note {
     }
 }
 html[data-theme="dark"] .par3d-seg {
-    background: #262c29
+    background: #2a2f20
 }
 html[data-theme="dark"] .par3d-seg button {
     border: 0;
@@ -3575,25 +3575,6 @@ html[data-theme="dark"] .par3d-replay {
     border: 0;
     background: #262c29;
     color: #d1e7de
-}
-html[data-theme="dark"] .par3d-tag {
-    border: 0;
-    background: #262c29;
-    color: #d1e7de;
-    box-shadow: 0 4px 10px #0004
-}
-html[data-theme="dark"] .par3d-tag::after {
-    background: var(--c)
-}
-html[data-theme="dark"] .par3d-tag b::after {
-    background: var(--c)
-}
-html[data-theme="dark"] .par3d-tag i {
-    background: var(--c)
-}
-html[data-theme="dark"] .par3d-tag[aria-pressed=true] {
-    background: #262c29;
-    box-shadow: 0 5px 15px #0007
 }
 html[data-theme="dark"] .par3d-caption {
     color: #bfcec6
@@ -3614,6 +3595,57 @@ html[data-theme="dark"] .par3d-partners input {
     accent-color: #d1e7de
 }
 html[data-theme="dark"] .par3d-partners small {
+    color: #bccac2
+}
+html[data-theme="dark"] .par3d-detail {
+    background: #262c29;
+    color: #d1e7de;
+    box-shadow: 0 6px 20px #0004
+}
+html[data-theme="dark"] .par3d-detail>img {
+    background: #262c29
+}
+html[data-theme="dark"] .par3d-detail small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-detail button {
+    border: 0;
+    background: #20392f;
+    color: #fffefa
+}
+html[data-theme="dark"] .par3d-skip {
+    border: 0;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-coalition-summary strong {
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-coalition-summary strong small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-majority {
+    background: #2c3028
+}
+html[data-theme="dark"] .par3d-majority>span {
+    background: #537455
+}
+html[data-theme="dark"] .par3d-coalition[data-majority=true] .par3d-majority>span {
+    background: #245c48
+}
+html[data-theme="dark"] .par3d-majority>i {
+    background: #262c29
+}
+html[data-theme="dark"] .par3d-majority-label button {
+    border: 0;
+    background: transparent;
+    color: #d1e7de;
+    text-decoration: underline
+}
+html[data-theme="dark"] .par3d-majority-label button:disabled {
+    text-decoration: none
+}
+html[data-theme="dark"] .par3d-coalition>p {
     color: #bccac2
 }
 html[data-theme="dark"] .pc-head h2 {
