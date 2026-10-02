@@ -100,6 +100,10 @@ export default function ParliamentAR() {
         const candidates = [0, -38, 38, -76, 76, -114, 114];
         const offset = candidates.find(shift => baseTop + shift >= minY && baseBottom + shift <= maxY && placed.every(other => rect.right + 5 <= other.left || rect.left >= other.right + 5 || baseBottom + shift + 5 <= other.top || baseTop + shift >= other.bottom + 5)) ?? 0;
         tag.style.setProperty('--tag-offset', `${offset}px`);
+        // Pri odsunutom čísle ostáva farebná vodiaca čiara a bod na pôvodnom sektore.
+        tag.style.setProperty('--leader-height', `${Math.abs(offset)}px`);
+        tag.style.setProperty('--leader-top', `calc(50% - ${Math.max(0, offset)}px)`);
+        tag.style.setProperty('--leader-opacity', offset ? '1' : '0');
         placed.push({ left: rect.left, right: rect.right, top: baseTop + offset, bottom: baseBottom + offset });
       }
     };

@@ -35,6 +35,8 @@
 /* Čísla nad klinmi strán (hotspoty model-viewer) */
 .par3d-tag{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:32px;height:32px;padding:0 6px;border:0;border-radius:8px;background:#fffefa;color:#20392f;font:inherit;font-size:12.5px;font-weight:750;font-variant-numeric:tabular-nums;box-shadow:0 4px 10px #0004;cursor:pointer;transform:translateY(calc(-50% + var(--tag-offset,0px)));transition:opacity .25s;animation:par3d-tag .4s ease-out both;-webkit-tap-highlight-color:transparent}
 .par3d-tag::before{content:"";position:absolute;inset:-6px}
+.par3d-tag::after{content:"";position:absolute;left:50%;top:var(--leader-top,50%);width:1px;height:var(--leader-height,0px);background:var(--c);opacity:var(--leader-opacity,0);pointer-events:none;z-index:-1}
+.par3d-tag b::after{content:"";position:absolute;left:calc(50% - 2px);top:calc(50% - var(--tag-offset,0px) - 2px);width:4px;height:4px;border-radius:50%;background:var(--c);opacity:var(--leader-opacity,0);pointer-events:none}
 .par3d-tag i{width:5px;height:16px;border-radius:2px;background:var(--c)}
 .par3d-tag b{font-weight:750}
 .par3d-tag span{font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
