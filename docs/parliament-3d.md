@@ -138,7 +138,7 @@ Režim **Hlasovania** ukazuje skutočné hlasovania 9. volebného obdobia: kresl
   - Stránky hlasovaní ostávajú v cache mimo repa, ďalší beh dotiahne len nové hlasovania. Jedna požiadavka za sekundu.
 - **Výber podľa názvu hlasovania:**
   - záverečné hlasovanie o zákone, ústavnom zákone alebo zákone po vete;
-  - samotné hlasovanie o návrhu na vyslovenie nedôvery, nie procedurálne hlasovania k nemu.
+  - samotné hlasovanie o nedôvere (názov končí „o návrhu na vyslovenie nedôvery“, „o vyslovení nedôvery“ alebo „o návrhu uznesenia“), nie prezentácia, tajné hlasovanie ani procedurálne návrhy.
   - Ústavný zákon = „ústavného zákona / ústavnom zákone“, teda nie zákon o Ústavnom súde.
 - Pri každom poslancovi je `PoslanecID` z nrsr.sk, meno, klub v čase hlasovania a hlas (Z, P, ?, N, 0).
 - **Kontrola:** `node scripts/verify-votes.mjs`.

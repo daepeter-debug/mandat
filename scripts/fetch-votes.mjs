@@ -69,8 +69,9 @@ const NO_CONFIDENCE = /vyslovenie nedôvery/i;
 // Ústavný zákon (nie zákon o Ústavnom súde či o ústavnej zdravotnej starostlivosti).
 const CONSTITUTIONAL = /ústavného zákona|ústavnom zákone|ústavný zákon/i;
 export function kindOf(title) {
-  // Len samotné hlasovanie o návrhu na nedôveru (nie prezentácia ani procedurálne hlasovania k nemu).
-  if (NO_CONFIDENCE.test(title)) return /Hlasovanie o návrhu na vyslovenie nedôvery/i.test(title) ? "nedovera" : null;
+  // Len samotné hlasovanie o nedôvere („o návrhu na vyslovenie / o vyslovení nedôvery“, „o návrhu uznesenia“),
+  // nie prezentácia, tajné hlasovanie ani procedurálne návrhy k nemu.
+  if (NO_CONFIDENCE.test(title)) return /Hlasovanie o ((návrhu na vyslovenie|vyslovení) nedôvery|návrhu uznesenia)/i.test(title) ? "nedovera" : null;
   if (!FINAL.test(title) || /programe/i.test(title)) return null;
   if (/vrátený prezident|opätovné prerokovanie/i.test(title)) return "veto";
   if (CONSTITUTIONAL.test(title)) return "ustavny";

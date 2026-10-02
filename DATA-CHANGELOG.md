@@ -8,8 +8,8 @@ Nový režim **Hlasovania** v 3D sále: vyberieš hlasovanie zo zoznamu a sála 
 - Na operadlách sú logá klubov v čase hlasovania. Ťuknutie na kreslo ukáže meno poslanca a jeho hlas.
 - Pod sálou je pravidlo väčšiny podľa Ústavy SR, súhrn po kluboch a odkaz na nrsr.sk. Zoznam má vyhľadávanie bez diakritiky a filtre podľa druhu.
 
-**Dáta:** 345 hlasovaní 9. volebného obdobia (od 25. 10. 2023 do 1. 10. 2026) z nrsr.sk (`scripts/fetch-votes.mjs`, `public/data/hlasovania/`).
-- **Výber podľa pravidiel, nie ručne:** záverečné hlasovania o zákonoch (315) a ústavných zákonoch (3), štátne rozpočty (3), opätovné hlasovania po vete prezidenta (13) a hlasovania o nedôvere vláde alebo ministrom (11).
+**Dáta:** 348 hlasovaní 9. volebného obdobia (od 25. 10. 2023 do 1. 10. 2026) z nrsr.sk (`scripts/fetch-votes.mjs`, `public/data/hlasovania/`).
+- **Výber podľa pravidiel, nie ručne:** záverečné hlasovania o zákonoch (315) a ústavných zákonoch (3), štátne rozpočty (3), opätovné hlasovania po vete prezidenta (13) a hlasovania o nedôvere vláde alebo ministrom (14, prešla jediná: Tomášovi Tarabovi 29. 9. 2026 so 77 hlasmi).
 - **Kontrola (`scripts/verify-votes.mjs`):**
   - súčty za, proti, zdržalo sa a nehlasovalo sa pri každom hlasovaní zhodujú so súhrnom NR SR;
   - výsledok vždy zodpovedá väčšine, ktorú vyžaduje ústava: zákon nadpolovičná väčšina prítomných, ústavný zákon 90, zákon po vete a nedôvera 76.
