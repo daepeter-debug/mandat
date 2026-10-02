@@ -2,7 +2,7 @@
 
 import {lazy,Suspense,useEffect,useId,useMemo,useState,type CSSProperties} from "react";
 import {ArrowRight,ArrowUpRight,Info,ChartNoAxesCombined,ListOrdered,Pause,Play,RotateCcw} from "lucide-react";
-import {aggregatePolls,aggregateSeries,currentAggregate,aggregateLastDate} from "@/lib/aggregate";
+import {aggregatePolls,aggregateSeries,currentAggregate,aggregateLastDate,aggregateUpdated} from "@/lib/aggregate";
 import {parties,fmt,date} from "@/lib/polls";
 import {edition} from "@/lib/edition";
 import {currentSeatUncertainty,thresholdHints,thresholdLabels,thresholdStatus} from "@/lib/uncertainty";
@@ -71,7 +71,7 @@ export default function PollAggregator({onMethod}:{onMethod:()=>void}) {
     if(Number.isInteger(next)&&next>=0&&next<points.length)setHovered(next);
   };
   return <section className="aggregate poll-studio" aria-labelledby="aggregate-title" style={{"--series-color":focused.color} as CSSProperties}>
-    <div className="aggregate-head"><div><h2 id="aggregate-title">Ako sa mení podpora strán.</h2><p>Vážený priemer meraní AKO, FOCUS, INFOSTAT, IPSOS a NMS. Vyberte stranu a preskúmajte jej vývoj.</p></div><button className="studio-method" onClick={onMethod}>Model Mandát <span>{date(aggregateLastDate)}</span><ArrowUpRight size={15}/></button></div>
+    <div className="aggregate-head"><div><h2 id="aggregate-title">Ako sa mení podpora strán.</h2><p>Vážený priemer meraní AKO, FOCUS, INFOSTAT, IPSOS a NMS. Vyberte stranu a preskúmajte jej vývoj.</p></div><button className="studio-method" onClick={onMethod} title={`Aktualizované ${date(aggregateUpdated)} · posledný zber ${date(aggregateLastDate)}`}>Model Mandát <span>{date(aggregateUpdated)}</span><ArrowUpRight size={15}/></button></div>
     <div className="studio-surface">
       <div className="studio-toolbar"><div className="studio-segment" role="group" aria-label="Zobrazenie agregátora"><button aria-pressed={mode==="ranking"} onClick={()=>{setMode("ranking");setHovered(null);}}><ListOrdered size={16}/> Poradie</button><button aria-pressed={mode==="trend"} onClick={()=>{setMode("trend");setHovered(null);}}><ChartNoAxesCombined size={16}/> Trend</button></div>{mode==="trend"&&<div className="studio-period" role="group" aria-label="Obdobie trendu">{[{value:3,label:"3 mesiace"},{value:6,label:"6 mesiacov"},{value:0,label:"Celé obdobie"}].map(p=><button key={p.value} aria-pressed={period===p.value} onClick={()=>{setPeriod(p.value);setPinned(null);setHovered(null);}}>{p.label}</button>)}</div>}</div>
       <div className="studio-workspace">

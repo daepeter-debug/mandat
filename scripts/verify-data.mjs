@@ -6,7 +6,7 @@ import { cabinets, cabinetSummaries, debtBrake, debtPerCapita, financeCompare, f
 import { politicalCases, politicalCaseInputs, casesChecked, caseStatuses, severityBand, severityScale, casesForParty, caseCountsByParty, scoreCase } from '../lib/political-cases.ts';
 import { archive, polls, parties, latest, previous, difference, rank, agencySeries, availableTrendAgencies, dataVerified } from '../lib/polls.ts';
 import { programmes, positions } from '../lib/programmes.ts';
-import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, aggregatePolls, aggregateSeries, currentAggregate } from '../lib/aggregate.ts';
+import { aggregateAt, aggregateAgencies, aggregateAsPoll, aggregateLastDate, aggregatePolls, aggregateSeries, aggregateUpdated, currentAggregate } from '../lib/aggregate.ts';
 import { blocSeats, optionalIds, MAJORITY, CONSTITUTIONAL_MAJORITY } from '../lib/blocs.ts';
 import { responsibilityRows, responsibilityTotalDays, tierFor, responsibilityGroups, compactTenure, inactiveResponsibilityRows } from '../lib/responsibility.ts';
 import { durationLabel } from '../lib/government-tenure.ts';
@@ -135,6 +135,7 @@ for(const position of positions){assert(partyIds.has(position.partyId)&&position
 // Agregátor: chýbajúce údaje sa nedopĺňajú nulou a každá agentúra vstupuje najviac raz.
 assert.deepEqual(aggregateAgencies,['AKO','FOCUS','INFOSTAT','IPSOS','NMS']);
 assert.equal(aggregateLastDate,'2026-09-22'); // koniec zberu septembrového Ipsosu
+assert.equal(aggregateUpdated,'2026-10-01'); // aktualizácia: septembrový AKO zverejnený 1. 10. so zberom do 21. 9.
 assert.equal(new Set(aggregatePolls.map(p=>p.agency)).size,aggregatePolls.length,'Jedna agentúra najviac raz v aktuálnom bode');
 assert(aggregatePolls.length>=3,'Aktuálny agregát potrebuje aspoň tri agentúry');
 assert.equal(currentAggregate.pollIds.length,aggregatePolls.length);

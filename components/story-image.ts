@@ -97,7 +97,7 @@ function leaderCard(ctx: Ctx) {
     ctx.textAlign = "right"; ctx.fillStyle = "#dde9e0"; ctx.fillText(`${fmt(v.value)} %`, R, y + 13); ctx.textAlign = "left";
     y += 78;
   }
-  footer(ctx, `Model Mandát k ${date(edition.asOf)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`);
+  footer(ctx, `Model Mandát · aktualizované ${date(edition.updated)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`);
 }
 
 function seatsCard(ctx: Ctx) {
@@ -114,7 +114,7 @@ function seatsCard(ctx: Ctx) {
   const y = para(ctx, win ? `Väčšinu by mala ${lowerFirst(win.label)}, ${inRuns(win.share)}.` : "Väčšinu by nemal ani jeden blok.", X, Math.max(lc, lo) + 70, R - X, 60);
   font(ctx, 400, 30); ctx.fillStyle = FAINT;
   para(ctx, "Republiku ku koalícii a Hnutie Slovensko k opozícii radíme ako redakčný predpoklad, nie dohodu strán.", X, y + 10, R - X, 42);
-  footer(ctx, `Model Mandát k ${date(edition.asOf)} · kreslá podľa § 68 · scenár, nie predpoveď`);
+  footer(ctx, `Model Mandát · aktualizované ${date(edition.updated)} · kreslá podľa § 68 · scenár, nie predpoveď`);
 }
 
 function monthCard(ctx: Ctx) {
@@ -136,14 +136,14 @@ function monthCard(ctx: Ctx) {
   row(down, 790, false);
   font(ctx, 400, 44); ctx.fillStyle = "#dde9e0";
   para(ctx, `Najväčší rast a pokles v Modeli Mandát od ${date(edition.monthAgo)}. Za ten čas pribudlo ${edition.newPolls.length} ${pollWordNew(edition.newPolls.length)}.`, X, 1130, R - X, 62);
-  footer(ctx, `Model Mandát k ${date(edition.asOf)} · ${edition.agencies.length} agentúr · zmena v percentuálnych bodoch`);
+  footer(ctx, `Model Mandát · aktualizované ${date(edition.updated)} · ${edition.agencies.length} agentúr · zmena v percentuálnych bodoch`);
 }
 
 function edgeCard(ctx: Ctx) {
   const u = currentSeatUncertainty();
   if (!edge.length) {
     font(ctx, 400, 48); ctx.fillStyle = "#dde9e0"; para(ctx, "Pásmo žiadnej strany dnes nepretína hranicu 5 %.", X, 560, R - X, 66);
-    footer(ctx, `Model Mandát k ${date(edition.asOf)} · pásmo neistoty 95 %`);
+    footer(ctx, `Model Mandát · aktualizované ${date(edition.updated)} · pásmo neistoty 95 %`);
     return;
   }
   const big = edge.length <= 2, x0 = big ? 420 : 360, x1 = 850, at = (v: number) => x0 + (x1 - x0) * Math.min(10, Math.max(0, v)) / 10;
@@ -165,7 +165,7 @@ function edgeCard(ctx: Ctx) {
   y = para(ctx, edge.map(v => `${storyParty(v.partyId)?.short}: nad 5 % ${inRuns(u.parties[v.partyId]?.entry ?? 0)}`).join(" · ") + ".", X, y + 30, R - X, 60);
   font(ctx, 400, 30); ctx.fillStyle = FAINT;
   para(ctx, "Pásmo neistoty týchto strán pretína hranicu 5 %. O vstupe do parlamentu rozhodnú voľby, nie prieskum.", X, y + 20, R - X, 42);
-  footer(ctx, `Model Mandát k ${date(edition.asOf)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`);
+  footer(ctx, `Model Mandát · aktualizované ${date(edition.updated)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`);
 }
 
 function debtCard(ctx: Ctx) {

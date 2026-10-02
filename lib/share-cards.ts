@@ -9,7 +9,7 @@ export const shareCards: ShareCard[] = [
   { view: "finance", image: "hospodarenie", title: "Ako hospodári štát", text: "Deficit, dlh, životná úroveň a porovnanie so susedmi od roku 1995." },
   { view: "responsibility", image: "zodpovednost", title: "Kto nesie zodpovednosť za stav krajiny", text: "Koľko času strávila každá strana vo vláde od roku 1993." },
   { view: "model", image: "volby", title: "Vlastný model parlamentu", text: "Posuňte podporu strán a poskladajte vlastnú väčšinu." },
-  { view: "game", image: "mala-republika", title: "Herňa", text: "Denná väčšina, Do decembra a Malá republika. Tri hry o rozhodovaní." },
+  { view: "game", image: "mala-republika", title: "Herňa", text: "Kvíz Tridsiatka, Koalícia slov, Denná väčšina, Do decembra a Malá republika." },
 ];
 
 export const shareCardFor = (view: string | undefined): ShareCard => shareCards.find(c => c.view === view) ?? shareCards[0];

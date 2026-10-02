@@ -62,7 +62,7 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
     <div className="national-copy">
       <div className="national-aurora" aria-hidden="true"><i/><i/><i/></div>
       <MinuteLaunch onYear={onYear} onNavigate={onNavigate}/>
-      <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát k {date(edition.asOf)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
+      <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát · aktualizované {date(edition.updated)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
       <h1 id="national-title">{headline}</h1>
       <p className="edition-lead">{lead}</p>
       <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">

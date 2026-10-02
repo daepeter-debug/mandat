@@ -42,7 +42,7 @@ export default function ParliamentAR() {
       <DialogPrimitive.Content className="par3d" aria-describedby="par3d-desc">
         <div className="par3d-head">
           <div><DialogPrimitive.Title className="par3d-title">Parlament v 3D</DialogPrimitive.Title>
-            <p id="par3d-desc" className="par3d-desc">150 kresiel podľa Modelu Mandát k {date(model.asOf)}: koalícia vľavo, opozícia vpravo. Otáčaj prstom, približuj dvoma prstami.</p></div>
+            <p id="par3d-desc" className="par3d-desc">150 kresiel podľa Modelu Mandát (aktualizované {date(model.updated)}): koalícia vľavo, opozícia vpravo. Otáčaj prstom, približuj dvoma prstami.</p></div>
           <DialogPrimitive.Close className="par3d-close" aria-label="Zavrieť"><X size={20}/></DialogPrimitive.Close>
         </div>
         <div className="par3d-stage">

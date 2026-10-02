@@ -1,5 +1,19 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Model Mandát: dátum aktualizácie popri dátume zberu (Claude)
+
+Po doplnení septembrového AKO sa Model Mandát prepočítal. PS 19,3 → 19,0 %, Smer-SD 17,3 → 17,2 %, Republika 12,4 → 11,8 %, Hlas-SD 7,3 → 7,6 %, SNS 3,0 → 3,4 %. ZA ĽUDÍ (1,1 %) ho po novom uvádza väčšina meraní v bode, preto vstupuje do priemeru. Kreslá: Smer-SD 31, Republika 21.
+
+Pri modeli však ostal dátum 22. 9., lebo bod nesie koniec posledného zberu (Ipsos 22. 9.; AKO zbieral do 21. 9.). Web tak vyzeral neaktualizovaný.
+
+**Oprava:** nová hodnota `aggregateUpdated` je najneskoršie zverejnenie merania v aktuálnom bode, teraz 1. 10. 2026. Všade, kde sa spomína Model Mandát, je teraz „aktualizované 1. 10. 2026“:
+- pás strán, agregátor, Parlament podľa prieskumov, titulná strana;
+- Mandát za minútu a jeho obrázky, skladačka koalícií, 3D parlament.
+
+Koniec zberu ostáva v časovom rade a v metodike, ktorá oba dátumy vysvetľuje. Značka „nové“ pri Mandáte za minútu sa riadi dňom aktualizácie, takže sa po novom meraní ukáže aj vtedy, keď sa koniec zberu neposunie.
+
+**Popri tom:** náhľad Herne pri zdieľaní už vymenúva päť hier (`public/og/game.jpg`).
+
 ## 2. 10. 2026 — Deň v politike za 30. 9. a 1. 10. (Claude)
 
 Doplnených 12 správ: 6 za stredu 30. 9. a 6 za štvrtok 1. 10. Každý deň má poradie, vetu dňa a počet prejdených udalostí (po 35).

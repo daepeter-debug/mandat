@@ -1,4 +1,4 @@
-import { aggregateAsPoll, aggregateLastDate } from "./aggregate.ts";
+import { aggregateAsPoll, aggregateLastDate, aggregateUpdated } from "./aggregate.ts";
 import { blocSeats } from "./blocs.ts";
 import { scenarioFromPoll } from "./parliament.ts";
 
@@ -15,5 +15,5 @@ export function parliamentSeats() {
   const entries = scenario.rows.map(r => ({ id: r.id, short: r.short, color: r.color, seats: r.seats }));
   const summary = blocSeats(entries);
   const ordered = [...summary.coalition.members, ...summary.others.members, ...summary.opposition.members];
-  return { asOf: aggregateLastDate, ordered, seats: Object.fromEntries(ordered.map(m => [m.id, m.seats])) as Record<string, number> };
+  return { asOf: aggregateLastDate, updated: aggregateUpdated, ordered, seats: Object.fromEntries(ordered.map(m => [m.id, m.seats])) as Record<string, number> };
 }

@@ -22,7 +22,7 @@ function subscribe(onChange: () => void) {
   window.addEventListener("storage", onChange);
   return () => { window.removeEventListener(EVENT, onChange); window.removeEventListener("storage", onChange); };
 }
-const seenNow = () => { try { return localStorage.getItem(KEY) === edition.asOf; } catch { return false; } };
+const seenNow = () => { try { return localStorage.getItem(KEY) === edition.updated; } catch { return false; } };
 
 export default function MinuteLaunch({ onYear, onNavigate }: { onYear: (year: number) => void; onNavigate: (view: string) => void }) {
   const seen = useSyncExternalStore(subscribe, seenNow, () => false);
@@ -42,14 +42,14 @@ export default function MinuteLaunch({ onYear, onNavigate }: { onYear: (year: nu
     const hide = () => setOpen(false);
     if (morph && canMorph(ring.current)) morphBack(ring.current, "mandat-story", "vt-story", hide);
     else hide();
-    try { localStorage.setItem(KEY, edition.asOf); } catch { /* súkromné okno */ }
+    try { localStorage.setItem(KEY, edition.updated); } catch { /* súkromné okno */ }
     window.dispatchEvent(new Event(EVENT));
   }
 
   return <>
     <button type="button" className={`minute-launch${seen ? " is-seen" : ""}`} aria-haspopup="dialog" onPointerEnter={preload} onPointerDown={preload} onFocus={preload} onClick={() => { void openStory(); }}>
       <span className="minute-ring" ref={ring} aria-hidden="true"><span><svg viewBox="0 0 64 64"><g fill="#f5f4ee"><circle cx="10" cy="43" r="4.6"/><circle cx="16.4" cy="27.4" r="4.6"/><circle cx="32" cy="21" r="4.6"/><circle cx="21" cy="43" r="4.6"/><circle cx="32" cy="32" r="4.6"/></g><g fill="#9dbb86"><circle cx="47.6" cy="27.4" r="4.6"/><circle cx="54" cy="43" r="4.6"/><circle cx="43" cy="43" r="4.6"/></g></svg></span></span>
-      <span className="minute-text"><b>Mandát za minútu</b><small>6 kariet · údaje k {date(edition.asOf)}</small></span>
+      <span className="minute-text"><b>Mandát za minútu</b><small>6 kariet · aktualizované {date(edition.updated)}</small></span>
       <Play size={15} aria-hidden="true"/>
     </button>
     {open && Story && <Story open morph={morph} onOpenChange={next => { if (!next) closeStory(); }} onYear={onYear} onNavigate={onNavigate}/>}

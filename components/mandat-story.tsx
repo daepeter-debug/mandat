@@ -256,7 +256,7 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
         <p className="story-toast" role="status">{toast}</p>
         <div className="story-foot">
           <button type="button" onClick={prev} disabled={index === 0} aria-label="Predchádzajúca karta"><ChevronLeft size={20}/></button>
-          <span>{slide.id === "debt" ? "Eurostat, odhad Mandátu" : slide.id === "you" ? "Mandát · nezávislý projekt bez reklamy" : `Model Mandát k ${date(edition.asOf)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`}{voiceOn ? ` · ${storyAudio.credit}` : ""}</span>
+          <span>{slide.id === "debt" ? "Eurostat, odhad Mandátu" : slide.id === "you" ? "Mandát · nezávislý projekt bez reklamy" : `Model Mandát · aktualizované ${date(edition.updated)} · ${edition.agencies.length} agentúr · scenár, nie predpoveď`}{voiceOn ? ` · ${storyAudio.credit}` : ""}</span>
           <button type="button" onClick={last ? close : next} aria-label={last ? "Zavrieť" : "Ďalšia karta"}>{last ? <X size={20}/> : <ChevronRight size={20}/>}</button>
         </div>
       </DialogPrimitive.Content>

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ArrowUpRight, Check, Download, Plus, RotateCcw, Share2 } from "lucide-react";
-import { aggregateAsPoll, aggregateLastDate } from "@/lib/aggregate";
+import { aggregateAsPoll, aggregateUpdated } from "@/lib/aggregate";
 import { MAJORITY } from "@/lib/blocs";
 import { minimalMajorities } from "@/lib/coalitions";
 import { hemicycleSeats, scenarioFromPoll } from "@/lib/parliament";
@@ -46,7 +46,7 @@ function drawImage(selected: string[], count: number): HTMLCanvasElement {
   const cx = 860, cy = 440, R = 290;
   points.forEach((p, i) => { ctx.fillStyle = colours[i] ?? "#3d5a4d"; ctx.beginPath(); ctx.arc(cx + p.x * R, cy + p.y * R, 10.5, 0, Math.PI * 2); ctx.fill(); });
   ctx.fillStyle = "#9fb8a8"; ctx.font = `500 20px ${font}`;
-  ctx.fillText(`Model Mandát k ${date(aggregateLastDate)} · scenár, nie predpoveď · ${location.host}`, 64, 590);
+  ctx.fillText(`Model Mandát · aktualizované ${date(aggregateUpdated)} · scenár, nie predpoveď · ${location.host}`, 64, 590);
   return canvas;
 }
 

@@ -1,4 +1,4 @@
-import { aggregateAsPoll, aggregateLastDate, aggregateSeries, currentAggregate, type AggregatePoint } from "./aggregate.ts";
+import { aggregateAsPoll, aggregateLastDate, aggregateSeries, aggregateUpdated, currentAggregate, type AggregatePoint } from "./aggregate.ts";
 import { blocSeats, blocs, MAJORITY, optionalPartners } from "./blocs.ts";
 import { scenarioFromPoll } from "./parliament.ts";
 import { archive, parties } from "./polls.ts";
@@ -59,6 +59,8 @@ const newPolls = archive.filter(p => p.end > before.date && p.end <= aggregateLa
 
 export const edition = {
   asOf: aggregateLastDate,
+  /** Deň, keď do modelu naposledy pribudlo zverejnené meranie (pozri aggregateUpdated). */
+  updated: aggregateUpdated,
   monthAgo: before.date,
   month: aggregateAsPoll(currentAggregate).month,
   year: aggregateLastDate.slice(0, 4),

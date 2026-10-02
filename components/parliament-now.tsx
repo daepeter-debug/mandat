@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { hemicycleSeats, seated2023, election2023, scenarioFromPoll } from "@/lib/parliament";
 import { blocSeats, MAJORITY, optionalIds, type SeatEntry } from "@/lib/blocs";
 import { partnerWording } from "@/lib/edition";
-import { aggregateAsPoll, aggregateLastDate, aggregatePolls } from "@/lib/aggregate";
+import { aggregateAsPoll, aggregatePolls, aggregateUpdated } from "@/lib/aggregate";
 import { date } from "@/lib/polls";
 import { currentSeatUncertainty } from "@/lib/uncertainty";
 import SeatDots, { RollNumber } from "@/components/seat-dots";
@@ -35,7 +35,7 @@ const modelScenario = scenarioFromPoll(aggregateAsPoll());
 const modelEntries = modelScenario.rows.map(r => ({ id: r.id, short: r.short, color: r.color, seats: r.seats }));
 
 const views = {
-  model: { title: "Parlament podľa prieskumov", tab: "Podľa prieskumov", meta: `150 kresiel · Model Mandát k ${date(aggregateLastDate)}`, data: [buildView(modelEntries), buildView(modelEntries, true)] as const, label: `Scenár podľa Modelu Mandát k ${date(aggregateLastDate)}` },
+  model: { title: "Parlament podľa prieskumov", tab: "Podľa prieskumov", meta: `150 kresiel · Model Mandát, aktualizované ${date(aggregateUpdated)}`, data: [buildView(modelEntries), buildView(modelEntries, true)] as const, label: `Scenár podľa Modelu Mandát, aktualizované ${date(aggregateUpdated)}` },
   volby2023: { title: "Parlament z volieb 2023", tab: "Voľby 2023", meta: "150 kresiel · oficiálny výsledok", data: [buildView(todayEntries), buildView(todayEntries, true)] as const, label: "Parlament z volieb 2023" },
 } as const;
 type ViewId = keyof typeof views;

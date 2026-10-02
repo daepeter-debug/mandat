@@ -73,6 +73,10 @@ export const aggregateLastDate=eligibleArchive.reduce((max,p)=>p.end>max?p.end:m
 export const aggregateSeries=weeklyDates("2026-01-20",aggregateLastDate).map(d=>aggregateAt(d));
 export const currentAggregate=aggregateAt(aggregateLastDate);
 export const aggregatePolls=pollsForAggregate(aggregateLastDate);
+/** Deň poslednej aktualizácie Modelu Mandát: najneskoršie zverejnenie merania v aktuálnom bode. Dátum bodu je koniec
+ *  posledného zberu, takže meranie zverejnené neskôr so starším zberom (AKO 1. 10. so zberom do 21. 9.) model zmení,
+ *  no dátum bodu neposunie; čitateľ preto pri modeli vidí aj tento deň. Bez dátumu zverejnenia platí koniec zberu. */
+export const aggregateUpdated=aggregatePolls.reduce((max,p)=>{const d=p.published??p.end;return d>max?d:max;},aggregateLastDate);
 
 export function aggregateAsPoll(point:AggregatePoint=currentAggregate):Poll {
   return {
