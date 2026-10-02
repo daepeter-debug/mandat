@@ -2,15 +2,8 @@
   "voice": "2ST3sI2j7fz4A5oXjnbA",
   "model": "eleven_multilingual_v2",
   "credit": "Hlas: ElevenLabs (AI)",
-  "generated": "2026-09-29",
+  "generated": "2026-10-02",
   "items": {
-    "majority": {
-      "src": "/audio/quick/majority-54f95c88c9.mp3",
-      "hash": "54f95c88c9",
-      "chars": 408,
-      "ms": 25156,
-      "edition": "2026-09-22"
-    },
     "debt": {
       "src": "/audio/quick/debt-a667c73fa3.mp3",
       "hash": "a667c73fa3",

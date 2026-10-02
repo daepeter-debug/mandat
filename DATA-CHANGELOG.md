@@ -1,5 +1,22 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — septembrový prieskum AKO, kontrola ostatných agentúr (Claude)
+
+Doplnené septembrové meranie AKO pre JOJ 24 podľa pôvodnej tlačovej správy (PDF na ako.sk z 30. 9. 2026, verejne 1. 10. 2026, TASR 12:42).
+- Zber 10.–21. 9. 2026; rozhodnutých 73 % opýtaných.
+- PS 18,9 %, Smer-SD 17,1 %, Republika 9,7 %, Hlas-SD 8,6 %, Hnutie Slovensko 8,1 %, SaS 8,1 %, KDH 6,9 %, SNS 4,8 %, Demokrati 4,4 %, Maďarská aliancia 3,3 %, Sme rodina 3,2 %, Právo na pravdu 2,7 %.
+- Z ostatných: ĽSNS 0,7 %, ZA ĽUDÍ 0,5 %, Strana vidieka 0,2 %, KÚ 0,1 %.
+
+**Zmena metodiky AKO:** od septembra zbiera kombinovane, polovicu rozhovorov telefonicky a polovicu online, na vzorke 2 000 respondentov. Dovtedy zbieralo telefonicky na vzorke 1 000. Uvedené pri meraní aj v pokrytí agentúr.
+
+**Vplyv:** Model Mandát k 22. 9. (posledný koniec zberu, Ipsos) sa posunul o jedno kreslo: Smer-SD 31, Republika 21. 3D parlament je pregenerovaný.
+
+**Hlas:** nahrávky s neplatnými číslami sa skryli (`import-audio --restamp`), mimo je 8 položiek. Prenahrať ich treba po obnove kreditov ElevenLabs 24. 10.
+
+**Kontrola ostatných agentúr k 2. 10.:**
+- NMS a Focus mali posledné merania 10. 9., Ipsos a SANEP 24. 9., Infostat 21. 9.
+- V spravodajstve od 29. 9. sa okrem AKO objavil len krajský prieskum AKO o voľbe župana v Banskobystrickom kraji. Do agregátora nepatrí.
+
 ## 30. 9. 2026 — oprava: súčet Modelu Mandát nad 100 % (Claude)
 
 Po doplnení septembrového Infostatu dával Model Mandát k 22. 9. súčet 101,5 %. Vlastný model pri súčte nad 100 % scenár nevypočítal.

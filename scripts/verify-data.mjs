@@ -108,7 +108,8 @@ for(const agency of availableTrendAgencies) {
   assert(series.every((p,i)=>i===0||p.end>series[i-1].end),'Každá séria musí mať chronologické poradie');
   assert.deepEqual(agencySeries(agency,3),series.slice(-3),'Filter počtu meraní musí zachovať najnovšie záznamy');
 }
-assert.equal(agencySeries('AKO',9).length,8);
+assert.equal(agencySeries('AKO',9).length,9);
+assert.equal(agencySeries('AKO',1)[0].values.ps,18.9); assert.equal(agencySeries('AKO',1)[0].sample,2000); // AKO september 2026 (tlačová správa 30. 9., zverejnené 1. 10.), od septembra polovica telefonicky, polovica online
 assert.equal(agencySeries('AKO',9)[0].values.ps,23.2);
 assert.equal(agencySeries('FOCUS',1)[0].values.ps,17.3);
 assert.equal(agencySeries('FOCUS',1)[0].values.smer,17.3);
