@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (b608f67f13) — needitovať ručne. Pravidiel: 1391, prefarbených: 1087. */
+/* Generované scripts/build-dark.mjs z 30 súborov (d68e6799e3) — needitovať ručne. Pravidiel: 1408, prefarbených: 1098. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3559,6 +3559,9 @@ html[data-theme="dark"] .par3d-note {
         box-shadow: 0 40px 90px #0006
     }
 }
+html[data-theme="dark"] .par3d-controls {
+    border: 0
+}
 html[data-theme="dark"] .par3d-seg {
     background: #2a2f20
 }
@@ -3673,6 +3676,66 @@ html[data-theme="dark"] .par3d-majority-label button:disabled {
 }
 html[data-theme="dark"] .par3d-coalition>p {
     color: #bccac2
+}
+html[data-theme="dark"] .par3d-timeline-head button,html[data-theme="dark"] .par3d-share {
+    border: 0;
+    background: #20392f;
+    color: #fffefa
+}
+html[data-theme="dark"] .par3d-share-preview {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .par3d-share-preview a {
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-share-preview>button {
+    border: 0;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-timeline input {
+    accent-color: #baead9
+}
+html[data-theme="dark"] .par3d-timeline input:focus-visible,html[data-theme="dark"] .par3d-uncertainty summary:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .par3d-timeline-months button {
+    border: 0;
+    background: transparent;
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-timeline-months button[aria-pressed=true] {
+    background: #20392f;
+    color: #fffefa
+}
+html[data-theme="dark"] .par3d-coverage {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-range {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-uncertainty {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .par3d-uncertainty summary {
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-edge-buttons button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-edge-buttons button[aria-pressed=true] {
+    background: #20392f;
+    color: #fffefa
+}
+html[data-theme="dark"] .par3d-legend button[data-edge=true] {
+    border-style: dashed
+}
+html[data-theme="dark"] .par3d ::selection {
+    background: #dcf59b;
+    color: #20392f
 }
 html[data-theme="dark"] .pc-head h2 {
     color: #d1e7de

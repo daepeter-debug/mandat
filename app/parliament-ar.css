@@ -3,12 +3,13 @@
 .par3d-open:hover{border-color:#b9c7b0}
 .par3d-open:focus-visible,.par3d button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .par3d-overlay{position:fixed;inset:0;z-index:70;background:#0a110ee0}
-.par3d{position:fixed;z-index:71;inset:0;display:grid;grid-template-rows:auto auto minmax(180px,1fr) auto auto auto;gap:10px;overflow-y:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));background:#f5f4ee;color:var(--mag-ink);outline:none}
+.par3d{position:fixed;z-index:71;inset:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto;overflow-x:hidden;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));background:#f5f4ee;color:var(--mag-ink);outline:none}
+.par3d>*{flex:none}
 .par3d-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .par3d-title{margin:0;font-size:20px;font-weight:650;letter-spacing:-.01em}
 .par3d-desc{margin:4px 0 0;font-size:13px;line-height:1.45;color:var(--text-2)}
 .par3d-close{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:#fffefa;color:var(--mag-ink);cursor:pointer}
-.par3d-stage{position:relative;min-height:0;border-radius:16px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)}
+.par3d-stage{position:relative;min-height:0;height:min(360px,42dvh);border-radius:16px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)}
 .par3d-viewer{display:block;width:100%;height:100%;--poster-color:transparent;--progress-bar-color:#2f6b3f}
 .par3d-loading{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:60px 24px;text-align:center;font-size:14px;color:#f5f4ee;background:#343b36}
 .par3d-ar{position:absolute;left:50%;bottom:14px;translate:-50% 0;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:999px;background:#20392f;color:#fff;font:inherit;font-size:15px;font-weight:650;box-shadow:0 6px 18px #0003;cursor:pointer}
@@ -26,7 +27,7 @@
 }
 
 /* Ovládanie nad sálou: obsadenie (prieskumy / 2023), zafarbenie (strany / bloky), znova prehrať úvod */
-.par3d-controls{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
+.par3d-controls{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px;border:0;margin:0;padding:0;min-width:0}
 .par3d-controls>*{pointer-events:auto}
 .par3d-seg{display:inline-flex;padding:3px;border-radius:10px;background:#e5ebd8}
 .par3d-seg button{min-height:38px;padding:0 10px;border:0;border-radius:7px;background:transparent;font:inherit;font-size:12.5px;font-weight:650;color:#4f6057;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -76,3 +77,42 @@
 /* Mobil: stĺpec namiesto mriežky a sála s pevnou výškou (široký polkruh), pod ňou popis a strany. Safari pri aspect-ratio
    v riadku mriežky vypočítal riadok nižší ako samotnú plochu a model potom zasahoval do textu pod ňou. */
 @media(max-width:760px){.par3d{display:flex;flex-direction:column}.par3d>*{flex:none}.par3d-stage{height:min(calc((100vw - 32px) * .95),48dvh)}.par3d-controls{gap:5px}.par3d-seg button{padding:0 8px;font-size:12px}.par3d-detail{gap:7px;padding:8px}.par3d-detail>span{font-size:13px}.par3d-detail button{font-size:11px;padding:0 8px}.par3d-coalition-summary strong{font-size:30px}}
+
+/* The chamber leads; dated controls stay separate from the model canvas. */
+.par3d-loading{align-content:center;gap:22px;pointer-events:none}
+.par3d-loading svg{width:min(82%,420px);height:auto;justify-self:center}
+.par3d-controls:disabled{opacity:.6}
+.par3d button:disabled{cursor:default}
+.par3d-timeline{display:grid;gap:7px}
+.par3d-timeline-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.par3d-timeline-head>span{display:grid;gap:3px}
+.par3d-timeline-head small{font-size:11px}
+.par3d-timeline-head button,.par3d-share{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:0 12px;border:0;border-radius:8px;background:#20392f;color:#fffefa;font:inherit;font-size:12px;font-weight:600;cursor:pointer;flex:none}
+.par3d-share{justify-self:start}
+.par3d-share:disabled,.par3d-timeline-head button:disabled{opacity:.45}
+.par3d-share-preview{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:12px}
+.par3d-share-preview img{width:72px;height:90px;object-fit:contain;border-radius:5px}
+.par3d-share-preview>span{display:grid;gap:7px}
+.par3d-share-preview a{color:var(--mag-ink);text-underline-offset:3px}
+.par3d-share-preview>button{display:grid;place-items:center;min-width:40px;min-height:40px;margin-left:auto;border:0;background:transparent;color:var(--mag-ink);cursor:pointer}
+.par3d-timeline input{width:100%;height:28px;margin:0;accent-color:#245c48;cursor:pointer}
+.par3d-timeline input:focus-visible,.par3d-uncertainty summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.par3d-timeline-months{display:grid;grid-template-columns:repeat(auto-fit,minmax(30px,1fr));gap:2px}
+.par3d-timeline-months button{min-height:36px;padding:0 2px;border:0;border-radius:6px;background:transparent;color:var(--text-2);font:inherit;font-size:11px;cursor:pointer}
+.par3d-timeline-months button[aria-pressed=true]{background:#20392f;color:#fffefa}
+.par3d-coverage{font-size:11px;line-height:1.4;color:var(--text-2)}
+.par3d-range{display:block;margin:2px 0;font-size:12px;line-height:1.45;color:var(--text-2)}
+.par3d-range svg{display:inline;vertical-align:-2px;margin-right:6px}
+.par3d-uncertainty{border-top:1px solid var(--border);padding-top:4px;font-size:12px}
+.par3d-uncertainty summary{display:flex;align-items:center;gap:7px;min-height:40px;cursor:pointer;color:var(--mag-ink);font-weight:600}
+.par3d-uncertainty summary::after{content:'+';margin-left:auto;font-size:18px}
+.par3d-uncertainty[open] summary::after{content:'−'}
+.par3d-uncertainty p{margin:2px 0 8px;font-size:11px;line-height:1.45}
+.par3d-edge-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.par3d-edge-buttons button{min-height:40px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:#fffefa;color:var(--mag-ink);font:inherit;cursor:pointer}
+.par3d-edge-buttons button[aria-pressed=true]{background:#20392f;color:#fffefa}
+.par3d-legend button[data-edge=true]{border-style:dashed}
+.par3d ::selection{background:#dcf59b;color:#20392f}
+.par3d{scrollbar-color:#8a9c8e #e9eee3}
+@media(min-width:761px){.par3d{height:min(800px,calc(100dvh - 40px));width:min(900px,calc(100vw - 48px))}}
+@media(max-width:760px){.par3d-stage{width:calc(100% + 20px);margin-left:-10px;height:min(calc((100vw - 12px) * .86),48dvh);border-radius:12px}.par3d-timeline-head button{padding:0 9px;font-size:11px}.par3d-seg button{padding:0 7px}.par3d-timeline-head b{font-size:14px}}

@@ -12,7 +12,7 @@
 // 2. 10. 2026 doplnenie: mäkšie rádiusy čalúnenia, lesk orecha a hlbší statický kontakt pre detail kamery.
 import fs from "node:fs";
 import { parliamentTextures, writeParliamentEnvironment } from './parliament-textures.mjs';
-import { CHAMBER, ROW_DEPTH, chamberSeats, parliamentSeats, parliamentVariants, rowRadius, tierTop } from "../lib/parliament-model.ts";
+import { CHAMBER, ROW_DEPTH, chamberSeats, parliamentSeats, allParliamentVariants, parliamentTimeline, parliamentEdges, rowRadius, tierTop } from "../lib/parliament-model.ts";
 
 const OUT = "public/models/parlament.glb";
 const { ROWS, SECTORS, AISLE } = CHAMBER;
@@ -101,7 +101,7 @@ function halfDiscXY(g, cx, cy, z, r, up, seg = 16) {
 
 // ---------- GLB ----------
 async function buildGlb() {
-  const variants = parliamentVariants(), [model, v2023] = variants;
+  const variants = allParliamentVariants(), [model, v2023] = variants;
   const partyIds = [...new Set(variants.flatMap(v => v.ordered.map(m => m.id)))];
   const textureBytes = await parliamentTextures(partyIds);
   const bin = [], bufferViews = [], accessors = [], materials = [], meshes = [], nodes = [];
@@ -172,7 +172,7 @@ async function buildGlb() {
     tier: material("stupne", "#454b49", { rough: 0.95, texture: 'fabric' }), riser: material("čelá stupňov", "#6d4c35", { rough: 0.65, texture: 'wood' }),
     deskTop: material("lavice", "#946d4e", { rough: 0.28, texture: 'wood' }), deskFront: material("čelo lavíc", "#63452f", { rough: 0.48, texture: 'wood' }),
     chairBase: material("podnož kresla", "#3a3f44", { rough: 0.4, metal: 0.5 }), wall: material("stena", "#393c38", { rough: 0.9, texture: 'stone' }),
-    slat: material("obklad", "#805b3d", { rough: 0.34, texture: 'wood' }), dais: material("pódium", "#63442e", { rough: 0.32, texture: 'wood' }),
+    slat: material("obklad", "#987657", { rough: 0.34, texture: 'wood' }), dais: material("pódium", "#63442e", { rough: 0.32, texture: 'wood' }),
     dark: material("predsedníctvo", "#2b2f33", { rough: 0.45 }), metal: material("žrď", "#cfc8b6", { rough: 0.3, metal: 0.85 }),
     red: material("štít", "#d72b23", { rough: 0.5 }), white: material("biela", "#f7f5ef", { rough: 0.6 }), blue: material("modrá", "#1351a5", { rough: 0.55 }),
     euBlue: material("EÚ modrá", "#0b3a92", { rough: 0.6 }), gold: material("zlatá", "#f2c230", { rough: 0.4, metal: 0.2 }),
@@ -212,7 +212,7 @@ async function buildGlb() {
   solid("stena", g => ring(g, wallR, wallR + 0.006, FLOOR, wallH, wallA0, wallA1, { seg: 64 }), M.wall);
   solid('svetelná škára', g => ring(g, wallR - .002, wallR, wallH - .005, wallH - .003, wallA0, wallA1, { seg: 64 }), M.light);
   solid("obklad", g => {
-    const n = 54;
+    const n = 28;
     for (let i = 0; i <= n; i++) {
       const a = wallA0 + (wallA1 - wallA0) * i / n;
       if (Math.abs(a - Math.PI / 2) < 0.16) continue;                  // miesto pre znak a vlajky
@@ -288,16 +288,24 @@ async function buildGlb() {
   badge.uv = [0, 1, 1, 1, 1, 0, 0, 0];
   const badgeG = geometry(badge, true);
   const chairNodes = chamberSeats.map(seat => {
-    const mModel = partyMat.get(model.seatParty[seat.index]), m2023 = partyMat.get(v2023.seatParty[seat.index]);
-    const mappings = mModel === m2023 ? [{ material: mModel, variants: [0, 1] }] : [{ material: mModel, variants: [0] }, { material: m2023, variants: [1] }];
-    const lModel = logoMat.get(model.seatParty[seat.index]), l2023 = logoMat.get(v2023.seatParty[seat.index]);
-    const logoMappings = lModel === l2023 ? [{ material: lModel, variants: [0, 1] }] : [{ material: lModel, variants: [0] }, { material: l2023, variants: [1] }];
+    const mModel = partyMat.get(model.seatParty[seat.index]);
+    const lModel = logoMat.get(model.seatParty[seat.index]);
+    const mapMaterials = mats => {
+      const grouped = new Map();
+      variants.forEach((v, i) => {
+        const mat = mats.get(v.seatParty[seat.index]);
+        if (!grouped.has(mat)) grouped.set(mat, []);
+        grouped.get(mat).push(i);
+      });
+      return [...grouped].map(([material, variants]) => ({ material, variants }));
+    };
+    const mappings = mapMaterials(partyMat), logoMappings = mapMaterials(logoMat);
     // Internal third variant: independent seat materials allow a genuine colour/logo sweep.
     // Textures and geometry are shared; the two factual allocations are left unchanged.
     const sweepMat = material(`prechod:${seat.index}`, colorOf(model.seatParty[seat.index]), { rough: .72, texture: 'fabric' });
     const sweepLogo = material(`prechod-logo:${seat.index}`, '#ffffff', { rough: .85, texture: `logo:${model.seatParty[seat.index]}` });
-    mappings.push({ material: sweepMat, variants: [2] });
-    logoMappings.push({ material: sweepLogo, variants: [2] });
+    mappings.push({ material: sweepMat, variants: [variants.length] });
+    logoMappings.push({ material: sweepLogo, variants: [variants.length] });
     return node(`kreslo ${seat.index + 1}`, [{ ...prim(upG, mModel), extensions: { KHR_materials_variants: { mappings } } }, prim(baseG, M.chairBase), { ...prim(badgeG, lModel), extensions: { KHR_materials_variants: { mappings: logoMappings } } }],
       { translation: [seat.x, seat.y, seat.z], rotation: [0, Math.sin(seat.yaw / 2), 0, Math.cos(seat.yaw / 2)] });
   });
@@ -315,7 +323,7 @@ async function buildGlb() {
 
   const seats = parliamentSeats();
   const json = {
-    asset: { version: "2.0", generator: "Mandát · scripts/build-parliament-glb.mjs", extras: { asOf: seats.asOf, updated: seats.updated, seats: seats.seats, seats2023: Object.fromEntries(v2023.ordered.map(m => [m.id, m.seats])) } },
+    asset: { version: "2.0", generator: "Mandát · scripts/build-parliament-glb.mjs", extras: { asOf: seats.asOf, updated: seats.updated, seats: seats.seats, seats2023: Object.fromEntries(v2023.ordered.map(m => [m.id, m.seats])), timeline: parliamentTimeline().map(p => ({ id: p.variant.id, date: p.point.date, agencies: p.agencies, missing: p.missing, seats: Object.fromEntries(p.variant.ordered.map(m => [m.id, m.seats])) })), exclusions: parliamentEdges().map(p => ({ id: p.variant.id, excluded: p.party.id, seats: Object.fromEntries(p.variant.ordered.map(m => [m.id, m.seats])) })) } },
     extensionsUsed: ["KHR_materials_variants"],
     extensions: { KHR_materials_variants: { variants: [...variants.map(v => ({ name: v.id })), { name: 'prechod' }] } },
     scene: 0, scenes: [{ name: "Rokovacia sála", nodes: nodes.map((_, i) => i) }],

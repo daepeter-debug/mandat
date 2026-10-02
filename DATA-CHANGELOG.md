@@ -1,5 +1,27 @@
 # Evidencia údajov a rozsahu
 
+## 2. 10. 2026 — Parlament v 3D: vývoj 2026, zdieľanie koalície a strany na hrane (Codex, dokončil Claude)
+
+Päť rozšírení podľa zadania `outputs/PROMPT-codex-parlament-3d-dalsie.md`. Codex ich naprogramoval a otestoval, no pri záverečných snímkach narazil na limit používania. Kontroly, dokumentáciu a nasadenie dokončil Claude.
+
+- **Vývoj 2026:** nový režim prefarbí sálu po mesiacoch od januára 2026.
+  - Ovládanie: posuvník mesiacov, tlačidlo „Prehrať vývoj“, dátum bodu a počet agentúr, pod tým najväčšie zmeny oproti januáru.
+  - Dáta: každý mesiac je posledný týždenný bod `aggregateSeries`, bez dopočítavania. Strany bez väčšinového pokrytia meraní sú vypísané.
+  - Varianty `model-2026-01` … `model-2026-09` sú v GLB a `verify-data` aj `verify-parliament-evolution` ich porovnávajú s dátami.
+- **Strany na hrane 5 %:** detail strany uvádza podiel prepočtov, v ktorých postúpi, a rozpätie kresiel (`seatUncertainty`).
+  - Scenár „Čo ak nepostúpia?“ prepočíta všetkých 150 kresiel bez tej strany, pri nezmenenej podpore ostatných (variant `bez-dem`).
+  - Teraz je na hrane len Demokrati (5,0 %, postup v 49 % prepočtov).
+- **Zdieľanie vlastnej koalície:** obrázok so záberom sály, súčtom, väčšinou áno/nie a stranami (`components/parliament-share.ts`). Vlastná kombinácia, nie odporúčanie ani predpoveď.
+- **Mobil:** väčšia sála v prvom pohľade, redšia a svetlejšia zadná stena, nápoveda podľa zariadenia (prst alebo myš).
+- **Kompresia modelu vynechaná** na Petrovo prianie. Model má 1 399 656 B, pod limitom 1,5 MB, a načíta sa až pri zámere otvoriť 3D. Na pozadí sa vopred sťahuje len knižnica a svetelné prostredie.
+- **Claudove úpravy pri dokončení:**
+  - text pre január („východiskový mesiac“);
+  - dátum karty koalície podľa aktualizácie modelu;
+  - skloňovanie „agentúry“;
+  - kontrola vývoja nad nekomprimovaným modelom.
+- **Overenie:** dáta, GLB (Khronos 0 chýb), všetky overovacie skripty, TypeScript, ESLint, tmavé CSS a build.
+- **Neoverené:** vykreslenie 3D a karty na skutočnom telefóne. Náhľad v Claudovom prehliadači nevykresľuje WebGL animácie, Codexove snímky v `.impeccable/review/parliament-evolution/` ostali mimo repa.
+
 ## 2. 10. 2026 — Parlament v 3D: prechod kresiel, moment väčšiny a pohľad poslanca (Codex)
 
 - Pri prepnutí obsadenia v režime Strany sa cez 150 skutočných miest postupne mení farba a logo. Prechod trvá 1 050 ms, možno ho preskočiť a iné ovládanie ho preruší. Dve faktické obsadenia ostávajú nezmenené; interný glTF variant `prechod` slúži len animácii.

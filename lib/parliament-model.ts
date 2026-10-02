@@ -1,4 +1,6 @@
-import { aggregateAsPoll, aggregateLastDate, aggregateUpdated } from "./aggregate.ts";
+import { aggregateAsPoll, aggregateLastDate, aggregateUpdated, aggregateSeries, currentAggregate, pollsForAggregate, reportedByMajority, type AggregatePoint } from "./aggregate.ts";
+import { parties } from './polls.ts';
+import { thresholdStatus } from './uncertainty.ts';
 import { blocSeats, optionalIds, type BlocSummary, type SeatEntry } from "./blocs.ts";
 import { hemicycleSeats, scenarioFromPoll, seated2023 } from "./parliament.ts";
 
@@ -45,7 +47,7 @@ export const chamberSeats: ChamberSeat[] = (() => {
   return seats.sort((a, b) => b.angle - a.angle || a.row - b.row).map((s, index) => ({ index, ...s }));
 })();
 
-export type VariantId = "prieskumy" | "volby-2023";
+export type VariantId = "prieskumy" | "volby-2023" | `model-${string}` | `bez-${string}`;
 export type ParliamentLabel = { id: string; short: string; color: string; seats: number; position: [number, number, number] };
 export type ParliamentVariant = {
   id: VariantId; label: string; ordered: SeatEntry[]; seatParty: string[];
@@ -71,6 +73,31 @@ function variant(id: VariantId, label: string, entries: SeatEntry[]): Parliament
 
 const modelEntries = (): SeatEntry[] => scenarioFromPoll(aggregateAsPoll()).rows.map(r => ({ id: r.id, short: r.short, color: r.color, seats: r.seats }));
 const entries2023 = (): SeatEntry[] => seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, color: s.color, seats: s.seats }));
+
+export function pointVariant(point: AggregatePoint) {
+  return variant(`model-${point.date.slice(0, 7)}`, new Date(`${point.date}T12:00:00Z`).toLocaleDateString('sk-SK', { month: 'long', year: 'numeric', timeZone: 'UTC' }),
+    scenarioFromPoll(aggregateAsPoll(point)).rows.map(r => ({ id: r.id, short: r.short, color: r.color, seats: r.seats })));
+}
+/** Last observed weekly point of each month, never interpolation or a future month. */
+export function parliamentTimeline() {
+  const monthly = new Map<string, AggregatePoint>();
+  aggregateSeries.forEach(p => monthly.set(p.date.slice(0, 7), p));
+  return [...monthly.values()].map(point => {
+    const inputs = pollsForAggregate(point.date);
+    const missing = parties.filter(p => inputs.some(x => x.values[p.id] !== undefined) && !reportedByMajority(inputs.filter(x => x.values[p.id] !== undefined).length, inputs.length)).map(p => p.short);
+    return { point, variant: pointVariant(point), agencies: inputs.length, missing, limited: inputs.length < 3 };
+  });
+}
+export function parliamentEdges() {
+  return Object.values(currentAggregate.values).filter(v => thresholdStatus(v) === 'edge').map(v => {
+    const p = parties.find(p => p.id === v.partyId)!;
+    const poll = aggregateAsPoll();
+    // Remaining shares stay fixed. Zero puts the excluded party below the threshold.
+    poll.values = { ...poll.values, [v.partyId]: 0 };
+    return { value: v, party: p, variant: variant(`bez-${p.id}`, `Bez ${p.short}`, scenarioFromPoll(poll).rows.map(r => ({ id: r.id, short: r.short, color: r.color, seats: r.seats }))) };
+  });
+}
+export const allParliamentVariants = () => [...parliamentVariants(), ...parliamentTimeline().map(p => p.variant), ...parliamentEdges().map(p => p.variant)];
 
 /** Oba varianty obsadenia sály: scenár Modelu Mandát (predvolený) a voľby 2023. */
 export const parliamentVariants = (): ParliamentVariant[] => [variant("prieskumy", "Podľa prieskumov", modelEntries()), variant("volby-2023", "Voľby 2023", entries2023())];

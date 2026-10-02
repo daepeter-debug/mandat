@@ -335,12 +335,14 @@ assert.deepEqual([durationLabel(0), durationLabel(20), durationLabel(366), durat
 }
 // 3D parlament: public/models/parlament.glb nesie kreslá aktuálneho scenára (inak: node scripts/build-parliament-glb.mjs).
 {
-  const { parliamentSeats } = await import('../lib/parliament-model.ts');
+  const { parliamentSeats, parliamentTimeline, parliamentEdges } = await import('../lib/parliament-model.ts');
   const glb = readFileSync('public/models/parlament.glb');
   assert.equal(glb.readUInt32LE(0), 0x46546c67, '3D parlament: súbor nie je GLB');
   const gltf = JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString('utf8').trim());
   const now = parliamentSeats();
   assert.deepEqual(gltf.asset.extras.seats, now.seats, '3D parlament je zastaraný — spusti: node scripts/build-parliament-glb.mjs');
+  assert.deepEqual(gltf.asset.extras.timeline, parliamentTimeline().map(p => ({ id: p.variant.id, date: p.point.date, agencies: p.agencies, missing: p.missing, seats: Object.fromEntries(p.variant.ordered.map(m => [m.id, m.seats])) })), 'Mesačné varianty nezodpovedajú aggregateSeries');
+  assert.deepEqual(gltf.asset.extras.exclusions, parliamentEdges().map(p => ({ id: p.variant.id, excluded: p.party.id, seats: Object.fromEntries(p.variant.ordered.map(m => [m.id, m.seats])) })), 'Hypotetické varianty sú zastarané');
   assert.equal(gltf.nodes.filter(n => n.name.startsWith('kreslo ')).length, 150, '3D parlament: 150 kresiel');
 }
 // Hlas (ElevenLabs): nahrávky nie sú povinné (tlačidlá sa bez nich neukážu), ale súbory musia existovať. Nahrávka s iným

@@ -101,3 +101,29 @@ Browser kontrola potvrdila rýchle prieskumy → 2023 → prieskumy s výsledný
 Prešli čisté kontroly zážitku (monotónny sweep, zachovanie súčtu zmien, deterministická kamera), GLB a dát, TypeScript, úplný ESLint v `app`, `components`, `lib`, `scripts`, `worker`, tmavé CSS (`b608f67f13`), detector `[]` a produkčný build. Khronos: **0 chýb, 0 varovaní**. Po rebase so zmenami Claude `9d991af` (refresh aplikácie a iPhone keyboard dock) znova prešli TypeScript, úplný ESLint a build; parlamentové zmeny zostali zachované.
 
 Úspešné `npm run deploy:preview` nasadilo verziu **`6c292992-11a5-4419-ac37-62dcb290d65f`** na [verejný náhľad Mandátu](https://mandat-preview.mandat.workers.dev/). Kód: `0279dc8`; evidencia: `0080f03`. Verejný GLB má **1 417 048 B**, SHA-256 **`087CA7AA921B3FD15F96A5BF446AB91C56F6781A1123793C3E17211CA10BC5A2`**, zhodný s lokálnym súborom. Verejné UI potvrdilo pohľad zvnútra a návrat, prechod ustálený na `volby-2023`, kombináciu 81 a konzolu `[]`; `online-seat.png` a `online-majority.png` sú verejné ustálené stavy. Tieto údaje nahrádzajú staršie nasadenie uvedené vyššie, ktoré zostáva zachované ako historická evidencia.
+
+## Vývoj 2026, strany na hrane a zdieľanie (2. 10. 2026, Codex, dokončil Claude)
+
+**Vývoj 2026** (`parliamentTimeline` v `lib/parliament-model.ts`):
+- Každý mesiac je posledný týždenný bod `aggregateSeries` v danom mesiaci; budúce mesiace ani dopočítavanie nie sú.
+- Obsadenie počíta `scenarioFromPoll(aggregateAsPoll(bod))`, rovnako ako zvyšok webu.
+- Strany, ktoré v bode nemá väčšina agentúr, sú vypísané a do bodu nevstupujú. Bod s menej ako tromi agentúrami je označený ako obmedzené pokrytie.
+- Varianty `model-RRRR-MM` generuje `scripts/build-parliament-glb.mjs`. V `asset.extras.timeline` sú počty kresiel každého mesiaca, ktoré `verify-data` porovnáva s dátami.
+- Po novom meraní stačí ako doteraz `node scripts/build-parliament-glb.mjs`.
+
+**Strany na hrane** (`parliamentEdges`):
+- Strana, ktorej pásmo neistoty pretína 5 % (`thresholdStatus === 'edge'`), dostane variant `bez-<id>`: podpora strany 0, ostatné bez zmeny, prepočet všetkých 150 kresiel.
+- Detail uvádza podiel prepočtov s postupom a rozpätie kresiel zo `seatUncertainty`. Kreslá strán na hrane sú jemne rozjasnené, rovnako pre každú stranu.
+
+**Zdieľanie koalície** (`components/parliament-share.ts`):
+- Záber `model-viewer` (`toBlob`) a karta 1080 × 1350 so súčtom, väčšinou, stranami a dátumom.
+- Dátum: mesiac vývoja „bod k …“, súčasný model „aktualizované …“ (`aggregateUpdated`), voľby 30. 9. 2023.
+- Zdieľa sa cez `navigator.share` so súborom, inak sa ponúkne stiahnutie.
+
+**Bez kompresie:**
+- Peter kompresiu meshopt odmietol. Ostáva jeden model `public/models/parlament.glb` (1 399 656 B, limit 1,5 MB) pre web aj AR.
+- Knižnica `model-viewer` a HDR sa sťahujú vopred, keď sa karta parlamentu objaví na obrazovke. GLB až pri zámere (prejdenie myšou nad tlačidlom) alebo po otvorení, aby úvod nesťahoval 1,4 MB každému návštevníkovi.
+
+**Kontrola:** `node scripts/verify-parliament-evolution.mjs` overuje mesiace (posledný bod mesiaca, súčet zmien 0, zhoda so `scenarioFromPoll`), scenáre bez strany a prítomnosť všetkých variantov v modeli.
+
+**Neoverené:** Claudov prehliadač pri skrytom okne nevykresľuje snímky WebGL. Animácia vývoja, karta koalície a priblíženie na stranu sú overené v kóde a v Codexových snímkach (`.impeccable/review/parliament-evolution/`, mimo repa), nie na skutočnom telefóne.
