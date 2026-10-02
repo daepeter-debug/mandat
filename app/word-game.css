@@ -1,0 +1,95 @@
+/* Koalícia slov (slovná hra). Mobil najprv; vlastný svetlý panel ako ostatné hry (v tmavom režime sa neprevádza).
+   Farby strán koalície: --party na riadku koalície aj na použitej kachličke. Grafiku (polkruh, animácie) môže doladiť Codex. */
+.words { --w-ink:#1f3229; --w-muted:#566a5d; --w-line:#dbe2d2; --w-paper:#fffefa; --w-bg:#f4f3ec; --w-green:#245c48; --w-yellow:#f2c94c;
+  max-width:640px; margin:0 auto 28px; padding:14px; border-radius:22px; background:var(--w-bg); color:var(--w-ink); }
+.words button { font:inherit; cursor:pointer; touch-action:manipulation; }
+.words button:disabled { cursor:default; }
+.words button:focus-visible, .words a:focus-visible, .words summary:focus-visible { outline:3px solid #b17a2d; outline-offset:2px; }
+.words-head { padding:4px 4px 0; }
+.words-kicker { display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; margin:0 0 4px; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#6d7f5d; }
+.words-streak { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:99px; background:#fde9c8; color:#8a4b06; letter-spacing:.02em; text-transform:none; font-size:12px; }
+.words-head h1 { margin:0; font-size:30px; font-weight:750; line-height:1.05; letter-spacing:-.02em; }
+.words-head p:last-child { margin:6px 0 0; font-size:14px; line-height:1.5; color:var(--w-muted); }
+.words-note { margin:8px 0 0; font-size:13px; line-height:1.55; color:var(--w-muted); }
+.words-note code { display:block; white-space:pre-wrap; font-size:12px; }
+
+/* Snemovňa: polkruh 150 kresiel, uprostred počet mandátov koalície. */
+.words-chamber { position:relative; margin:12px 0 0; padding:14px 18px 8px; border-radius:18px; background:#20392f; }
+.words-chamber svg { display:block; width:100%; height:auto; }
+.words-chamber circle { transition:fill .25s; }
+.words-seat-majority { stroke:#fff3c4; stroke-width:.012; }
+.words-count { position:absolute; left:50%; bottom:10px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; color:#fffefa; line-height:1; }
+.words-count b { font-size:40px; font-weight:750; font-variant-numeric:tabular-nums; }
+.words-count span { margin-top:4px; max-width:9.5em; font-size:12px; line-height:1.25; text-align:center; color:#dce8d6; }
+
+/* Ciele: tri hviezdy, ktoré sa zbierajú počas hry (data-done = už splnené). */
+.words-goals { list-style:none; display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 0; padding:0; }
+.words-goals li { flex:1 1 0; display:inline-flex; align-items:center; justify-content:center; gap:4px; min-height:34px; padding:4px 6px; border-radius:99px; background:var(--w-paper); border:1px solid var(--w-line); font-size:12px; white-space:nowrap; color:var(--w-muted); }
+.words-goals li svg { color:#c5cdbc; }
+.words-goals li[data-done=true] { border-color:#e6cf7f; background:#fff6d6; color:#4b3a07; font-weight:600; }
+.words-goals li[data-done=true] svg { color:#d9a826; fill:#f2c94c; }
+
+/* Koalícia: slová (strany) vo farbe svojich kresiel, pod nimi voľné miesta; kým je prázdna, rada ako začať. */
+.words-coalition { list-style:none; display:grid; gap:6px; margin:14px 0 0; padding:0; }
+.words-hint { margin:14px 0 0; padding:10px 12px; border-radius:12px; border:1px dashed #cfd8c5; font-size:13px; line-height:1.5; color:var(--w-muted); }
+.words-coalition li { display:grid; grid-template-columns:12px 1fr auto 40px; align-items:center; gap:10px; min-height:48px; padding:4px 4px 4px 12px; border-radius:12px; background:var(--w-paper); border:1px solid var(--w-line); }
+.words-coalition li b { font-size:16px; letter-spacing:.08em; overflow-wrap:anywhere; }
+.words-coalition li > span:nth-child(3) { font-size:13px; font-weight:600; color:var(--w-muted); font-variant-numeric:tabular-nums; }
+.words-coalition li button { display:grid; place-items:center; width:40px; height:40px; border:0; border-radius:10px; background:transparent; color:var(--w-muted); }
+.words-coalition li button:hover { background:#f1f3ea; color:var(--w-ink); }
+.words-party-dot { width:12px; height:12px; border-radius:50%; background:var(--party, #d9dfd2); }
+.words-coalition li.is-empty { grid-template-columns:12px 1fr; border-style:dashed; background:transparent; color:#8a978d; font-size:13px; }
+
+/* Rozpísané slovo a kachličky s písmenami. */
+.words-current { margin:14px 0 0; text-align:center; }
+.words-word { display:flex; flex-wrap:wrap; justify-content:center; gap:4px; min-height:46px; align-items:center; }
+.words-word span { display:grid; place-items:center; width:34px; height:42px; border-radius:8px; background:#20392f; color:#fff3c4; font-size:22px; font-weight:750; }
+.words-word em { font-style:normal; font-size:14px; color:#8a978d; }
+.words-preview { margin:4px 0 0; font-size:13px; color:var(--w-muted); }
+.words-tiles { display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); gap:6px; margin:12px 0 0; }
+.words-tile { position:relative; display:grid; place-items:center; aspect-ratio:1 / 1.12; min-height:52px; padding:0; border:2px solid #cfd8c5; border-radius:12px; background:var(--w-paper); color:var(--w-ink); box-shadow:0 3px 0 #cfd8c5; transition:transform .08s, background .15s, border-color .15s; }
+.words-tile span { font-size:24px; font-weight:750; line-height:1; }
+.words-tile small { position:absolute; right:6px; bottom:4px; font-size:11px; font-weight:700; color:var(--w-muted); }
+.words-tile:active:not(:disabled) { transform:translateY(2px); box-shadow:0 1px 0 #cfd8c5; }
+.words-tile[data-picked=true] { border-color:#20392f; background:#fff3c4; box-shadow:0 3px 0 #20392f; transform:translateY(-2px); }
+.words-tile[data-used=true] { border-color:transparent; background:color-mix(in oklab, var(--party) 18%, #fffefa); color:color-mix(in oklab, var(--party) 70%, #1f3229); box-shadow:none; opacity:.8; }
+.words-tile[data-used=true] small { color:inherit; }
+.words-controls { display:grid; grid-template-columns:52px 52px 1fr; gap:8px; margin:12px 0 0; }
+.words-controls .words-secondary { padding:10px 0; }
+.words-primary, .words-secondary { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:50px; padding:10px 16px; border-radius:12px; font-size:15px; font-weight:650; }
+.words-primary { border:0; background:var(--w-yellow); color:#1f2a1c; box-shadow:0 6px 16px -10px rgba(120,90,10,.7); }
+.words-primary:hover:not(:disabled) { background:#f6d66f; }
+.words-secondary { border:1px solid #c9d3bf; background:var(--w-paper); color:var(--w-ink); }
+.words-secondary:hover:not(:disabled) { border-color:var(--w-green); }
+.words-primary:disabled, .words-secondary:disabled { opacity:.45; box-shadow:none; }
+.words-message { display:flex; align-items:flex-start; gap:8px; margin:10px 0 0; padding:10px 12px; border-radius:12px; background:#fbe9e4; color:#7d2b1c; font-size:14px; line-height:1.45; }
+.words-message[data-ok=true] { background:#e8f2df; color:#24502f; }
+.words-message svg { flex:none; margin-top:2px; }
+
+/* Výsledok, odhalenie a pravidlá. */
+.words-card { margin:14px 0 0; padding:14px 16px; border-radius:16px; background:var(--w-paper); border:1px solid var(--w-line); }
+.words-result > p { margin:0; font-size:14px; line-height:1.5; }
+.words-result > p + p { margin-top:8px; }
+.words-target { color:var(--w-muted); }
+.words-target b { color:var(--w-ink); }
+.words-best span { color:#c79513; letter-spacing:.06em; }
+.words-perfect { display:block; margin-top:4px; color:#24502f; }
+.words-reveal { margin:10px 0 0; padding:10px 12px; border-radius:12px; background:#f5f6ef; }
+.words-reveal p { margin:0 0 6px; font-size:14px; line-height:1.5; }
+.words-reveal p:last-child { margin:0; }
+.words-result > .words-secondary { width:100%; margin-top:10px; }
+.words-actions { display:grid; gap:8px; margin:10px 0 0; }
+.words-rules { margin-top:12px; padding:2px 16px; border-radius:14px; background:var(--w-paper); border:1px solid var(--w-line); }
+.words-rules summary { min-height:46px; display:flex; align-items:center; cursor:pointer; font-size:14px; font-weight:600; }
+.words-rules ul { margin:0 0 14px; padding-left:18px; display:grid; gap:6px; font-size:13px; line-height:1.55; color:var(--w-muted); }
+.words-rules a { color:var(--w-green); }
+.words .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+@media (min-width:600px) {
+  .words { padding:20px; }
+  .words-head h1 { font-size:40px; }
+  .words-tiles { gap:8px; }
+  .words-tile span { font-size:28px; }
+  .words-actions { grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); }
+}
+@media (prefers-reduced-motion:reduce) { .words-chamber circle, .words-tile { transition:none; } }

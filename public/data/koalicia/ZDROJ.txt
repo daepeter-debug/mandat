@@ -1,0 +1,7 @@
+Koalícia slov – zoznamy slov v tomto priečinku
+
+Slová sú odvodené zo slovenského slovníka projektu sk-spell (verzia 2.4.8, 2024-08-29),
+distribuovaného v repozitári LibreOffice dictionaries: https://github.com/LibreOffice/dictionaries/tree/master/sk_SK
+Pôvodné dáta sú trojlicencované (GPL 2 / LGPL 2.1 / MPL 1.1); tieto odvodené zoznamy šírime podľa MPL 1.1.
+Úpravy: rozbalené tvary slov, vynechané vlastné mená, skratky, citoslovcia a vulgarizmy, rozdelené na zadania hry.
+Generátor: scripts/build-word-game.mjs a scripts/word-forms.mjs v repozitári Mandátu.

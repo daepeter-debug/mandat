@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (1c482cd86a) — needitovať ručne. Pravidiel: 1350, prefarbených: 1065. */
+/* Generované scripts/build-dark.mjs z 30 súborov (a37edd50ee) — needitovať ručne. Pravidiel: 1357, prefarbených: 1064. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3265,7 +3265,7 @@ html[data-theme="dark"] .games-quiz-number {
 }
 html[data-theme="dark"] .games-quiz-dots i {
     background: #3b8146;
-    box-shadow: 0 0 0 2px #262c29
+    box-shadow: 0 0 0 2px #fffefa
 }
 html[data-theme="dark"] .games-quiz-dots i:nth-child(2) {
     background: #33679e
@@ -3278,6 +3278,31 @@ html[data-theme="dark"] .games-quiz-dots i:nth-child(4) {
 }
 html[data-theme="dark"] .games-quiz-mark {
     color: rgba(255,255,255,.12)
+}
+html[data-theme="dark"] .games-words-art {
+    background: linear-gradient(150deg,#1d3a4f,#245c48 70%)
+}
+html[data-theme="dark"] .games-words-tiles i {
+    background: #fffefa;
+    color: #1f3229;
+    box-shadow: 0 3px 0 #b9c4ad
+}
+html[data-theme="dark"] .games-words-tiles i[data-word="0"] {
+    background: #dcefd7;
+    box-shadow: 0 3px 0 #3b8146
+}
+html[data-theme="dark"] .games-words-tiles i[data-word="1"] {
+    background: #d9e6f5;
+    box-shadow: 0 3px 0 #33679e
+}
+html[data-theme="dark"] .games-words-tiles small {
+    color: #566a5d
+}
+html[data-theme="dark"] .games-words-seats {
+    color: #fffefa
+}
+html[data-theme="dark"] .games-words-seats small {
+    color: #dce8d6
 }
 html[data-theme="dark"] .games-parliament {
     background: #20392f

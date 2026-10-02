@@ -14,6 +14,15 @@
 .games-quiz-dots i { width:12px; height:12px; border-radius:50%; background:#3b8146; box-shadow:0 0 0 2px #fffefa; }
 .games-quiz-dots i:nth-child(2) { background:#33679e; } .games-quiz-dots i:nth-child(3) { background:#a86d12; } .games-quiz-dots i:nth-child(4) { background:#a3302a; }
 .games-quiz-mark { position:absolute; top:14px; right:22px; font-size:54px; font-weight:800; color:rgba(255,255,255,.12); }
+/* Koalícia slov: kachličky s písmenami (dve slová koalície) a cieľ 76; ilustráciu môže dokresliť Codex. */
+.games-words-art { position:relative; height:220px; overflow:hidden; display:grid; place-items:center; background:linear-gradient(150deg,#1d3a4f,#245c48 70%); }
+.games-words-tiles { display:grid; grid-template-columns:repeat(6, 38px); gap:6px; transform:rotate(-4deg) translateY(-22px); }
+.games-words-tiles i { position:relative; display:grid; place-items:center; height:42px; border-radius:8px; background:#fffefa; color:#1f3229; font-style:normal; font-size:21px; font-weight:800; box-shadow:0 3px 0 #b9c4ad; }
+.games-words-tiles i[data-word="0"] { background:#dcefd7; box-shadow:0 3px 0 #3b8146; }
+.games-words-tiles i[data-word="1"] { background:#d9e6f5; box-shadow:0 3px 0 #33679e; }
+.games-words-tiles small { position:absolute; right:4px; bottom:2px; font-size:9px; font-weight:700; color:#566a5d; }
+.games-words-seats { position:absolute; bottom:12px; color:#fffefa; font-size:30px; font-weight:600; display:flex; flex-direction:column; align-items:center; line-height:1; }
+.games-words-seats small { margin-top:5px; font-size:12px; font-weight:400; color:#dce8d6; }
 .republic-cover { display:block; width:100%; height:100%; object-fit:cover; object-position:50% 53%; }
 .games-parliament { background: #20392f; display: grid; place-items: center; padding: 26px 30px 12px; }
 .games-parliament svg { width: 100%; height: 100%; }
@@ -39,7 +48,7 @@
   .games-room-heading { margin-bottom: 20px; }
   .games-room-heading p { font-size: 15px; }
   .games-collection { grid-template-columns: 1fr; gap: 20px; }
-  .games-parliament, .games-town, .games-republic-art, .games-quiz-art { height: 200px; }
+  .games-parliament, .games-town, .games-republic-art, .games-quiz-art, .games-words-art { height: 200px; }
   .games-town svg { width: 128%; }
   .games-entry-body { padding: 20px; }
   .games-entry h2 { font-size: 25px; }

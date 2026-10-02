@@ -12,12 +12,12 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const OUT = 'app/theme-dark.css';
 const OUT_COLORS = 'lib/theme-colors.ts';
-const SKIP_FILES = new Set(['theme-dark.css', 'daily-game.css', 'december-game.css', 'december-town-art.css', 'republic-game.css', 'republic-festival.css', 'republic-guide.css', 'republic-visit.css', 'republic-playfield.css', 'quiz-game.css']);
+const SKIP_FILES = new Set(['theme-dark.css', 'daily-game.css', 'december-game.css', 'december-town-art.css', 'republic-game.css', 'republic-festival.css', 'republic-guide.css', 'republic-visit.css', 'republic-playfield.css', 'quiz-game.css', 'word-game.css']);
 // Poradie ako v aplikácii: layout (globals → magazine → news), potom komponenty.
 const FIRST = ['globals.css', 'magazine.css', 'news.css'];
 // Podklady pod logami, portrétmi a mapkou ostávajú presne ako vo svetlom režime (logá strán sú kreslené na svetlú):
 // triedy končiace na -logo (.party-card-logo, .party-rail-logo …), značky vlád, monogramy, obrázky log v zdrojoch.
-const KEEP_SELECTOR = /-logo(?![\w-])|resp-mark|person-portrait|monogram|party-logo-sources a (img|svg)|section-art img|slovakia-mark|party-sheet-logo|national-aurora|\.story\b|\.story-|games-republic-art|games-town|games-parliament/;
+const KEEP_SELECTOR = /-logo(?![\w-])|resp-mark|person-portrait|monogram|party-logo-sources a (img|svg)|section-art img|slovakia-mark|party-sheet-logo|national-aurora|\.story\b|\.story-|games-republic-art|games-town|games-parliament|games-quiz-|games-words-/;
 // SVG grafy s farbami v atribútoch (Recharts, časová os vlád): prefarbia sa cez selektory na atribút.
 const SVG_SOURCES = ['components/finance-chart.tsx', 'components/trend-chart.tsx', 'components/living-chart.tsx', 'components/archive-chart.tsx', 'components/responsibility-page.tsx'];
 const SVG_SCOPE = ':is([data-slot="chart"],.resp-timeline,.resp-timeline-names)';

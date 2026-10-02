@@ -49,6 +49,30 @@ Politický kvíz v `?v=game&g=quiz`: kolo má 30 otázok o slovenskej politike o
   - krížová kontrola s `lib/cabinets.ts`, voľbami 2023 v `lib/parliament.ts`, Eurostatom v `lib/public-finance.data.ts` a kalkulačkou daní;
   - plán kola, žolíky, zdieľanie a uloženie.
 - **Aktualizácia faktov:** po zmene vlády, predsedu NR SR, prezidenta, sadzieb (január) či nových voľbách upraviť dotknuté otázky. Otázky s „od roku…“ či „v roku 2026“ prejsť každý rok.
+- **Grafika pre Codex:** hra je funkčná so štýlmi v `app/quiz-game.css`, ilustrácie zatiaľ nemá. Chýba titulná grafika karty v Herni (`.games-quiz-art`, teraz veľké „30“), ilustrácie titulov na konci kola (Volič … Prezident), jemná oslava pri vysokom skóre a prípadne ikony tém.
+
+## Koalícia slov (`components/word-game.tsx`, `lib/word-game.ts`, `public/data/koalicia`)
+
+Slovná hra v `?v=game&g=words`: z 12 písmen poskladať koalíciu najviac štyroch slov; každé písmeno sa dá použiť raz. Podobná slovným hrám s písmenami (napr. Slovosleď Denníka N), ale nejde o hľadanie čo najviac slov: písmená treba rozdeliť medzi slová.
+
+- **Mandáty:** slovo = (súčet bodov písmen) × (dĺžka − 1); body 1 – 5 podľa vzácnosti písmena (a o e i n s t r v = 1 … ň ď ô ä ó ĺ ŕ f g = 5). Koalícia má najviac 150 mandátov.
+- **Ciele (hviezdy) sa zbierajú počas hry:** väčšina 76 a ústavná väčšina 90 podľa najsilnejšej koalície, tretia hviezda za koalíciu bez opozície (všetkých 12 písmen v slovách, s väčšinou), hoci aj inú ako najsilnejšiu. Po odhalení riešenia sa nič nezapisuje.
+- **Zadania:** vopred vygenerované súbory, telefón sťahuje len jeden (do 12 kB) – 12 písmen, všetky platné slová z nich, najlepšia koalícia počítača a najlepšia koalícia zo všetkých 12 písmen.
+  - denné `public/data/koalicia/RRRR-MM-DD.json` od 2. 10. 2026 do 31. 12. 2027, rovnaké pre všetkých; chýbajúci deň nahradí voľné zadanie určené dátumom;
+  - 200 voľných `public/data/koalicia/volne/<n>.json`; hra ponúkne najprv tie, ktoré hráč ešte neotvoril;
+  - každé zadanie má aspoň 120 slov, najlepšiu koalíciu aspoň 100 mandátov a všetkých 12 písmen sa dá použiť s väčšinou (tri ciele vždy splniteľné).
+- **Slovník:** sk-spell 2.4.8 (LibreOffice dictionaries, licencia MPL 1.1, zdroj v `public/data/koalicia/ZDROJ.txt`). Do repa ide len odvodený zoznam slov v zadaniach, nie slovník.
+  - `scripts/word-forms.mjs` rozbalí tvary (koncovky, ne-, naj-) a vynechá vlastné mená, skratky, citoslovcia, vulgarizmy a nadávky;
+  - opravuje chyby pravidiel slovníka: rozkazy bez slabiky (zabi nie zab, pomsti nie pomsť), nesprávne skupiny spoluhlások (kotvi nie kotv), príslovky typu pso či sovietsko a zápory prídavných mien od miestnych mien (nemaltský, neazorský).
+- **Nové zadania:** stiahnuť `sk_SK.aff` a `sk_SK.dic` z https://github.com/LibreOffice/dictionaries/tree/master/sk_SK do priečinka mimo repa a spustiť
+  `node --max-old-space-size=6144 scripts/build-word-game.mjs <priečinok> 2028-12-31 200` (približne 7 minút). Generovanie je deterministické; existujúce dni sa prepíšu rovnakými písmenami len pri rovnakom slovníku a filtri.
+- **Uloženie v zariadení:** `mandat:words:v1:day:<deň>` a `…:free:<n>` (slová, najsilnejšia koalícia, koalícia zo všetkých písmen, odhalenie), `…:history` (denné výsledky pre sériu dní) a `…:free-current`. Čítanie je prísne: slová sa overia proti zadaniu a najlepší výsledok sa prepočíta.
+- **Zdieľanie:** hlavička s dátumom, mandáty, hviezdy a farebné štvorčeky za písmená (zelená, modrá, oranžová, fialová podľa strán), bez slov.
+- **Grafika pre Codex:** polkruh snemovne a kachličky sú funkčné, ale jednoduché. Chýba animácia pridania slova (kreslá sa vyplnia farbou strany), oslava väčšiny a ústavnej väčšiny a titulná grafika karty v Herni (`.games-words-art`).
+- **Overenie:** `node scripts/verify-word-game.mjs`:
+  - mandáty, kontrola slova a hviezdy;
+  - prísne čítanie zadania a uloženia, séria, zdieľanie;
+  - všetky zadania: denné bez medzery, dosť slov, tri ciele splniteľné, žiadne vulgarizmy ani známe chybné tvary, veľkosť súboru.
 
 ## Overenie
 
