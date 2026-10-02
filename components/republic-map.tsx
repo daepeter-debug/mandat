@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
-import { AlertTriangle, Grid2X2, LocateFixed, Maximize2, Minus, Plus } from "lucide-react";
+import { AlertTriangle, Grid2X2, LocateFixed, Maximize2, Minus, Plus, Smartphone } from "lucide-react";
 import { usePlayfield } from "@/components/republic-playfield";
 import { catalog, connected, distance, network, type ItemId, type Placed, type Point, type RepublicState } from "@/lib/republic";
 import type { Gathering } from "@/lib/republic-living";
@@ -182,7 +182,13 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
       <button type="button" aria-label="Priblížiť mapu" disabled={currentZoom>=2} onClick={()=>setCurrentZoom(z=>Math.min(2,z+.5))}><Plus size={16}/></button>
       <button type="button" aria-label={playfield?.expanded?"Zobraziť celú mapu":"Centrovať mapu"} onClick={()=>{if(playfield?.expanded)setExpandedZoom(1);centre();}}><LocateFixed size={17}/></button>
     </div></div>
-    {playfield&&!playfield.expanded&&<button type="button" className="republic-expand-plan" data-playfield-open aria-label="Hra na celú obrazovku" onClick={event=>playfield.open(event.currentTarget)}><Maximize2 size={18} aria-hidden="true"/><span>Hra na celú obrazovku</span></button>}
+    {playfield&&!playfield.expanded&&<><button type="button" className="republic-expand-plan" data-playfield-open aria-label="Hra na celú obrazovku" onClick={event=>playfield.open(event.currentTarget)}><Maximize2 size={18} aria-hidden="true"/><span>Hra na celú obrazovku</span></button>
+      <details className="republic-install-tip"><summary><Smartphone size={17} aria-hidden="true"/><span>Viac miesta na hru? Pridaj Mandát na plochu.</span></summary>
+        <p>Hru odporúčame otvárať cez ikonu na ploche. Získaš viac priestoru bez adresného riadka prehliadača.</p>
+        <p><b>iPhone:</b> otvor Mandát v Safari → Zdieľať → Pridať na plochu. Ak sa zobrazí voľba otvárania ako webová aplikácia, nechaj ju zapnutú. <a href="https://support.apple.com/sk-sk/guide/iphone/iphea86e5236/ios" target="_blank" rel="noopener noreferrer">Návod pre iPhone</a></p>
+        <p><b>Android:</b> v Chrome otvor menu → Pridať na plochu → Inštalovať. <a href="https://support.google.com/chrome/answer/9658361?co=GENIE.Platform%3DAndroid&hl=sk" target="_blank" rel="noopener noreferrer">Návod pre Android</a></p>
+        <p>Potom otvor Malú republiku a otoč telefón na šírku. Nová aplikácia môže mať vlastné uloženie hry; pôvodný postup zostáva v prehliadači, kde si hral.</p>
+      </details></>}
     {scene&&<details className="republic-daylight"><summary><span className={`republic-daylight-dot ${scene.time.period}`}/>{scenePreview?"Náhľad scény": "Živá štvrť"}<span>{periods[scene.time.period]} · {clock}</span></summary>
       <div><p>Čas v Bratislave · východ {timeLabel(scene.time.sunrise)} · západ {timeLabel(scene.time.sunset)}. Napojené domy a budovy ožívajú podľa dennej doby.</p>
         <label>Prezrieť deň a noc<select value={scenePreview} onChange={e=>setScenePreview(e.target.value)}><option value="">Teraz · skutočný čas</option>
