@@ -1,9 +1,9 @@
 /* Pozadie sály: večerná Bratislava cez celú scénu (components/parliament-backdrop.tsx). V oboch témach rovnaké. */
 .parl-backdrop{--pan:0;--tilt:0;--zoom:1;position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;container-type:size;background:#141d36}
-.parl-backdrop>*{position:absolute;--horizon:26cqh;--bw:calc(150cqw * var(--zoom));--top:calc(var(--horizon) - var(--bw) * .2167 + var(--tilt) * 7cqh);--shift:calc(var(--pan) * -22cqw)}
+.parl-backdrop>*{position:absolute;--horizon:26cqh;--bw:calc(114cqw * var(--zoom));--top:calc(var(--horizon) - var(--bw) * .2167 + var(--tilt) * 22cqh);--shift:calc(var(--pan) * -22cqw)}
 @container (min-aspect-ratio: 1/1){.parl-backdrop>*{--horizon:30cqh}}
 /* Obloha nad panorámou nadväzuje na farbu jej horného okraja. */
-.parl-backdrop-sky{inset:0;background:linear-gradient(180deg,#14306a 0%,#1f4b92 10%,#26569f 22%,#2a5aa2 100%)}
+.parl-backdrop-sky{inset:0;background:linear-gradient(180deg,#28314e 0%,#5b5270 15%,#b88186 31%,#233651 68%,#121a30 100%)}
 .parl-backdrop-city,.parl-backdrop-mirror{left:50%;width:var(--bw);height:calc(var(--bw) / 3);max-width:none;user-select:none}
 .parl-backdrop-city{top:var(--top);transform:translateX(calc(-50% + var(--shift)));-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%);mask-image:linear-gradient(to bottom,transparent 0,#000 16%)}
 /* Rieka pokračuje pod panorámou: tmavne k okraju plochy. */
@@ -15,6 +15,7 @@
   background:radial-gradient(ellipse 1.8% 55% at 22% 0%,#ffcf8a66,transparent 72%),radial-gradient(ellipse 4% 62% at 77% 0%,#ffd9a055,transparent 72%),radial-gradient(ellipse 1.1% 38% at 44% 0%,#ffc07a40,transparent 72%),radial-gradient(ellipse 1.1% 42% at 59% 0%,#ffc07a40,transparent 72%),repeating-linear-gradient(180deg,#ffffff0a 0 1px,transparent 1px 7px);
   animation:parl-shimmer 9s ease-in-out infinite alternate}
 @keyframes parl-shimmer{to{opacity:.6;background-position:0 0,0 0,0 0,0 0,0 14px}}
+.parl-backdrop[data-active="false"] .parl-backdrop-glints{animation-play-state:paused}
 /* Vineta: pozornosť na sálu, tmavší spodok kvôli ovládaniu nad scénou. */
 .parl-backdrop-vignette{inset:0;background:radial-gradient(ellipse 90% 78% at 50% 50%,transparent 58%,#05080fa6 100%),linear-gradient(180deg,transparent 72%,#070b14b8 100%)}
 @media(prefers-reduced-motion:reduce){.parl-backdrop-glints{animation:none}}

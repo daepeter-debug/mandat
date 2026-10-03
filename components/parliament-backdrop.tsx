@@ -1,19 +1,30 @@
 "use client";
-import type { Ref } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import "@/app/parliament-backdrop.css";
 
 /*
   Pozadie sály na stránke Parlament: večerná Bratislava nad Dunajom cez celú scénu (2D aj 3D).
   Hore obloha, v strede panoráma mesta (Most SNP vľavo, hrad vpravo), dole rieka so zrkadlením a odleskami svetiel.
   Obrázok public/models/bratislava-evening.jpg je ilustrácia vytvorená pomocou AI (zadanie v .prompt.txt vedľa neho).
-  Vrstvy sa v 3D posúvajú podľa kamery cez CSS premenné --pan, --tilt, --zoom (nastavuje ich priamo 3D sála, bez
-  prekresľovania Reactu); v 2D sú v pokoji. Rozloženie počíta s mierkou plochy (container units), takže na úzkom
+  Vrstvy v 3D dostávajú CSS premenné --pan, --tilt, --zoom z tej istej riadenej kamery ako sála;
+  nepotrebujú odloženú udalosť WebGL. V 2D sú v pokoji. Rozloženie počíta s mierkou plochy (container units), takže na úzkom
   telefóne ostane viditeľný most aj hrad a obloha s riekou vyplnia výšku.
 */
 export const BACKDROP_IMAGE = "/models/bratislava-evening.jpg";
 
-export default function ParliamentBackdrop({ ref, className = "" }: { ref?: Ref<HTMLDivElement>; className?: string }) {
-  return <div ref={ref} className={`parl-backdrop ${className}`} aria-hidden="true">
+type CameraStyle = CSSProperties & { '--pan': number; '--tilt': number; '--zoom': number };
+export default function ParliamentBackdrop({ cameraStyle, className = "" }: { cameraStyle?: CameraStyle; className?: string }) {
+  const own = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = own.current;
+    if (!el) return;
+    let inView = false;
+    const update = () => { el.dataset.active = String(inView && !document.hidden); };
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; update(); });
+    observer.observe(el); document.addEventListener('visibilitychange', update);
+    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', update); };
+  }, []);
+  return <div ref={own} style={cameraStyle} className={`parl-backdrop ${className}`} data-active="false" aria-hidden="true">
     <div className="parl-backdrop-sky"/>
     {/* eslint-disable-next-line @next/next/no-img-element -- dekoratívna vrstva pozadia, veľkosť riadi CSS */}
     <img className="parl-backdrop-city" src={BACKDROP_IMAGE} alt="" decoding="async" draggable={false}/>

@@ -26,20 +26,25 @@ function fitFont(ctx: CanvasRenderingContext2D, text: string, weight: number, si
 
 function drawPanel(ctx: CanvasRenderingContext2D, p: WallPanel, x: number, shown: string) {
   const cx = x + PW / 2, inner = PW - 70;
-  ctx.fillStyle = "#0f1b17";
+  const panel = ctx.createLinearGradient(0, 14, 0, H - 14);
+  panel.addColorStop(0, '#14251f'); panel.addColorStop(.45, '#0d1915'); panel.addColorStop(1, '#08120f');
+  ctx.fillStyle = panel;
   ctx.beginPath(); ctx.roundRect(x + 14, 14, PW - 28, H - 28, 18); ctx.fill();
+  ctx.strokeStyle = '#486052'; ctx.lineWidth = 2; ctx.stroke();
   if (p.empty) {
     ctx.fillStyle = "#1d2c26";
     for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.arc(cx + i * 30, H / 2, 7, 0, Math.PI * 2); ctx.fill(); }
     return;
   }
-  ctx.globalAlpha = p.dim ? .45 : 1;
+  ctx.globalAlpha = p.dim ? .62 : 1;
   if (p.bar) { ctx.fillStyle = p.bar; ctx.beginPath(); ctx.roundRect(cx - 70, 38, 140, 12, 6); ctx.fill(); }
   ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
   ctx.fillStyle = WALL_SOFT; fitFont(ctx, p.label, 620, 36, inner); ctx.fillText(p.label, cx, 104);
   ctx.fillStyle = p.color;
+  ctx.shadowColor = p.color; ctx.shadowBlur = 3;
   if (p.word) fitFont(ctx, shown, 660, 92, inner); else fitFont(ctx, shown, 640, 168, inner);
   ctx.fillText(shown, cx, p.word ? 232 : 270);
+  ctx.shadowBlur = 0;
   if (p.note) { ctx.fillStyle = WALL_SOFT; fitFont(ctx, p.note, 500, 32, inner); ctx.fillText(p.note, cx, 330); }
   ctx.globalAlpha = 1;
 }

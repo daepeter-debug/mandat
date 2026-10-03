@@ -1,7 +1,7 @@
 {
   "mimeType": "model/gltf-binary",
   "validatorVersion": "2.0.0-dev.3.10",
-  "validatedAt": "2026-10-03T15:33:56.354Z",
+  "validatedAt": "2026-10-03T17:22:37.897Z",
   "issues": {
     "numErrors": 0,
     "numWarnings": 0,
@@ -22,7 +22,7 @@
       },
       {
         "code": "IMAGE_NPOT_DIMENSIONS",
-        "message": "Image has non-power-of-two dimensions: 1536x512.",
+        "message": "Image has non-power-of-two dimensions: 2172x724.",
         "severity": 2,
         "pointer": "/images/16"
       }
@@ -43,7 +43,7 @@
         "pointer": "/buffers/0",
         "mimeType": "application/gltf-buffer",
         "storage": "glb",
-        "byteLength": 1182696
+        "byteLength": 1193424
       },
       {
         "pointer": "/images/0",
@@ -253,8 +253,8 @@
         "storage": "external",
         "uri": "bratislava-evening.jpg",
         "image": {
-          "width": 1536,
-          "height": 512,
+          "width": 2172,
+          "height": 724,
           "format": "rgb",
           "bits": 8
         }
@@ -292,9 +292,9 @@
     "hasSkins": false,
     "hasTextures": true,
     "hasDefaultScene": true,
-    "drawCallCount": 494,
-    "totalVertexCount": 92112,
-    "totalTriangleCount": 82056,
+    "drawCallCount": 497,
+    "totalVertexCount": 92328,
+    "totalTriangleCount": 82164,
     "maxUVs": 1,
     "maxInfluences": 0,
     "maxAttributes": 5

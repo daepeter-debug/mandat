@@ -1,4 +1,4 @@
 {
-  "prompt": "Origin: native model-viewer toBlob PNG export on 2026-10-03 from Mandat /parlament, variant Kluby dnes, clubs dated 2026-10-01. Source public/models/parlament.glb SHA256 dc6cf7b358cc281eab8a8513d9f7a71f44160b72851e00f6623a36483a353b53, source lib/parliament-clubs.data.ts at commit 572df50, actual 150 seats, evening HDR. Format conversion only with sharp WebP quality 90; no generated or retouched political imagery. This is an illustrative arrangement by clubs, not the official seating plan.",
-  "createdAt": "2026-10-03T12:48:13.224Z"
+  "prompt": "Origin: actual browser screenshot of the interactive local parliament scene, captured 3 October 2026 at 1280 x 720. Camera Celá sála, Kluby dnes (NR SR clubs as of 1 October 2026). Native stage rectangle x28 y135 w1209 h518 cropped from .impeccable/review/parliament-river/final-desktop-light.png, converted to WebP quality88 without upscaling. Seats and wall rendered by the real model-viewer using public/models/parlament.glb (1492072 bytes), with the AI-illustrated bratislava-evening.jpg behind it. No generated parliament or invented numbers.",
+  "createdAt": "2026-10-03T17:29:15.400Z"
 }

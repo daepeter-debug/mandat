@@ -18,6 +18,7 @@ import Chamber2D from './chamber-2d';
 import { ParliamentDisplay } from './parliament-display';
 import { ParliamentWall } from './parliament-wall';
 import ParliamentBackdrop from './parliament-backdrop';
+import { backdropAttributes } from '@/lib/parliament-backdrop';
 import type { WallScene } from '@/lib/parliament-wall';
 import { coalitionSelection, partyFocus, seatChanges, seatSweep, SEAT_SWEEP_MS, deputyView } from '@/lib/parliament-experience';
 import type { TextureInfo, Texture } from '@google/model-viewer/lib/features/scene-graph/api.js';
@@ -44,7 +45,7 @@ declare module "react" {
   namespace JSX { interface IntrinsicElements { "model-viewer": ModelViewerProps } }
 }
 type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; emissiveTexture?: TextureInfo | null; setEmissiveFactor: (c: string | number[]) => void; setAlphaMode: (mode: 'BLEND' | 'MASK' | 'OPAQUE') => void };
-type Viewer = NavigableViewer & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
+type Viewer = NavigableViewer & { model?: { materials: Material[] }; loaded?: boolean; updateComplete?: Promise<boolean>; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
   createCanvasTexture: () => Texture; positionAndNormalFromPoint: (x: number, y: number) => { position: { x: number; y: number; z: number } } | null };
 export type Mode = "strany" | "bloky" | "koalicia" | "vyvoj" | "hlasovania";
 type Props = {
@@ -87,14 +88,14 @@ const changes = seatChanges(electionVariant, modelVariant);
 // A historical coalition is not a current party: don't display its disappearance as a party's loss.
 const biggestGain = changes.find(p => p.delta > 0), biggestLoss = changes.find(p => p.delta < 0 && modelVariant.ordered.some(m => m.id === p.id));
 /*
-  Kamera k celej sále so zorným poľom 30°. Na výšku (telefón) stačí šírka kresiel so stenou (0,345 m), podstavec smie
-  presahovať okraj a sála je väčšia. Na šírku (počítač) okolo sály ostane výhľad na Bratislavu (0,58 m).
+  Kamera k celej sále so zorným poľom 30°. Na výšku je polovičná šírka 0,29 m: kreslá aj tabuľa sú väčšie.
+  Na šírku (počítač) okolo sály ostane výhľad na Bratislavu (0,58 m).
   Cieľ je mierne nad sálou, aby nad stenou bolo vidieť mesto (pozadie, components/parliament-backdrop.tsx).
 */
 function fit(el: HTMLElement | null) {
-  const aspect = el && el.clientHeight ? el.clientWidth / el.clientHeight : 1.3, portrait = aspect < 1, half = portrait ? .345 : .58;
+  const aspect = el && el.clientHeight ? el.clientWidth / el.clientHeight : 1.3, portrait = aspect < 1, half = portrait ? .29 : .58;
   const r = Math.min(2.4, Math.max(portrait ? .8 : .9, half / (Math.tan(15 * Math.PI / 180) * aspect)));
-  return { r, view: { orbit: `0deg ${portrait ? 46 : 58}deg ${r.toFixed(2)}m`, target: portrait ? "0m 0.12m -0.1m" : "0m 0.1m -0.1m" }, intro: { orbit: `0deg 10deg ${(r * 1.35).toFixed(2)}m`, target: "0m 0.02m -0.08m" } };
+  return { r, view: { orbit: `0deg ${portrait ? 46 : 58}deg ${r.toFixed(2)}m`, target: portrait ? "0m 0.1m -0.1m" : "0m 0.075m -0.1m" }, intro: { orbit: `0deg 10deg ${(r * 1.35).toFixed(2)}m`, target: "0m 0.02m -0.08m" } };
 }
 /** Kamera ku kreslu poslanca: blízko, mierne zhora, smerom od pultu. */
 function seatCamera(index: number) {
@@ -141,13 +142,19 @@ export default function ParliamentChamber(props: Props) {
   const shareFile = useRef<File | null>(null);
   const shareLock = useRef(false);
   const [selected, setSelected] = useState<string | null>(null), [partners, setPartners] = useState(true), [camera, setCamera] = useState(INTRO);
+  const snapCamera = useRef(false);
+  useEffect(() => {
+    if (!viewer || !snapCamera.current) return;
+    snapCamera.current = false;
+    // Reset and orientation changes settle even if the browser has suspended animation frames.
+    void Promise.resolve(viewer.updateComplete).then(() => viewer.jumpCameraToGoal());
+  }, [viewer, camera]);
   const [reduced, setReduced] = useState(false), [visible, setVisible] = useState(true);
   const [combination, setCombination] = useState<string[]>([]), [touring, setTouring] = useState(false);
   const [immersive, setImmersive] = useState(false), [expanded, setExpanded] = useState(false);
   const [displayVariant, setDisplayVariant] = useState<VariantId | 'prechod' | 'hlasovanie'>(props.mode === 'hlasovania' ? 'hlasovanie' : shownVariant(initialVariant));
   const [transition, setTransition] = useState<{ from: VariantId; to: VariantId } | null>(null);
   const majorityWasOn = useRef(false), firstClubPaint = useRef(true), flownTo = useRef<number | null>(null);
-  const backdrop = useRef<HTMLDivElement>(null);
   const introTimers = useRef<number[]>([]), introActive = useRef(false);
   const manuallyNavigated = useRef(false);
   const previousVariant = useRef<VariantId>(initialVariant);
@@ -219,7 +226,7 @@ export default function ParliamentChamber(props: Props) {
   }, [viewer, reduced]);
   useEffect(() => {
     if (!viewer || !loaded) return;
-    const observer = new ResizeObserver(() => { if (!manuallyNavigated.current && !selected && !immersive && !introActive.current && spotRef.current === null) setCamera(fit(viewer).view); });
+    const observer = new ResizeObserver(() => { if (!manuallyNavigated.current && !selected && !immersive && !introActive.current && spotRef.current === null) { snapCamera.current = true; setCamera(fit(viewer).view); } });
     observer.observe(viewer);
     return () => observer.disconnect();
   }, [viewer, loaded, selected, immersive]);
@@ -505,6 +512,7 @@ export default function ParliamentChamber(props: Props) {
   function stopIntro() { introTimers.current.forEach(clearTimeout); introActive.current = false; setTouring(false); viewer?.pause(); }
   function resetCamera() {
     if (shareLock.current) return;
+    snapCamera.current = true;
     manuallyNavigated.current = false;
     setPlaying(false); stopIntro(); setSelected(null); setImmersive(false);
     if (deputy !== null) { flownTo.current = deputy; onDeputy(null); }
@@ -601,20 +609,12 @@ export default function ParliamentChamber(props: Props) {
     catch (e) { if (!(e instanceof DOMException && e.name === 'AbortError')) setShareMessage('Zdieľanie nebolo dostupné. Obrázok môžeš stiahnuť ako PNG.'); }
   }
 
-  // Pozadie sa posúva s kamerou: otočenie posunie panorámu do strany, sklon a priblíženie ju zdvihnú či zväčšia.
-  useEffect(() => {
-    const layer = backdrop.current;
-    if (!viewer || !layer) return;
-    const update = () => {
-      const orbit = viewer.getCameraOrbit(), base = fit(viewer).r;
-      layer.style.setProperty('--pan', (Math.sin(orbit.theta) * .9).toFixed(3));
-      layer.style.setProperty('--tilt', Math.max(-1, Math.min(1, (orbit.phi - .9) / .7)).toFixed(3));
-      layer.style.setProperty('--zoom', Math.max(.96, Math.min(1.18, 1 + (base / Math.max(.05, orbit.radius) - 1) * .08)).toFixed(3));
-    };
-    viewer.addEventListener('camera-change', update);
-    update();
-    return () => viewer.removeEventListener('camera-change', update);
-  }, [viewer]);
+  // Same controlled camera drives both viewer and plate; no deferred model-viewer event is required.
+  const portraitBackdrop = !!viewer && viewer.clientWidth < viewer.clientHeight;
+  const backdropPosition = backdropAttributes(camera.orbit, camera.target, immersive ? 68 : 30, {
+    radius: fit(viewer).r, phi: (portraitBackdrop ? 46 : 58) * Math.PI / 180,
+    target: { x: 0, y: portraitBackdrop ? .1 : .075, z: -.1 },
+  });
   // Režim zmenený na stránke (zoznam hlasovaní, „Späť na kluby“): rovnaké prepnutie ako tlačidlom v sále.
   useEffect(() => {
     if (props.mode === mode) return;
@@ -670,7 +670,7 @@ export default function ParliamentChamber(props: Props) {
       <button type="button" className="par3d-expand" aria-pressed={expanded} aria-label={expanded ? 'Vrátiť sálu do stránky' : 'Sála na celú obrazovku'} onClick={() => setExpanded(!expanded)}>{expanded ? <Minimize2 size={16} aria-hidden="true"/> : <Maximize2 size={16} aria-hidden="true"/>}</button>
     </fieldset>
     <div className="par3d-stage" data-detail={!!selected}>
-      <ParliamentBackdrop ref={backdrop}/>
+      <ParliamentBackdrop cameraStyle={{ '--pan': backdropPosition.pan, '--tilt': backdropPosition.tilt, '--zoom': backdropPosition.zoom }}/>
       {ready
         ? <model-viewer ref={setViewer as unknown as Ref<HTMLElement>} src={PARLIAMENT_MODEL} variant-name={displayVariant} animation-name="obsadenie"
             alt={mode === 'hlasovania' && vote ? `3D rokovacia sála, hlasovanie ${vote.nazov}: za ${vote.za}, proti ${vote.proti}, zdržalo sa ${vote.zdrzalo}, nehlasovalo ${vote.nehlasovalo}, neprítomní ${vote.nepritomni}` : `3D rokovacia sála: ${current.ordered.map(m => `${m.short} ${m.seats}`).join(", ")}`}

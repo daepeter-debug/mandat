@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 32 súborov (76c2d6094c) — needitovať ručne. Pravidiel: 1555, prefarbených: 1208. */
+/* Generované scripts/build-dark.mjs z 32 súborov (ca1a84f546) — needitovať ručne. Pravidiel: 1555, prefarbených: 1208. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3879,7 +3879,7 @@ html[data-theme="dark"] .parl-backdrop {
     background: #141d36
 }
 html[data-theme="dark"] .parl-backdrop-sky {
-    background: linear-gradient(180deg,#14306a 0%,#1f4b92 10%,#26569f 22%,#2a5aa2 100%)
+    background: linear-gradient(180deg,#28314e 0%,#5b5270 15%,#b88186 31%,#233651 68%,#121a30 100%)
 }
 html[data-theme="dark"] .parl-backdrop-city {
     mask-image: linear-gradient(to bottom,transparent 0,#000 16%)

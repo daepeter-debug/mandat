@@ -1,5 +1,14 @@
 # Evidencia údajov a rozsahu
 
+## 3. 10. 2026 — Parlament: kamera a grafické dokončenie scény nad Dunajom (Codex)
+
+- Panoráma aj sála vychádzajú z tej istej riadenej kamery; zoom, otáčanie a posun cieľa posúvajú aj mesto. Vzdialené mesto sa zväčšuje pomalšie než sála. Návrat „Celá sála“ a zmena rozmerov ustália záber aj pri pozastavených animačných snímkach.
+- Ostrejšia ilustrácia Bratislavy v skutočnom natívnom rozlíšení 2172 × 724, UFO vľavo a hrad vpravo; užšie rozloženie obrázka ich v základnom pohľade neorezáva. Generovanie nedodalo požadované 3K, obrázok nie je umelo zväčšený. Prompt je vložený v JPEG aj uložený vedľa neho.
+- Podlaha je kamenná terasa s oporami, škárami a zapusteným teplým osvetlením; vnútorné drevo sály ostáva. Žiadna zmena 150 súradníc kresiel, variantov, klubov ani hlasov.
+- Tabuľa má jemnejší LED povrch. Desať polí a ich dáta sú nezmenené. Menší pohyblivý pás nesie celý názov hlasovania a dátum; neopakuje počty hlasov. Úvodný náhľad je výrez skutočnej interaktívnej scény.
+- Mobil: väčšie kreslá pri zachovaní celého polkruhu, overené 375/402 px v oboch témach bez horizontálneho pretekania. Odlesky sa zastavia mimo viditeľnej plochy a pri skrytej karte; reduced-motion ostáva statický.
+- Overenie: 21 `verify-*`, TypeScript, ESLint, aktuálne tmavé CSS; GLB 1 492 072 B, Khronos bez chýb a varovaní. Čerstvá vizuálna kontrola ôsmich finálnych snímok: `ship`. Fyzický iPhone, Safari a FPS sa týmto nepotvrdzujú.
+
 ## 3. 10. 2026 — Parlament: Bratislava v pozadí celej scény a tabuľa hlasovania na stene (Claude)
 
 Na Petrov podnet (na mobile malá sála, panoráma v oknách sa strácala):

@@ -260,9 +260,9 @@ Peter: na mobile bola sála malá a panoráma v oknách sa strácala. Prázdnu p
   - odlesky svetiel mosta a hradu;
   - vineta.
 - Rozloženie počíta v jednotkách plochy (`container-type: size`, `cqw`/`cqh`).
-  - Panoráma má 150 % šírky scény, takže na telefóne ostane vidieť most aj hrad.
+  - Po spresnení Codexom je šírka panorámy `114cqw × zoom`; pri celkovom pohľade ostávajú na telefóne viditeľné UFO aj hrad.
   - Obzor je na 26 % výšky na výšku a na 30 % na šírku.
-- V 3D sa vrstvy posúvajú s kamerou: otočenie cez `--pan`, sklon cez `--tilt`, priblíženie cez `--zoom`. Premenné nastavuje udalosť `camera-change` priamo na DOM, bez prekresľovania Reactu.
+- V 3D po spresnení Codexom dodáva tá istá riadená kamera orbit, cieľ a FOV vieweru aj `backdropAttributes` v `lib/parliament-backdrop.ts`. `--pan`, `--tilt` a `--zoom` zahŕňajú preklad cieľa a vzdialenosť; pozadie nečaká na udalosť `camera-change`. Ide o vrstvenú 2.5D ilustráciu, nie rekonštrukciu mesta pri otočení o 360°.
 - V oboch témach je pozadie rovnaké (`parl-backdrop` v `KEEP_SELECTOR`). Pri obmedzenom pohybe sa odlesky nehýbu.
 
 **Tabuľa na stene** (`components/parliament-wall.tsx`, `lib/parliament-wall.ts`, kontrola `scripts/verify-parliament-wall.mjs`):
@@ -270,12 +270,22 @@ Peter: na mobile bola sála malá a panoráma v oknách sa strácala. Prázdnu p
 - **Pri hlasovaní:** dátum, druh a schôdza, päť kategórií hlasu, výsledok, potrebná väčšina a počet hlasov inak ako klub.
 - **Inak:** kreslá strán alebo klubov aktuálneho obsadenia a väčšina 76. V Koalícii súčet vlastnej koalície, v Blokoch koalícia : opozícia.
 - Pás okien má UV obrázka glTF, preto sa canvas kreslí zrkadlovo zvisle (overené snímkou `toBlob`). Čísla sa pri zmene napočítajú (8 krokov cez `setTimeout`).
-- GLB sa nemenil; posuvný pás s textom (`parliament-display.tsx`) ostáva pod oknami.
+- Pri pôvodnej Claudovej úprave sa GLB nemenil. Následné spresnenie pridáva skutočnú kamennú terasu, podpery, škáry a svetlá; aktuálny GLB má 1 492 072 B. Posuvný pás (`parliament-display.tsx`) pod oknami teraz nesie celý názov hlasovania, dátum a čas bez opakovania počtov; pauza a textová alternatíva zostávajú.
 
 **Kamera** (`fit` v `components/parliament-ar.tsx`):
-- **Na výšku:** sála na šírku kresiel so stenou (0,345 m), cieľ `0m 0.12m -0.1m`, mesto nad stenou.
-- **Na šírku:** 0,58 m, takže okolo sály je výhľad na mesto; sklon 58°, cieľ `0m 0.1m -0.1m`.
+- **Na výšku po spresnení:** polovičná šírka 0,29 m, sklon 46°, cieľ `0m 0.1m -0.1m`, mesto nad stenou.
+- **Na šírku po spresnení:** polovičná šírka 0,58 m, sklon 58°, cieľ `0m 0.075m -0.1m`.
 
 **Scéna na mobile:** výška `min((100vw − 12px) × 1,12; 64svh)`, na celú obrazovku `× 1,45; 72dvh`. 2D sála stojí nad hladinou pod panorámou.
 
 **Overenie:** snímky `model-viewer.toBlob()` fungujú aj v Claudovom prehliadači (WebGL snímka sa vyrenderuje na požiadanie). Overená je orientácia a obsah tabule, kompozícia 402 px a 1280 px. Plynulosť a posun pozadia pri ťahaní treba pozrieť na telefóne.
+
+## Spresnenie sály nad Dunajom — 3. 10. 2026 (Codex)
+
+Najnovší kontrakt je `.impeccable/parliament-river-polish-brief.md`, prijatá evidencia a verdikt **disposition: ship** sú v `.impeccable/review/parliament-river/packet.md` a `review.md`. Úplný záznam je [parliament-river-polish.md](parliament-river-polish.md). Tento dodatok nahrádza skoršie implementačné tvrdenia o 150 % panoráme, spätnej väzbe cez `camera-change`, staršom framovaní a nemennom GLB; historické kontroly a nasadenia vyššie zostávajú datovanou evidenciou.
+
+Mesto nasleduje posun cieľa, orbit aj zoom spoločnej kamery s pomalším škálovaním vzdialenej vrstvy. Reset a oprávnený resize používajú `updateComplete` / `jumpCameraToGoal`. Kamenná podlaha, sokel, dve podpery, škáry a nábrežné svetlá sú súčasťou geometrie. Desať polí má čitateľnejší LED náter; ich fakty a poradie sa nemenia. Ticker nesie celý názov/dátum/čas bez duplicitných počtov. Reduced-motion a pozastavenie odleskov/tickeru pri skrytej scéne ostávajú zachované.
+
+Nová AI panoráma má natívnych **2172 × 724**, JPEG **333 104 B**, bez upscalingu; pôvod a skutočný rozmer sú v `public/models/bratislava-evening.prompt.txt`. Skutočný úvodný WebP `chamber-clubs-2026-10-01.webp` je natívny orez **1209 × 518** z finálneho desktopového browser záberu; pôvod eviduje jeho `.json` sidecar. GLB má **1 492 072 B**; Khronos uvádza **0 chýb / 0 varovaní**. Zachované sú politické dáta, pôvodné farby, 150 súradníc a incumbent systém vrátane root `PRODUCT.md`, `DESIGN.md` a sidecaru.
+
+Prijatých je osem finálnych záberov: desktop **1280 × 720**, šírky **375/402 × 874 CSS px** v oboch témach a hlasovanie na desktope/402. Živá browser evidencia zaznamenala zoom pozadia **1.00036 → 1.06283**, pan **0 → 0.01831**, bez vodorovného pretekania a s prázdnym logom chýb. Prešlo všetkých **21 `verify-*.mjs`**, TypeScript, ESLint, kontrola tmavého CSS, produkčný build a jeden cielený detector `[]`; dva dodávané rastre majú pôvod. **Fyzický iPhone, Safari, AR, FPS a súvislá plynulosť zostávajú neoverené.** Tento documenter záznam nevykonal nové browser kontroly, commit ani deploy.

@@ -162,7 +162,7 @@ async function buildGlb() {
 
   // Materiály sály
   const M = {
-    floor: material("podlaha", "#716451", { rough: 0.38, texture: 'wood' }), carpet: material("koberec", "#343b3b", { rough: 1, texture: 'fabric' }),
+    floor: material("podlaha", "#c2b5a0", { rough: 0.82, texture: 'stone' }), carpet: material("koberec", "#343b3b", { rough: 1, texture: 'fabric' }),
     tier: material("stupne", "#454b49", { rough: 0.95, texture: 'fabric' }), riser: material("čelá stupňov", "#6d4c35", { rough: 0.65, texture: 'wood' }),
     deskTop: material("lavice", "#946d4e", { rough: 0.28, texture: 'wood' }), deskFront: material("čelo lavíc", "#63452f", { rough: 0.48, texture: 'wood' }),
     chairBase: material("podnož kresla", "#3a3f44", { rough: 0.4, metal: 0.5 }), wall: material("stena", "#393c38", { rough: 0.9, texture: 'stone' }),
@@ -175,6 +175,17 @@ async function buildGlb() {
   // Podlaha (polkruh + predná časť pre predsedníctvo) a koberec v strede
   const outer = rowRadius(ROWS - 1) + ROW_DEPTH / 2 + 0.03, front = 0.13;
   solid("podlaha", g => { ring(g, 0.0001, outer, 0, FLOOR, Math.PI, 0, { seg: 72 }); box(g, 0, FLOOR / 2, front / 2, outer * 2, FLOOR, front); }, M.floor);
+  // Real 3D waterfront terrace: stone fascia, two piers and warm recessed lights, moving with the chamber.
+  solid('kamenný sokel terasy', g => {
+    box(g, 0, -.011, front / 2, outer * 2, .022, front);
+    for (const x of [-outer * .77, outer * .77]) box(g, x, -.044, front * .58, .052, .066, .064);
+  }, M.wall);
+  solid('svetlo nábrežia', g => {
+    for (const x of [-outer * .64, outer * .64]) box(g, x, -.006, front + .0003, outer * .52, .0018, .001);
+  }, M.light);
+  solid('škáry dlažby terasy', g => {
+    for (const x of [-outer * .62, -outer * .31, outer * .31, outer * .62]) box(g, x, FLOOR + .0001, front / 2, .0006, .0002, front);
+  }, M.wall);
   const inner = rowRadius(0) - ROW_DEPTH / 2 - 0.004;
   solid("koberec", g => { ring(g, 0.0001, inner, FLOOR, FLOOR + 0.0008, Math.PI, 0, { seg: 64, sides: false }); box(g, 0, FLOOR + 0.0004, 0.045, inner * 2, 0.0008, 0.09); }, M.carpet);
   solid('lem koberca', g => ring(g, inner - .0012, inner, FLOOR, FLOOR + .0009, Math.PI, 0, { sides: false, seg: 64 }), M.trim);
