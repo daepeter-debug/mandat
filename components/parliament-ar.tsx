@@ -16,6 +16,9 @@ import { parliamentShareCard } from './parliament-share';
 import { ParliamentNavigation, type NavigableViewer } from './parliament-navigation';
 import Chamber2D from './chamber-2d';
 import { ParliamentDisplay } from './parliament-display';
+import { ParliamentWall } from './parliament-wall';
+import ParliamentBackdrop from './parliament-backdrop';
+import type { WallScene } from '@/lib/parliament-wall';
 import { coalitionSelection, partyFocus, seatChanges, seatSweep, SEAT_SWEEP_MS, deputyView } from '@/lib/parliament-experience';
 import type { TextureInfo, Texture } from '@google/model-viewer/lib/features/scene-graph/api.js';
 import { track } from "@/lib/track";
@@ -83,10 +86,15 @@ const linearColor = (hex: string) => [0, 2, 4].map(i => { const v = parseInt(hex
 const changes = seatChanges(electionVariant, modelVariant);
 // A historical coalition is not a current party: don't display its disappearance as a party's loss.
 const biggestGain = changes.find(p => p.delta > 0), biggestLoss = changes.find(p => p.delta < 0 && modelVariant.ordered.some(m => m.id === p.id));
-/** Kamera tak, aby sa celá sála zmestila na šírku aj na úzkom mobile (zorné pole 32°, polovičná šírka sály ~0,37 m). */
+/*
+  Kamera k celej sále so zorným poľom 30°. Na výšku (telefón) stačí šírka kresiel so stenou (0,345 m), podstavec smie
+  presahovať okraj a sála je väčšia. Na šírku (počítač) okolo sály ostane výhľad na Bratislavu (0,58 m).
+  Cieľ je mierne nad sálou, aby nad stenou bolo vidieť mesto (pozadie, components/parliament-backdrop.tsx).
+*/
 function fit(el: HTMLElement | null) {
-  const aspect = el && el.clientHeight ? el.clientWidth / el.clientHeight : 1.3, r = Math.min(2.4, Math.max(0.9, 0.425 / (Math.tan(15 * Math.PI / 180) * aspect)));
-  return { r, view: { orbit: `0deg ${aspect < 1 ? 46 : 54}deg ${r.toFixed(2)}m`, target: aspect < 1 ? "0m 0.085m -0.1m" : "0m 0.05m -0.1m" }, intro: { orbit: `0deg 10deg ${(r * 1.35).toFixed(2)}m`, target: "0m 0.02m -0.08m" } };
+  const aspect = el && el.clientHeight ? el.clientWidth / el.clientHeight : 1.3, portrait = aspect < 1, half = portrait ? .345 : .58;
+  const r = Math.min(2.4, Math.max(portrait ? .8 : .9, half / (Math.tan(15 * Math.PI / 180) * aspect)));
+  return { r, view: { orbit: `0deg ${portrait ? 46 : 58}deg ${r.toFixed(2)}m`, target: portrait ? "0m 0.12m -0.1m" : "0m 0.1m -0.1m" }, intro: { orbit: `0deg 10deg ${(r * 1.35).toFixed(2)}m`, target: "0m 0.02m -0.08m" } };
 }
 /** Kamera ku kreslu poslanca: blízko, mierne zhora, smerom od pultu. */
 function seatCamera(index: number) {
@@ -139,6 +147,7 @@ export default function ParliamentChamber(props: Props) {
   const [displayVariant, setDisplayVariant] = useState<VariantId | 'prechod' | 'hlasovanie'>(props.mode === 'hlasovania' ? 'hlasovanie' : shownVariant(initialVariant));
   const [transition, setTransition] = useState<{ from: VariantId; to: VariantId } | null>(null);
   const majorityWasOn = useRef(false), firstClubPaint = useRef(true), flownTo = useRef<number | null>(null);
+  const backdrop = useRef<HTMLDivElement>(null);
   const introTimers = useRef<number[]>([]), introActive = useRef(false);
   const manuallyNavigated = useRef(false);
   const previousVariant = useRef<VariantId>(initialVariant);
@@ -592,6 +601,20 @@ export default function ParliamentChamber(props: Props) {
     catch (e) { if (!(e instanceof DOMException && e.name === 'AbortError')) setShareMessage('Zdieľanie nebolo dostupné. Obrázok môžeš stiahnuť ako PNG.'); }
   }
 
+  // Pozadie sa posúva s kamerou: otočenie posunie panorámu do strany, sklon a priblíženie ju zdvihnú či zväčšia.
+  useEffect(() => {
+    const layer = backdrop.current;
+    if (!viewer || !layer) return;
+    const update = () => {
+      const orbit = viewer.getCameraOrbit(), base = fit(viewer).r;
+      layer.style.setProperty('--pan', (Math.sin(orbit.theta) * .9).toFixed(3));
+      layer.style.setProperty('--tilt', Math.max(-1, Math.min(1, (orbit.phi - .9) / .7)).toFixed(3));
+      layer.style.setProperty('--zoom', Math.max(.96, Math.min(1.18, 1 + (base / Math.max(.05, orbit.radius) - 1) * .08)).toFixed(3));
+    };
+    viewer.addEventListener('camera-change', update);
+    update();
+    return () => viewer.removeEventListener('camera-change', update);
+  }, [viewer]);
   // Režim zmenený na stránke (zoznam hlasovaní, „Späť na kluby“): rovnaké prepnutie ako tlačidlom v sále.
   useEffect(() => {
     if (props.mode === mode) return;
@@ -623,6 +646,16 @@ export default function ParliamentChamber(props: Props) {
     return { title: variantId === 'kluby' ? `Kluby NR SR k ${date(CLUBS_AS_OF)}` : variantId === "prieskumy" ? `Scenár podľa Modelu Mandát · aktualizované ${date(seatsNow.updated)}` : variantId === 'volby-2023' ? "Výsledok volieb 30. septembra 2023" : exclusion ? `Čo ak ${exclusion.party.short} nepostúpia?` : `Model Mandát · ${current.label}`,
       note: variantId === 'kluby' ? 'Skutočné zloženie podľa poslaneckých klubov. Ťukni na kreslo a uvidíš poslanca, klub vyberieš v zozname.' : exclusion ? 'Hypotetický scenár pri nezmenenej podpore ostatných strán. Nie predpoveď.' : "Ťukni na kreslo alebo vyber stranu zo zoznamu a pozri si ju zblízka." };
   })();
+  // Tabuľa na stene: hlasovanie, alebo kreslá aktuálneho obsadenia (lib/parliament-wall.ts).
+  const wallScene: WallScene = mode === 'hlasovania' && vote ? { kind: 'vote', vote, differ: differing.size } : {
+    kind: 'seats',
+    title: variantId === 'kluby' ? 'KLUBY NR SR' : variantId === 'volby-2023' ? 'VOĽBY 2023' : exclusion ? `BEZ ${exclusion.party.short.toUpperCase()}` : 'MODEL MANDÁT',
+    date: variantId === 'kluby' ? `k ${skDay(CLUBS_AS_OF)}` : variantId === 'volby-2023' ? '30. 9. 2023' : exclusion ? 'hypotetický scenár' : variantId === 'prieskumy' ? `k ${skDay(seatsNow.updated)}` : current.label,
+    items: current.ordered.map(p => ({ short: p.short, color: mode === 'bloky' ? BLOC_COLOR[blocOf(summary, p.id)] : p.color, seats: p.seats, dim: mode === 'koalicia' ? !combination.includes(p.id) : !!selected && selected !== p.id })),
+    footer: mode === 'koalicia' ? { label: 'VLASTNÁ KOALÍCIA', value: String(coalition.seats), note: coalition.majority ? 'má väčšinu 76' : `do 76 chýba ${coalition.missing}` }
+      : mode === 'bloky' ? { label: 'KOALÍCIA : OPOZÍCIA', value: `${summary.coalition.seats}:${summary.opposition.seats}`, note: 'väčšina 76' }
+      : { label: 'VÄČŠINA', value: '76', note: 'zo 150 kresiel' },
+  };
   const posterColors = seated ? seated.map(s => markColors[s.mark]) : current.seatParty.map(id => current.ordered.find(m => m.id === id)?.color ?? '#7d857f');
 
   return <section className={`par3d${expanded ? ' is-expanded' : ''}`} role={expanded ? 'dialog' : undefined} aria-modal={expanded || undefined} aria-label="3D sála" aria-describedby="par3d-desc">
@@ -637,6 +670,7 @@ export default function ParliamentChamber(props: Props) {
       <button type="button" className="par3d-expand" aria-pressed={expanded} aria-label={expanded ? 'Vrátiť sálu do stránky' : 'Sála na celú obrazovku'} onClick={() => setExpanded(!expanded)}>{expanded ? <Minimize2 size={16} aria-hidden="true"/> : <Maximize2 size={16} aria-hidden="true"/>}</button>
     </fieldset>
     <div className="par3d-stage" data-detail={!!selected}>
+      <ParliamentBackdrop ref={backdrop}/>
       {ready
         ? <model-viewer ref={setViewer as unknown as Ref<HTMLElement>} src={PARLIAMENT_MODEL} variant-name={displayVariant} animation-name="obsadenie"
             alt={mode === 'hlasovania' && vote ? `3D rokovacia sála, hlasovanie ${vote.nazov}: za ${vote.za}, proti ${vote.proti}, zdržalo sa ${vote.zdrzalo}, nehlasovalo ${vote.nehlasovalo}, neprítomní ${vote.nepritomni}` : `3D rokovacia sála: ${current.ordered.map(m => `${m.short} ${m.seats}`).join(", ")}`}
@@ -653,6 +687,7 @@ export default function ParliamentChamber(props: Props) {
           </model-viewer>
         : null}
       <ParliamentDisplay viewer={viewer} loaded={loaded} visible={visible} reduced={reduced} vote={mode === 'hlasovania' ? vote : null} caption={caption.title}/>
+      <ParliamentWall viewer={viewer} loaded={loaded} scene={wallScene} reduced={reduced}/>
       {!loaded && <div className="par3d-loading" role="status"><Chamber2D colors={posterColors} label="Náhľad sály"/><span>{failed ? '3D sálu sa nepodarilo načítať. Prepni na 2D alebo skús znova.' : 'Načítava sa 3D sála…'}</span></div>}
       {touring && <button type="button" className="par3d-skip" onClick={() => { stopIntro(); setCamera(fit(viewer).view); }}>Preskočiť úvod</button>}
       {transition && <div className="par3d-transition" role="status"><span>{allVariants.find(v => v.id === transition.from)?.label} → {current.label}</span><button type="button" onClick={settleTransition}>Preskočiť</button></div>}
@@ -711,6 +746,6 @@ export default function ParliamentChamber(props: Props) {
     {mode === 'hlasovania' ? null : mode !== "bloky"
       ? <ul className="par3d-legend" aria-label={mode === 'koalicia' ? 'Strany do vlastnej koalície' : variantId === 'kluby' ? 'Kluby v sále' : 'Kreslá strán'}>{current.ordered.map(m => <li key={m.id}><button type="button" disabled={sharing} data-edge={variantId === 'prieskumy' && edges.some(p => p.party.id === m.id)} aria-pressed={mode === 'koalicia' ? combination.includes(m.id) : selected === m.id} onClick={() => mode === 'koalicia' ? toggleCoalition(m.id) : choose(selected === m.id ? null : m.id)}><i style={{ background: m.color }} aria-hidden="true"/>{logos[m.id]?.src && <Image className="par3d-party-logo" src={logos[m.id].src} alt="" width={23} height={18} unoptimized loading="lazy"/>}{m.short}<b>{m.seats}</b>{variantId === 'prieskumy' && edges.some(p => p.party.id === m.id) && <TriangleAlert size={12} aria-label="Na hrane 5 %"/>}{mode === 'koalicia' && combination.includes(m.id) && <Check size={13} aria-hidden="true"/>}</button></li>)}</ul>
       : <ul className="par3d-legend" aria-label="Bloky">{(["coalition", "others", "opposition"] as const).filter(b => summary[b].seats > 0).map(b => <li key={b}><span className="par3d-bloc"><i style={{ background: BLOC_COLOR[b] }} aria-hidden="true"/>{b === "others" ? "Ostatní" : blocLabel(summary, b, partners)}<b>{summary[b].seats}</b></span></li>)}</ul>}
-    <p className="par3d-note">{mode === 'hlasovania' ? 'Poslanci sedia podľa klubov v čase hlasovania, nie podľa skutočného zasadacieho poriadku. Vlna farieb odhaľuje výsledok, neukazuje poradie hlasovania.' : variantId === 'kluby' ? `Kluby podľa posledného hlasovania NR SR (${date(CLUBS_AS_OF)}); poradie kresiel je ilustrácia, nie zasadací poriadok.` : 'Scenár, nie predpoveď. Farba kresla a značka na operadle rozlišujú strany.'} „Položiť na stôl“ otvorí AR na podporovanom telefóne; Android Scene Viewer používa pôvodný model prieskumov, iOS prenáša aktuálny výber.</p>
+    <p className="par3d-note">{mode === 'hlasovania' ? 'Poslanci sedia podľa klubov v čase hlasovania, nie podľa skutočného zasadacieho poriadku. Vlna farieb odhaľuje výsledok, neukazuje poradie hlasovania.' : variantId === 'kluby' ? `Kluby podľa posledného hlasovania NR SR (${date(CLUBS_AS_OF)}); poradie kresiel je ilustrácia, nie zasadací poriadok.` : 'Scenár, nie predpoveď. Farba kresla a značka na operadle rozlišujú strany.'} Pozadie: večerná Bratislava, ilustrácia vytvorená pomocou AI. „Položiť na stôl“ otvorí AR na podporovanom telefóne; Android Scene Viewer používa pôvodný model prieskumov, iOS prenáša aktuálny výber.</p>
   </section>;
 }

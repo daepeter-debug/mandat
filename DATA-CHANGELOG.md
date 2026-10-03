@@ -1,5 +1,15 @@
 # Evidencia údajov a rozsahu
 
+## 3. 10. 2026 — Parlament: Bratislava v pozadí celej scény a tabuľa hlasovania na stene (Claude)
+
+Na Petrov podnet (na mobile malá sála, panoráma v oknách sa strácala):
+- **Pozadie:** ilustrácia večernej Bratislavy (AI) je cez celú scénu 3D aj 2D sály. Hore je obloha a mesto (most SNP vľavo, hrad vpravo), dole Dunaj so zrkadlením a odleskami. Pri otáčaní kamery sa pozadie posúva.
+- **Tabuľa na stene:** okná sály sú teraz zakrivená tabuľa s desiatimi poľami.
+  - Pri hlasovaní ukazuje dátum, druh, za/proti/zdržali sa/nehlasovali/neprítomní, výsledok, potrebnú väčšinu a počet hlasov inak ako klub.
+  - Inak ukazuje kreslá klubov alebo strán a väčšinu 76; čísla sa pri zmene napočítajú.
+- **Mobil:** sála je väčšia (vyššia scéna, kamera na šírku kresiel) a nad stenou je vidieť mesto. Na počítači ostáva okolo sály výhľad na Bratislavu.
+- **Kontrola:** `scripts/verify-parliament-wall.mjs` (348 hlasovaní × 10 polí, kluby 150 kresiel). GLB bez zmeny. Podrobnosti sú v `docs/parliament-3d.md`.
+
 ## 3. 10. 2026 — Stránka Parlament: 3D sála, hlasovania poslancov a kluby (Claude)
 
 3D sála sa presunula z dialógu na úvode na vlastnú stránku **`/parlament`** (sekcia Parlament v menu, vo „Viac“ na mobile, v rozcestníku a tlačidlo v karte Parlament dnes). Stav je v adrese: `h` = hlasovanie, `poslanec` = poslanec, `rezim` = režim 3D sály; zdieľaný odkaz má vlastný titulok a popis (`app/parlament/page.tsx`) a náhľad `public/og/parliament.jpg` (sála zhora vo farbách klubov, `scripts/build-og.mjs`).

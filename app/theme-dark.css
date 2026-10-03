@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 31 súborov (575f9b9a76) — needitovať ručne. Pravidiel: 1547, prefarbených: 1208. */
+/* Generované scripts/build-dark.mjs z 32 súborov (76c2d6094c) — needitovať ručne. Pravidiel: 1555, prefarbených: 1208. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3875,6 +3875,27 @@ html[data-theme="dark"] .par3d-marks {
 html[data-theme="dark"] .par3d-marks b {
     color: #d1e7de
 }
+html[data-theme="dark"] .parl-backdrop {
+    background: #141d36
+}
+html[data-theme="dark"] .parl-backdrop-sky {
+    background: linear-gradient(180deg,#14306a 0%,#1f4b92 10%,#26569f 22%,#2a5aa2 100%)
+}
+html[data-theme="dark"] .parl-backdrop-city {
+    mask-image: linear-gradient(to bottom,transparent 0,#000 16%)
+}
+html[data-theme="dark"] .parl-backdrop-water {
+    background: linear-gradient(180deg,#263458 0%,#1c2645 32%,#121a30 100%)
+}
+html[data-theme="dark"] .parl-backdrop-mirror {
+    mask-image: linear-gradient(to top,#000 0%,#0009 16%,transparent 34%)
+}
+html[data-theme="dark"] .parl-backdrop-glints {
+    background: radial-gradient(ellipse 1.8% 55% at 22% 0%,#ffcf8a66,transparent 72%),radial-gradient(ellipse 4% 62% at 77% 0%,#ffd9a055,transparent 72%),radial-gradient(ellipse 1.1% 38% at 44% 0%,#ffc07a40,transparent 72%),radial-gradient(ellipse 1.1% 42% at 59% 0%,#ffc07a40,transparent 72%),repeating-linear-gradient(180deg,#ffffff0a 0 1px,transparent 1px 7px)
+}
+html[data-theme="dark"] .parl-backdrop-vignette {
+    background: radial-gradient(ellipse 90% 78% at 50% 50%,transparent 58%,#05080fa6 100%),linear-gradient(180deg,transparent 72%,#070b14b8 100%)
+}
 html[data-theme="dark"] .parl button:focus-visible,html[data-theme="dark"] .parl a:focus-visible,html[data-theme="dark"] .parl summary:focus-visible {
     outline: 2px solid #77a998;
     outline-offset: 2px
@@ -3902,6 +3923,9 @@ html[data-theme="dark"] .parl-stage-label {
 }
 html[data-theme="dark"] .parl-stage {
     background: radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)
+}
+html[data-theme="dark"] .parl-stage {
+    background: #141d36
 }
 html[data-theme="dark"] .parl-stage-wait {
     color: #f5f4ee

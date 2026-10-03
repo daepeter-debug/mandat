@@ -18,7 +18,7 @@ const FIRST = ['globals.css', 'magazine.css', 'news.css'];
 // Podklady pod logami, portrétmi a mapkou ostávajú presne ako vo svetlom režime (logá strán sú kreslené na svetlú):
 // triedy končiace na -logo (.party-card-logo, .party-rail-logo …), značky vlád, monogramy, obrázky log v zdrojoch.
 // Večerná sála stránky Parlament (2D) je tmavá v oboch režimoch, rovnako ako 3D scéna.
-const KEEP_SELECTOR = /-logo(?![\w-])|resp-mark|person-portrait|monogram|party-logo-sources a (img|svg)|section-art img|slovakia-mark|party-sheet-logo|national-aurora|\.story\b|\.story-|games-republic-art|games-town|games-parliament|games-quiz-|games-words-|chamber2d|parl-stage(?![\w-])|parl-stage-wait|parl-enter|parl-playing/;
+const KEEP_SELECTOR = /-logo(?![\w-])|resp-mark|person-portrait|monogram|party-logo-sources a (img|svg)|section-art img|slovakia-mark|party-sheet-logo|national-aurora|\.story\b|\.story-|games-republic-art|games-town|games-parliament|games-quiz-|games-words-|chamber2d|parl-stage(?![\w-])|parl-stage-wait|parl-enter|parl-playing|parl-backdrop/;
 // SVG grafy s farbami v atribútoch (Recharts, časová os vlád): prefarbia sa cez selektory na atribút.
 const SVG_SOURCES = ['components/finance-chart.tsx', 'components/trend-chart.tsx', 'components/living-chart.tsx', 'components/archive-chart.tsx', 'components/responsibility-page.tsx'];
 const SVG_SCOPE = ':is([data-slot="chart"],.resp-timeline,.resp-timeline-names)';

@@ -4,6 +4,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSPropertie
 import Image from "next/image";
 import { ArrowUpRight, Box, Check, ChevronLeft, ChevronRight, Link2, Pause, Play, Search, Share2, UserRound, X } from "lucide-react";
 import Chamber2D from "@/components/chamber-2d";
+import ParliamentBackdrop from "@/components/parliament-backdrop";
 import { VOTES_INDEX, clubLabel, clubTotals, kindNames, markColors, markNames, marks, matchesQuery, required, seatMembers, skDay, voteSource, type Mark, type SeatedMember, type VoteIndex, type VoteKind, type VoteSummary } from "@/lib/votes";
 import { DEPUTIES_FILE, clubAgreement, clubStats, deputyProfile, deputyStats, differentAt, displayName, findDeputies, partyAt, unaffiliatedPresence, voteDetailAt, type DeputiesData, type DeputyRow } from "@/lib/deputies";
 import { CLUBS_AS_OF, TERM, UNAFFILIATED, clubEntries, clubSeatParty } from "@/lib/parliament-clubs";
@@ -201,11 +202,12 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
         <span className="parl-stage-label">{summary ? `Hlasovanie ${skDay(summary.datum)}` : `Kluby k ${skDay(CLUBS_AS_OF)}`}</span>
       </div>
       {view3d
-        ? <Suspense fallback={<div className="parl-stage parl-stage-wait" role="status"><Chamber2D colors={colors} label={label2d}/><span>Načítava sa 3D sála…</span></div>}>
+        ? <Suspense fallback={<div className="parl-stage parl-stage-wait" role="status"><ParliamentBackdrop/><Chamber2D colors={colors} label={label2d}/><span>Načítava sa 3D sála…</span></div>}>
             <ParliamentChamber mode={mode3d} onMode={setMode3d} vote={summary} voteSeats={seated} latestSeats={latestSeats} deputy={deputy}
               onDeputy={id => chooseDeputy(id)} onProfile={showProfile} highlightDiff={highlight} differing={diffIds}/>
           </Suspense>
         : <div className="parl-stage">
+            <ParliamentBackdrop/>
             <Chamber2D colors={colors} label={label2d} spotlight={spot?.seat ?? null} rings={rings} dim={dim}
               onSeat={seat => { const m = stageSeats?.[seat]; if (m) chooseDeputy(deputy === m.id ? null : m.id); }}/>
             <button type="button" className="parl-enter" onPointerEnter={prefetch3d} onFocus={prefetch3d} onClick={() => { setView3d(true); track("parlament", "3d"); }}><Box size={18} aria-hidden="true"/>Vstúpiť do 3D sály</button>
@@ -220,7 +222,7 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
         <button type="button" onClick={showProfile}><UserRound size={15} aria-hidden="true"/>Profil</button>
         <button type="button" className="parl-icon-button" aria-label="Zrušiť výber poslanca" onClick={() => chooseDeputy(null)}><X size={16}/></button>
       </div>}
-      {!view3d && !row && <p className="parl-hint">{summary ? "Ťukni na kreslo a uvidíš, kto tam sedí a ako hlasoval." : "Ťukni na kreslo a uvidíš poslanca. Klub zvýrazníš v zozname."} Kreslá sú podľa klubov, nie skutočný zasadací poriadok.</p>}
+      {!view3d && !row && <p className="parl-hint">{summary ? "Ťukni na kreslo a uvidíš, kto tam sedí a ako hlasoval." : "Ťukni na kreslo a uvidíš poslanca. Klub zvýrazníš v zozname."} Kreslá sú podľa klubov, nie skutočný zasadací poriadok. Pozadie: večerná Bratislava, ilustrácia vytvorená pomocou AI.</p>}
     </section>
 
     {failed && <p className="parl-error" role="alert">Hlasovania sa nepodarilo načítať. Skontroluj pripojenie a obnov stránku.</p>}

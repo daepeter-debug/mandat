@@ -246,3 +246,36 @@ Fyzický mobilný Safari/Chrome, najmä súčasný dvojprstový pan/pinch, AR a 
 **Poslanci a kluby** (`lib/deputies.ts`, dáta `public/data/hlasovania/poslanci.json` zo `scripts/build-deputies.mjs`): pravidlá sú v hlavičke súboru, kontrola je `scripts/verify-deputies.mjs`. Po `fetch-votes` sa poslanci a kluby prepočítajú samy, stačí `verify-votes`, `verify-deputies` a commit.
 
 **Neoverené:** vlna 2D aj 3D, prelet kamery a pulz krúžku v pohybe (Claudov prehliadač nespúšťa `requestAnimationFrame` ani CSS animácie v skrytom okne). Farby, logá a výber 150 kresiel sú overené cez API model-viewer pri obmedzenom pohybe.
+
+## Bratislava v pozadí a tabuľa na stene — 3. 10. 2026 (Claude, na Petrov podnet)
+
+Peter: na mobile bola sála malá a panoráma v oknách sa strácala. Prázdnu plochu okolo sály treba využiť na Bratislavu a stenu na prehľadné hlasovanie.
+
+**Pozadie** (`components/parliament-backdrop.tsx`, `app/parliament-backdrop.css`) je za 3D aj 2D sálou.
+- Vrstvy:
+  - obloha;
+  - panoráma `public/models/bratislava-evening.jpg` (ilustrácia vytvorená pomocou AI, zadanie v `.prompt.txt`);
+  - rieka pod ňou;
+  - zrkadlenie spodného pásu obrázka;
+  - odlesky svetiel mosta a hradu;
+  - vineta.
+- Rozloženie počíta v jednotkách plochy (`container-type: size`, `cqw`/`cqh`).
+  - Panoráma má 150 % šírky scény, takže na telefóne ostane vidieť most aj hrad.
+  - Obzor je na 26 % výšky na výšku a na 30 % na šírku.
+- V 3D sa vrstvy posúvajú s kamerou: otočenie cez `--pan`, sklon cez `--tilt`, priblíženie cez `--zoom`. Premenné nastavuje udalosť `camera-change` priamo na DOM, bez prekresľovania Reactu.
+- V oboch témach je pozadie rovnaké (`parl-backdrop` v `KEEP_SELECTOR`). Pri obmedzenom pohybe sa odlesky nehýbu.
+
+**Tabuľa na stene** (`components/parliament-wall.tsx`, `lib/parliament-wall.ts`, kontrola `scripts/verify-parliament-wall.mjs`):
+- Pás okien (materiál `okná:Bratislava`) dostane za behu textúru canvasu 4096 × 368 s desiatimi poľami medzi pilastrami.
+- **Pri hlasovaní:** dátum, druh a schôdza, päť kategórií hlasu, výsledok, potrebná väčšina a počet hlasov inak ako klub.
+- **Inak:** kreslá strán alebo klubov aktuálneho obsadenia a väčšina 76. V Koalícii súčet vlastnej koalície, v Blokoch koalícia : opozícia.
+- Pás okien má UV obrázka glTF, preto sa canvas kreslí zrkadlovo zvisle (overené snímkou `toBlob`). Čísla sa pri zmene napočítajú (8 krokov cez `setTimeout`).
+- GLB sa nemenil; posuvný pás s textom (`parliament-display.tsx`) ostáva pod oknami.
+
+**Kamera** (`fit` v `components/parliament-ar.tsx`):
+- **Na výšku:** sála na šírku kresiel so stenou (0,345 m), cieľ `0m 0.12m -0.1m`, mesto nad stenou.
+- **Na šírku:** 0,58 m, takže okolo sály je výhľad na mesto; sklon 58°, cieľ `0m 0.1m -0.1m`.
+
+**Scéna na mobile:** výška `min((100vw − 12px) × 1,12; 64svh)`, na celú obrazovku `× 1,45; 72dvh`. 2D sála stojí nad hladinou pod panorámou.
+
+**Overenie:** snímky `model-viewer.toBlob()` fungujú aj v Claudovom prehliadači (WebGL snímka sa vyrenderuje na požiadanie). Overená je orientácia a obsah tabule, kompozícia 402 px a 1280 px. Plynulosť a posun pozadia pri ťahaní treba pozrieť na telefóne.
