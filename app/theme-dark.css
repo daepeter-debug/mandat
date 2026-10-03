@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 31 súborov (0537f9a55e) — needitovať ručne. Pravidiel: 1538, prefarbených: 1205. */
+/* Generované scripts/build-dark.mjs z 31 súborov (76ac186903) — needitovať ručne. Pravidiel: 1546, prefarbených: 1207. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3531,6 +3531,14 @@ html[data-theme="dark"] .par3d-close {
 html[data-theme="dark"] .par3d-stage {
     background: radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)
 }
+html[data-theme="dark"] .par3d-seat-marker {
+    border: 3px solid var(--marker-ring);
+    background: transparent;
+    box-shadow: 0 3px 8px #0008
+}
+html[data-theme="dark"] .par3d-seat-marker::after {
+    border: 2px solid var(--marker-ink)
+}
 html[data-theme="dark"] .par3d-loading {
     color: #f5f4ee;
     background: #343b36
@@ -3865,6 +3873,18 @@ html[data-theme="dark"] .parl button:focus-visible,html[data-theme="dark"] .parl
     outline: 2px solid #77a998;
     outline-offset: 2px
 }
+html[data-theme="dark"] .parl-preview button {
+    border: 0;
+    background: #343b36;
+    color: #fffefa
+}
+html[data-theme="dark"] .parl-preview figcaption {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-preview button:focus-visible {
+    outline: 3px solid #77a998;
+    outline-offset: 3px
+}
 html[data-theme="dark"] .parl-facts b {
     color: #d1e7de
 }
@@ -3902,6 +3922,17 @@ html[data-theme="dark"] .chamber2d-floor path {
 }
 html[data-theme="dark"] .chamber2d-floor rect {
     fill: #ffffff24
+}
+html[data-theme="dark"] .chamber2d-dot {
+    stroke: #fffefa40
+}
+html[data-theme="dark"] .chamber2d-back {
+    fill: none;
+    stroke: #17271f
+}
+html[data-theme="dark"] .chamber2d-floor .chamber2d-rim {
+    fill: #202a25;
+    stroke: #b8ab8b
 }
 html[data-theme="dark"] .chamber2d-rings circle {
     fill: none;
@@ -4067,7 +4098,6 @@ html[data-theme="dark"] .parl-results button small {
 }
 html[data-theme="dark"] .parl-profile {
     border: 1px solid #41463d;
-    border-top: 4px solid var(--club, #97aba3);
     background: #262c29
 }
 html[data-theme="dark"] .parl-profile header h3 {
@@ -4142,7 +4172,6 @@ html[data-theme="dark"] .parl-profile-links a {
 }
 html[data-theme="dark"] .parl-club-cards article {
     border: 1px solid #41463d;
-    border-left: 4px solid var(--club);
     background: #262c29
 }
 html[data-theme="dark"] .parl-club-cards h3 {

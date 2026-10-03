@@ -182,11 +182,23 @@ export default function ParliamentChamber(props: Props) {
   useEffect(() => {
     if (!expanded) return;
     const root = document.documentElement, overflow = root.style.overflow;
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const surface = viewer?.closest<HTMLElement>('.par3d');
     root.style.overflow = 'hidden';
-    const key = (e: KeyboardEvent) => { if (e.key === 'Escape') setExpanded(false); };
+    surface?.querySelector<HTMLButtonElement>('.par3d-close')?.focus({ preventScroll: true });
+    const key = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { e.preventDefault(); setExpanded(false); }
+      if (e.key !== 'Tab' || !surface) return;
+      const controls = [...surface.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),[tabindex="0"]')].filter(el => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+      const first = controls[0], last = controls.at(-1);
+      if (!first || !last) return;
+      if (!surface.contains(document.activeElement) || e.shiftKey && document.activeElement === first || !e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); (e.shiftKey ? last : first).focus({ preventScroll: true });
+      }
+    };
     window.addEventListener('keydown', key);
-    return () => { root.style.overflow = overflow; window.removeEventListener('keydown', key); };
-  }, [expanded]);
+    return () => { root.style.overflow = overflow; window.removeEventListener('keydown', key); if (previous?.isConnected) previous.focus({ preventScroll: true }); };
+  }, [expanded, viewer]);
   useEffect(() => {
     if (!viewer) return;
     let inView = true;
@@ -612,7 +624,7 @@ export default function ParliamentChamber(props: Props) {
   })();
   const posterColors = seated ? seated.map(s => markColors[s.mark]) : current.seatParty.map(id => current.ordered.find(m => m.id === id)?.color ?? '#7d857f');
 
-  return <section className={`par3d${expanded ? ' is-expanded' : ''}`} aria-label="3D sála" aria-describedby="par3d-desc">
+  return <section className={`par3d${expanded ? ' is-expanded' : ''}`} role={expanded ? 'dialog' : undefined} aria-modal={expanded || undefined} aria-label="3D sála" aria-describedby="par3d-desc">
     {expanded && <div className="par3d-head"><div><b className="par3d-title">Parlament v 3D</b><p id="par3d-desc" className="par3d-desc">150 kresiel · {mode === 'hlasovania' ? 'Hlasovania NR SR' : current.label}</p></div>
       <button type="button" className="par3d-close" aria-label="Vrátiť sálu do stránky" onClick={() => setExpanded(false)}><Minimize2 size={20}/></button></div>}
     {!expanded && <p id="par3d-desc" className="sr-only">3D sála, 150 kresiel · {mode === 'hlasovania' ? 'Hlasovania NR SR' : current.label}. Preskúmaj sálu vlastným pohľadom.</p>}
@@ -634,6 +646,9 @@ export default function ParliamentChamber(props: Props) {
             tone-mapping="aces" shadow-intensity="1.1" shadow-softness="0.7" exposure="1.2" environment-image="/models/parlament-evening.hdr" class="par3d-viewer"
             onError={() => setFailed(true)}>
             <button slot="ar-button" type="button" className="par3d-ar" onClick={() => track("ar", "table")}><ScanLine size={18} aria-hidden="true"/>Položiť na stôl</button>
+            {spotSeat !== null && <span key={spotSeat} slot="hotspot-selected-deputy" className="par3d-seat-marker" aria-hidden="true"
+              data-position={`${chamberSeats[spotSeat].x}m ${chamberSeats[spotSeat].y + .05}m ${chamberSeats[spotSeat].z}m`}
+              data-normal="0m 1m 0m"/>}
           </model-viewer>
         : null}
       {!loaded && <div className="par3d-loading" role="status"><Chamber2D colors={posterColors} label="Náhľad sály"/><span>{failed ? '3D sálu sa nepodarilo načítať. Prepni na 2D alebo skús znova.' : 'Načítava sa 3D sála…'}</span></div>}

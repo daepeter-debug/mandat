@@ -34,13 +34,17 @@ export default function Chamber2D({ colors, label, spotlight = null, rings, dim,
   return <svg ref={svg} className={`chamber2d ${className}`} viewBox="-322 -322 644 372" role="img" aria-label={label}
     onPointerDown={e => { press.current = { x: e.clientX, y: e.clientY }; }} onPointerUp={pick} onPointerCancel={() => { press.current = null; }}>
     <g className="chamber2d-floor" aria-hidden="true">
+      <path className="chamber2d-rim" d="M -312 0 A 312 312 0 0 1 312 0 L 312 40 L -312 40 Z"/>
       {rows.map(r => <path key={r} d={arc(r)}/>)}
       <rect x="-46" y="14" width="92" height="18" rx="5"/>
       <rect x="-20" y="-4" width="40" height="11" rx="3"/>
     </g>
     <g className="chamber2d-seats">
-      {seats.map((s, i) => <circle key={i} cx={s.x} cy={s.y} r={R} fill={colors[i] ?? "#7d857f"} data-dim={dim?.has(i) || undefined}
-        style={{ "--d": `${Math.round(i / 149 * 650)}ms`, "--fx": `${-s.x}px`, "--fy": `${22 - s.y}px` } as CSSProperties}/>)}
+      {seats.map((s, i) => <g key={i} className="chamber2d-seat" data-dim={dim?.has(i) || undefined}
+        style={{ "--d": `${Math.round(i / 149 * 650)}ms`, "--fx": `${-s.x}px`, "--fy": `${22 - s.y}px` } as CSSProperties}>
+        <circle className="chamber2d-dot" cx={s.x} cy={s.y} r={R} fill={colors[i] ?? "#7d857f"}/>
+        <path className="chamber2d-back" d={`M ${s.x - 5} ${s.y + 2} Q ${s.x} ${s.y + 5.5} ${s.x + 5} ${s.y + 2}`} aria-hidden="true"/>
+      </g>)}
     </g>
     {rings && <g className="chamber2d-rings" aria-hidden="true">{[...rings].map(i => seats[i] && <circle key={i} cx={seats[i].x} cy={seats[i].y} r={R + 4.2}/>)}</g>}
     {spotlight !== null && seats[spotlight] && <g className="chamber2d-spot" aria-hidden="true">

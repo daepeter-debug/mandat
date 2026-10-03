@@ -9,6 +9,9 @@
 .par3d-close{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:#fffefa;color:var(--mag-ink);cursor:pointer}
 .par3d-stage{position:relative;min-height:0;height:min(360px,42dvh);border-radius:16px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)}
 .par3d-viewer{display:block;width:100%;height:100%;--poster-color:transparent;--progress-bar-color:#2f6b3f}
+.par3d-seat-marker{--marker-ink:#17271f;--marker-ring:#dcf59b;display:block;width:26px;height:26px;border:3px solid var(--marker-ring);border-radius:50%;background:transparent;box-shadow:0 3px 8px #0008;pointer-events:none}
+.par3d-seat-marker::after{content:'';position:absolute;inset:4px;border:2px solid var(--marker-ink);border-radius:50%}
+.par3d-seat-marker[data-visible=false]{opacity:0}
 .par3d-loading{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:60px 24px;text-align:center;font-size:14px;color:#f5f4ee;background:#343b36}
 .par3d-ar{position:absolute;left:50%;bottom:14px;translate:-50% 0;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:999px;background:#20392f;color:#fff;font:inherit;font-size:15px;font-weight:650;box-shadow:0 6px 18px #0003;cursor:pointer}
 .par3d-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;font-size:12.5px;font-weight:600;color:var(--mag-ink)}
@@ -180,4 +183,13 @@
 .par3d-marks i{width:9px;height:9px;border-radius:50%}
 .par3d-marks b{color:var(--mag-ink);font-variant-numeric:tabular-nums}
 .par3d .par3d-head{align-items:center}
-@media(max-width:760px){.par3d-variants{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.par3d-variants button{padding:0 4px;font-size:11.5px}.par3d.is-expanded .par3d-stage{height:min(calc((100vw - 12px) * 1.1),60dvh)}}
+@media(max-width:760px){
+  .par3d-controls{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:6px}
+  .par3d-variants,.par3d-modes{grid-column:1/-1;width:100%;display:grid}
+  .par3d-variants{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .par3d-variants button{padding:0 4px;font-size:11.5px;min-height:40px}
+  .par3d-modes button{min-height:40px}
+  .par3d-seat-view{justify-self:start}
+  .par3d-replay,.par3d-expand{margin:0}
+  .par3d.is-expanded .par3d-stage{height:min(calc((100vw - 12px) * 1.05),48dvh)}
+}

@@ -183,7 +183,14 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
         <li><b>{clubEntries.length - (unaffiliatedToday ? 1 : 0)}</b><span>klubov · {unaffiliatedToday} {plural(unaffiliatedToday, "nezaradený", "nezaradení", "nezaradených")}</span></li>
         <li><b>{TERM.votes}</b><span>hlasovaní od {skDay(TERM.since)}</span></li>
       </ul>
-    </div></section>
+    </div><figure className="parl-preview">
+      <button type="button" aria-label="Preskúmať sálu v 3D" onPointerEnter={prefetch3d} onFocus={prefetch3d}
+        onClick={() => { setView3d(true); stage.current?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); track("parlament", "3d"); }}>
+        <Image src="/models/chamber-clubs-2026-10-01.webp" width={1209} height={518} alt="Ilustračná 3D sála podľa klubov k 1. októbru 2026" unoptimized/>
+        <span><Box size={16} aria-hidden="true"/>Preskúmať v 3D<ArrowUpRight size={16} aria-hidden="true"/></span>
+      </button>
+      <figcaption>Náhľad klubov k 1. 10. 2026 · ilustračná sála</figcaption>
+    </figure></section>
 
     <section className="parl-stage-block" aria-label="Sála">
       <div ref={stage} className="parl-stage-head">
