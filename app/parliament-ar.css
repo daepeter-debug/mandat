@@ -29,6 +29,18 @@
 /* Ovládanie nad sálou: obsadenie (prieskumy / 2023), zafarbenie (strany / bloky), znova prehrať úvod */
 .par3d-controls{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px;border:0;margin:0;padding:0;min-width:0}
 .par3d-controls>*{pointer-events:auto}
+.par3d-viewer{--par3d-focus:#dcf59b;touch-action:none;cursor:grab}
+.par3d-viewer:active{cursor:grabbing}
+.par3d-viewer:focus-visible{outline:2px solid var(--par3d-focus);outline-offset:-4px}
+.par3d-navigation{display:grid;gap:5px}
+.par3d-nav-tools{display:flex;align-items:center;gap:8px;min-width:0;margin:0;padding:0;border:0}
+.par3d-nav-tools .par3d-seg button{display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.par3d-nav-zoom{display:flex;gap:2px}
+.par3d-nav-zoom button,.par3d-nav-reset{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;min-height:44px;padding:0 10px;border:0;border-radius:8px;background:#fffefa;color:#20392f;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.par3d-nav-reset{margin-left:auto;white-space:nowrap}
+.par3d-nav-tools:disabled{opacity:.45}
+.par3d-navigation p{margin:0;font-size:11.5px;line-height:1.45;color:var(--text-2)}
+@media(max-width:400px){.par3d-nav-tools{gap:4px}.par3d-nav-tools .par3d-seg button{padding:0 7px;gap:4px;font-size:11.5px}.par3d-nav-reset{padding:0 7px;font-size:11.5px}.par3d-nav-zoom button{padding:0;min-width:40px}.par3d-nav-tools .par3d-seg{padding:2px}}
 .par3d-seg{display:inline-flex;padding:3px;border-radius:10px;background:#e5ebd8}
 .par3d-seg button{min-height:38px;padding:0 10px;border:0;border-radius:7px;background:transparent;font:inherit;font-size:12.5px;font-weight:650;color:#4f6057;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .par3d-seg button[aria-pressed=true]{background:#20392f;color:#fff}

@@ -1,5 +1,13 @@
 # Evidencia údajov a rozsahu
 
+## 3. 10. 2026 — Parlament v 3D: voľný pohyb kamery (Codex)
+
+Predvolené **Posúvať** presúva kameru aj cieľ bez obmedzenia na model; **Otáčať** otáča okolo aktuálneho cieľa so stabilným horizontom a celým azimutom. Zoom **0,015–20 m**, spoločný dvojprstový pan/pinch, myš/koliesko/pravé ťahanie, šípky/Shift/plus/mínus/Home a dostupná **Celá sála**. Krátke ťuknutie naďalej vyberá kreslo, stranu alebo poslanca. Ručný pohyb preruší úvod v aktuálnej polohe a resize potom necentruje scénu. Kompaktné ovládanie a nápoveda sú pod sálou.
+
+Fresh review najprv požadoval jedinú opravu: tmavý fokus vieweru s nízkym kontrastom. Lokálne `--par3d-focus:#dcf59b` zachováva zdedenú limetku v oboch témach aj generovanom CSS; nejde o nový globálny token. Reviewer následne uzavrel **ship** pre túto opravu bez viditeľnej regresie; ostatné oblasti v pôvodnej kontrole zodpovedali zdedenému smeru. Root `PRODUCT.md`, `DESIGN.md` a sidecar sú zachované. Bez novej dodávanej bitmapy, zmien dát/hlasovaní, hier, Worker bindingov či GLB/kompresie; model má **1 444 616 B**, 150 kresiel a 165 animačných kanálov.
+
+Po oprave prešli všetkých **17 `verify-*.mjs`**, TypeScript, úplný ESLint, tmavé CSS (**`7ba0d10900`**) a produkčný build; priamy detector nad tromi zmenenými cieľmi vrátil `[]`. Lokálny browser potvrdil pan bez zmeny orbitu, otáčanie po posune so zachovaním cieľa, reset, klávesnicové ArrowLeft/Home, zoom tlačidlom, výber SMER a **Lešo, Boleslav / SMER / za**, výsledok **90/0/52/0/8**, konzolu `[]`. JPEG dôkazy: desktop **1280 × 800**, mobilné CSS viewporty **375 × 812 / 402 × 874** s providerovými bitmapami **360 × 780 / 387 × 841**, obe témy. Emulácia používala myš, coarse=false; fyzické mobilné pan/pinch, Safari/Chrome, AR, živé reduced-motion a výkon neboli overené. Rozsah, oprava, verdikt a limity sú v `docs/parliament-3d.md` a `.impeccable/review/parliament-navigation/finish.md`. Nové nasadenie ešte nie je súčasťou tohto lokálneho záznamu.
+
 ## 2. 10. 2026 — Parlament v 3D: hlasovania bez stĺpikov (Codex)
 
 Peter prijal nahradenie zvislých stĺpikov jednorazovou vlnou farieb cez 150 kresiel počas **1 050 ms** a jemným zvýraznením vybraného poslanca. Vlna začína aktuálne zobrazenými farbami a končí presnými farbami hlasov; odhaľuje výsledok, nie chronológiu hlasovania. Výber kresla ju neopakuje, druhé ťuknutie výber zruší. Rovnaký prírastok emisívneho faktora **+0,16 v každom lineárnom farebnom kanáli** platí aj pre neprítomného. Rýchle prepnutie ruší starú prácu; skrytá scéna a reduced-motion dokončia cieľ bez vlny.

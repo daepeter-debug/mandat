@@ -13,6 +13,7 @@ import { PARLIAMENT_MODEL, parliamentSeats, parliamentVariants, allParliamentVar
 import { currentSeatUncertainty } from '@/lib/uncertainty';
 import { hemicycleSeats } from '@/lib/parliament';
 import { parliamentShareCard } from './parliament-share';
+import { ParliamentNavigation, type NavigableViewer } from './parliament-navigation';
 import { coalitionSelection, partyFocus, seatChanges, seatSweep, SEAT_SWEEP_MS, deputyView } from '@/lib/parliament-experience';
 import type { TextureInfo } from '@google/model-viewer/lib/features/scene-graph/api.js';
 import { track } from "@/lib/track";
@@ -35,7 +36,7 @@ declare module "react" {
   namespace JSX { interface IntrinsicElements { "model-viewer": ModelViewerProps } }
 }
 type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; emissiveTexture?: TextureInfo | null; setEmissiveFactor: (c: string | number[]) => void; setAlphaMode: (mode: 'BLEND' | 'MASK' | 'OPAQUE') => void };
-type Viewer = HTMLElement & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
+type Viewer = NavigableViewer & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
   createTexture: (uri: string) => Promise<Parameters<TextureInfo["setTexture"]>[0]>; positionAndNormalFromPoint: (x: number, y: number) => { position: { x: number; y: number; z: number } } | null };
 type Mode = "strany" | "bloky" | "koalicia" | "vyvoj" | "hlasovania";
 // Hlasovania NR SR (lib/votes.ts): zoznam a detaily sa načítajú až v režime Hlasovania, potom ostanú v pamäti.
@@ -126,8 +127,7 @@ export default function ParliamentAR() {
   const [transition, setTransition] = useState<{ from: VariantId; to: VariantId } | null>(null);
   const majorityWasOn = useRef(false);
   const introTimers = useRef<number[]>([]), introActive = useRef(false);
-  const pointerStart = useRef<{ x: number; y: number; at: number; moved: boolean; multi: boolean } | null>(null);
-  const pointers = useRef(new Set<number>());
+  const manuallyNavigated = useRef(false);
   const previousVariant = useRef<VariantId>('prieskumy');
   const current = allVariants.find(v => v.id === variantId) as ParliamentVariant;
   const monthIndex = Math.max(0, timeline.findIndex(p => p.variant.id === variantId));
@@ -174,7 +174,7 @@ export default function ParliamentAR() {
   }, [viewer, reduced]);
   useEffect(() => {
     if (!viewer || !loaded) return;
-    const observer = new ResizeObserver(() => { if (!selected && !immersive && !introActive.current) setCamera(fit(viewer).view); });
+    const observer = new ResizeObserver(() => { if (!manuallyNavigated.current && !selected && !immersive && !introActive.current) setCamera(fit(viewer).view); });
     observer.observe(viewer);
     return () => observer.disconnect();
   }, [viewer, loaded, selected, immersive]);
@@ -193,6 +193,7 @@ export default function ParliamentAR() {
   useEffect(() => {
     if (!viewer) return;
     const start = () => {
+      manuallyNavigated.current = false;
       introTimers.current.forEach(clearTimeout);
       const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const cam = fit(viewer);
@@ -424,6 +425,12 @@ export default function ParliamentAR() {
     if (id) track("ar", `party:${id}`);
   }
   function stopIntro() { introTimers.current.forEach(clearTimeout); introActive.current = false; setTouring(false); viewer?.pause(); }
+  function resetCamera() {
+    if (shareLock.current) return;
+    manuallyNavigated.current = false;
+    setPlaying(false); stopIntro(); setSelected(null); setVoteSeat(null); setImmersive(false);
+    setCamera(fit(viewer).view);
+  }
   function settleTransition() { setTransition(null); setDisplayVariant(mode === 'hlasovania' && seated ? 'hlasovanie' : variantId); }
   function switchVariant(id: VariantId) {
     if (shareLock.current) return;
@@ -534,7 +541,7 @@ export default function ParliamentAR() {
       <DialogPrimitive.Content className="par3d" aria-describedby="par3d-desc">
         <div className="par3d-head">
           <div><DialogPrimitive.Title className="par3d-title">Parlament v 3D</DialogPrimitive.Title>
-            <p id="par3d-desc" className="par3d-desc">150 kresiel · {mode === 'hlasovania' ? 'Hlasovania NR SR' : current.label}{mode !== 'hlasovania' && variantId === 'prieskumy' ? ` · ${date(seatsNow.updated)}` : ''}. {touch ? 'Otáčaj prstom, približuj dvoma prstami.' : 'Otáčaj myšou, približuj kolieskom.'}</p></div>
+            <p id="par3d-desc" className="par3d-desc">150 kresiel · {mode === 'hlasovania' ? 'Hlasovania NR SR' : current.label}{mode !== 'hlasovania' && variantId === 'prieskumy' ? ` · ${date(seatsNow.updated)}` : ''}. Preskúmaj sálu vlastným pohľadom.</p></div>
           <DialogPrimitive.Close className="par3d-close" aria-label="Zavrieť"><X size={20}/></DialogPrimitive.Close>
         </div>
         <fieldset className="par3d-controls" disabled={sharing}>
@@ -548,14 +555,10 @@ export default function ParliamentAR() {
             ? <model-viewer ref={setViewer as unknown as Ref<HTMLElement>} src={PARLIAMENT_MODEL} variant-name={displayVariant} animation-name="obsadenie"
                 alt={`3D rokovacia sála: ${current.ordered.map(m => `${m.short} ${m.seats}`).join(", ")}`}
                 ar="" ar-modes="webxr scene-viewer quick-look" ar-scale="auto" ar-placement="floor"
-                camera-controls="" touch-action="none" interaction-prompt="none" reveal="manual" loading="eager"
+                tabIndex={0} aria-describedby="par3d-navigation-help" interaction-prompt="none" reveal="manual" loading="eager"
                 camera-orbit={camera.orbit} camera-target={camera.target} field-of-view={immersive ? '68deg' : '30deg'} interpolation-decay={reduced ? '0' : touring ? '220' : '100'}
-                min-camera-orbit={immersive ? 'auto 35deg 0.015m' : 'auto 10deg 0.35m'} max-camera-orbit="auto 86deg 3.2m"
+                min-camera-orbit="auto 0.57deg 0.015m" max-camera-orbit="auto 179.43deg 20m"
                 tone-mapping="aces" shadow-intensity="1.1" shadow-softness="0.7" exposure="1.2" environment-image="/models/parlament-evening.hdr" class="par3d-viewer"
-                onPointerDown={e => { if (sharing) return; setPlaying(false); pointers.current.add(e.pointerId); pointerStart.current = { x: e.clientX, y: e.clientY, at: e.timeStamp, moved: false, multi: pointers.current.size > 1 }; if (touring) { stopIntro(); setCamera(fit(viewer).view); } }}
-                onPointerMove={e => { if (pointerStart.current && Math.hypot(e.clientX - pointerStart.current.x, e.clientY - pointerStart.current.y) > 7) pointerStart.current.moved = true; }}
-                onPointerCancel={e => { pointers.current.delete(e.pointerId); pointerStart.current = null; }}
-                onPointerUp={e => { const down = pointerStart.current; pointers.current.delete(e.pointerId); pointerStart.current = null; if (down && !down.moved && !down.multi && e.timeStamp - down.at < 500 && e.target === e.currentTarget) pickSeat(e.clientX, e.clientY); }}
                 onError={() => setFailed(true)}>
                 <button slot="ar-button" type="button" className="par3d-ar" onClick={() => track("ar", "table")}><ScanLine size={18} aria-hidden="true"/>Položiť na stôl</button>
               </model-viewer>
@@ -566,6 +569,8 @@ export default function ParliamentAR() {
           {immersive && <div className="par3d-detail"><Armchair size={22} aria-hidden="true"/><span><b>Pohľad z kresla</b><small>Ilustračná sála · rozhliadni sa {touch ? 'prstom' : 'myšou'}</small></span><button type="button" onClick={toggleImmersive}><ArrowLeft size={16} aria-hidden="true"/>Celá sála</button></div>}
           {failed && ready && <p className="par3d-loading" role="alert">Model sa nepodarilo načítať. Zavri okno a skús ho otvoriť znova.</p>}
         </div>
+        <ParliamentNavigation viewer={viewer} enabled={loaded && visible && !sharing} touch={touch} onCamera={setCamera}
+          onStart={() => { manuallyNavigated.current = true; setPlaying(false); stopIntro(); }} onPick={pickSeat} onReset={resetCamera}/>
           {selectedParty && (mode === 'strany' || mode === 'vyvoj') && <div className="par3d-detail par3d-inspection" style={{ ['--party-color' as string]: selectedParty.color }}>
             {logos[selectedParty.id]?.src && <Image src={logos[selectedParty.id].src} alt="" width={40} height={30} unoptimized/>}
             <span><b>{selectedParty.short}</b><small>{selectedParty.seats} {plural(selectedParty.seats)}</small></span>

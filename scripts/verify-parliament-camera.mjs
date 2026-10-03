@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import { panCamera, rotateCamera, zoomCamera, touchFrame, cameraAttributes, CAMERA_NEAR, CAMERA_FAR } from '../lib/parliament-camera.ts';
+const c = { theta: 0, phi: Math.PI / 2, radius: 1, target: { x: 0, y: 0, z: 0 } };
+const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
+const pan = panCamera(c, 100, 50, 400, 30);
+assert.ok(pan.target.x < 0 && pan.target.y > 0); near(pan.target.z, 0);
+assert.equal(pan.radius, c.radius); assert.equal(pan.theta, c.theta);
+const undo = panCamera(pan, -100, -50, 400, 30);
+Object.values(undo.target).forEach(v => near(v, 0));
+const turned = panCamera({ ...c, theta: Math.PI / 2 }, 100, 0, 400, 30);
+near(turned.target.x, 0); assert.ok(turned.target.z > 0);
+assert.ok(Math.abs(panCamera(c, 10000, 0, 400, 30).target.x) > 10, 'Pan is not clamped to the model bounding sphere');
+near(panCamera({ ...c, radius: 2 }, 100, 0, 400, 30).target.x, pan.target.x * 2);
+assert.deepEqual(rotateCamera(c, 20, 10, 400).target, c.target);
+assert.ok(rotateCamera(c, 4000, 0, 400).theta < -Math.PI * 2, 'Azimuth is unrestricted');
+assert.ok(rotateCamera(c, 0, 1e6, 400).phi > 0);
+assert.ok(rotateCamera(c, 0, -1e6, 400).phi < Math.PI);
+assert.equal(zoomCamera(c, 1e-6).radius, CAMERA_NEAR);
+assert.equal(zoomCamera(c, 1e6).radius, CAMERA_FAR);
+near(zoomCamera(zoomCamera(c, .8), 1.25).radius, 1);
+assert.deepEqual(zoomCamera(c, .5).target, c.target);
+const a = touchFrame([{ x: 10, y: 20 }, { x: 30, y: 20 }]);
+assert.deepEqual(a, { x: 20, y: 20, span: 20 });
+const b = touchFrame([{ x: 5, y: 25 }, { x: 45, y: 25 }]);
+const pinch = panCamera(zoomCamera(c, a.span / b.span), b.x - a.x, b.y - a.y, 400, 30);
+assert.equal(pinch.radius, .5); assert.ok(pinch.target.x < 0 && pinch.target.y > 0);
+assert.deepEqual(touchFrame([{ x: 12, y: 8 }]), { x: 12, y: 8, span: 0 });
+assert.deepEqual(c.target, { x: 0, y: 0, z: 0 }, 'No mutation of camera snapshots');
+for (const pose of [c, pan, turned, pinch]) {
+  assert.ok(Object.values(pose.target).every(Number.isFinite));
+  assert.match(cameraAttributes(pose).orbit, /rad .*rad .*m$/);
+}
+console.log('PASS parliament camera: screen-space translation, full azimuth, safe poles/zoom, compound pinch, immutable snapshots.');

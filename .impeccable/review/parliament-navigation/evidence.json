@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-03",
+  "captureScope": "Local in-app browser, mouse input; no physical mobile tests",
+  "cssViewports": [
+    {
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "width": 375,
+      "height": 812
+    },
+    {
+      "width": 402,
+      "height": 874
+    }
+  ],
+  "captures": [
+    {
+      "name": "375-dark.jpg",
+      "width": 360,
+      "height": 780,
+      "format": "jpeg"
+    },
+    {
+      "name": "375-light.jpg",
+      "width": 360,
+      "height": 780,
+      "format": "jpeg"
+    },
+    {
+      "name": "402-dark.jpg",
+      "width": 387,
+      "height": 841,
+      "format": "jpeg"
+    },
+    {
+      "name": "402-light.jpg",
+      "width": 387,
+      "height": 841,
+      "format": "jpeg"
+    },
+    {
+      "name": "desktop-dark-focus.jpg",
+      "width": 1280,
+      "height": 800,
+      "format": "jpeg"
+    },
+    {
+      "name": "desktop-dark.jpg",
+      "width": 1280,
+      "height": 800,
+      "format": "jpeg"
+    },
+    {
+      "name": "desktop-light.jpg",
+      "width": 1280,
+      "height": 800,
+      "format": "jpeg"
+    },
+    {
+      "name": "desktop-vote-selected.jpg",
+      "width": 1280,
+      "height": 800,
+      "format": "jpeg"
+    }
+  ]
+}
