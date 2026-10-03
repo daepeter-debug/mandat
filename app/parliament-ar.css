@@ -195,14 +195,6 @@
 }
 
 /* Telefón: výzva otočiť na šírku (na výšku) a sála cez celú obrazovku na šírku s plávajúcim ovládaním pohybu */
-.par3d-rotate{position:absolute;inset:auto 10px 10px;z-index:3;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:2px 10px;padding:10px 12px;border-radius:14px;background:#0f1a16e6;color:#f5f4ee;text-align:left;font-size:12px;line-height:1.35;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.par3d-rotate b{grid-column:2;font-size:14px}
-.par3d-rotate svg{grid-row:1/3}
-.par3d-rotate span{grid-column:2;color:#cfe0d6}
-.par3d-rotate button{grid-column:3;grid-row:1/3;min-height:40px;padding:0 6px;border:0;border-radius:8px;background:transparent;color:#dcf59b;font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.par3d-rotate-icon{animation:par3d-rotate 2.4s ease-in-out infinite}
-@keyframes par3d-rotate{0%,20%{transform:rotate(0)}45%,75%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
-@media(prefers-reduced-motion:reduce){.par3d-rotate-icon{animation:none;transform:rotate(-90deg)}}
 .par3d.is-expanded.is-landscape{gap:6px;padding:calc(6px + env(safe-area-inset-top,0px)) calc(10px + env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) calc(10px + env(safe-area-inset-left,0px))}
 .par3d.is-landscape .par3d-head{display:none}
 .par3d.is-landscape .par3d-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none}
@@ -214,3 +206,14 @@
 .par3d.is-landscape .par3d-navigation{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:73;padding:5px;border-radius:999px;background:#0f1a16d0;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .par3d.is-landscape .par3d-navigation p{display:none}
 .par3d.is-landscape .par3d-nav-tools{gap:4px}
+/* Telefón na výšku: výzva otočiť na šírku cez celú scénu (ako Malá republika); na šírku zamknutá sála bez posúvania */
+.par3d-rotate{position:absolute;inset:0;z-index:3;display:grid;place-content:center;justify-items:center;gap:8px;padding:24px;text-align:center;background:#0b1512d9;color:#f5f4ee;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.par3d-rotate-icon{position:relative;display:grid;place-items:center;width:76px;height:76px;margin-bottom:4px}
+.par3d-rotate-icon svg:first-child{animation:par3d-rotate 2.4s ease-in-out infinite}
+.par3d-rotate-icon svg:last-child{position:absolute;right:-2px;bottom:0;color:#dcf59b}
+.par3d-rotate b{font-size:20px;line-height:1.2}
+.par3d-rotate span{max-width:30ch;font-size:13px;line-height:1.45;color:#cfe0d6}
+.par3d-rotate button{min-height:44px;margin-top:6px;padding:0 16px;border:1px solid #dcf59b80;border-radius:999px;background:transparent;color:#dcf59b;font:inherit;font-weight:600;cursor:pointer}
+@keyframes par3d-rotate{0%,20%{transform:rotate(0)}45%,75%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+@media(prefers-reduced-motion:reduce){.par3d-rotate-icon svg:first-child{animation:none;transform:rotate(-90deg)}}
+.par3d-navigation[data-lock] .par3d-nav-reset{margin-left:0}

@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 32 súborov (753d9f924c) — needitovať ručne. Pravidiel: 1557, prefarbených: 1207. */
+/* Generované scripts/build-dark.mjs z 31 súborov (b838dccdf3) — needitovať ručne. Pravidiel: 1550, prefarbených: 1208. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3866,42 +3866,23 @@ html[data-theme="dark"] .par3d-marks {
 html[data-theme="dark"] .par3d-marks b {
     color: #d1e7de
 }
+html[data-theme="dark"] .par3d.is-landscape .par3d-navigation {
+    background: #0f1a16d0
+}
 html[data-theme="dark"] .par3d-rotate {
-    background: #0f1a16e6;
+    background: #0b1512d9;
     color: #f5f4ee
+}
+html[data-theme="dark"] .par3d-rotate-icon svg:last-child {
+    color: #dcf59b
 }
 html[data-theme="dark"] .par3d-rotate span {
     color: #cfe0d6
 }
 html[data-theme="dark"] .par3d-rotate button {
-    border: 0;
+    border: 1px solid #4c504380;
     background: transparent;
-    color: #dcf59b;
-    text-decoration: underline
-}
-html[data-theme="dark"] .par3d.is-landscape .par3d-navigation {
-    background: #0f1a16d0
-}
-html[data-theme="dark"] .parl-backdrop {
-    background: #141d36
-}
-html[data-theme="dark"] .parl-backdrop-sky {
-    background: linear-gradient(180deg,#28314e 0%,#5b5270 15%,#b88186 31%,#233651 68%,#121a30 100%)
-}
-html[data-theme="dark"] .parl-backdrop-city {
-    mask-image: linear-gradient(to bottom,transparent 0,#000 16%)
-}
-html[data-theme="dark"] .parl-backdrop-water {
-    background: linear-gradient(180deg,#263458 0%,#1c2645 32%,#121a30 100%)
-}
-html[data-theme="dark"] .parl-backdrop-mirror {
-    mask-image: linear-gradient(to top,#000 0%,#0009 16%,transparent 34%)
-}
-html[data-theme="dark"] .parl-backdrop-glints {
-    background: radial-gradient(ellipse 1.8% 55% at 22% 0%,#ffcf8a66,transparent 72%),radial-gradient(ellipse 4% 62% at 77% 0%,#ffd9a055,transparent 72%),radial-gradient(ellipse 1.1% 38% at 44% 0%,#ffc07a40,transparent 72%),radial-gradient(ellipse 1.1% 42% at 59% 0%,#ffc07a40,transparent 72%),repeating-linear-gradient(180deg,#ffffff0a 0 1px,transparent 1px 7px)
-}
-html[data-theme="dark"] .parl-backdrop-vignette {
-    background: radial-gradient(ellipse 90% 78% at 50% 50%,transparent 58%,#05080fa6 100%),linear-gradient(180deg,transparent 72%,#070b14b8 100%)
+    color: #dcf59b
 }
 html[data-theme="dark"] .parl button:focus-visible,html[data-theme="dark"] .parl a:focus-visible,html[data-theme="dark"] .parl summary:focus-visible {
     outline: 2px solid #77a998;
@@ -3930,9 +3911,6 @@ html[data-theme="dark"] .parl-stage-label {
 }
 html[data-theme="dark"] .parl-stage {
     background: radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)
-}
-html[data-theme="dark"] .parl-stage {
-    background: #141d36
 }
 html[data-theme="dark"] .parl-stage-wait {
     color: #f5f4ee

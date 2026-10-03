@@ -319,3 +319,7 @@ Peter: sála a pozadie pôsobili ako dva objekty (parlament vpredu, Bratislava z
 **Tabuľa** ostáva na páse medzi zábradlím a oknami (`tabula:hlasovanie`, canvas 4096 × 212); posuvný pás s textom a jeho skripty odišli, rovnako `lib/parliament-backdrop.ts` (väzba CSS kulisy na kameru) a jej kontrola.
 
 **Overenie:** snímky `model-viewer.toBlob()` (fungujú aj v skrytom okne): počítač 1280 × 800 a 1680 × 1000, telefón 402 × 874 na výšku, 874 × 402 na šírku (celá obrazovka), hlasovanie aj kluby; pohľad od pultu; farby kresiel cez API. Náhľad v úvode stránky (`chamber-clubs-2026-10-01.webp`) je výrez zo skutočnej snímky novej scény. Plynulosť, dotyky a výkon na skutočnom telefóne neoverené.
+
+### Telefón: zamknutá sála (3. 10. 2026, neskôr)
+
+Peter po nasadení stále videl „dva objekty“. Preto na telefóne (`(pointer: coarse) and (max-width: 950px)` alebo nízke okno na šírku) platí zámok kamery: `locked = isPhone && !immersive && !touring` nastaví `min-camera-orbit` a `max-camera-orbit` na ±12° otočenia, sklon 58–72° a polomer od 42 % po 100 % hodnoty `fit().r`; navigácia s `lock` neposúva cieľ (jeden prst otáča v týchto medziach, dva prsty len približujú). Sála tak vždy drží okraje obrazovky a okolo nej nie je nič prázdne; mesto vidno iba oknami. Na výšku prekryje scénu výzva na otočenie (`.par3d-rotate`, celá plocha, ako Malá republika). 2D diagram je bez kulisy mesta.

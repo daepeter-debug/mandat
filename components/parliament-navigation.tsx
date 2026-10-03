@@ -9,6 +9,8 @@ export type NavigableViewer = HTMLElement & {
   getFieldOfView: () => number;
 };
 type Props = { viewer: NavigableViewer | null; enabled: boolean; touch: boolean;
+  /** Zamknutá sála (telefón na šírku): bez posúvania cieľa, ťahanie otáča v medziach vieweru, dva prsty len približujú. */
+  lock?: boolean;
   onCamera: (c: { orbit: string; target: string }) => void; onStart: () => void;
   onPick: (x: number, y: number) => void; onReset: () => void };
 
@@ -45,9 +47,9 @@ export function ParliamentNavigation(props: Props) {
       if (pointers.size > 1) {
         const after = touchFrame([...pointers.values()]);
         const scaled = zoomCamera(camera, before.span > 2 && after.span > 2 ? before.span / after.span : 1);
-        apply(panCamera(scaled, after.x - before.x, after.y - before.y, v.clientHeight, v.getFieldOfView()));
+        apply(latest.current.lock ? scaled : panCamera(scaled, after.x - before.x, after.y - before.y, v.clientHeight, v.getFieldOfView()));
       } else {
-        const rotate = e.buttons === 2 || (mode === 'rotate' ? !e.shiftKey : e.shiftKey);
+        const rotate = latest.current.lock || e.buttons === 2 || (mode === 'rotate' ? !e.shiftKey : e.shiftKey);
         apply(rotate ? rotateCamera(camera, e.clientX - old.x, e.clientY - old.y, v.clientHeight) : panCamera(camera, e.clientX - old.x, e.clientY - old.y, v.clientHeight, v.getFieldOfView()));
       }
       e.preventDefault();
@@ -79,7 +81,7 @@ export function ParliamentNavigation(props: Props) {
       else {
         const dx = e.key === 'ArrowLeft' ? 24 : e.key === 'ArrowRight' ? -24 : 0;
         const dy = e.key === 'ArrowUp' ? 24 : e.key === 'ArrowDown' ? -24 : 0;
-        apply((mode === 'rotate' || e.shiftKey) ? rotateCamera(camera, dx, dy, v.clientHeight) : panCamera(camera, dx, dy, v.clientHeight, v.getFieldOfView()));
+        apply((latest.current.lock || mode === 'rotate' || e.shiftKey) ? rotateCamera(camera, dx, dy, v.clientHeight) : panCamera(camera, dx, dy, v.clientHeight, v.getFieldOfView()));
       }
     };
     const context = (e: Event) => e.preventDefault();
@@ -101,18 +103,18 @@ export function ParliamentNavigation(props: Props) {
     if (!props.viewer || !props.enabled) return;
     const camera = snapshot(props.viewer); props.onStart(); props.onCamera(cameraAttributes(zoomCamera(camera, factor)));
   };
-  return <div className="par3d-navigation">
+  return <div className="par3d-navigation" data-lock={props.lock || undefined}>
     <fieldset disabled={!props.enabled} className="par3d-nav-tools" aria-label="Pohyb v sále">
-      <div className="par3d-seg" role="group" aria-label="Ťahanie v sále">
+      {!props.lock && <div className="par3d-seg" role="group" aria-label="Ťahanie v sále">
         <button type="button" aria-pressed={mode === 'pan'} onClick={() => setMode('pan')}><Hand size={15} aria-hidden="true"/>Posúvať</button>
         <button type="button" aria-pressed={mode === 'rotate'} onClick={() => setMode('rotate')}><Rotate3D size={15} aria-hidden="true"/>Otáčať</button>
-      </div>
+      </div>}
       <div className="par3d-nav-zoom">
         <button type="button" aria-label="Oddialiť sálu" onClick={() => zoom(1.25)}><Minus size={17} aria-hidden="true"/></button>
         <button type="button" aria-label="Priblížiť sálu" onClick={() => zoom(.8)}><Plus size={17} aria-hidden="true"/></button>
       </div>
       <button type="button" className="par3d-nav-reset" onClick={props.onReset}><Maximize size={15} aria-hidden="true"/>Celá sála</button>
     </fieldset>
-    <p id="par3d-navigation-help">{props.touch ? 'Ťahaj jedným prstom. Dvoma posúvaš aj približuješ.' : 'Ťahaj myšou, približuj kolieskom. Pravé tlačidlo otáča.'} Ťuknutie vyberie kreslo.<span className="sr-only">Šípky posúvajú, Shift so šípkami otáča, plus a mínus menia priblíženie, Home vráti celú sálu.</span></p>
+    <p id="par3d-navigation-help">{props.lock ? 'Dvoma prstami približuješ, ťahaním sa rozhliadneš.' : props.touch ? 'Ťahaj jedným prstom. Dvoma posúvaš aj približuješ.' : 'Ťahaj myšou, približuj kolieskom. Pravé tlačidlo otáča.'} Ťuknutie vyberie kreslo.<span className="sr-only">Šípky posúvajú, Shift so šípkami otáča, plus a mínus menia priblíženie, Home vráti celú sálu.</span></p>
   </div>;
 }

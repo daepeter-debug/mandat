@@ -1,5 +1,12 @@
 # Evidencia údajov a rozsahu
 
+## 3. 10. 2026 — Parlament na telefóne: zamknutá sála od okraja po okraj (Claude)
+
+Peter po nasadení: stále „dva objekty“, sála a pozadie. Na telefóne to má byť ako Malá republika: jedna scéna cez celú obrazovku bez prázdnych plôch, mesto len za oknami.
+- **Telefón:** kamera je zamknutá (`locked` v `components/parliament-ar.tsx`): bez posúvania, otočenie najviac ±12°, sklon 58–72°, oddialenie najviac po celkový pohľad (`min-camera-orbit`/`max-camera-orbit`). Dvoma prstami sa približuje, ťahaním rozhliada; prepínač Posúvať/Otáčať sa na telefóne neukazuje (`lock` v `components/parliament-navigation.tsx`). Úvodný prejazd a pohľady Od pultu / Z kresla zámok dočasne uvoľnia.
+- **Na výšku** prekryje scénu výzva „Otoč telefón na šírku“ ako v Malej republike (dá sa pokračovať na výšku, pamätá sa na návštevu); **na šírku** je sála cez celú obrazovku so stenami na okrajoch.
+- **2D diagram** už nemá CSS kulisu Bratislavy (`components/parliament-backdrop.tsx` a jej štýly odišli); mesto patrí iba za okná 3D sály.
+
 ## 3. 10. 2026 — Parlament: jedna skutočná scéna, mesto len cez okná (Claude)
 
 Peter: sála a Bratislava pôsobili ako dva oddelené objekty. Teraz je to jeden priestor:
