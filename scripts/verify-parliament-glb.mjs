@@ -2,16 +2,24 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import validator from 'gltf-validator';
-import { allParliamentVariants } from '../lib/parliament-model.ts';
+import { allParliamentVariants, chamberSeats } from '../lib/parliament-model.ts';
 const bytes = fs.readFileSync('public/models/parlament.glb');
 const json = JSON.parse(bytes.subarray(20, 20 + bytes.readUInt32LE(12)).toString());
-const report = await validator.validateBytes(new Uint8Array(bytes), { maxIssues: 1000 });
+const report = await validator.validateBytes(new Uint8Array(bytes), { maxIssues: 1000, externalResourceFunction: async uri => {
+  assert.equal(uri, 'bratislava-evening.jpg', 'Only our local panorama is an external resource');
+  return new Uint8Array(fs.readFileSync(`public/models/${uri}`));
+} });
 fs.mkdirSync('.impeccable/review', { recursive: true });
 fs.writeFileSync('.impeccable/review/gltf-validation.json', JSON.stringify(report, null, 2));
 assert.equal(report.issues.numErrors, 0, JSON.stringify(report.issues.messages));
 assert.ok(bytes.length <= 1_500_000, 'GLB nad 1,5 MB');
 const chairs = json.nodes.filter(n => /^kreslo \d+$/.test(n.name));
 assert.equal(chairs.length, 150);
+chairs.forEach((chair, i) => assert.deepEqual(chair.translation, [chamberSeats[i].x, chamberSeats[i].y, chamberSeats[i].z], 'Existing shared seat coordinates stay exact'));
+assert.ok(json.nodes.some(n => n.name === 'panoráma v oknách'));
+assert.ok(json.nodes.some(n => n.name === 'integrovaná hlasovacia tabuľa'));
+assert.ok(json.materials.some(m => m.name === 'tabula:hlasovanie' && m.extensions.KHR_materials_unlit));
+assert.ok(!json.nodes.some(n => /vlajka|štít|dvojkríž|trojvršie|hviezdy EÚ/.test(n.name)), 'Illustrative architecture contains no state symbols');
 const variants = allParliamentVariants();
 for (const [v, variant] of variants.entries()) for (const [i, chair] of chairs.entries()) {
   const primitives = json.meshes[chair.mesh].primitives;

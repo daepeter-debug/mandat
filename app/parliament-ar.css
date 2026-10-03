@@ -12,6 +12,7 @@
 .par3d-seat-marker{--marker-ink:#17271f;--marker-ring:#dcf59b;display:block;width:26px;height:26px;border:3px solid var(--marker-ring);border-radius:50%;background:transparent;box-shadow:0 3px 8px #0008;pointer-events:none}
 .par3d-seat-marker::after{content:'';position:absolute;inset:4px;border:2px solid var(--marker-ink);border-radius:50%}
 .par3d-seat-marker[data-visible=false]{opacity:0}
+.par3d-display-pause{position:absolute;right:12px;bottom:12px;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border:0;border-radius:8px;background:#fffefa;color:#20392f;font:inherit;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px #0003}
 .par3d-loading{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:60px 24px;text-align:center;font-size:14px;color:#f5f4ee;background:#343b36}
 .par3d-ar{position:absolute;left:50%;bottom:14px;translate:-50% 0;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:999px;background:#20392f;color:#fff;font:inherit;font-size:15px;font-weight:650;box-shadow:0 6px 18px #0003;cursor:pointer}
 .par3d-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;font-size:12.5px;font-weight:600;color:var(--mag-ink)}

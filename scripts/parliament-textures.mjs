@@ -43,9 +43,9 @@ export async function parliamentTextures(ids) {
 }
 
 // Malá analytická panoráma RGBE: mäkké teplé stropné panely + chladnejšie okolité svetlo.
-// Vlastný HDR bez externého hostovania/licencie, 128 × 64; nie textúra vo vnútri GLB.
+// Vlastný HDR bez externého hostovania/licencie, 512 × 256; nie textúra vo vnútri GLB.
 export function writeParliamentEnvironment() {
-  const w = 128, h = 64, pixels = Buffer.alloc(w * h * 4);
+  const w = 512, h = 256, pixels = Buffer.alloc(w * h * 4);
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const a = x / w * Math.PI * 2, v = y / h;
     const panel = Math.exp(-(((v - .23) / .075) ** 2)) * (Math.max(0, Math.cos(a - .7)) ** 12 + Math.max(0, Math.cos(a + 1.8)) ** 12);

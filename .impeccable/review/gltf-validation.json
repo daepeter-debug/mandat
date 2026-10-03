@@ -1,27 +1,49 @@
 {
   "mimeType": "model/gltf-binary",
   "validatorVersion": "2.0.0-dev.3.10",
-  "validatedAt": "2026-10-02T21:26:17.346Z",
+  "validatedAt": "2026-10-03T15:33:56.354Z",
   "issues": {
     "numErrors": 0,
     "numWarnings": 0,
-    "numInfos": 0,
+    "numInfos": 3,
     "numHints": 0,
-    "messages": [],
+    "messages": [
+      {
+        "code": "URI_GLB",
+        "message": "URI is used in GLB container.",
+        "severity": 2,
+        "pointer": "/images/16/uri"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/materials/11"
+      },
+      {
+        "code": "IMAGE_NPOT_DIMENSIONS",
+        "message": "Image has non-power-of-two dimensions: 1536x512.",
+        "severity": 2,
+        "pointer": "/images/16"
+      }
+    ],
     "truncated": false
   },
   "info": {
     "version": "2.0",
     "generator": "Mandát · scripts/build-parliament-glb.mjs",
     "extensionsUsed": [
-      "KHR_materials_variants"
+      "KHR_materials_variants",
+      "KHR_materials_clearcoat",
+      "KHR_materials_sheen",
+      "KHR_materials_unlit"
     ],
     "resources": [
       {
         "pointer": "/buffers/0",
         "mimeType": "application/gltf-buffer",
         "storage": "glb",
-        "byteLength": 1160808
+        "byteLength": 1182696
       },
       {
         "pointer": "/images/0",
@@ -227,6 +249,31 @@
       },
       {
         "pointer": "/images/16",
+        "mimeType": "image/jpeg",
+        "storage": "external",
+        "uri": "bratislava-evening.jpg",
+        "image": {
+          "width": 1536,
+          "height": 512,
+          "format": "rgb",
+          "bits": 8
+        }
+      },
+      {
+        "pointer": "/images/17",
+        "mimeType": "image/png",
+        "storage": "buffer-view",
+        "image": {
+          "width": 2,
+          "height": 2,
+          "format": "rgb",
+          "primaries": "srgb",
+          "transfer": "srgb",
+          "bits": 8
+        }
+      },
+      {
+        "pointer": "/images/18",
         "mimeType": "image/png",
         "storage": "buffer-view",
         "image": {
@@ -240,14 +287,14 @@
       }
     ],
     "animationCount": 1,
-    "materialCount": 342,
+    "materialCount": 339,
     "hasMorphTargets": false,
     "hasSkins": false,
     "hasTextures": true,
     "hasDefaultScene": true,
-    "drawCallCount": 502,
-    "totalVertexCount": 91784,
-    "totalTriangleCount": 81752,
+    "drawCallCount": 494,
+    "totalVertexCount": 92112,
+    "totalTriangleCount": 82056,
     "maxUVs": 1,
     "maxInfluences": 0,
     "maxAttributes": 5

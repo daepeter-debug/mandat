@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 31 súborov (76ac186903) — needitovať ručne. Pravidiel: 1546, prefarbených: 1207. */
+/* Generované scripts/build-dark.mjs z 31 súborov (575f9b9a76) — needitovať ručne. Pravidiel: 1547, prefarbených: 1208. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3538,6 +3538,12 @@ html[data-theme="dark"] .par3d-seat-marker {
 }
 html[data-theme="dark"] .par3d-seat-marker::after {
     border: 2px solid var(--marker-ink)
+}
+html[data-theme="dark"] .par3d-display-pause {
+    border: 0;
+    background: #262c29;
+    color: #d1e7de;
+    box-shadow: 0 4px 14px #0003
 }
 html[data-theme="dark"] .par3d-loading {
     color: #f5f4ee;

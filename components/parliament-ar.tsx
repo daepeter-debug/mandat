@@ -15,8 +15,9 @@ import { currentSeatUncertainty } from '@/lib/uncertainty';
 import { parliamentShareCard } from './parliament-share';
 import { ParliamentNavigation, type NavigableViewer } from './parliament-navigation';
 import Chamber2D from './chamber-2d';
+import { ParliamentDisplay } from './parliament-display';
 import { coalitionSelection, partyFocus, seatChanges, seatSweep, SEAT_SWEEP_MS, deputyView } from '@/lib/parliament-experience';
-import type { TextureInfo } from '@google/model-viewer/lib/features/scene-graph/api.js';
+import type { TextureInfo, Texture } from '@google/model-viewer/lib/features/scene-graph/api.js';
 import { track } from "@/lib/track";
 import partyLogos from '@/lib/party-logos.json';
 import "@/app/parliament-ar.css";
@@ -41,7 +42,7 @@ declare module "react" {
 }
 type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { setBaseColorFactor: (c: string | number[]) => void; baseColorTexture: TextureInfo | null }; emissiveTexture?: TextureInfo | null; setEmissiveFactor: (c: string | number[]) => void; setAlphaMode: (mode: 'BLEND' | 'MASK' | 'OPAQUE') => void };
 type Viewer = NavigableViewer & { model?: { materials: Material[] }; loaded?: boolean; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
-  positionAndNormalFromPoint: (x: number, y: number) => { position: { x: number; y: number; z: number } } | null };
+  createCanvasTexture: () => Texture; positionAndNormalFromPoint: (x: number, y: number) => { position: { x: number; y: number; z: number } } | null };
 export type Mode = "strany" | "bloky" | "koalicia" | "vyvoj" | "hlasovania";
 type Props = {
   mode: Mode; onMode: (mode: Mode) => void;
@@ -84,7 +85,7 @@ const changes = seatChanges(electionVariant, modelVariant);
 const biggestGain = changes.find(p => p.delta > 0), biggestLoss = changes.find(p => p.delta < 0 && modelVariant.ordered.some(m => m.id === p.id));
 /** Kamera tak, aby sa celá sála zmestila na šírku aj na úzkom mobile (zorné pole 32°, polovičná šírka sály ~0,37 m). */
 function fit(el: HTMLElement | null) {
-  const aspect = el && el.clientHeight ? el.clientWidth / el.clientHeight : 1.3, r = Math.min(2.4, Math.max(0.78, 0.375 / (Math.tan(15 * Math.PI / 180) * aspect)));
+  const aspect = el && el.clientHeight ? el.clientWidth / el.clientHeight : 1.3, r = Math.min(2.4, Math.max(0.9, 0.425 / (Math.tan(15 * Math.PI / 180) * aspect)));
   return { r, view: { orbit: `0deg ${aspect < 1 ? 46 : 54}deg ${r.toFixed(2)}m`, target: aspect < 1 ? "0m 0.085m -0.1m" : "0m 0.05m -0.1m" }, intro: { orbit: `0deg 10deg ${(r * 1.35).toFixed(2)}m`, target: "0m 0.02m -0.08m" } };
 }
 /** Kamera ku kreslu poslanca: blízko, mierne zhora, smerom od pultu. */
@@ -651,6 +652,7 @@ export default function ParliamentChamber(props: Props) {
               data-normal="0m 1m 0m"/>}
           </model-viewer>
         : null}
+      <ParliamentDisplay viewer={viewer} loaded={loaded} visible={visible} reduced={reduced} vote={mode === 'hlasovania' ? vote : null} caption={caption.title}/>
       {!loaded && <div className="par3d-loading" role="status"><Chamber2D colors={posterColors} label="Náhľad sály"/><span>{failed ? '3D sálu sa nepodarilo načítať. Prepni na 2D alebo skús znova.' : 'Načítava sa 3D sála…'}</span></div>}
       {touring && <button type="button" className="par3d-skip" onClick={() => { stopIntro(); setCamera(fit(viewer).view); }}>Preskočiť úvod</button>}
       {transition && <div className="par3d-transition" role="status"><span>{allVariants.find(v => v.id === transition.from)?.label} → {current.label}</span><button type="button" onClick={settleTransition}>Preskočiť</button></div>}
