@@ -1,6 +1,6 @@
 # Parlament — prvý lokálny prototyp A + B
 
-Stav k 3. 10. 2026: **čaká na Petrovu vizuálnu spätnú väzbu**. Produkčný lokálny náhľad je na [127.0.0.1:5185/parlament](http://127.0.0.1:5185/parlament). V tomto kroku neprebehlo nasadenie. Ide o prvý prototyp schválenej kombinácie A + B, nie o dokončenie celej sedembodovej roadmapy.
+Stav k 3. 10. 2026: **nasadené na testovací web na Petrov výslovný pokyn; čaká na vizuálnu spätnú väzbu**. Online: [Parlament](https://mandat-preview.mandat.workers.dev/parlament). Zdrojový commit `d3724ac`, overený Worker `ae2bac1f-e28e-4e6e-b0b6-2ee39aadfeed`. Produkčný lokálny náhľad je aj na [127.0.0.1:5185/parlament](http://127.0.0.1:5185/parlament). Ide o prvý prototyp schválenej kombinácie A + B, nie o dokončenie celej sedembodovej roadmapy.
 
 ## Čo je skutočne implementované
 
