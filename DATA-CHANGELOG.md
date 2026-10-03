@@ -1,5 +1,14 @@
 # Evidencia údajov a rozsahu
 
+## 4. 10. 2026 — Parlament: interiér dokola, pohľad „Vnútri“, zámok aj na počítači (Claude)
+
+Peter: na počítači tiež držať sálu v ráme ako na mobile; na výšku nechať voľbu (žiadne prekrytie); a dokresliť zvyšok miestnosti, aby sa dalo otáčať dookola.
+- **Interiér dokola** (`scripts/build-parliament-glb.mjs`): čelná stena po strop s obkladom, dvoma dverami, **tabuľou výsledkov nad predsedníctvom** (tá istá textúra ako pás na zadnej stene, čiže rovnaké čísla), galériou pre tlač so zábradlím a svetelnými škárami; obloženie bočných stien. Všetko je viditeľné len zvnútra, takže celkový pohľad zhora ostáva voľný.
+- **Mesto za oknami** pokrýva celý polkruh okien: stredná časť ilustrácie bez dominánt pokračuje po stranách (±136°), ďalej tlmený pás (`scripts/parliament-sky.mjs`).
+- **Pohľad „Vnútri“** (tlačidlo vedľa Od pultu / Z kresla): kamera krúži okolo stredu sály nad kreslami, otáčanie dookola, sklon 30–85°, polomer 0,08–0,20 m (vždy medzi stenami a pred čelnou stenou), zorné pole 60°.
+- **Zámok celkového pohľadu platí aj na počítači** (otočenie ±18°, na telefóne ±12°; sklon 58–72°; oddialenie najviac po celkový pohľad). Posúvanie cieľa odišlo zo všetkých zariadení.
+- **Na výšku** už scénu neprekrýva výzva; dole je len nenápadná ponuka „Funguje aj na šírku“ s tlačidlom Rozumiem.
+
 ## 3. 10. 2026 — Parlament na telefóne: zamknutá sála od okraja po okraj (Claude)
 
 Peter po nasadení: stále „dva objekty“, sála a pozadie. Na telefóne to má byť ako Malá republika: jedna scéna cez celú obrazovku bez prázdnych plôch, mesto len za oknami.

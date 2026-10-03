@@ -16,7 +16,9 @@ chairs.forEach((chair, i) => assert.deepEqual(chair.translation, [chamberSeats[i
 assert.ok(!json.nodes.some(n => n.name === 'panoráma v oknách'), 'Mesto nie je plocha v modeli, ale obloha scény');
 assert.ok(json.nodes.some(n => n.name === 'integrovaná hlasovacia tabuľa'));
 // Jedna scéna: miestnosť s oknami (sklo, strop, sokel) a mesto za nimi ako obloha scény v nekonečnej diaľke.
-for (const name of ['stena', 'pilastre okien', 'rámy okien', 'svietidlá pri oknách', 'sklo okien', 'strop', 'stropné svetlá', 'sokel budovy', 'svetelný oblúk podlohy'.replace('podlohy', 'podlahy')]) assert.ok(json.nodes.some(n => n.name === name), `Miestnosť: ${name}`);
+for (const name of ['stena', 'pilastre okien', 'rámy okien', 'svietidlá pri oknách', 'sklo okien', 'strop', 'stropné svetlá', 'sokel budovy', 'svetelný oblúk podlahy', 'tabuľa predsedníctva', 'dvere predsedníctva', 'galéria', 'zábradlie galérie', 'obloženie bočných stien']) assert.ok(json.nodes.some(n => n.name === name), `Miestnosť: ${name}`);
+// Tabuľa nad predsedníctvom zdieľa textúru s pásom na zadnej stene (jeden canvas, dve plochy).
+assert.equal(json.materials[json.meshes[json.nodes.find(n => n.name === 'tabuľa predsedníctva').mesh].primitives[0].material].name, 'tabula:hlasovanie');
 assert.ok(json.materials.some(m => m.name === 'sklo okien' && m.alphaMode === 'BLEND'), 'Sklo okien je priehľadné');
 const sky = fs.statSync('public/models/bratislava-sky.jpg');
 assert.ok(sky.size > 100_000 && sky.size < 3_000_000, 'Obloha scény (ekvirektangulárna) existuje');

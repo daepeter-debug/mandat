@@ -206,14 +206,10 @@
 .par3d.is-landscape .par3d-navigation{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:73;padding:5px;border-radius:999px;background:#0f1a16d0;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .par3d.is-landscape .par3d-navigation p{display:none}
 .par3d.is-landscape .par3d-nav-tools{gap:4px}
-/* Telefón na výšku: výzva otočiť na šírku cez celú scénu (ako Malá republika); na šírku zamknutá sála bez posúvania */
-.par3d-rotate{position:absolute;inset:0;z-index:3;display:grid;place-content:center;justify-items:center;gap:8px;padding:24px;text-align:center;background:#0b1512d9;color:#f5f4ee;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.par3d-rotate-icon{position:relative;display:grid;place-items:center;width:76px;height:76px;margin-bottom:4px}
-.par3d-rotate-icon svg:first-child{animation:par3d-rotate 2.4s ease-in-out infinite}
-.par3d-rotate-icon svg:last-child{position:absolute;right:-2px;bottom:0;color:#dcf59b}
-.par3d-rotate b{font-size:20px;line-height:1.2}
-.par3d-rotate span{max-width:30ch;font-size:13px;line-height:1.45;color:#cfe0d6}
-.par3d-rotate button{min-height:44px;margin-top:6px;padding:0 16px;border:1px solid #dcf59b80;border-radius:999px;background:transparent;color:#dcf59b;font:inherit;font-weight:600;cursor:pointer}
-@keyframes par3d-rotate{0%,20%{transform:rotate(0)}45%,75%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
-@media(prefers-reduced-motion:reduce){.par3d-rotate-icon svg:first-child{animation:none;transform:rotate(-90deg)}}
 .par3d-navigation[data-lock] .par3d-nav-reset{margin-left:0}
+/* Telefón na výšku: nenápadná ponuka šírky (voľba ostáva na človeku) */
+.par3d-rotate{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 12px;border-radius:12px;background:#0f1a16e6;color:#f5f4ee;font-size:12px;line-height:1.35;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.par3d-rotate>svg{flex:none;color:#dcf59b}
+.par3d-rotate span{flex:1;min-width:0}
+.par3d-rotate b{color:#fff}
+.par3d-rotate button{flex:none;min-height:40px;padding:0 12px;border:1px solid #dcf59b80;border-radius:999px;background:transparent;color:#dcf59b;font:inherit;font-weight:600;cursor:pointer}

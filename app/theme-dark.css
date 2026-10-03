@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 31 súborov (b838dccdf3) — needitovať ručne. Pravidiel: 1550, prefarbených: 1208. */
+/* Generované scripts/build-dark.mjs z 31 súborov (e7c953cc5b) — needitovať ručne. Pravidiel: 1550, prefarbených: 1208. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3870,14 +3870,14 @@ html[data-theme="dark"] .par3d.is-landscape .par3d-navigation {
     background: #0f1a16d0
 }
 html[data-theme="dark"] .par3d-rotate {
-    background: #0b1512d9;
+    background: #0f1a16e6;
     color: #f5f4ee
 }
-html[data-theme="dark"] .par3d-rotate-icon svg:last-child {
+html[data-theme="dark"] .par3d-rotate>svg {
     color: #dcf59b
 }
-html[data-theme="dark"] .par3d-rotate span {
-    color: #cfe0d6
+html[data-theme="dark"] .par3d-rotate b {
+    color: #fff
 }
 html[data-theme="dark"] .par3d-rotate button {
     border: 1px solid #4c504380;

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type DetailedHTMLProps, type HTMLAttributes, type Ref } from "react";
 import Image from 'next/image';
-import { ArrowLeft, Armchair, Check, Maximize2, Mic, Minimize2, RotateCcw, RotateCw, ScanLine, Smartphone, X, Play, Pause, Share2, TriangleAlert, UserRound } from "lucide-react";
+import { ArrowLeft, Armchair, Check, Eye, Maximize2, Mic, Minimize2, RotateCcw, ScanLine, Smartphone, X, Play, Pause, Share2, TriangleAlert, UserRound } from "lucide-react";
 import { clubLabel, markColors, markNames, marks, skDay, type SeatedMember, type VoteSummary } from "@/lib/votes";
 import { chamberSeats } from "@/lib/parliament-model";
 import { date } from "@/lib/polls";
@@ -45,6 +45,11 @@ type Material = { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise
 type Viewer = NavigableViewer & { model?: { materials: Material[] }; loaded?: boolean; updateComplete?: Promise<boolean>; currentTime: number; pause: () => void; play: (o?: { repetitions?: number }) => void; dismissPoster: () => void; resetTurntableRotation: (theta?: number) => void; jumpCameraToGoal: () => void; materialFromPoint: (x: number, y: number) => Material | null; toBlob: (o?: { idealAspect?: boolean; mimeType?: string }) => Promise<Blob>;
   createCanvasTexture: () => Texture; positionAndNormalFromPoint: (x: number, y: number) => { position: { x: number; y: number; z: number } } | null };
 export type Mode = "strany" | "bloky" | "koalicia" | "vyvoj" | "hlasovania";
+/** Pohľady zvnútra sály: voľné otáčanie okolo stredu, od rečníckeho pultu, z kresla poslanca. */
+type Vantage = 'inside' | 'lectern' | 'seat';
+// „Vnútri“: kamera krúži okolo stredu sály nad kreslami (cieľ 0,1 m, polomer do 0,2 m, sklon do 85°), vždy medzi
+// stenami (0,34 m) a pred čelnou stenou (0,128 m), takže nikdy neskĺzne medzi kreslá ani von zo sály.
+const INSIDE = { orbit: '0deg 52deg 0.2m', target: '0m 0.1m -0.08m' };
 type Props = {
   mode: Mode; onMode: (mode: Mode) => void;
   /** Vybrané hlasovanie a rozsadenie poslancov pri ňom (zo stránky); null mimo režimu Hlasovania. */
@@ -152,7 +157,7 @@ export default function ParliamentChamber(props: Props) {
   }, [viewer, camera]);
   const [reduced, setReduced] = useState(false), [visible, setVisible] = useState(true);
   const [combination, setCombination] = useState<string[]>([]), [touring, setTouring] = useState(false);
-  const [immersive, setImmersive] = useState(false), [vantage, setVantage] = useState<'seat' | 'lectern'>('lectern'), [expanded, setExpanded] = useState(false);
+  const [immersive, setImmersive] = useState(false), [vantage, setVantage] = useState<Vantage>('inside'), [expanded, setExpanded] = useState(false);
   const [wideIntro, setWideIntro] = useState(false);
   const [landscape, setLandscape] = useState(false), [rotateHint, setRotateHint] = useState(false), [isPhone, setIsPhone] = useState(false);
   const autoExpanded = useRef(false);
@@ -573,14 +578,14 @@ export default function ParliamentChamber(props: Props) {
   }
   function toggleCoalition(id: string) { if (shareLock.current) return; setSharePreview(null); stopIntro(); settleTransition(); setCombination(ids => ids.includes(id) ? ids.filter(p => p !== id) : [...ids, id]); }
   /** Pohľad z úrovne očí: z kresla poslanca (k predsedníctvu) alebo od rečníckeho pultu (k radom a oknám). */
-  function toggleImmersive(kind: 'seat' | 'lectern' = vantage) {
+  function toggleImmersive(kind: Vantage = vantage) {
     if (shareLock.current) return;
     setPlaying(false); stopIntro(); settleTransition(); setSelected(null);
     const off = immersive && vantage === kind;
     setImmersive(!off); setVantage(kind);
     const view = kind === 'seat' ? deputyView() : lecternView();
-    setCamera(off ? fit(viewer).view : { orbit: view.orbit, target: view.target.map(v => `${v}m`).join(' ') });
-    if (!off) track('ar', kind === 'seat' ? 'seat' : 'lectern');
+    setCamera(off ? fit(viewer).view : kind === 'inside' ? INSIDE : { orbit: view.orbit, target: view.target.map(v => `${v}m`).join(' ') });
+    if (!off) track('ar', kind);
   }
   /** Kreslo pod prstom: vlastný materiál kresla, inak najbližšie kreslo k bodu dotyku. */
   function seatAt(x: number, y: number) {
@@ -689,7 +694,12 @@ export default function ParliamentChamber(props: Props) {
   // Telefón: sála drží okraje obrazovky. Kamera sa smie len priblížiť a mierne rozhliadnuť (bez posúvania, bez
   // oddialenia za celkový pohľad), takže okolo sály nikdy nevznikne prázdne pozadie; úvodný prejazd a pohľady
   // z úrovne očí zámok dočasne uvoľnia.
-  const fitRadius = fit(viewer).r, locked = isPhone && !immersive && !touring;
+  const fitRadius = fit(viewer).r, locked = !immersive && !touring;
+  // Medze kamery: celkový pohľad drží sálu v ráme (aj na počítači), pohľady zvnútra sa otáčajú dookola a ostávajú medzi stenami.
+  const [minOrbit, maxOrbit] = immersive
+    ? (vantage === 'inside' ? ['auto 30deg 0.08m', 'auto 85deg 0.2m'] : ['auto 20deg 0.05m', 'auto 150deg 0.3m'])
+    : locked ? [`-${isPhone ? 12 : 18}deg 58deg ${(fitRadius * .42).toFixed(2)}m`, `${isPhone ? 12 : 18}deg 72deg ${fitRadius.toFixed(2)}m`]
+    : ['auto 0.57deg 0.015m', 'auto 179.43deg 20m'];
 
   return <section className={`par3d${expanded ? ' is-expanded' : ''}${expanded && landscape ? ' is-landscape' : ''}`} role={expanded ? 'dialog' : undefined} aria-modal={expanded || undefined} aria-label="3D sála" aria-describedby="par3d-desc">
     {expanded && <div className="par3d-head"><div><b className="par3d-title">Parlament v 3D</b><p id="par3d-desc" className="par3d-desc">150 kresiel · {mode === 'hlasovania' ? 'Hlasovania NR SR' : current.label}</p></div>
@@ -698,7 +708,8 @@ export default function ParliamentChamber(props: Props) {
     <fieldset className="par3d-controls" disabled={sharing}>
       {mode !== 'hlasovania' && <div className="par3d-seg par3d-variants" role="group" aria-label="Obsadenie sály">{variants.map(v => <button key={v.id} type="button" aria-pressed={variantId === v.id} onClick={() => { setPlaying(false); if (mode === 'vyvoj') switchMode('strany'); switchVariant(v.id); }}>{v.label}</button>)}</div>}
       <div className="par3d-seg par3d-modes" role="group" aria-label="Režim sály">{(["strany", "koalicia", "bloky", "vyvoj", "hlasovania"] as const).map(m => <button key={m} type="button" aria-pressed={mode === m} onClick={() => switchMode(m)}>{m === "strany" ? (variantId === 'kluby' ? "Kluby" : "Strany") : m === 'koalicia' ? 'Koalícia' : m === 'vyvoj' ? 'Vývoj 2026' : m === 'hlasovania' ? 'Hlasovania' : "Bloky"}</button>)}</div>
-      <div className="par3d-seg par3d-vantage" role="group" aria-label="Pohľad z úrovne očí">
+      <div className="par3d-seg par3d-vantage" role="group" aria-label="Pohľad zvnútra sály">
+        <button type="button" aria-label="Vnútri sály, otáčanie dookola" aria-pressed={immersive && vantage === 'inside'} disabled={!loaded} onClick={() => toggleImmersive('inside')}><Eye size={15} aria-hidden="true"/><span>Vnútri</span></button>
         <button type="button" aria-label="Od rečníckeho pultu" aria-pressed={immersive && vantage === 'lectern'} disabled={!loaded} onClick={() => toggleImmersive('lectern')}><Mic size={15} aria-hidden="true"/><span>Od pultu</span></button>
         <button type="button" aria-label="Z kresla poslanca" aria-pressed={immersive && vantage === 'seat'} disabled={!loaded} onClick={() => toggleImmersive('seat')}><Armchair size={15} aria-hidden="true"/><span>Z kresla</span></button>
       </div>
@@ -712,7 +723,7 @@ export default function ParliamentChamber(props: Props) {
             ar="" ar-modes="webxr scene-viewer quick-look" ar-scale="auto" ar-placement="floor"
             tabIndex={0} aria-describedby="par3d-navigation-help" interaction-prompt="none" reveal="manual" loading="eager"
             camera-orbit={camera.orbit} camera-target={camera.target} field-of-view={immersive || wideIntro ? '60deg' : '30deg'} interpolation-decay={reduced ? '0' : touring ? '260' : '100'}
-            min-camera-orbit={locked ? `-12deg 58deg ${(fitRadius * .42).toFixed(2)}m` : "auto 0.57deg 0.015m"} max-camera-orbit={locked ? `12deg 72deg ${fitRadius.toFixed(2)}m` : "auto 179.43deg 20m"}
+            min-camera-orbit={minOrbit} max-camera-orbit={maxOrbit}
             tone-mapping="aces" shadow-intensity="0" exposure="1.2" environment-image="/models/parlament-evening.hdr" skybox-image={SKY_IMAGE} class="par3d-viewer"
             onError={() => setFailed(true)}>
             <button slot="ar-button" type="button" className="par3d-ar" onClick={() => track("ar", "table")}><ScanLine size={18} aria-hidden="true"/>Položiť na stôl</button>
@@ -724,17 +735,16 @@ export default function ParliamentChamber(props: Props) {
       <ParliamentWall viewer={viewer} loaded={loaded} scene={wallScene} reduced={reduced}/>
       {!loaded && <div className="par3d-loading" role="status"><Chamber2D colors={posterColors} label="Náhľad sály"/><span>{failed ? '3D sálu sa nepodarilo načítať. Prepni na 2D alebo skús znova.' : 'Načítava sa 3D sála…'}</span></div>}
       {rotateHint && !expanded && <div className="par3d-rotate" role="status">
-        <div className="par3d-rotate-icon"><Smartphone size={54} aria-hidden="true"/><RotateCw size={24} aria-hidden="true"/></div>
-        <b>Otoč telefón na šírku</b>
-        <span>Sála bude cez celú obrazovku a za oknami Bratislava. Ak sa obraz neotočí, vypni zámok otáčania telefónu.</span>
-        <button type="button" onClick={dismissRotate}>Pokračovať na výšku</button>
+        <Smartphone size={22} aria-hidden="true"/>
+        <span><b>Funguje aj na šírku.</b> Otoč telefón a sála bude cez celú obrazovku; na výšku si ju pozrieš tiež.</span>
+        <button type="button" onClick={dismissRotate}>Rozumiem</button>
       </div>}
       {touring && <button type="button" className="par3d-skip" onClick={() => { stopIntro(); setCamera(fit(viewer).view); }}>Preskočiť úvod</button>}
       {transition && <div className="par3d-transition" role="status"><span>{allVariants.find(v => v.id === transition.from)?.label} → {current.label}</span><button type="button" onClick={settleTransition}>Preskočiť</button></div>}
-      {immersive && <div className="par3d-detail">{vantage === 'seat' ? <Armchair size={22} aria-hidden="true"/> : <Mic size={22} aria-hidden="true"/>}<span><b>{vantage === 'seat' ? 'Pohľad z kresla poslanca' : 'Pohľad od rečníckeho pultu'}</b><small>Ilustračná sála · rozhliadni sa {touch ? 'prstom' : 'myšou'}</small></span><button type="button" onClick={() => toggleImmersive()}><ArrowLeft size={16} aria-hidden="true"/>Celá sála</button></div>}
+      {immersive && <div className="par3d-detail">{vantage === 'seat' ? <Armchair size={22} aria-hidden="true"/> : vantage === 'lectern' ? <Mic size={22} aria-hidden="true"/> : <Eye size={22} aria-hidden="true"/>}<span><b>{vantage === 'seat' ? 'Pohľad z kresla poslanca' : vantage === 'lectern' ? 'Pohľad od rečníckeho pultu' : 'Vnútri sály'}</b><small>Ilustračná sála · otáčaj sa dookola {touch ? 'prstom' : 'myšou'}, dvoma prstami približuj</small></span><button type="button" onClick={() => toggleImmersive()}><ArrowLeft size={16} aria-hidden="true"/>Celá sála</button></div>}
       {failed && ready && <p className="par3d-loading" role="alert">Model sa nepodarilo načítať. Prepni na 2D alebo obnov stránku.</p>}
     </div>
-    <ParliamentNavigation viewer={viewer} enabled={loaded && visible && !sharing} touch={touch} lock={locked} onCamera={setCamera}
+    <ParliamentNavigation viewer={viewer} enabled={loaded && visible && !sharing} touch={touch} lock={locked || immersive} onCamera={setCamera}
       onStart={() => { manuallyNavigated.current = true; setPlaying(false); stopIntro(); }} onPick={pickSeat} onReset={resetCamera}/>
       {spotlight && <div className="par3d-detail par3d-inspection" style={{ ['--party-color' as string]: mode === 'hlasovania' ? markColors[spotlight.mark] : current.ordered.find(m => m.id === spotlight.party)?.color }}>
         {logos[spotlight.party]?.src ? <Image src={logos[spotlight.party].src} alt="" width={40} height={30} unoptimized/> : <i className="par3d-detail-dot" style={{ background: mode === 'hlasovania' ? markColors[spotlight.mark] : UNAFFILIATED.color }} aria-hidden="true"/>}

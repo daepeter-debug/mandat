@@ -255,7 +255,7 @@ async function buildGlb() {
       const a = bayAngle(i);
       box(g, Math.cos(a) * (wallR - .006), .27, -Math.sin(a) * (wallR - .006), .0035, .05, .002, { yaw: Math.PI / 2 - a });
     }
-    for (const x of [-1, 1]) box(g, x * (wallR - .001), .27, roomFront * .55, .002, .05, .0035);
+    for (const x of [-1, 1]) box(g, x * (wallR - .001), .27, .07, .002, .05, .0035);
   }, M.glow);
   // Sklá okien v každom poli medzi pilastrami (jednostranné, dovnútra).
   solid('sklo okien', g => {
@@ -303,11 +303,30 @@ async function buildGlb() {
   // One-sided interior backdrop: visible from a seat, culled in the usual view from outside.
   // An illustrative front wall, not a claim about the real NR SR chamber.
   const frontPlate = (g, cx, cy, z, w, h) => quad(g, [[cx - w / 2, cy - h / 2, z], [cx - w / 2, cy + h / 2, z], [cx + w / 2, cy + h / 2, z], [cx + w / 2, cy - h / 2, z]], [0, 0, -1]);
-  solid('vnútorná stena predsedníctva', g => frontPlate(g, 0, .085, .128, outer * 2, .162), M.wall);
-  solid('vnútorné obloženie predsedníctva', g => {
-    for (let i = -28; i <= 28; i++) frontPlate(g, i * .012, .07, .1278, .003, .128);
-  }, M.slat);
-  solid('vnútorná svetelná škára', g => frontPlate(g, 0, .139, .1275, outer * 2 - .025, .0018), M.light);
+  // Čelná stena po strop (viditeľná len zvnútra): obklad, dvere, tabuľa výsledkov, galéria pre tlač, svetelné škáry.
+  // Ilustrácia, nie rekonštrukcia; bez štátnych symbolov.
+  const roomW = (wallR + .003) * 2;
+  solid('vnútorná stena predsedníctva', g => frontPlate(g, 0, (FLOOR + ceilingY) / 2, .128, roomW, ceilingY - FLOOR), M.wall);
+  solid('vnútorné obloženie predsedníctva', g => { for (let i = -28; i <= 28; i++) frontPlate(g, i * .012, .15, .1278, .003, .29); }, M.slat);
+  solid('vnútorná svetelná škára', g => { frontPlate(g, 0, .139, .1275, roomW - .025, .0018); frontPlate(g, 0, .262, .1275, roomW - .025, .0018); }, M.glow);
+  solid('rámy dverí predsedníctva', g => { for (const x of [-.21, .21]) frontPlate(g, x, .032, .1275, .046, .064); }, M.frame);
+  solid('dvere predsedníctva', g => { for (const x of [-.21, .21]) { frontPlate(g, x, .03, .1272, .038, .056); frontPlate(g, x + .012, .03, .127, .0025, .0025); } }, M.dais);
+  // Tabuľa výsledkov nad predsedníctvom: tá istá textúra ako pás na zadnej stene (components/parliament-wall.tsx);
+  // z vnútra sály je vľavo +X, preto u = 0 začína pri x = +0,252.
+  const boardFront = geo(); boardFront.uv = [];
+  quad(boardFront, [[.252, .17, .1272], [-.252, .17, .1272], [-.252, .196, .1272], [.252, .196, .1272]], [0, 0, -1]);
+  boardFront.uv.push(0, 0, 1, 0, 1, 1, 0, 1);
+  node('tabuľa predsedníctva', [prim(geometry(boardFront, true), boardMat)]);
+  solid('rám tabule predsedníctva', g => frontPlate(g, 0, .183, .1274, .512, .034), M.chairBase);
+  // Galéria pre tlač a verejnosť nad čelnou stenou: predná hrana, podhľad a zábradlie, všetko len zvnútra.
+  solid('galéria', g => { frontPlate(g, 0, .223, .09, roomW - .02, .016); plateDown(g, 0, .215, .109, roomW - .02, .038); }, M.deskFront);
+  solid('zábradlie galérie', g => {
+    frontPlate(g, 0, .256, .0895, roomW - .02, .003); frontPlate(g, 0, .241, .0895, roomW - .02, .002);
+    for (let x = -(roomW / 2 - .02); x <= roomW / 2 - .02; x += .024) frontPlate(g, x, .245, .0897, .002, .024);
+  }, M.trim);
+  // Obloženie bočných stien (vnútorné plochy), od podlahy po parapet.
+  const sidePlate = (g, x, cy, cz, h, d, n) => quad(g, [[x, cy - h / 2, cz - d / 2], [x, cy + h / 2, cz - d / 2], [x, cy + h / 2, cz + d / 2], [x, cy - h / 2, cz + d / 2]], [n, 0, 0]);
+  solid('obloženie bočných stien', g => { for (const s of [-1, 1]) for (let i = 0; i < 10; i++) sidePlate(g, -s * (wallR - .0002), .083, .006 + i * .012, .15, .003, s); }, M.slat);
   solid("mikrofón", g => cylinder(g, 0, FLOOR + 0.024, 0.028, 0.0006, 0.012, 8), M.chairBase);
   // Kreslá: čalúnenie vo farbe strany (dva varianty) a tmavá podnož; predok k predsedníctvu
   const upholstery = geo();

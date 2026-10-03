@@ -323,3 +323,11 @@ Peter: sála a pozadie pôsobili ako dva objekty (parlament vpredu, Bratislava z
 ### Telefón: zamknutá sála (3. 10. 2026, neskôr)
 
 Peter po nasadení stále videl „dva objekty“. Preto na telefóne (`(pointer: coarse) and (max-width: 950px)` alebo nízke okno na šírku) platí zámok kamery: `locked = isPhone && !immersive && !touring` nastaví `min-camera-orbit` a `max-camera-orbit` na ±12° otočenia, sklon 58–72° a polomer od 42 % po 100 % hodnoty `fit().r`; navigácia s `lock` neposúva cieľ (jeden prst otáča v týchto medziach, dva prsty len približujú). Sála tak vždy drží okraje obrazovky a okolo nej nie je nič prázdne; mesto vidno iba oknami. Na výšku prekryje scénu výzva na otočenie (`.par3d-rotate`, celá plocha, ako Malá republika). 2D diagram je bez kulisy mesta.
+
+### Interiér dokola a pohľad „Vnútri“ (4. 10. 2026)
+
+- **Čelná stena** (len zvnútra, `frontPlate` s normálou −Z): obklad po strop, dvere (`dvere predsedníctva`, `rámy dverí predsedníctva`), `tabuľa predsedníctva` (plocha s UV canvasu, materiál `tabula:hlasovanie` – zdieľa textúru s pásom na zadnej stene; z vnútra je vľavo +X, preto u = 0 pri x = +0,252), `galéria` a `zábradlie galérie` (predná hrana, podhľad a priečky, všetko jednostranné), dve svetelné škáry. `obloženie bočných stien` sú jednostranné lamely na vnútorných plochách bočných stien. Kontrola `verify-parliament-glb.mjs` stráži názvy a zdieľaný materiál tabule.
+- **Obloha**: tri diely strednej časti ilustrácie na každú stranu (±136°), pod všetkým tlmený rozmazaný pás cez celý obzor (viditeľný len tam, kam okná nesmerujú).
+- **Pohľad „Vnútri“** (`Vantage = 'inside'`, `INSIDE` v `components/parliament-ar.tsx`): orbit `0deg 52deg 0.2m`, cieľ `0m 0.1m -0.08m`; medze `auto 30deg 0.08m` – `auto 85deg 0.2m` (kamera ostáva nad kreslami, medzi stenami na 0,34 m a pred čelnou stenou na 0,128 m). Od pultu / Z kresla majú medze `auto 20deg 0.05m` – `auto 150deg 0.3m`. Navigácia je v pohľadoch zvnútra v režime `lock` (ťahanie otáča, dva prsty približujú).
+- **Celkový pohľad** je zamknutý všade (`locked = !immersive && !touring`): ±18° na počítači, ±12° na telefóne, sklon 58–72°, polomer 42–100 % `fit().r`.
+- **Na výšku** je ponuka šírky len pás dole (`.par3d-rotate`), nie prekrytie.
