@@ -1,6 +1,7 @@
 import { coalitionSelection } from '@/lib/parliament-experience';
 import { parliamentTimeline, type ParliamentVariant } from '@/lib/parliament-model';
 import { aggregateUpdated } from '@/lib/aggregate';
+import { CLUBS_AS_OF } from '@/lib/parliament-clubs';
 
 /** Snapshot data and image are supplied together; no hidden live model state is read. */
 export async function parliamentShareCard(image: Blob, variant: ParliamentVariant, ids: string[]) {
@@ -15,7 +16,7 @@ export async function parliamentShareCard(image: Blob, variant: ParliamentVarian
   // Mesiac vývoja nesie dátum svojho bodu; súčasný Model Mandát (aj scenár bez strany) dátum aktualizácie ako zvyšok webu.
   const point = parliamentTimeline().find(m => m.variant.id === variant.id)?.point.date;
   const skDate = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateString('sk-SK', { timeZone: 'UTC' });
-  const date = variant.id === 'volby-2023' ? '30. 9. 2023' : point ? `bod k ${skDate(point)}` : `aktualizované ${skDate(aggregateUpdated)}`;
+  const date = variant.id === 'volby-2023' ? '30. 9. 2023' : variant.id === 'kluby' ? `kluby k ${skDate(CLUBS_AS_OF)}` : point ? `bod k ${skDate(point)}` : `aktualizované ${skDate(aggregateUpdated)}`;
   ctx.fillStyle = '#cfe0d6'; ctx.font = `400 26px ${font}`; ctx.fillText(`${variant.label} · ${date}`, 64, 147);
   ctx.fillStyle = '#3b423a'; ctx.fillRect(40, 187, 1000, 720);
   const scale = Math.min(1000 / scene.width, 720 / scene.height);

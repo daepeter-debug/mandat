@@ -12,6 +12,7 @@ import { casesEnabled } from "@/lib/features";
 export default function OverviewDirectory({ onNavigate }: { onNavigate: (view: string) => void }) {
   const tiles = [
     ...(casesEnabled ? [{ view: "cases", title: "Kauzy", text: "Register prípadov so závažnosťou" }] : []),
+    { view: "parliament", title: "Parlament", text: "3D sála, hlasovania a ako hlasujú poslanci" },
     { view: "polls", title: "Prieskumy", text: `Trend podpory a archív ${archive.length} meraní` },
     { view: "parties", title: "Strany", text: `${parties.length} profilov, ľudia a dokumenty` },
     { view: "finance", title: "Hospodárenie", text: "Deficit a dlh po rokoch a po vládach" },

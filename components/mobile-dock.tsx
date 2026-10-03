@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { BarChart3, BookOpen, CalendarRange, FileText, Gamepad2, Home, Landmark, LayoutGrid, Newspaper, PieChart, Scale, SlidersHorizontal, Users, Wallet } from "lucide-react";
+import { Armchair, BarChart3, BookOpen, CalendarRange, FileText, Gamepad2, Home, Landmark, LayoutGrid, Newspaper, PieChart, Scale, SlidersHorizontal, Users, Wallet } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import InstallApp from "@/components/app-install";
 import "@/app/mobile-dock.css";
@@ -18,6 +18,7 @@ const primary: { id: string; label: string; icon: ReactNode }[] = [
   { id: "parties", label: "Strany", icon: <Users/> },
 ];
 const details: Record<string, { icon: ReactNode; text: string }> = {
+  parliament: { icon: <Armchair/>, text: "3D sála, hlasovania a poslanci" },
   finance: { icon: <Wallet/>, text: "Deficit, dlh, dane a životná úroveň" },
   responsibility: { icon: <Landmark/>, text: "Kto vládol a čo zažil tvoj ročník" },
   cases: { icon: <Scale/>, text: "Register prípadov" },

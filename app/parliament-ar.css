@@ -1,9 +1,7 @@
-/* Parlament v 3D a na stole (components/parliament-ar.tsx) — najprv mobil (celá obrazovka), na počítači okno */
-.par3d-open{display:inline-flex;align-items:center;gap:8px;min-height:40px;margin:10px 0 2px;padding:0 16px;border:1px solid var(--border);border-radius:999px;background:#fffefa;font:inherit;font-size:13.5px;font-weight:600;color:var(--mag-ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.par3d-open:hover{border-color:#b9c7b0}
-.par3d-open:focus-visible,.par3d button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.par3d-overlay{position:fixed;inset:0;z-index:70;background:#0a110ee0}
-.par3d{position:fixed;z-index:71;inset:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto;overflow-x:hidden;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));background:#f5f4ee;color:var(--mag-ink);outline:none}
+/* 3D sála na stránke Parlament (components/parliament-ar.tsx) — v toku stránky, voliteľne na celú obrazovku */
+.par3d button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.par3d{position:relative;display:flex;flex-direction:column;gap:10px;min-width:0;color:var(--mag-ink);outline:none}
+.par3d.is-expanded{position:fixed;z-index:71;inset:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));background:#f5f4ee}
 .par3d>*{flex:none}
 .par3d-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .par3d-title{margin:0;font-size:20px;font-weight:650;letter-spacing:-.01em}
@@ -22,9 +20,7 @@
 .par3d-legend i{width:10px;height:10px;border-radius:3px;flex:none}
 .par3d-legend b{font-variant-numeric:tabular-nums}
 .par3d-note{margin:0;font-size:11.5px;line-height:1.45;color:var(--text-3)}
-@media(min-width:761px){
-  .par3d{inset:auto;left:50%;top:50%;translate:-50% -50%;width:min(860px,calc(100vw - 48px));height:min(720px,calc(100dvh - 48px));padding:20px 22px;border-radius:22px;box-shadow:0 40px 90px #0006}
-}
+@media(min-width:761px){.par3d-stage{height:min(540px,64vh)}.par3d.is-expanded{padding:18px 28px}.par3d.is-expanded .par3d-stage{height:min(72dvh,820px)}}
 
 /* Ovládanie nad sálou: obsadenie (prieskumy / 2023), zafarbenie (strany / bloky), znova prehrať úvod */
 .par3d-controls{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px;border:0;margin:0;padding:0;min-width:0}
@@ -44,7 +40,9 @@
 .par3d-seg{display:inline-flex;padding:3px;border-radius:10px;background:#e5ebd8}
 .par3d-seg button{min-height:38px;padding:0 10px;border:0;border-radius:7px;background:transparent;font:inherit;font-size:12.5px;font-weight:650;color:#4f6057;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .par3d-seg button[aria-pressed=true]{background:#20392f;color:#fff}
-.par3d-replay{display:grid;place-items:center;width:44px;height:44px;margin-left:auto;border:0;border-radius:10px;background:#fffefa;color:#20392f;cursor:pointer}
+.par3d-replay,.par3d-expand{display:grid;place-items:center;width:44px;height:44px;margin-left:auto;border:0;border-radius:10px;background:#fffefa;color:#20392f;cursor:pointer}
+.par3d-expand{margin-left:0}
+.par3d-expand[aria-pressed=true]{background:#20392f;color:#fffefa}
 .par3d-seat-view{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 10px;border:0;border-radius:10px;background:#fffefa;color:#20392f;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 .par3d-seat-view[aria-pressed=true]{background:#20392f;color:#fffefa}
 .par3d-seat-view:disabled{opacity:.45;cursor:default}
@@ -70,6 +68,8 @@
 .par3d-detail>span{display:grid;gap:2px;min-width:0;font-size:15px}
 .par3d-detail small{font-size:12px;color:#4f6057}
 .par3d-detail button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;margin-left:auto;padding:0 10px;border:0;border-radius:8px;background:#20392f;color:#fffefa;font:inherit;font-size:12px;cursor:pointer}
+.par3d-detail button+button{margin-left:0}
+.par3d-detail .par3d-detail-close{min-width:44px;padding:0;background:transparent;color:#20392f}
 .par3d-skip{position:absolute;bottom:14px;right:14px;min-height:44px;padding:0 14px;border:0;border-radius:10px;background:#fffefa;color:#20392f;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 .par3d-coalition{display:grid;gap:8px}
 .par3d-coalition-summary{display:flex;align-items:center;justify-content:space-between;gap:16px}
@@ -126,7 +126,6 @@
 .par3d-legend button[data-edge=true]{border-style:dashed}
 .par3d ::selection{background:#dcf59b;color:#20392f}
 .par3d{scrollbar-color:#8a9c8e #e9eee3}
-@media(min-width:761px){.par3d{height:min(800px,calc(100dvh - 40px));width:min(900px,calc(100vw - 48px))}}
 @media(max-width:760px){.par3d-stage{width:calc(100% + 20px);margin-left:-10px;height:min(calc((100vw - 12px) * .86),48dvh);border-radius:12px}.par3d-timeline-head button{padding:0 9px;font-size:11px}.par3d-seg button{padding:0 7px}.par3d-timeline-head b{font-size:14px}}
 
 /* Hlasovania NR SR (režim Hlasovania, lib/votes.ts): tabuľa v sále, karta poslanca, kluby a výber hlasovania */
@@ -174,3 +173,11 @@
 .par3d-vote-more{justify-self:start;min-height:40px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:#fffefa;font:inherit;font-size:12.5px;font-weight:650;color:var(--mag-ink);cursor:pointer}
 @media(min-width:761px){.par3d-clubs{grid-template-columns:1fr 1fr;column-gap:18px}}
 @media(max-width:760px){.par3d-board{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 8px;padding:14px}.par3d-board b{font-size:26px}.par3d-board strong{white-space:normal;max-width:90px}.par3d-inspection{padding:10px}.par3d-vote-title{font-size:16px}.par3d-vote-rule{line-height:1.5}.par3d-modes{width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}.par3d-modes button{padding:0 3px;font-size:11px}}
+
+/* Stránka Parlament: obsadenie v troch tlačidlách, hlasy pod sálou, sála na celú obrazovku na mobile */
+.par3d-marks{display:flex;flex-wrap:wrap;gap:4px 12px;list-style:none;margin:0;padding:0;font-size:12px;color:var(--text-2)}
+.par3d-marks li{display:inline-flex;align-items:center;gap:5px}
+.par3d-marks i{width:9px;height:9px;border-radius:50%}
+.par3d-marks b{color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.par3d .par3d-head{align-items:center}
+@media(max-width:760px){.par3d-variants{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.par3d-variants button{padding:0 4px;font-size:11.5px}.par3d.is-expanded .par3d-stage{height:min(calc((100vw - 12px) * 1.1),60dvh)}}

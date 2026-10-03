@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 30 súborov (7ba0d10900) — needitovať ručne. Pravidiel: 1437, prefarbených: 1119. */
+/* Generované scripts/build-dark.mjs z 31 súborov (0537f9a55e) — needitovať ručne. Pravidiel: 1538, prefarbených: 1205. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2766,6 +2766,21 @@ html[data-theme="dark"] .party-card-history {
 html[data-theme="dark"] .party-card-history b {
     color: #c2d0e7
 }
+html[data-theme="dark"] .parliament-now-open {
+    border: 1px solid #4d5548;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parliament-now-open:hover {
+    border-color: #97aba3
+}
+html[data-theme="dark"] .parliament-now-open:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .parliament-now-open svg:last-child {
+    color: #bccac2
+}
 @media (max-width:760px) {
     html[data-theme="dark"] .archive-card {
         border: 1px solid #41463d;
@@ -3494,25 +3509,16 @@ html[data-theme="dark"] .mobile-collapse {
 html[data-theme="dark"] .mobile-collapse>.fold-toggle {
     color: #d1e7de
 }
-html[data-theme="dark"] .par3d-open {
-    border: 1px solid #41463d;
-    background: #262c29;
-    color: #d1e7de
-}
-html[data-theme="dark"] .par3d-open:hover {
-    border-color: #4d5548
-}
-html[data-theme="dark"] .par3d-open:focus-visible,html[data-theme="dark"] .par3d button:focus-visible {
+html[data-theme="dark"] .par3d button:focus-visible {
     outline: 2px solid #77a998;
     outline-offset: 2px
 }
-html[data-theme="dark"] .par3d-overlay {
-    background: #0a110ee0
-}
 html[data-theme="dark"] .par3d {
-    background: #1c221f;
     color: #d1e7de;
     outline: none
+}
+html[data-theme="dark"] .par3d.is-expanded {
+    background: #1c221f
 }
 html[data-theme="dark"] .par3d-desc {
     color: #bfcec6
@@ -3554,11 +3560,6 @@ html[data-theme="dark"] .par3d-party-logo {
 html[data-theme="dark"] .par3d-note {
     color: #bccac2
 }
-@media (min-width:761px) {
-    html[data-theme="dark"] .par3d {
-        box-shadow: 0 40px 90px #0006
-    }
-}
 html[data-theme="dark"] .par3d-controls {
     border: 0
 }
@@ -3589,10 +3590,14 @@ html[data-theme="dark"] .par3d-seg button[aria-pressed=true] {
     background: #20392f;
     color: #fff
 }
-html[data-theme="dark"] .par3d-replay {
+html[data-theme="dark"] .par3d-replay,html[data-theme="dark"] .par3d-expand {
     border: 0;
     background: #262c29;
     color: #d1e7de
+}
+html[data-theme="dark"] .par3d-expand[aria-pressed=true] {
+    background: #20392f;
+    color: #fffefa
 }
 html[data-theme="dark"] .par3d-seat-view {
     border: 0;
@@ -3656,6 +3661,10 @@ html[data-theme="dark"] .par3d-detail button {
     border: 0;
     background: #20392f;
     color: #fffefa
+}
+html[data-theme="dark"] .par3d-detail .par3d-detail-close {
+    background: transparent;
+    color: #d1e7de
 }
 html[data-theme="dark"] .par3d-skip {
     border: 0;
@@ -3845,6 +3854,347 @@ html[data-theme="dark"] .par3d-vote-more {
     border: 1px solid #41463d;
     background: #262c29;
     color: #d1e7de
+}
+html[data-theme="dark"] .par3d-marks {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-marks b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl button:focus-visible,html[data-theme="dark"] .parl a:focus-visible,html[data-theme="dark"] .parl summary:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .parl-facts b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-facts span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-stage-label {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-stage {
+    background: radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)
+}
+html[data-theme="dark"] .parl-stage-wait {
+    color: #f5f4ee
+}
+html[data-theme="dark"] .parl-enter {
+    border: 0;
+    background: #fffefa;
+    color: #20392f;
+    box-shadow: 0 10px 28px #0006
+}
+html[data-theme="dark"] .parl-enter:hover {
+    box-shadow: 0 14px 32px #0007
+}
+html[data-theme="dark"] .parl-playing {
+    background: #101b16cc;
+    color: #f5f4ee
+}
+html[data-theme="dark"] .parl-playing span {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .chamber2d-floor path {
+    fill: none;
+    stroke: #ffffff1c
+}
+html[data-theme="dark"] .chamber2d-floor rect {
+    fill: #ffffff24
+}
+html[data-theme="dark"] .chamber2d-rings circle {
+    fill: none;
+    stroke: #fffefa
+}
+html[data-theme="dark"] .chamber2d-spot circle {
+    fill: none;
+    stroke: #dcf59b
+}
+html[data-theme="dark"] .parl-legend {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-legend b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-legend .parl-ring {
+    background: transparent;
+    box-shadow: inset 0 0 0 2px var(--mag-ink)
+}
+html[data-theme="dark"] .parl-clubs-legend button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-clubs-legend button[aria-pressed=true] {
+    border-color: #97aba3;
+    background: #20392f;
+    color: #fff
+}
+html[data-theme="dark"] .parl-clubs-legend b {
+    color: inherit
+}
+html[data-theme="dark"] .parl-logo {
+    background: #fffefa
+}
+html[data-theme="dark"] .parl-seat-card .parl-icon-button {
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-hint {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-error {
+    background: #271918;
+    color: #f3a49b
+}
+html[data-theme="dark"] .parl-section-head h2 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-section-head span {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-section-text {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-note {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-link {
+    border: 0;
+    background: transparent;
+    color: #91bdeb;
+    text-decoration: underline
+}
+html[data-theme="dark"] .parl-icon-button {
+    border: 0;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-vote {
+    border: 1px solid #41463d;
+    background: #262c29
+}
+html[data-theme="dark"] .parl-back {
+    border: 1px solid #41463d;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-step {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-step button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-play,html[data-theme="dark"] .parl-step .parl-play {
+    border: 1px solid #97aba3;
+    background: #20392f;
+    color: #fffefa
+}
+html[data-theme="dark"] .parl-vote-title {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-diff {
+    background: #25241e
+}
+html[data-theme="dark"] .parl-diff p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-diff p b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-diff li button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-diff li button[aria-pressed=true] {
+    border-color: #97aba3;
+    box-shadow: inset 0 0 0 1px #20392f
+}
+html[data-theme="dark"] .parl-diff li small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-toggle {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-toggle input {
+    accent-color: #d1e7de
+}
+html[data-theme="dark"] .parl-roll,html[data-theme="dark"] .parl-all {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .parl-roll summary,html[data-theme="dark"] .parl-all summary {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-roll-club h3 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-roll-club h3 small {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-roll-club li button {
+    border: 0;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-roll-club li button small {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-roll-club li button[aria-pressed=true] {
+    background: #2a2f20
+}
+html[data-theme="dark"] .parl-share button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-share span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-vote-list .parl-mini-bar {
+    background: #2a2f20
+}
+html[data-theme="dark"] .parl-results button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-results button small {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-profile {
+    border: 1px solid #41463d;
+    border-top: 4px solid var(--club, #97aba3);
+    background: #262c29
+}
+html[data-theme="dark"] .parl-profile header h3 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-profile header p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-profile-stats div {
+    background: #25241e
+}
+html[data-theme="dark"] .parl-profile-stats dt {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-profile-stats dd {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-profile-stats small {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-profile-bar {
+    background: #2a2f20
+}
+html[data-theme="dark"] .parl-profile-counts {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-profile-counts b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-profile-clubs {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-profile-clubs small {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-barcode figcaption {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-barcode svg {
+    background: #25241e
+}
+html[data-theme="dark"] .parl-barcode-diff {
+    fill: #d1e7de
+}
+html[data-theme="dark"] .parl-barcode-now {
+    fill: #91bdeb
+}
+html[data-theme="dark"] .parl-barcode-axis {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-record button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-record button[aria-pressed=true] {
+    border-color: #97aba3;
+    box-shadow: inset 0 0 0 1px #20392f;
+    background: #22251c
+}
+html[data-theme="dark"] .parl-record small {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-record .parl-record-mark {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-profile-links {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-profile-links a {
+    color: #91bdeb
+}
+html[data-theme="dark"] .parl-club-cards article {
+    border: 1px solid #41463d;
+    border-left: 4px solid var(--club);
+    background: #262c29
+}
+html[data-theme="dark"] .parl-club-cards h3 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-club-cards h3 span {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-club-cards dt {
+    color: #bccac2
+}
+html[data-theme="dark"] .parl-club-cards dd {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-subhead {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-heat-wrap {
+    outline: none
+}
+html[data-theme="dark"] .parl-heat-wrap:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .parl-heat th {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-heat tbody th {
+    background: #1c221f
+}
+html[data-theme="dark"] .parl-heat td {
+    color: #d1e7de;
+    background: color-mix(in srgb,#2f6b55 calc(var(--a, 0) * 100%),#25261f)
+}
+html[data-theme="dark"] .parl-heat td[data-strong=true] {
+    color: #fff
+}
+html[data-theme="dark"] .parl-heat td.parl-heat-self {
+    background: transparent
+}
+html[data-theme="dark"] .parl-about {
+    background: #1f2523;
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-about h2 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-about b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .parl-about a {
+    color: #91bdeb
 }
 html[data-theme="dark"] .pc-head h2 {
     color: #d1e7de

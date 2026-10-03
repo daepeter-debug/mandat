@@ -1,0 +1,174 @@
+/* Stránka Parlament (components/parliament-page.tsx) — najprv mobil (375–402 px), od 1000 px dva stĺpce */
+.parl{display:grid;gap:22px;min-width:0;padding-bottom:28px}
+.parl button:focus-visible,.parl a:focus-visible,.parl summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.parl-intro{padding-bottom:0}
+.parl-facts{display:flex;flex-wrap:wrap;gap:10px 26px;list-style:none;margin:16px 0 0;padding:0}
+.parl-facts li{display:grid;gap:2px}
+.parl-facts b{font-size:28px;line-height:1.05;font-weight:620;letter-spacing:-.02em;color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.parl-facts span{font-size:12px;color:var(--text-2)}
+
+/* Sála: prepínač 2D/3D, večerná scéna, legenda a karta poslanca */
+.parl-stage-block{display:grid;gap:10px;min-width:0}
+.parl-stage-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;scroll-margin-top:12px}
+.parl-view button{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px}
+.parl-stage-label{font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.parl-stage{position:relative;display:grid;place-items:center;min-height:220px;padding:20px 12px 76px;border-radius:16px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)}
+.parl-stage .chamber2d{width:min(100%,760px);height:auto}
+.parl-stage-wait{gap:14px;color:#f5f4ee;font-size:14px}
+.parl-enter{position:absolute;left:50%;bottom:16px;translate:-50% 0;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border:0;border-radius:999px;background:#fffefa;color:#20392f;font:inherit;font-size:15px;font-weight:650;white-space:nowrap;box-shadow:0 10px 28px #0006;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s}
+.parl-enter:hover{transform:translateY(-1px);box-shadow:0 14px 32px #0007}
+.parl-playing{position:absolute;left:12px;right:12px;top:10px;display:grid;gap:1px;margin:0;padding:8px 12px;border-radius:10px;background:#101b16cc;color:#f5f4ee;font-size:12.5px;line-height:1.35}
+.parl-playing span{font-size:11px;color:#cfe0d6;font-variant-numeric:tabular-nums}
+
+.chamber2d{display:block;overflow:visible;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.chamber2d-floor path{fill:none;stroke:#ffffff1c;stroke-width:1.2}
+.chamber2d-floor rect{fill:#ffffff24}
+.chamber2d-seats circle{transform-box:fill-box;transform-origin:center;transition:fill .4s cubic-bezier(.2,.7,.2,1) var(--d),opacity .35s;animation:parl-seat-in .9s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--d) * .7)}
+.chamber2d-seats circle[data-dim]{opacity:.2}
+.chamber2d-rings circle{fill:none;stroke:#fffefa;stroke-width:2.4}
+.chamber2d-spot circle{fill:none;stroke:#dcf59b;stroke-width:3.2}
+.chamber2d-spot-pulse{transform-box:fill-box;transform-origin:center;animation:parl-spot 1.8s ease-out infinite}
+@keyframes parl-seat-in{from{transform:translate(var(--fx),var(--fy)) scale(.25);opacity:0}}
+@keyframes parl-spot{from{transform:scale(1);opacity:.85}to{transform:scale(2.3);opacity:0}}
+@media(prefers-reduced-motion:reduce){.chamber2d-seats circle{animation:none;transition:none}.chamber2d-spot-pulse{display:none}.parl-enter{transition:none}}
+
+.parl-legend{display:flex;flex-wrap:wrap;gap:6px 14px;list-style:none;margin:0;padding:0;font-size:12.5px;color:var(--text-2)}
+.parl-legend li{display:inline-flex;align-items:center;gap:6px}
+.parl-legend i{width:10px;height:10px;border-radius:50%;flex:none}
+.parl-legend b{color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.parl-legend .parl-ring{background:transparent;box-shadow:inset 0 0 0 2px var(--mag-ink)}
+.parl-clubs-legend{gap:6px}
+.parl-clubs-legend button{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:#fffefa;font:inherit;font-size:12.5px;font-weight:600;color:var(--mag-ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.parl-clubs-legend button[aria-pressed=true]{border-color:#20392f;background:#20392f;color:#fff}
+.parl-clubs-legend b{color:inherit}
+.parl-logo{object-fit:contain;flex:none;padding:1px;border-radius:3px;background:#fffefa}
+.parl-dot{display:inline-block;flex:none;width:12px;height:12px;border-radius:50%}
+.parl-seat-card .parl-icon-button{margin-left:0;background:transparent;color:#20392f}
+.parl-hint{margin:0;font-size:12px;line-height:1.5;color:var(--text-3)}
+.parl-error{margin:0;padding:12px 14px;border-radius:10px;background:#fbe9e7;color:#8a2c22;font-size:13px}
+
+/* Obsah pod sálou */
+.parl-columns{display:grid;gap:26px;min-width:0}
+.parl-column{display:grid;gap:26px;align-content:start;min-width:0}
+.parl-votes,.parl-deputies,.parl-clubs{display:grid;gap:8px;min-width:0}
+.parl-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.parl-section-head h2{margin:0;font-size:22px;font-weight:600;letter-spacing:-.02em;color:var(--mag-ink)}
+.parl-section-head span{font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums;text-align:right}
+.parl-section-text{margin:0 0 6px;font-size:13.5px;line-height:1.55;color:var(--text-2)}
+.parl-note{margin:0;font-size:12px;line-height:1.5;color:var(--text-3)}
+.parl-link{min-height:32px;padding:0;border:0;background:transparent;font:inherit;color:#33679e;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.parl-icon-button{display:grid;place-items:center;flex:none;min-width:44px;min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--mag-ink);cursor:pointer}
+
+/* Vybrané hlasovanie */
+.parl-vote{display:grid;gap:10px;padding:16px;border:1px solid var(--border);border-radius:14px;background:#fffefa;min-width:0}
+.parl-vote-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.parl-back{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--border);border-radius:999px;background:transparent;font:inherit;font-size:12.5px;font-weight:600;color:var(--mag-ink);cursor:pointer}
+.parl-step{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.parl-step>span{min-width:58px;text-align:center}
+.parl-step button{display:grid;place-items:center;min-width:40px;min-height:40px;border:1px solid var(--border);border-radius:10px;background:#fffefa;color:var(--mag-ink);cursor:pointer}
+.parl-step button:disabled{opacity:.4;cursor:default}
+.parl-play,.parl-step .parl-play{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid #20392f;border-radius:10px;background:#20392f;color:#fffefa;font:inherit;font-size:12px;font-weight:650;cursor:pointer}
+.parl-play:disabled{opacity:.45;cursor:default}
+.parl-play-wide{justify-self:start;margin-top:4px}
+.parl-vote-title{margin:0;font-size:18px;line-height:1.35;font-weight:620;letter-spacing:-.01em;color:var(--mag-ink);text-wrap:pretty}
+.parl-diff{display:grid;gap:8px;padding:12px;border-radius:12px;background:#f1f0e8}
+.parl-diff p{margin:0;font-size:13px;color:var(--text-2)}
+.parl-diff p b{color:var(--mag-ink)}
+.parl-diff ul{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.parl-diff li button{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px 6px;min-height:40px;padding:5px 10px;border:1px solid var(--border);border-radius:10px;background:#fffefa;font:inherit;font-size:12.5px;font-weight:600;color:var(--mag-ink);text-align:left;cursor:pointer}
+.parl-diff li button[aria-pressed=true]{border-color:#20392f;box-shadow:inset 0 0 0 1px #20392f}
+.parl-diff li i{width:9px;height:9px;border-radius:50%;flex:none}
+.parl-diff li small{font-weight:500;color:var(--text-2)}
+.parl-toggle{display:inline-flex;align-items:center;gap:8px;min-height:40px;font-size:12.5px;color:var(--text-2);cursor:pointer}
+.parl-toggle input{width:18px;height:18px;margin:0;accent-color:#20392f}
+.parl-roll,.parl-all{border-top:1px solid var(--border)}
+.parl-roll summary,.parl-all summary{display:flex;align-items:center;min-height:44px;font-size:13px;font-weight:650;color:var(--mag-ink);cursor:pointer}
+.parl-roll-club{display:grid;gap:4px;margin:6px 0 12px}
+.parl-roll-club h3{display:flex;align-items:center;gap:6px;margin:0;font-size:12.5px;font-weight:650;color:var(--mag-ink)}
+.parl-roll-club h3 small{font-weight:500;color:var(--text-3)}
+.parl-roll-club ul{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:2px 8px;list-style:none;margin:0;padding:0}
+.parl-roll-club li button{display:flex;align-items:center;gap:6px;width:100%;min-height:38px;padding:2px 6px;border:0;border-radius:8px;background:transparent;font:inherit;font-size:12.5px;color:var(--mag-ink);text-align:left;cursor:pointer}
+.parl-roll-club li button small{margin-left:auto;padding-left:6px;font-size:11px;color:var(--text-3);text-align:right}
+.parl-roll-club li button[aria-pressed=true]{background:#e5ebd8}
+.parl-roll-club li i{width:9px;height:9px;border-radius:50%;flex:none}
+.parl-share{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.parl-share button{display:inline-flex;align-items:center;gap:7px;min-height:42px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:#fffefa;font:inherit;font-size:12.5px;font-weight:650;color:var(--mag-ink);cursor:pointer}
+.parl-share span{font-size:12px;color:var(--text-2)}
+.parl-vote-list .parl-mini-bar{display:flex;height:6px;margin:3px 0 1px;border-radius:3px;overflow:hidden;background:#e5ebd8}
+.parl-mini-bar i{flex-basis:0;min-width:1px}
+
+/* Poslanci: hľadanie, zoznam a profil */
+.parl-results{display:grid;gap:4px;list-style:none;margin:0;padding:0}
+.parl-results button{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:0 12px;border:1px solid var(--border);border-radius:10px;background:#fffefa;font:inherit;font-size:13.5px;font-weight:600;color:var(--mag-ink);text-align:left;cursor:pointer}
+.parl-results button small{margin-left:auto;font-size:11.5px;font-weight:500;color:var(--text-3)}
+.parl-all ul{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.parl-profile{display:grid;gap:12px;padding:16px;border:1px solid var(--border);border-top:4px solid var(--club,#20392f);border-radius:14px;background:#fffefa;scroll-margin-top:12px;min-width:0}
+.parl-profile header{display:flex;align-items:center;gap:10px}
+.parl-profile header>div{flex:1;min-width:0}
+.parl-profile header h3{margin:0;font-size:20px;line-height:1.25;font-weight:620;letter-spacing:-.015em;color:var(--mag-ink)}
+.parl-profile header p{margin:2px 0 0;font-size:12.5px;color:var(--text-2)}
+.parl-profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+.parl-profile-stats div{display:grid;align-content:start;gap:2px;padding:10px;border-radius:10px;background:#f1f0e8}
+.parl-profile-stats dt{font-size:11px;color:var(--text-2)}
+.parl-profile-stats dd{margin:0;font-size:22px;font-weight:620;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--mag-ink)}
+.parl-profile-stats small{font-size:10.5px;line-height:1.3;color:var(--text-3)}
+.parl-profile-bar{display:flex;height:10px;border-radius:4px;overflow:hidden;background:#e5ebd8}
+.parl-profile-bar i{flex-basis:0;min-width:2px}
+.parl-profile-counts{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0;font-size:11.5px;color:var(--text-2)}
+.parl-profile-counts span{display:inline-flex;align-items:center;gap:5px}
+.parl-profile-counts i{width:8px;height:8px;border-radius:50%}
+.parl-profile-counts b{color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.parl-profile-clubs{margin:0;font-size:12.5px;line-height:1.55;color:var(--text-2)}
+.parl-profile-clubs small{color:var(--text-3)}
+.parl-barcode{display:grid;gap:5px;margin:0}
+.parl-barcode figcaption{font-size:11.5px;line-height:1.45;color:var(--text-3)}
+.parl-barcode svg{display:block;width:100%;height:44px;border-radius:4px;background:#f1f0e8;cursor:pointer}
+.parl-barcode-diff{fill:#20392f}
+.parl-barcode-now{fill:#33679e}
+.parl-barcode-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.parl-record{display:grid;gap:4px;list-style:none;margin:0;padding:0}
+.parl-record button{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:10px;width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:#fffefa;font:inherit;text-align:left;color:var(--mag-ink);cursor:pointer}
+.parl-record button[aria-pressed=true]{border-color:#20392f;box-shadow:inset 0 0 0 1px #20392f;background:#f1f5e9}
+.parl-record i{width:12px;height:12px;margin-top:3px;border-radius:50%}
+.parl-record span{display:grid;gap:2px;min-width:0}
+.parl-record small{font-size:11px;color:var(--text-3)}
+.parl-record b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;font-weight:600;line-height:1.35}
+.parl-record .parl-record-mark{font-weight:600;color:var(--text-2)}
+.parl-profile-links{margin:0;font-size:12.5px;color:var(--text-2)}
+.parl-profile-links a{display:inline-flex;align-items:center;gap:3px;color:#33679e}
+
+/* Kluby: karty a zhoda */
+.parl-club-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.parl-club-cards article{display:grid;gap:8px;padding:12px;border:1px solid var(--border);border-left:4px solid var(--club);border-radius:12px;background:#fffefa}
+.parl-club-cards h3{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0;font-size:14px;font-weight:650;color:var(--mag-ink)}
+.parl-club-cards h3 span{flex-basis:100%;font-size:11.5px;font-weight:500;color:var(--text-3)}
+.parl-club-cards dl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0}
+.parl-club-cards dt{font-size:10.5px;color:var(--text-3)}
+.parl-club-cards dd{margin:0;font-size:17px;font-weight:620;font-variant-numeric:tabular-nums;color:var(--mag-ink)}
+.parl-subhead{margin:12px 0 2px;font-size:15px;font-weight:650;color:var(--mag-ink)}
+.parl-heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;outline:none}
+.parl-heat-wrap:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.parl-heat{min-width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px;font-variant-numeric:tabular-nums}
+.parl-heat th{padding:2px 4px;font-weight:600;color:var(--text-2);white-space:nowrap}
+.parl-heat thead th{font-size:10.5px}
+.parl-heat tbody th{position:sticky;left:0;z-index:1;text-align:left;background:#f5f4ee}
+.parl-heat td{min-width:36px;height:34px;border-radius:6px;text-align:center;color:var(--mag-ink);background:color-mix(in srgb,#2f6b55 calc(var(--a,0) * 100%),#eef0e6)}
+.parl-heat td[data-strong=true]{color:#fff}
+.parl-heat td.parl-heat-self{background:transparent}
+
+.parl-about{display:grid;gap:8px;padding:16px;border-radius:14px;background:#e8f0ee;font-size:13px;line-height:1.6;color:var(--text-2)}
+.parl-about h2{margin:0 0 2px;font-size:17px;color:var(--mag-ink)}
+.parl-about p{margin:0}
+.parl-about b{color:var(--mag-ink)}
+.parl-about a{display:inline-flex;align-items:center;gap:3px;color:#33679e}
+
+@media(min-width:1000px){.parl-columns{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}}
+@media(max-width:760px){
+  .parl-facts{display:grid;grid-template-columns:auto auto auto;justify-content:start;gap:6px 22px}
+  .parl-facts b{font-size:24px}
+  .parl-stage{margin:0 -10px;padding:14px 6px 74px;border-radius:12px}
+  .parl-vote,.parl-profile{padding:14px 12px}
+  .parl-vote-title{font-size:17px}
+  .parl-profile-stats dd{font-size:19px}
+  .parl-step .parl-play{padding:0 10px}
+}

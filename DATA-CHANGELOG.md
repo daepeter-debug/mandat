@@ -1,5 +1,29 @@
 # Evidencia údajov a rozsahu
 
+## 3. 10. 2026 — Stránka Parlament: 3D sála, hlasovania poslancov a kluby (Claude)
+
+3D sála sa presunula z dialógu na úvode na vlastnú stránku **`/parlament`** (sekcia Parlament v menu, vo „Viac“ na mobile, v rozcestníku a tlačidlo v karte Parlament dnes). Stav je v adrese: `h` = hlasovanie, `poslanec` = poslanec, `rezim` = režim 3D sály; zdieľaný odkaz má vlastný titulok a popis (`app/parlament/page.tsx`) a náhľad `public/og/parliament.jpg` (sála zhora vo farbách klubov, `scripts/build-og.mjs`).
+
+**Nové dáta:**
+- `scripts/build-deputies.mjs` (spúšťa ho aj `fetch-votes.mjs`) skladá zo súborov hlasovaní `public/data/hlasovania/poslanci.json`: 169 poslancov × 348 hlasovaní, hlas a klub v čase každého hlasovania (128 kB, 11 kB komprimované).
+- `lib/parliament-clubs.data.ts`: kluby k poslednému hlasovaniu 1. 10. 2026: SMER 41, HLAS 25, SNS 8, nezaradení 8, SLOVENSKO 12, PS 33, KDH 12, SaS 11. Doteraz web aktuálne kluby nemal.
+- `lib/deputies.ts`: prítomnosť, línia klubu (nadpolovičná väčšina prítomných), hlas inak ako klub (len za, proti, zdržanie sa; nehlasovanie a neprítomnosť sa nerátajú), jednotnosť klubu, zhoda klubov. Rovnaké pravidlá pre každého, bez ručného výberu.
+- Kontrola `scripts/verify-deputies.mjs`: každé hlasovanie poskladané zo súboru poslancov sa zhoduje so súborom hlasovania vrátane rozsadenia do kresiel, kluby dnes = posledné hlasovanie, pravidlá na kontrolnom príklade.
+
+**Stránka (`components/parliament-page.tsx`, `app/parliament-page.css`):**
+- 2D sála (`components/chamber-2d.tsx`): tých istých 150 miest ako 3D model, kreslá sa pri načítaní zbehnú na miesta, farby sa menia vlnou; ľahký úvod a záloha bez WebGL. Ťuknutie na kreslo ukáže poslanca.
+- Hlasovanie: tabuľa, pravidlo väčšiny, kluby, kto hlasoval inak ako väčšina klubu (so zvýraznením v sále), menovitý zoznam, listovanie, **prehrávanie hlasovaní v čase** a obrázok hlasovania na zdieľanie (`components/vote-share.ts`).
+- Poslanci: hľadanie bez diakritiky, profil s prítomnosťou, počtom hlasov inak ako klub, zmenami klubu, **hlasovacím pásom** (každé hlasovanie jedna čiarka) a zoznamom hlasov s filtrom; odkaz na profil na nrsr.sk.
+- Kluby: dnešné zloženie, prítomnosť, jednotnosť a **mapa zhody klubov** (ako často dali dva kluby rovnaký hlas). Poradie sály, nie rebríček; pri prítomnosti poznámka o rôznych dôvodoch neprítomnosti.
+
+**3D sála (`components/parliament-ar.tsx`):**
+- V toku stránky namiesto dialógu, s tlačidlom „Na celú obrazovku“ (Escape vráti).
+- Nové obsadenie **Kluby dnes** (nie je v GLB, kreslá sa farbia po jednom cez `prechod:<i>` s logom klubu, nezaradení bez loga); funguje v režimoch Kluby, Koalícia a Bloky.
+- Vybraný poslanec má rozsvietené kreslo a kamera k nemu priletí; zvýraznenie hlasov inak ako klub stlmí ostatné kreslá.
+- Hlasovanie vyberá stránka, zoznam hlasovaní v sále odišiel.
+
+GLB sa nemenil. Overené v prehliadači (wrangler dev): úvod `/parlament` bez chýb konzoly, mobil 375 px bez vodorovného posunu, prepínanie hlasovaní, zvýraznenie, profil, navigácia späť a dopredu; farby a logá 150 kresiel v 3D cez API model-viewer (Kluby dnes, Bloky, Koalícia, Hlasovania). Animácie (vlna, prelet kamery) treba pozrieť na telefóne, prehliadač Clauda v skrytom okne nekreslí.
+
 ## 3. 10. 2026 — Deň v politike za 2. 10. a rozpracovaný 3. 10., kontrola prieskumov a hlasovaní (Claude)
 
 Doplnených 9 správ. Každý deň má poradie, vetu dňa a počet prejdených udalostí.

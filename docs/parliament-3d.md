@@ -146,7 +146,7 @@ Režim **Hlasovania** ukazuje skutočné hlasovania 9. volebného obdobia: kresl
   - Výsledok zodpovedá väčšine podľa ústavy (`required` v `lib/votes.ts`).
   - 150 rôznych poslancov a známe kluby.
   - Nový klub treba doplniť do `CLUBS` a `SEAT_ORDER` v `lib/votes.ts`, inak kontrola zlyhá.
-- **Aktualizácia:** po schôdzi NR SR spustiť `fetch-votes`, potom `verify-votes` a commit. Nové hlasovania sa objavia hneď, model netreba meniť.
+- **Aktualizácia:** po schôdzi NR SR spustiť `fetch-votes` (prepočíta aj poslancov a kluby, `scripts/build-deputies.mjs`), potom `verify-votes`, `verify-deputies` a commit. Nové hlasovania sa objavia hneď, model netreba meniť.
 
 **Sála:**
 - **Kreslá:** variant `hlasovanie` mapuje čalúnenie a značku každého kresla na materiály `prechod:<i>` a `prechod-logo:<i>`. Web im nastaví farbu hlasu a textúru loga klubu (`logo:<strana>`); nezaradení sú bez loga.
@@ -218,3 +218,31 @@ Po oprave fokusu prešli všetkých **17 `verify-*.mjs`**, TypeScript `--noEmit`
 Fyzický mobilný Safari/Chrome, najmä súčasný dvojprstový pan/pinch, AR a živé reduced-motion zostávajú **neoverené**. Statické snímky nepotvrdzujú plynulosť ani výkon.
 
 **Nasadenie 3. 10. 2026:** commit **`fd532d6`**, pred pushom `git pull --rebase` potvrdil aktuálny main. Cloudflare preview úspešne nasadilo verziu **`45c5dcf9-6eba-4f94-9863-087ca52a2f5c`**. Online browser overil prítomnosť nového ovládania, posun cieľa bez zmeny orbitu, reset a klávesnicové plus/mínus (0,78 → 0,65 → 0,78 m). Konzola s chybami bola `[]`; screenshot `online-navigation.jpg` v lokálnej sade bol otvorený. Online overenie nenahrádza fyzické dotykové gestá. Peter potvrdil, že Claude čaká s aktualizáciou správ; odovzdanie je mimo repa v `../SPRAVA-pre-claude-navigacia.md`.
+
+## Stránka Parlament — 3. 10. 2026 (Claude)
+
+3D sála už nie je dialóg na úvode. Má vlastnú stránku **`/parlament`** (`components/parliament-page.tsx`); karta Parlament dnes na úvode na ňu vedie tlačidlom.
+
+**Adresa a stav:**
+- `/parlament` vykreslí server rovno so sekciou Parlament (`app/parlament/page.tsx`, `MandatApp serverSearch="?v=parliament"`). Ostatné sekcie ostávajú na `/?v=…`; prepínanie rieši `urlFor` a `readSearch` v `components/mandat-app.tsx`.
+- Parametre: `h` = hlasovanie, `poslanec` = poslanec, `rezim` = režim 3D sály (`strany|koalicia|bloky|vyvoj|hlasovania`). Zvolené hlasovanie znamená režim Hlasovania.
+- `generateMetadata` dá zdieľanému odkazu titulok a popis podľa hlasovania, poslanca alebo oboch. Náhľad je `public/og/parliament.jpg` zo `scripts/build-og.mjs` (karta bez ilustrácie = sála zhora vo farbách klubov).
+
+**2D sála** (`components/chamber-2d.tsx`): tých istých 150 miest ako `chamberSeats`, zhora, aj s uličkami. Kreslo poslanca je v 2D aj v 3D na rovnakom mieste.
+- Pri prvom zobrazení sa kreslá zbehnú od pultu na miesta. Zmena farieb ide vlnou s časovaním `seatSweep`.
+- Stlmenie (`data-dim`), krúžky „inak ako klub“ a pulzujúci krúžok vybraného poslanca.
+- Pri obmedzenom pohybe bez animácií. Večerná scéna je tmavá v oboch témach (`KEEP_SELECTOR` v `scripts/build-dark.mjs`).
+
+**3D sála** (`components/parliament-ar.tsx`, export `ParliamentChamber`) sa pripojí až po voľbe „3D sála“, vtedy sa sťahuje knižnica, GLB aj HDR.
+- **Kluby dnes** (`lib/parliament-clubs.ts`, variant `kluby`): nie je v GLB.
+  - Zobrazí sa interný variant `prechod` a 150 materiálov `prechod:<i>` sa farbí podľa `clubSeatParty`, logá cez `prechod-logo:<i>` ← `logo:<strana>`; nezaradení sú bez loga.
+  - Platia rovnaké pravidlá ako pri stranách: výber stlmí ostatných, koalícia ponechá farby vybraných, bloky tri farby. Prvé zobrazenie rozsvieti kreslá vlnou.
+  - Prechody medzi Klubmi dnes a variantmi glTF idú cez existujúci `transition`.
+- **Poslanec:** `deputy` zo stránky alebo ťuknutím na kreslo pridá emisiu 0,16 na jeho kreslo a kamera priletí (`seatCamera`), raz pri výbere a až po úvodnom prejazde. „Celá sála“ výber zruší.
+- **Hlasovania:** hlasovanie a rozsadenie dodáva stránka (`voteSeats`), sála hlasovania nesťahuje sama. `highlightDiff` stlmí kreslá poslancov, ktorí hlasovali ako klub (`dimRef`), farby hlasov ostávajú faktické.
+- **Režim** je riadený zo stránky (`mode`/`onMode`), prepnutie zvonka ide cez `setTimeout`, nie `requestAnimationFrame` (skrytá karta).
+- **Na celú obrazovku:** trieda `is-expanded` (fixed, `z-index: 71`). Escape vráti sálu do stránky a stránka pod ňou sa neposúva.
+
+**Poslanci a kluby** (`lib/deputies.ts`, dáta `public/data/hlasovania/poslanci.json` zo `scripts/build-deputies.mjs`): pravidlá sú v hlavičke súboru, kontrola je `scripts/verify-deputies.mjs`. Po `fetch-votes` sa poslanci a kluby prepočítajú samy, stačí `verify-votes`, `verify-deputies` a commit.
+
+**Neoverené:** vlna 2D aj 3D, prelet kamery a pulz krúžku v pohybe (Claudov prehliadač nespúšťa `requestAnimationFrame` ani CSS animácie v skrytom okne). Farby, logá a výber 150 kresiel sú overené cez API model-viewer pri obmedzenom pohybe.

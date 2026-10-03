@@ -47,7 +47,7 @@ export const chamberSeats: ChamberSeat[] = (() => {
   return seats.sort((a, b) => b.angle - a.angle || a.row - b.row).map((s, index) => ({ index, ...s }));
 })();
 
-export type VariantId = "prieskumy" | "volby-2023" | `model-${string}` | `bez-${string}`;
+export type VariantId = "prieskumy" | "volby-2023" | "kluby" | `model-${string}` | `bez-${string}`;
 export type ParliamentLabel = { id: string; short: string; color: string; seats: number; position: [number, number, number] };
 export type ParliamentVariant = {
   id: VariantId; label: string; ordered: SeatEntry[]; seatParty: string[];

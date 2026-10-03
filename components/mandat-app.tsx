@@ -41,6 +41,8 @@ const PublicFinance = lazy(() => import("@/components/public-finance"));
 const ResponsibilityPage = lazy(() => import("@/components/responsibility-page"));
 // Herňa (výber hier) sa načíta až pri otvorení záložky; samotné hry ešte o krok neskôr.
 const GamesRoom = lazy(() => import("@/components/games-room"));
+// Parlament (/parlament): 3D sála, hlasovania a poslanci; 3D knižnica a model sa načítajú až po vstupe do sály.
+const ParliamentPage = lazy(() => import("@/components/parliament-page"));
 import { gameIds, type GameId } from "@/components/games-room";
 import PoliticalNewsFeed, { NewsSheetMeta, NewsSheetNav } from "@/components/news-room";
 import { epigraph } from "@/lib/quote";
@@ -67,7 +69,7 @@ const PartyCompare = lazy(() => import("@/components/party-compare"));
 
 const officialSeats = seated2023.map(s => ({ id: s.partyId ?? `election-2023-${s.number}`, short: s.short, name: s.name, color: s.color, seats: s.seats, share: s.pct }));
 const primaryAgencies = ["AKO","FOCUS","INFOSTAT","IPSOS","NMS"];
-const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"news",label:"Správy"},{id:"finance",label:"Hospodárenie"},{id:"responsibility",label:"Zodpovednosť"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"game",label:"Herňa"},{id:"method",label:"O dátach"}];
+const views = [{id:"overview",label:"Prehľad"},{id:"parties",label:"Strany"},{id:"parliament",label:"Parlament"},{id:"news",label:"Správy"},{id:"finance",label:"Hospodárenie"},{id:"responsibility",label:"Zodpovednosť"},...(casesEnabled?[{id:"cases",label:"Kauzy"}]:[]),{id:"data",label:"Dátový prehľad"},{id:"model",label:"Vlastný model"},{id:"polls",label:"Prieskumy"},{id:"programmes",label:"Programy"},{id:"game",label:"Herňa"},{id:"method",label:"O dátach"}];
 const viewIds = views.map(v=>v.id);
 const periods = ["3","5","9"];
 const defaultActive = ["ps","smer","rep","slovensko","sas"];
@@ -75,14 +77,16 @@ const normalize = (s:string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "
 const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^www\./,""); } catch { return url; } };
 
 /* Stav rozhrania v URL: záložka (v), agentúra prehľadu (a), obdobie (p), graf/tabuľka (m),
-   filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana), rok narodenia v Tvojom Slovensku (rok), porovnávané strany (porovnaj).
+   filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana), rok narodenia v Tvojom Slovensku (rok), porovnávané strany (porovnaj),
+   na stránke Parlament hlasovanie (h), poslanec (poslanec) a režim 3D sály (rezim).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;parliamentPartners:boolean;game:GameId|null;news:string|null;newsDay:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null;birthYear:number|null;compare:string[]};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;parliamentPartners:boolean;game:GameId|null;news:string|null;newsDay:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null;birthYear:number|null;compare:string[];parlVote:number|null;parlDeputy:number|null;parlMode:string|null};
+const parliamentModes = ["strany","koalicia","bloky","vyvoj","hlasovania"];
 const parliamentViews = ["model","volby2023"];
 const ELECTION_VIEW = "volby2023";
 // Dátový prehľad má jednu grafiku parlamentu; prepínač vyberá, čo zobrazuje.
 const spreadOptions = [ELECTION_VIEW, ...primaryAgencies];
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",parliamentPartners:false,game:null,news:null,newsDay:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null,birthYear:null,compare:[]};
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",parliamentPartners:false,game:null,news:null,newsDay:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null,birthYear:null,compare:[],parlVote:null,parlDeputy:null,parlMode:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
@@ -112,6 +116,10 @@ function parseSearch(search:string):UiState {
     // Presný rozsah overí sekcia Zodpovednosť; tu len štvormiestny rok bez importu hospodárskych dát.
     birthYear: Number(pick("rok", v=>/^(19[2-9][0-9]|20[0-9][0-9])$/.test(v))) || null,
     compare: [...new Set((s.get("porovnaj") ?? "").split(",").filter(id=>partyIds.has(id)))].slice(0,3),
+    // Existenciu hlasovania a poslanca overí stránka Parlament až po načítaní dát.
+    parlVote: Number(pick("h", v=>/^[1-9][0-9]{0,7}$/.test(v))) || null,
+    parlDeputy: Number(pick("poslanec", v=>/^[1-9][0-9]{0,6}$/.test(v))) || null,
+    parlMode: pick("rezim", v=>parliamentModes.includes(v)),
   };
 }
 function serialize(state:UiState) {
@@ -137,15 +145,28 @@ function serialize(state:UiState) {
   if(state.party) s.set("strana",state.party);
   if(state.birthYear) s.set("rok",String(state.birthYear));
   if(state.compare.length) s.set("porovnaj",state.compare.join(","));
+  if(state.view==="parliament"){
+    if(state.parlVote) s.set("h",String(state.parlVote));
+    if(state.parlDeputy) s.set("poslanec",String(state.parlDeputy));
+    if(state.parlMode) s.set("rezim",state.parlMode);
+  }
   const qs = s.toString();
   return qs ? `?${qs}` : "";
 }
 // Adresa je jediný zdroj stavu rozhrania. Komponent ju číta cez useSyncExternalStore,
 // zápis ide cez history API; zmena záložky vytvorí položku histórie, ostatné zmeny ju nahradia.
+// Parlament má vlastnú adresu /parlament (bez ?v=); ostatné sekcie ostávajú na úvodnej adrese s ?v=.
+const PARLIAMENT_PATH = "/parlament";
 const urlListeners = new Set<()=>void>();
 const subscribeUrl = (cb:()=>void) => { urlListeners.add(cb); window.addEventListener("popstate",cb); return () => { urlListeners.delete(cb); window.removeEventListener("popstate",cb); }; };
-const readSearch = () => window.location.search;
-const readServerSearch = () => "";
+const readSearch = () => window.location.pathname.replace(/\/+$/,"")===PARLIAMENT_PATH ? `?v=parliament${window.location.search.replace(/^\?/,"&")}` : window.location.search;
+function urlFor(next:string) {
+  const s = new URLSearchParams(next);
+  if(s.get("v")!=="parliament") return `/${next}`;
+  s.delete("v");
+  const qs = s.toString();
+  return `${PARLIAMENT_PATH}${qs ? `?${qs}` : ""}`;
+}
 // Prepnutie sekcie s plynulým prechodom (View Transitions, štýly v app/motion.css); bez podpory alebo pri obmedzení pohybu hneď.
 function withViewTransition(run:()=>void) {
   if(!document.startViewTransition||window.matchMedia("(prefers-reduced-motion: reduce)").matches){run();return;}
@@ -159,8 +180,8 @@ function withViewTransition(run:()=>void) {
   t.finished.catch(()=>{}).finally(()=>root.classList.remove("vt-view"));
 }
 function navigateTo(next:string, push:boolean) {
-  if(next===window.location.search) return;
-  const url = `${window.location.pathname}${next}`;
+  if(next===readSearch()) return;
+  const url = urlFor(next);
   if(push) window.history.pushState(null,"",url); else window.history.replaceState(null,"",url);
   urlListeners.forEach(l=>l());
 }
@@ -183,10 +204,11 @@ function SourceFallback({poll}:{poll:Poll}) {
 type WebTool = {name:string;title:string;description:string;inputSchema:object;execute:(input:Record<string,unknown>)=>Promise<{content:{type:"text";text:string}[]}>};
 type ModelContext = {registerTool:(tool:WebTool, options?:{signal:AbortSignal})=>void;unregisterTool?:(name:string)=>void};
 
-export default function MandatApp() {
+// serverSearch: stav, ktorý pozná server (stránka /parlament sa vykreslí rovno so svojou sekciou).
+export default function MandatApp({serverSearch=""}:{serverSearch?:string}) {
   useServiceWorker();
   const [archiveVisible, setArchiveVisible] = useState(archive.length);
-  const search = useSyncExternalStore(subscribeUrl, readSearch, readServerSearch);
+  const search = useSyncExternalStore(subscribeUrl, readSearch, ()=>serverSearch);
   const ui = useMemo(()=>parseSearch(search),[search]);
   const {view,trendAgency,period,mode,agency,query,partyQuery} = ui;
   const active = ui.legend;
@@ -282,6 +304,7 @@ export default function MandatApp() {
         <TabsContent value="overview"><PollTicker onOpen={id=>{update({view:"polls",detail:id},true);window.scrollTo({top:0,behavior:"instant"});}}/><PartyStrip selected={ui.party} onSelect={(p,logo)=>openParty(ui.party===p.id?null:p,logo)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} onYear={y=>{update({view:"responsibility",birthYear:y},true);window.scrollTo({top:0,behavior:"instant"});}} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})} onOpenNewsDay={day=>{update({view:"news",newsDay:day},true);window.scrollTo({top:0,behavior:"instant"});}}/></TabsContent>
         <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})} day={ui.newsDay} onDay={d=>update({newsDay:d})}/></TabsContent>
         <TabsContent value="game"><Suspense fallback={<p className="chart-loading">Načítavame herňu…</p>}><GamesRoom game={ui.game} onGame={g=>update({game:g})}/></Suspense></TabsContent>
+        <TabsContent value="parliament"><Suspense fallback={<p className="chart-loading">Načítavame parlament…</p>}><ParliamentPage vote={ui.parlVote} deputy={ui.parlDeputy} mode={ui.parlMode} onChange={p=>{const now=parseSearch(readSearch());navigateTo(serialize({...now,...("vote" in p?{parlVote:p.vote??null}:{}),...("deputy" in p?{parlDeputy:p.deputy??null}:{}),...("mode" in p?{parlMode:p.mode??null}:{})}),false);}} onNavigate={changeView}/></Suspense></TabsContent>
         <TabsContent value="responsibility"><Suspense fallback={<p className="chart-loading">Načítavame prehľad vlád…</p>}><ResponsibilityPage birthYear={ui.birthYear} onBirthYear={y=>update({birthYear:y})} onParty={id=>setParty(parties.find(p=>p.id===id)??null)} onFinance={()=>{update({view:"finance",finance:"governments"},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense></TabsContent>
         <TabsContent value="finance"><Suspense fallback={<p className="chart-loading">Načítavame hospodárenie…</p>}><PublicFinance view={ui.finance} onView={v=>update({finance:v})}/></Suspense></TabsContent>
         {casesEnabled&&<TabsContent value="cases"><Suspense fallback={<p className="chart-loading">Načítavame register…</p>}><PoliticalCases onParty={id=>setParty(parties.find(p=>p.id===id)??null)} party={ui.caseParty??"all"} onPartyChange={id=>update({caseParty:id==="all"?null:id})}/></Suspense></TabsContent>}

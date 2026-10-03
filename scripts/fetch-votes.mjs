@@ -6,6 +6,7 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildDeputies } from "./build-deputies.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const arg = name => { const i = process.argv.indexOf(name); return i > 0 ? process.argv[i + 1] : null; };
@@ -122,3 +123,6 @@ for (const [i, r] of chosen.entries()) {
 index.sort((a, b) => b.datum.localeCompare(a.datum) || b.cas.localeCompare(a.cas) || b.cislo - a.cislo);
 writeFileSync(path.join(OUT, "index.json"), JSON.stringify({ v: 1, obdobie: TERM, aktualizovane: new Date().toISOString().slice(0, 10), zdroj: `${BASE}?sid=schodze%2Fhlasovanie`, hlasovania: index }));
 console.log(`\nHotovo: ${index.length} hlasovaní → public/data/hlasovania (cache ${CACHE})`);
+// Poslanci naprieč hlasovaniami a kluby k poslednému hlasovaniu (stránka Parlament).
+const built = buildDeputies();
+console.log(`Poslanci: ${built.deputies} → public/data/hlasovania/poslanci.json; kluby: ${built.latest.map(c => `${c.party} ${c.seats}`).join(", ")} → lib/parliament-clubs.data.ts`);
