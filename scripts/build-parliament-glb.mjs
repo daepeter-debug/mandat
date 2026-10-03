@@ -8,7 +8,8 @@
 // 2. 10. 2026: smer C „Večerná sála“, orech/tkanina/kameň + normály, statický kontakt vo farbách vrcholov,
 // zrazené čalúnenie a lavice, podrúčky, mikrofóny, schodíky, svetelná škára, logá v oboch variantoch.
 // Regeneruje aj lokálny HDR. Logá: lib/party-logos.json; historická koalícia 2023 má textový štítok.
-// Oficiálne overenie: node scripts/verify-parliament-glb.mjs. Model musí ostať pod 1 500 000 B.
+// Oficiálne overenie: node scripts/verify-parliament-glb.mjs. Limit 1,5 MB Peter 3. 10. 2026 zrušil (Workers Paid);
+// poistka 8 MB len chráni pred omylom (model sa načíta až po voľbe 3D sály).
 // 2. 10. 2026 doplnenie: mäkšie rádiusy čalúnenia, lesk orecha a hlbší statický kontakt pre detail kamery.
 // 2. 10. 2026 (Claude): režim Hlasovania. Variant „hlasovanie“ (kreslá cez materiály prechodu, prefarbí ich web podľa
 // hlasu) a nad každým kreslom svetelný stĺpik vo farbe hlasu: 15 skupín po 10 kreslách, farby z malého atlasu, ktorý
@@ -16,6 +17,7 @@
 import fs from "node:fs";
 import sharp from "sharp";
 import { parliamentTextures, writeParliamentEnvironment } from './parliament-textures.mjs';
+import { writeParliamentSky } from './parliament-sky.mjs';
 import { CHAMBER, ROW_DEPTH, chamberSeats, parliamentSeats, allParliamentVariants, parliamentTimeline, parliamentEdges, rowRadius, tierTop } from "../lib/parliament-model.ts";
 
 const OUT = "public/models/parlament.glb";
@@ -152,8 +154,10 @@ async function buildGlb() {
       indices: accessor(idx, "SCALAR", { target: 34963 }),
     };
   };
-  const material = (name, hex, { rough = 0.6, metal = 0, emissive, texture } = {}) => {
-    materials.push({ name, pbrMetallicRoughness: { baseColorFactor: [...rgb(hex), 1], metallicFactor: metal, roughnessFactor: rough, ...(texture ? { baseColorTexture: { index: textureIds.get(texture) } } : {}) }, ...(textureIds.has(`${texture}Normal`) ? { normalTexture: { index: textureIds.get(`${texture}Normal`), scale: .35 } } : {}), ...(emissive ? { emissiveFactor: rgb(emissive) } : {}), ...(texture === 'wood' ? { extensions: { KHR_materials_clearcoat: { clearcoatFactor: .32, clearcoatRoughnessFactor: .3 } } } : texture === 'fabric' ? { extensions: { KHR_materials_sheen: { sheenColorFactor: [.12,.105,.09], sheenRoughnessFactor: .8 } } } : {}) });
+  const material = (name, hex, { rough = 0.6, metal = 0, emissive, strength, texture } = {}) => {
+    const extensions = texture === 'wood' ? { KHR_materials_clearcoat: { clearcoatFactor: .32, clearcoatRoughnessFactor: .3 } } : texture === 'parquet' ? { KHR_materials_clearcoat: { clearcoatFactor: .22, clearcoatRoughnessFactor: .38 } } : texture === 'fabric' ? { KHR_materials_sheen: { sheenColorFactor: [.12,.105,.09], sheenRoughnessFactor: .8 } } : {};
+    if (strength) extensions.KHR_materials_emissive_strength = { emissiveStrength: strength };
+    materials.push({ name, pbrMetallicRoughness: { baseColorFactor: [...rgb(hex), 1], metallicFactor: metal, roughnessFactor: rough, ...(texture ? { baseColorTexture: { index: textureIds.get(texture) } } : {}) }, ...(textureIds.has(`${texture}Normal`) ? { normalTexture: { index: textureIds.get(`${texture}Normal`), scale: .35 } } : {}), ...(emissive ? { emissiveFactor: rgb(emissive) } : {}), ...(Object.keys(extensions).length ? { extensions } : {}) });
     return materials.length - 1;
   };
   const prim = (g, mat) => ({ attributes: { POSITION: g.POSITION, NORMAL: g.NORMAL, ...(g.TEXCOORD_0 !== undefined ? { TEXCOORD_0: g.TEXCOORD_0 } : {}), ...(g.TANGENT !== undefined ? { TANGENT: g.TANGENT } : {}), COLOR_0: g.COLOR_0 }, indices: g.indices, material: mat });
@@ -170,25 +174,33 @@ async function buildGlb() {
     dark: material("predsedníctvo", "#2b2f33", { rough: 0.45 }), metal: material("žrď", "#cfc8b6", { rough: 0.3, metal: 0.85 }),
     light: material('teplá svetelná škára', '#f7d7a7', { emissive: '#d2a66f', rough: .8 }),
     trim: material('mosadzné lemovanie', '#b6a074', { rough: .45, metal: .65 }),
+    parquet: material('parketa', '#ffffff', { rough: .46, texture: 'parquet' }),
+    glow: material('svietidlá', '#fff1d6', { emissive: '#ffcf8f', strength: 3.2, rough: .7 }),
+    frame: material('rámy okien', '#2b2722', { rough: .45, metal: .35 }),
+    plaster: material('strop', '#e8dcc6', { rough: .92, texture: 'stone' }),
   };
+  // Sklo okien: priehľadné s jemným odleskom okolia; mesto za ním je obloha scény (skybox), nie plocha v modeli.
+  materials.push({ name: 'sklo okien', alphaMode: 'BLEND', pbrMetallicRoughness: { baseColorFactor: [.82, .9, 1, .1], metallicFactor: 0, roughnessFactor: .04 } });
+  M.glass = materials.length - 1;
+  /** Plocha viditeľná len zdola (strop, stropné svetlá): kamera zhora vidí cez ňu do sály. */
+  const annulusDown = (g, r0, r1, y, a0, a1, seg = 48) => {
+    const steps = Math.max(2, Math.ceil(seg * Math.abs(a1 - a0) / Math.PI));
+    for (let i = 0; i < steps; i++) {
+      const a = a0 + (a1 - a0) * i / steps, b = a0 + (a1 - a0) * (i + 1) / steps;
+      quad(g, [arcPt(r0, a, y), arcPt(r0, b, y), arcPt(r1, b, y), arcPt(r1, a, y)], [0, -1, 0]);
+    }
+  };
+  const plateDown = (g, cx, y, cz, w, d) => quad(g, [[cx - w / 2, y, cz - d / 2], [cx + w / 2, y, cz - d / 2], [cx + w / 2, y, cz + d / 2], [cx - w / 2, y, cz + d / 2]], [0, -1, 0]);
 
   // Podlaha (polkruh + predná časť pre predsedníctvo) a koberec v strede
-  const outer = rowRadius(ROWS - 1) + ROW_DEPTH / 2 + 0.03, front = 0.13;
-  solid("podlaha", g => { ring(g, 0.0001, outer, 0, FLOOR, Math.PI, 0, { seg: 72 }); box(g, 0, FLOOR / 2, front / 2, outer * 2, FLOOR, front); }, M.floor);
-  // Real 3D waterfront terrace: stone fascia, two piers and warm recessed lights, moving with the chamber.
-  solid('kamenný sokel terasy', g => {
-    box(g, 0, -.011, front / 2, outer * 2, .022, front);
-    for (const x of [-outer * .77, outer * .77]) box(g, x, -.044, front * .58, .052, .066, .064);
-  }, M.wall);
-  solid('svetlo nábrežia', g => {
-    for (const x of [-outer * .64, outer * .64]) box(g, x, -.006, front + .0003, outer * .52, .0018, .001);
-  }, M.light);
-  solid('škáry dlažby terasy', g => {
-    for (const x of [-outer * .62, -outer * .31, outer * .31, outer * .62]) box(g, x, FLOOR + .0001, front / 2, .0006, .0002, front);
-  }, M.wall);
+  const outer = rowRadius(ROWS - 1) + ROW_DEPTH / 2 + 0.03, wallR = outer + .003, roomFront = .24;
+  // Parketová podlaha cez celú miestnosť (polkruh až po stenu a predná časť s predsedníctvom) a kamenný sokel pod ňou.
+  solid("podlaha", g => { ring(g, 0.0001, wallR, -.006, FLOOR, Math.PI, 0, { seg: 72 }); box(g, 0, (FLOOR - .006) / 2, roomFront / 2, wallR * 2, FLOOR + .006, roomFront); }, M.parquet);
+  solid('sokel budovy', g => { ring(g, 0.0001, wallR + .012, -.05, -.006, Math.PI, 0, { seg: 72 }); box(g, 0, -.028, roomFront / 2, wallR * 2 + .024, .044, roomFront + .012); }, M.wall);
   const inner = rowRadius(0) - ROW_DEPTH / 2 - 0.004;
-  solid("koberec", g => { ring(g, 0.0001, inner, FLOOR, FLOOR + 0.0008, Math.PI, 0, { seg: 64, sides: false }); box(g, 0, FLOOR + 0.0004, 0.045, inner * 2, 0.0008, 0.09); }, M.carpet);
   solid('lem koberca', g => ring(g, inner - .0012, inner, FLOOR, FLOOR + .0009, Math.PI, 0, { sides: false, seg: 64 }), M.trim);
+  // Teplý svetelný oblúk pri prvom rade (ako v návrhu Večerná sála+).
+  solid('svetelný oblúk podlahy', g => ring(g, inner + .0012, inner + .0034, FLOOR, FLOOR + .0012, Math.PI, 0, { sides: false, seg: 64 }), M.glow);
   // Quiet floor inlay, lit only when a user's own selection reaches 76 seats.
   const majorityLight = material('väčšina:svetlo', '#565347', { rough: .6 });
   solid('svetelná cesta k väčšine', g => {
@@ -210,26 +222,58 @@ async function buildGlb() {
   solid('mikrofóny poslancov', g => { for (const seat of chamberSeats) { const r = deskR(seat.row); cylinder(g, Math.cos(seat.angle) * r, deskTopY(seat.row), -Math.sin(seat.angle) * r, .0003, .004, 6); } }, M.chairBase);
   solid('schodíky v uličkách', g => { for (let k = 1; k < ROWS; k++) for (let s = 0; s < SECTORS - 1; s++) { const a = sectorSpan(k, s)[1] - AISLE / rowRadius(k) / 2; ring(g, rowRadius(k) - ROW_DEPTH / 2, rowRadius(k), FLOOR, tierTop(k) - .00575, a + .012, a - .012, { seg: 2 }); } }, M.tier);
 
-  // Warm wainscot, glazing and gallery. Panorama is illustrative, not a real room reconstruction.
-  const wallR = outer + .003, wallH = .218, wallA0 = Math.PI * .95, wallA1 = Math.PI * .05;
-  const woodTop = .12, windowBottom = .127, windowTop = .207;
-  solid('stena', g => ring(g, wallR, wallR + .005, FLOOR, woodTop, wallA0, wallA1, { seg: 32 }), M.deskFront);
-  solid('svetelná škára', g => ring(g, wallR - .001, wallR + .003, woodTop - .002, woodTop, wallA0, wallA1, { seg: 32 }), M.light);
-  solid('okenný parapet', g => ring(g, wallR - .004, wallR + .006, woodTop, windowBottom, wallA0, wallA1, { seg: 32 }), M.deskTop);
-  solid('horný rám okien', g => ring(g, wallR, wallR + .008, windowTop, wallH, wallA0, wallA1, { seg: 32 }), M.deskFront);
-  solid('mosadz galérie', g => ring(g, wallR - .005, wallR - .003, woodTop + .004, woodTop + .0055, wallA0, wallA1, { seg: 32 }), M.trim);
+  // Miestnosť (Večerná sála+): drevený obklad, mosadzné zábradlie, tabuľa, vysoké okná s pilastrami a svietidlami.
+  // Ilustrácia, nie rekonštrukcia rokovacej sály NR SR; bez štátnych symbolov.
+  const wallA0 = Math.PI, wallA1 = 0, BAYS = 10;
+  const woodTop = .095, bandLo = .101, bandHi = .149, windowBottom = .162, windowTop = .4, wallH = .428, ceilingY = wallH + .004;
+  const bayAngle = i => wallA0 + (wallA1 - wallA0) * i / BAYS;
+  solid('stena', g => {
+    ring(g, wallR, wallR + .006, FLOOR, windowBottom, wallA0, wallA1, { seg: 32 });
+    // Rovné bočné steny miestnosti až k predsedníctvu.
+    for (const x of [-1, 1]) box(g, x * (wallR + .003), wallH / 2, roomFront / 2, .006, wallH, roomFront);
+  }, M.deskFront);
+  solid('mosadz galérie', g => ring(g, wallR - .007, wallR - .003, woodTop, woodTop + .0035, wallA0, wallA1, { seg: 32 }), M.trim);
+  solid('rám integrovanej tabule', g => ring(g, wallR - .0035, wallR, woodTop + .0035, windowBottom - .006, wallA0, wallA1, { seg: 32, top: false }), M.chairBase);
+  solid('svetelná škára', g => ring(g, wallR - .004, wallR + .001, bandHi + .003, bandHi + .0048, wallA0, wallA1, { seg: 32 }), M.glow);
+  solid('okenný parapet', g => ring(g, wallR - .006, wallR + .009, windowBottom - .006, windowBottom, wallA0, wallA1, { seg: 32 }), M.deskTop);
+  solid('horný rám okien', g => ring(g, wallR - .004, wallR + .012, windowTop, wallH, wallA0, wallA1, { seg: 32 }), M.deskFront);
   solid('pilastre okien', g => {
-    for (let i = 0; i <= 10; i++) {
-      const a = wallA0 + (wallA1 - wallA0) * i / 10;
-      box(g, Math.cos(a) * wallR, (windowTop + windowBottom) / 2, -Math.sin(a) * wallR, .0036, windowTop - windowBottom, .006, { yaw: Math.PI / 2 - a });
+    for (let i = 0; i <= BAYS; i++) {
+      const a = bayAngle(i);
+      box(g, Math.cos(a) * (wallR + .002), (windowTop + windowBottom) / 2, -Math.sin(a) * (wallR + .002), .011, windowTop - windowBottom, .012, { yaw: Math.PI / 2 - a });
     }
   }, M.deskFront);
-  solid('svietidlá pri oknách', g => {
-    for (let i = 1; i < 10; i += 2) {
-      const a = wallA0 + (wallA1 - wallA0) * i / 10;
-      box(g, Math.cos(a) * (wallR - .004), .17, -Math.sin(a) * (wallR - .004), .0018, .026, .001, { yaw: Math.PI / 2 - a });
+  solid('rámy okien', g => {
+    for (let i = 0; i < BAYS; i++) {
+      const a = (bayAngle(i) + bayAngle(i + 1)) / 2;
+      box(g, Math.cos(a) * (wallR + .002), (windowTop + windowBottom) / 2, -Math.sin(a) * (wallR + .002), .0022, windowTop - windowBottom, .004, { yaw: Math.PI / 2 - a });
     }
-  }, M.light);
+    ring(g, wallR + .0005, wallR + .0035, .318, .3215, wallA0, wallA1, { seg: 32 });
+  }, M.frame);
+  solid('svietidlá pri oknách', g => {
+    for (let i = 1; i < BAYS; i++) {
+      const a = bayAngle(i);
+      box(g, Math.cos(a) * (wallR - .006), .27, -Math.sin(a) * (wallR - .006), .0035, .05, .002, { yaw: Math.PI / 2 - a });
+    }
+    for (const x of [-1, 1]) box(g, x * (wallR - .001), .27, roomFront * .55, .002, .05, .0035);
+  }, M.glow);
+  // Sklá okien v každom poli medzi pilastrami (jednostranné, dovnútra).
+  solid('sklo okien', g => {
+    for (let i = 0; i < BAYS; i++) {
+      const a0 = bayAngle(i) - .018, a1 = bayAngle(i + 1) + .018;
+      for (let k = 0; k < 4; k++) {
+        const a = a0 + (a1 - a0) * k / 4, b = a0 + (a1 - a0) * (k + 1) / 4, mid = (a + b) / 2;
+        quad(g, [arcPt(wallR + .004, a, windowBottom), arcPt(wallR + .004, b, windowBottom), arcPt(wallR + .004, b, windowTop), arcPt(wallR + .004, a, windowTop)], [-Math.cos(mid), 0, Math.sin(mid)]);
+      }
+    }
+  }, M.glass);
+  // Strop viditeľný len zvnútra (kamera zhora ním vidí do sály): omietka, svetelný prstenec a kazety svetla.
+  solid('strop', g => { annulusDown(g, .0001, wallR + .006, ceilingY, Math.PI, 0, 72); plateDown(g, 0, ceilingY, roomFront / 2, wallR * 2 + .012, roomFront); }, M.plaster);
+  solid('stropné svetlá', g => {
+    annulusDown(g, wallR - .024, wallR - .012, ceilingY - .0006, Math.PI, 0, 72);
+    annulusDown(g, .16, .172, ceilingY - .0006, Math.PI, 0, 64);
+    for (const z of [.06, .17]) plateDown(g, 0, ceilingY - .0006, z, wallR * 1.6, .012);
+  }, M.glow);
   // A curved, inward-facing UV ribbon. UV left→right follows physical chair order.
   const ribbon = (r, lo, hi, a0, a1, seg = 32, canvas = false) => {
     const g = geo(); g.uv = [];
@@ -241,13 +285,8 @@ async function buildGlb() {
     }
     return g;
   };
-  // External local JPEG loads ONLY with this 3D model. Keep it independently cacheable.
-  images.push({ name: 'Bratislava za oknami — ilustrácia', uri: 'bratislava-evening.jpg' });
-  textures.push({ source: images.length - 1, sampler: 1 });
-  materials.push({ name: 'okná:Bratislava', pbrMetallicRoughness: { baseColorFactor: [1,1,1,1], metallicFactor: 0, roughnessFactor: 1, baseColorTexture: { index: textures.length - 1 } }, extensions: { KHR_materials_unlit: {} } });
-  node('panoráma v oknách', [prim(geometry(ribbon(wallR + .0005, windowBottom, windowTop, wallA0, wallA1), true), materials.length - 1)]);
-  // Ribbon display inset in the wooden wall, below the glazing and above the rear chairs.
-  solid('rám integrovanej tabule', g => ring(g, wallR - .002, wallR, .096, .117, wallA0, wallA1, { seg: 32, top: false }), M.chairBase);
+  // Mesto za oknami nie je v modeli: je to obloha scény (scripts/parliament-sky.mjs, atribút skybox-image),
+  // teda v nekonečnej diaľke so správnou perspektívou pri každom pohybe kamery.
   const boardPlaceholder = await sharp({ create: { width: 2, height: 2, channels: 3, background: '#101a18' } }).png().toBuffer();
   images.push({ name: 'tabula:podklad', bufferView: pushView(new Uint8Array(boardPlaceholder)), mimeType: 'image/png' });
   textures.push({ source: images.length - 1, sampler: 1 });
@@ -255,7 +294,7 @@ async function buildGlb() {
   materials[boardMat].pbrMetallicRoughness.baseColorTexture = { index: textures.length - 1 };
   // Unlit makes canvas typography independent of the room exposure. Texture arrives through public API.
   materials[boardMat].extensions = { KHR_materials_unlit: {} };
-  node('integrovaná hlasovacia tabuľa', [prim(geometry(ribbon(wallR - .0025, .098, .115, wallA0, wallA1, 32, true), true), boardMat)]);
+  node('integrovaná hlasovacia tabuľa', [prim(geometry(ribbon(wallR - .0042, bandLo, bandHi, Math.PI * .93, Math.PI * .07, 48, true), true), boardMat)]);
   // Predsedníctvo vpredu: pódium, dlhý stôl k poslancom, tri kreslá; rečnícky pult na koberci pred ním
   solid("pódium", g => box(g, 0, FLOOR + 0.008, 0.088, 0.17, 0.016, 0.05), M.dais);
   solid("predsednícky stôl", g => { box(g, 0, FLOOR + 0.016 + 0.009, 0.074, 0.13, 0.018, 0.012); }, M.deskTop);
@@ -374,6 +413,7 @@ async function buildGlb() {
     nodes, meshes, materials, images, textures, samplers: [{ magFilter: 9729, minFilter: 9987, wrapS: 10497, wrapT: 10497 }, { magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 }, { magFilter: 9728, minFilter: 9728, wrapS: 33071, wrapT: 33071 }], accessors, bufferViews, buffers: [{ byteLength: offset }],
     animations: [{ name: "obsadenie", samplers, channels }],
   };
+  json.extensionsUsed.push('KHR_materials_emissive_strength');
   const jsonBuf = Buffer.from(JSON.stringify(json)), jsonPad = Buffer.alloc((4 - (jsonBuf.length % 4)) % 4, 0x20), binBuf = Buffer.concat(bin);
   const total = 12 + 8 + jsonBuf.length + jsonPad.length + 8 + binBuf.length;
   const header = Buffer.alloc(12); header.writeUInt32LE(0x46546c67, 0); header.writeUInt32LE(2, 4); header.writeUInt32LE(total, 8);
@@ -384,7 +424,8 @@ async function buildGlb() {
 
 fs.mkdirSync("public/models", { recursive: true });
 const { glb, seats, v2023 } = await buildGlb();
-if (glb.length > 1_500_000) throw new Error(`Model má ${glb.length} bajtov, limit je 1,5 MB.`);
+if (glb.length > 8_000_000) throw new Error(`Model má ${glb.length} bajtov, poistka je 8 MB.`);
 fs.writeFileSync(OUT, glb);
 writeParliamentEnvironment();
+await writeParliamentSky();
 console.log(`${OUT}: ${Math.round(glb.length / 1024)} kB, ${seats.ordered.map(m => `${m.short} ${m.seats}`).join(", ")} (k ${seats.asOf}, aktualizované ${seats.updated}); voľby 2023: ${v2023.ordered.map(m => `${m.short} ${m.seats}`).join(", ")}`);

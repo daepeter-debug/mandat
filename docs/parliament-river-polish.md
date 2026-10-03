@@ -1,3 +1,5 @@
+> **Prekonané 3. 10. 2026 večer:** CSS kulisa za 3D sálou, väzba na kameru (`lib/parliament-backdrop.ts`) a posuvný pás s textom odišli; mesto je obloha scény a sála má sklá, strop a sokel. Pozri poslednú časť `docs/parliament-3d.md`. Záznam nižšie ostáva ako história.
+
 # Parlament nad Dunajom — grafické spresnenie, 3. 10. 2026
 
 Dokončená obyčajná úprava Claudovej kompozície `91ebc51`: mesto cez celú scénu, desať polí na stene a existujúca Večerná sála. Kontrakt je [parliament-river-polish-brief.md](../.impeccable/parliament-river-polish-brief.md), finálna evidencia [packet.md](../.impeccable/review/parliament-river/packet.md) a nezávislý verdikt [review.md](../.impeccable/review/parliament-river/review.md): **disposition: ship**, bez materiálnych opráv. Skoršie A/B kompozície ani pozadie iba v oknách neurčujú aktuálny vzhľad.

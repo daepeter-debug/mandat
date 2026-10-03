@@ -4,18 +4,16 @@ import type { Texture, TextureInfo } from "@google/model-viewer/lib/features/sce
 import { WALL_PANELS, WALL_SOFT, wallPanels, wallText, type WallPanel, type WallScene } from "@/lib/parliament-wall";
 
 /*
-  Tabuľa na stene 3D sály: pás okien (materiál „okná:Bratislava“ z GLB) slúži ako zakrivená obrazovka s desiatimi
-  poľami medzi pilastrami. Výhľad na Bratislavu je za sálou (components/parliament-backdrop.tsx), stena ukazuje
-  hlasovanie alebo kreslá veľkým písmom (lib/parliament-wall.ts), aby sa dalo čítať aj na telefóne.
-  - Textúra je jeden canvas 4096 × 368 (pomer pásu okien, bez skreslenia), kreslí sa len pri zmene.
-  - Pás okien má UV obrázka glTF (otočené oproti canvasu), preto sa obsah kreslí zrkadlovo zvisle.
-  - Pri novom hlasovaní sa čísla napočítajú (8 krokov); pri obmedzenom pohybe hneď konečný stav.
+  Tabuľa v 3D sále: zakrivený pás na stene medzi zábradlím za posledným radom a oknami (materiál „tabula:hlasovanie“
+  z GLB, scripts/build-parliament-glb.mjs). Desať polí ukazuje hlasovanie alebo kreslá veľkým písmom (lib/parliament-wall.ts).
+  - Textúra je jeden canvas 4096 × 212 (pomer pásu, bez skreslenia), kreslí sa len pri zmene.
+  - Pás má UV pre canvas (bez zrkadlenia). Pri novom hlasovaní sa čísla napočítajú (8 krokov); pri obmedzenom pohybe hneď.
 */
 export type WallViewer = HTMLElement & {
   createCanvasTexture: () => Texture;
   model?: { materials: { name: string; isLoaded?: boolean; ensureLoaded?: () => Promise<void>; pbrMetallicRoughness: { baseColorTexture: TextureInfo | null } }[] };
 };
-const W = 4096, H = 368, PW = W / WALL_PANELS;
+const W = 4096, H = 212, PW = W / WALL_PANELS;
 const FONT = '"IBM Plex Sans Variable", "IBM Plex Sans", "Segoe UI", sans-serif';
 
 function fitFont(ctx: CanvasRenderingContext2D, text: string, weight: number, size: number, max: number) {
@@ -25,27 +23,27 @@ function fitFont(ctx: CanvasRenderingContext2D, text: string, weight: number, si
 }
 
 function drawPanel(ctx: CanvasRenderingContext2D, p: WallPanel, x: number, shown: string) {
-  const cx = x + PW / 2, inner = PW - 70;
-  const panel = ctx.createLinearGradient(0, 14, 0, H - 14);
+  const cx = x + PW / 2, inner = PW - 56;
+  const panel = ctx.createLinearGradient(0, 8, 0, H - 8);
   panel.addColorStop(0, '#14251f'); panel.addColorStop(.45, '#0d1915'); panel.addColorStop(1, '#08120f');
   ctx.fillStyle = panel;
-  ctx.beginPath(); ctx.roundRect(x + 14, 14, PW - 28, H - 28, 18); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(x + 10, 8, PW - 20, H - 16, 12); ctx.fill();
   ctx.strokeStyle = '#486052'; ctx.lineWidth = 2; ctx.stroke();
   if (p.empty) {
     ctx.fillStyle = "#1d2c26";
-    for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.arc(cx + i * 30, H / 2, 7, 0, Math.PI * 2); ctx.fill(); }
+    for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.arc(cx + i * 26, H / 2, 6, 0, Math.PI * 2); ctx.fill(); }
     return;
   }
   ctx.globalAlpha = p.dim ? .62 : 1;
-  if (p.bar) { ctx.fillStyle = p.bar; ctx.beginPath(); ctx.roundRect(cx - 70, 38, 140, 12, 6); ctx.fill(); }
+  if (p.bar) { ctx.fillStyle = p.bar; ctx.beginPath(); ctx.roundRect(cx - 60, 20, 120, 9, 4.5); ctx.fill(); }
   ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = WALL_SOFT; fitFont(ctx, p.label, 620, 36, inner); ctx.fillText(p.label, cx, 104);
+  ctx.fillStyle = WALL_SOFT; fitFont(ctx, p.label, 620, 31, inner); ctx.fillText(p.label, cx, 62);
   ctx.fillStyle = p.color;
   ctx.shadowColor = p.color; ctx.shadowBlur = 3;
-  if (p.word) fitFont(ctx, shown, 660, 92, inner); else fitFont(ctx, shown, 640, 168, inner);
-  ctx.fillText(shown, cx, p.word ? 232 : 270);
+  if (p.word) fitFont(ctx, shown, 660, 66, inner); else fitFont(ctx, shown, 650, 116, inner);
+  ctx.fillText(shown, cx, p.word ? 142 : 166);
   ctx.shadowBlur = 0;
-  if (p.note) { ctx.fillStyle = WALL_SOFT; fitFont(ctx, p.note, 500, 32, inner); ctx.fillText(p.note, cx, 330); }
+  if (p.note) { ctx.fillStyle = WALL_SOFT; fitFont(ctx, p.note, 500, 24, inner); ctx.fillText(p.note, cx, p.word ? 186 : 196); }
   ctx.globalAlpha = 1;
 }
 
@@ -64,7 +62,7 @@ function drawWall(target: HTMLCanvasElement, panels: WallPanel[], from: WallPane
   // Jemná mriežka LED bodov.
   ctx.fillStyle = "#00000030";
   for (let y = 0; y < H; y += 4) ctx.fillRect(0, y, W, 1);
-  out.save(); out.setTransform(1, 0, 0, -1, 0, H); out.drawImage(off, 0, 0); out.restore();
+  out.drawImage(off, 0, 0);
 }
 
 export function ParliamentWall({ viewer, loaded, scene, reduced }: { viewer: WallViewer | null; loaded: boolean; scene: WallScene; reduced: boolean }) {
@@ -73,7 +71,7 @@ export function ParliamentWall({ viewer, loaded, scene, reduced }: { viewer: Wal
   useEffect(() => {
     if (!viewer?.model || !loaded) return;
     let alive = true;
-    const material = viewer.model.materials.find(m => m.name === "okná:Bratislava");
+    const material = viewer.model.materials.find(m => m.name === "tabula:hlasovanie");
     if (!material) return;
     void (async () => {
       if (material.isLoaded === false) await material.ensureLoaded?.();

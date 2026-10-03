@@ -1,4 +1,4 @@
 {
-  "prompt": "Origin: actual browser screenshot of the interactive local parliament scene, captured 3 October 2026 at 1280 x 720. Camera Celá sála, Kluby dnes (NR SR clubs as of 1 October 2026). Native stage rectangle x28 y135 w1209 h518 cropped from .impeccable/review/parliament-river/final-desktop-light.png, converted to WebP quality88 without upscaling. Seats and wall rendered by the real model-viewer using public/models/parlament.glb (1492072 bytes), with the AI-illustrated bratislava-evening.jpg behind it. No generated parliament or invented numbers.",
-  "createdAt": "2026-10-03T17:29:15.400Z"
+  "prompt": "Origin: real model-viewer render (toBlob) of the interactive parliament scene, captured 3 October 2026 at a 1381 x 540 stage. Camera Celá sála, Kluby dnes (NR SR clubs as of 1 October 2026), centre crop to 1209 x 518, WebP quality 88. Scene: public/models/parlament.glb (room with glass windows, ceiling, plinth) with the AI-illustrated Bratislava skybox public/models/bratislava-sky.jpg (from bratislava-evening.jpg) visible only through the windows. No generated parliament or invented numbers.",
+  "createdAt": "2026-10-03T18:30:43.243Z"
 }

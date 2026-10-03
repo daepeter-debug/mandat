@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 32 súborov (ca1a84f546) — needitovať ručne. Pravidiel: 1555, prefarbených: 1208. */
+/* Generované scripts/build-dark.mjs z 32 súborov (753d9f924c) — needitovať ručne. Pravidiel: 1557, prefarbených: 1207. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3529,7 +3529,7 @@ html[data-theme="dark"] .par3d-close {
     color: #d1e7de
 }
 html[data-theme="dark"] .par3d-stage {
-    background: radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)
+    background: linear-gradient(180deg,#07122b 0%,#0c1f47 48%,#0a1530 100%)
 }
 html[data-theme="dark"] .par3d-seat-marker {
     border: 3px solid var(--marker-ring);
@@ -3610,15 +3610,6 @@ html[data-theme="dark"] .par3d-replay,html[data-theme="dark"] .par3d-expand {
     color: #d1e7de
 }
 html[data-theme="dark"] .par3d-expand[aria-pressed=true] {
-    background: #20392f;
-    color: #fffefa
-}
-html[data-theme="dark"] .par3d-seat-view {
-    border: 0;
-    background: #262c29;
-    color: #d1e7de
-}
-html[data-theme="dark"] .par3d-seat-view[aria-pressed=true] {
     background: #20392f;
     color: #fffefa
 }
@@ -3874,6 +3865,22 @@ html[data-theme="dark"] .par3d-marks {
 }
 html[data-theme="dark"] .par3d-marks b {
     color: #d1e7de
+}
+html[data-theme="dark"] .par3d-rotate {
+    background: #0f1a16e6;
+    color: #f5f4ee
+}
+html[data-theme="dark"] .par3d-rotate span {
+    color: #cfe0d6
+}
+html[data-theme="dark"] .par3d-rotate button {
+    border: 0;
+    background: transparent;
+    color: #dcf59b;
+    text-decoration: underline
+}
+html[data-theme="dark"] .par3d.is-landscape .par3d-navigation {
+    background: #0f1a16d0
 }
 html[data-theme="dark"] .parl-backdrop {
     background: #141d36

@@ -7,7 +7,7 @@
 .par3d-title{margin:0;font-size:20px;font-weight:650;letter-spacing:-.01em}
 .par3d-desc{margin:4px 0 0;font-size:13px;line-height:1.45;color:var(--text-2)}
 .par3d-close{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:#fffefa;color:var(--mag-ink);cursor:pointer}
-.par3d-stage{position:relative;min-height:0;height:min(360px,42dvh);border-radius:16px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)}
+.par3d-stage{position:relative;min-height:0;height:min(360px,42dvh);border-radius:16px;overflow:hidden;isolation:isolate;background:linear-gradient(180deg,#07122b 0%,#0c1f47 48%,#0a1530 100%)}
 .par3d-viewer{position:relative;z-index:1;display:block;width:100%;height:100%;--poster-color:transparent;--progress-bar-color:#2f6b3f}
 .par3d-seat-marker{--marker-ink:#17271f;--marker-ring:#dcf59b;display:block;width:26px;height:26px;border:3px solid var(--marker-ring);border-radius:50%;background:transparent;box-shadow:0 3px 8px #0008;pointer-events:none}
 .par3d-seat-marker::after{content:'';position:absolute;inset:4px;border:2px solid var(--marker-ink);border-radius:50%}
@@ -47,9 +47,8 @@
 .par3d-replay,.par3d-expand{display:grid;place-items:center;width:44px;height:44px;margin-left:auto;border:0;border-radius:10px;background:#fffefa;color:#20392f;cursor:pointer}
 .par3d-expand{margin-left:0}
 .par3d-expand[aria-pressed=true]{background:#20392f;color:#fffefa}
-.par3d-seat-view{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 10px;border:0;border-radius:10px;background:#fffefa;color:#20392f;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
-.par3d-seat-view[aria-pressed=true]{background:#20392f;color:#fffefa}
-.par3d-seat-view:disabled{opacity:.45;cursor:default}
+.par3d-vantage button{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:0 10px;font-size:12px}
+.par3d-vantage button:disabled{opacity:.45;cursor:default}
 @media(max-width:760px){.par3d-seat-long{display:none}}
 .par3d-transition{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 12px;border-radius:10px;background:#fffefa;color:#20392f;font-size:12px;box-shadow:0 6px 20px #0004}
 .par3d-transition button{min-height:40px;padding:0 4px;border:0;background:transparent;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
@@ -190,7 +189,28 @@
   .par3d-variants{grid-template-columns:repeat(3,minmax(0,1fr))}
   .par3d-variants button{padding:0 4px;font-size:11.5px;min-height:40px}
   .par3d-modes button{min-height:40px}
-  .par3d-seat-view{justify-self:start}
+  .par3d-vantage{justify-self:start}
   .par3d-replay,.par3d-expand{margin:0}
   .par3d.is-expanded .par3d-stage{height:min(calc((100vw - 12px) * 1.45),72dvh)}
 }
+
+/* Telefón: výzva otočiť na šírku (na výšku) a sála cez celú obrazovku na šírku s plávajúcim ovládaním pohybu */
+.par3d-rotate{position:absolute;inset:auto 10px 10px;z-index:3;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:2px 10px;padding:10px 12px;border-radius:14px;background:#0f1a16e6;color:#f5f4ee;text-align:left;font-size:12px;line-height:1.35;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.par3d-rotate b{grid-column:2;font-size:14px}
+.par3d-rotate svg{grid-row:1/3}
+.par3d-rotate span{grid-column:2;color:#cfe0d6}
+.par3d-rotate button{grid-column:3;grid-row:1/3;min-height:40px;padding:0 6px;border:0;border-radius:8px;background:transparent;color:#dcf59b;font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.par3d-rotate-icon{animation:par3d-rotate 2.4s ease-in-out infinite}
+@keyframes par3d-rotate{0%,20%{transform:rotate(0)}45%,75%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+@media(prefers-reduced-motion:reduce){.par3d-rotate-icon{animation:none;transform:rotate(-90deg)}}
+.par3d.is-expanded.is-landscape{gap:6px;padding:calc(6px + env(safe-area-inset-top,0px)) calc(10px + env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) calc(10px + env(safe-area-inset-left,0px))}
+.par3d.is-landscape .par3d-head{display:none}
+.par3d.is-landscape .par3d-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none}
+.par3d.is-landscape .par3d-controls::-webkit-scrollbar{display:none}
+.par3d.is-landscape .par3d-controls>*{flex:none;width:auto;margin:0}
+.par3d.is-landscape .par3d-variants,.par3d.is-landscape .par3d-modes{display:inline-flex}
+.par3d.is-landscape .par3d-seg button{min-height:40px;padding:0 9px;font-size:12px}
+.par3d.is-landscape .par3d-stage{width:100%;margin-left:0;height:calc(100dvh - 62px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));border-radius:12px}
+.par3d.is-landscape .par3d-navigation{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:73;padding:5px;border-radius:999px;background:#0f1a16d0;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.par3d.is-landscape .par3d-navigation p{display:none}
+.par3d.is-landscape .par3d-nav-tools{gap:4px}

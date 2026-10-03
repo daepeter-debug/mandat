@@ -36,6 +36,13 @@ export function seatChanges(from: ParliamentVariant, to: ParliamentVariant) {
   }).filter(p => p.delta !== 0).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta) || a.id.localeCompare(b.id));
 }
 
+/** Od rečníckeho pultu: výška očí, pohľad na stúpajúce rady, tabuľu a okná s mestom (pohľad „stojím tam“). */
+export function lecternView() {
+  // Stojím za pultom (výška očí ~1,7 m v mierke sály), mierny pohľad hore cez rady k tabuli; okná s mestom sú nad ňou.
+  const eye = [0, .042, .045] as const, target = [0, .1, -.3] as const;
+  const [x, y, z] = eye.map((v, i) => v - target[i]), radius = Math.hypot(x, y, z);
+  return { eye, target, orbit: `${Math.atan2(x, z) * 180 / Math.PI}deg ${Math.acos(y / radius) * 180 / Math.PI}deg ${radius}m` };
+}
 /** Eye height over an actual central seat, looking toward the lectern. Metres throughout. */
 export function deputyView() {
   const seat = [...chamberSeats.filter(s => s.row === 3 && s.sector === 2)].sort((a, b) => Math.abs(a.x) - Math.abs(b.x))[0];

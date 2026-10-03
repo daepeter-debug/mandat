@@ -289,3 +289,33 @@ Mesto nasleduje posun cieľa, orbit aj zoom spoločnej kamery s pomalším šká
 Nová AI panoráma má natívnych **2172 × 724**, JPEG **333 104 B**, bez upscalingu; pôvod a skutočný rozmer sú v `public/models/bratislava-evening.prompt.txt`. Skutočný úvodný WebP `chamber-clubs-2026-10-01.webp` je natívny orez **1209 × 518** z finálneho desktopového browser záberu; pôvod eviduje jeho `.json` sidecar. GLB má **1 492 072 B**; Khronos uvádza **0 chýb / 0 varovaní**. Zachované sú politické dáta, pôvodné farby, 150 súradníc a incumbent systém vrátane root `PRODUCT.md`, `DESIGN.md` a sidecaru.
 
 Prijatých je osem finálnych záberov: desktop **1280 × 720**, šírky **375/402 × 874 CSS px** v oboch témach a hlasovanie na desktope/402. Živá browser evidencia zaznamenala zoom pozadia **1.00036 → 1.06283**, pan **0 → 0.01831**, bez vodorovného pretekania a s prázdnym logom chýb. Prešlo všetkých **21 `verify-*.mjs`**, TypeScript, ESLint, kontrola tmavého CSS, produkčný build a jeden cielený detector `[]`; dva dodávané rastre majú pôvod. **Fyzický iPhone, Safari, AR, FPS a súvislá plynulosť zostávajú neoverené.** Tento documenter záznam nevykonal nové browser kontroly, commit ani deploy.
+
+
+## Jedna skutočná scéna: miestnosť, sklá a mesto za oknami — 3. 10. 2026 (Claude)
+
+Peter: sála a pozadie pôsobili ako dva objekty (parlament vpredu, Bratislava za ním). Chcel skutočný priestor, „ako keby som tam bol“. Táto úprava nahrádza CSS kulisu za 3D sálou (`components/parliament-backdrop.tsx` ostáva len pod 2D diagramom) aj plochu mesta v modeli.
+
+**Mesto ako obloha scény.** `scripts/parliament-sky.mjs` skladá z ilustrácie `bratislava-evening.jpg` ekvirektangulárnu panorámu `public/models/bratislava-sky.jpg` (4096 × 2048) a model-viewer ju dostáva ako `skybox-image` (osvetlenie ostáva náš HDR).
+- Mesto je tak v nekonečnej diaľke: pri otáčaní sa posúva, pri priblížení k oknu sa nezväčšuje, zo žiadneho uhla nevidno jeho okraj.
+- Panoráma pokrýva 80° azimutu so stredom za oknami (three.js: smer −Z je u = 0,25), aby z celkového pohľadu bolo oknami vidieť most SNP vľavo aj hrad vpravo. Zvyšok obzoru je rozmazané pokračovanie okrajov obrázka, nad ním obloha do zenitu, pod ním hladina do tmy.
+- Hladina rieky je 17° pod obzorom: sála stojí na kopci nad Dunajom. Z galérie (celkový pohľad, sklon 66°) vidno oknami mesto, z podlahy sály (pohľad od pultu, z kresla) cez vysoké okná oblohu, ako v skutočnej budove na kopci.
+- Adresa obrázka má verziu (`SKY_IMAGE` v `components/parliament-ar.tsx`); po zmene oblohy ju treba zvýšiť, inak prehliadač použije starú kópiu.
+- Veľkosť 4096 × 2048 je kompromis: three.js z nej robí kocku 1024 px (asi 33 MB v GPU). Väčšia je ostrejšia na počítači, ale ťažšia pre telefóny.
+
+**Miestnosť v GLB** (`scripts/build-parliament-glb.mjs`):
+- `sklo okien`: jednostranné priehľadné sklá (BLEND, alfa 0,1, drsnosť 0,04) v každom poli medzi pilastrami, s odleskom okolia.
+- `strop` a `stropné svetlá`: viditeľné len zdola (kamera zhora nimi vidí do sály, rovnako ako cez čelnú stenu predsedníctva).
+- `sokel budovy`: kamenný blok pod parketou, aby pri oddialení sála nebola tenká doska.
+- Parketa do V (`parquet` v `scripts/parliament-textures.mjs`, 512 px), svietidlá cez `KHR_materials_emissive_strength`.
+- HDR dostal teplý pás súmraku za oknami (azimut π/2 = −Z), takže operadlá majú jemný lem.
+- Plocha mesta, obloha a rieka v modeli odišli; GLB nemá externé zdroje. Limit 1,5 MB Peter zrušil (Workers Paid), ostáva poistka 8 MB; model má ~1,56 MB.
+
+**Kamera** (`fit` v `components/parliament-ar.tsx`): sklon 66° vo všetkých formátoch. Na výšku polovičná šírka 0,275 m (kreslá cez celú šírku, cieľ 0,15 m), na šírku 0,43 m (cieľ 0,13 m), na širokom telefóne na šírku aspoň 0,78 m (cieľ 0,115 m), aby sa zmestili okná aj predsedníctvo.
+
+**Pohľady z úrovne očí:** `lecternView()` v `lib/parliament-experience.ts` (za rečníckym pultom, výška očí ~1,7 m v mierke sály, mierne hore cez rady k tabuli) a doterajší `deputyView()`. Tlačidlá „Od pultu“ a „Z kresla“ (`par3d-vantage`), zorné pole 60°. Úvodný prejazd začína od pultu (široký záber) a stúpa k celkovému pohľadu.
+
+**Telefón:** na výšku výzva „Otoč telefón na šírku“ (raz za návštevu, `sessionStorage`), na šírku sa sála sama roztiahne na celú obrazovku (`is-landscape`: kompaktné ovládanie, plávajúca lišta pohybu), späť na výšku sa vráti do stránky.
+
+**Tabuľa** ostáva na páse medzi zábradlím a oknami (`tabula:hlasovanie`, canvas 4096 × 212); posuvný pás s textom a jeho skripty odišli, rovnako `lib/parliament-backdrop.ts` (väzba CSS kulisy na kameru) a jej kontrola.
+
+**Overenie:** snímky `model-viewer.toBlob()` (fungujú aj v skrytom okne): počítač 1280 × 800 a 1680 × 1000, telefón 402 × 874 na výšku, 874 × 402 na šírku (celá obrazovka), hlasovanie aj kluby; pohľad od pultu; farby kresiel cez API. Náhľad v úvode stránky (`chamber-clubs-2026-10-01.webp`) je výrez zo skutočnej snímky novej scény. Plynulosť, dotyky a výkon na skutočnom telefóne neoverené.
