@@ -1,5 +1,31 @@
 # Evidencia údajov a rozsahu
 
+## 3. 10. 2026 — Deň v politike za 2. 10. a rozpracovaný 3. 10., kontrola prieskumov a hlasovaní (Claude)
+
+Doplnených 9 správ. Každý deň má poradie, vetu dňa a počet prejdených udalostí.
+- **Piatok 2. 10. (6 správ z 26 udalostí):**
+  - koalícia sa dohodla na rozpočte 2027 so schodkom 4,94 % HDP a transakčnú daň zruší od roku 2028;
+  - SNS trvá na Kuffovi na envirorezort;
+  - opozičné političky žiadajú zmeny v ochrane mládeže;
+  - Matovič pozval opozíciu na zhromaždenia 17. novembra;
+  - Šimkovičová chce zmeniť pravidlá dotácií na pochody;
+  - NKÚ kritizuje Sociálnu poisťovňu.
+- **Sobota 3. 10. (3 správy z 9 udalostí, podklady len do 12:10):**
+  - Fico pre virózu odriekol príhovor na Dukle a Vučić ho ohlásil ako hosťa mítingu v Belehrade;
+  - RÚZ nepríde na tripartitu k rozpočtu;
+  - Pellegrini na Dukle hovoril o zbrojení.
+- **Sobota je rozpracovaná:** večerné udalosti treba doplniť pri ďalšom spracovaní, napríklad míting v Belehrade o 17:00 a reakcie naň.
+
+**Postup:**
+- Podklady sú z Minúty po minúte Denníka N a z TASR.
+- Na každý deň písal jeden pisateľ a nezávislý overovateľ, ktorý si zdroje znova prečítal.
+- Overovateľ odstránil vety typu „zdroje neuvádzajú reakciu“ a preformuloval vety príliš blízke zdroju.
+- V podkladoch TASR chýbal hlavný článok o rozpočte (996856). Pisateľ ho našiel cez vyhľadávanie na teraz.sk, zoznam sekcie teda nemusí byť úplný.
+
+**Kontrola dát 3. 10.:**
+- **Prieskumy:** nič nové. AKO má len septembrové meranie (už zapísané), NMS ani FOCUS zatiaľ nemajú októbrové a októbrový Infostat ešte neexistuje. Preto `dataVerified` = 2026-10-03.
+- **Hlasovania NR SR:** od 1. 10. nepribudlo žiadne záverečné hlasovanie, stále ich je 348. Dátum kontroly v `public/data/hlasovania/index.json` = 2026-10-03.
+- **Správy:** `newsChecked` = 2026-10-03.
 
 ## 3. 10. 2026 — Parlament v 3D: voľný pohyb kamery (Codex)
 
