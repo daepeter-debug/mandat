@@ -1,5 +1,10 @@
 # Evidencia údajov a rozsahu
 
+## 6. 10. 2026 — Deň v politike: doplnené 4. a 5. októbra (Codex)
+
+Peter schválil oba celé pripravené dni pokynom „všetko prosím hneď nasadzuj na web“. Pridaných päť správ za nedeľu a päť za pondelok vrátane viet dňa a počtu redakčne prejdených skupín (17 / 27); newsChecked je 6. október. Vlastná druhá kontrola autora aj samostatný modelový overovateľ čítali úplné dostupné zdroje. Úplné návrhy a audity ostávajú mimo repozitára v outputs/automatizacia-lokalne/2026-10-05 a 2026-10-06. Nové odkazy na dnešné hlasovania NR SR zatiaľ nepreberajú neoverené čísla; dáta prieskumov a hlasovaní sa touto zmenou nemenia.
+
+
 ## 4. 10. 2026 — Parlament: interiér dokola, pohľad „Vnútri“, zámok aj na počítači (Claude)
 
 Peter: na počítači tiež držať sálu v ráme ako na mobile; na výšku nechať voľbu (žiadne prekrytie); a dokresliť zvyšok miestnosti, aby sa dalo otáčať dookola.

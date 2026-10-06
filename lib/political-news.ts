@@ -11,9 +11,11 @@ export type PoliticalNews = {id:string;published:string;rank?:number;category:Ne
   neodchádzal skôr, než dostane obsah; vydavateľ aj odkaz na originál sú v detaile,
   lebo zhrnutie stojí na jeho práci.
 */
-export const newsChecked='2026-10-03';
+export const newsChecked='2026-10-06';
 /** Veta dňa (neutrálne zhrnutie) a počet politických udalostí, z ktorých sme vyberali. */
 export const newsDays:Record<string,{line?:string;analyzed?:number}>={
+  "2026-10-04":{"line":"ZMOS kritizoval čas na posúdenie rozpočtu, Taraba odmietol menej preferenčných hlasov, opozícia riešila spoluprácu, diplomati zostávajú v Kyjeve a rezort kultúry oznámil priority FPU.","analyzed":17},
+  "2026-10-05":{"line":"Vláda schválila návrh rozpočtu a pomoc po školských útokoch, zmenila vedenie úradu MŽP, SaS predstavila program a obchvat Ružomberka otvorili motoristom.","analyzed":27},
   '2026-09-09':{line:'SNS oznámila, že nebude blokovať otvorenie septembrovej schôdze a čaká návrh na odvolanie ministra životného prostredia; minister vnútra uviedol, že kontroly na hranici s Českom zatiaľ neočakáva.'},
   '2026-09-10':{line:'SNS presadzovala Filipa Kuffu za nástupcu Tarabu napriek výhradám prezidenta, zverejnili sa prieskumy Focusu a NMS, opozícia kritizovala nákup stíhačiek F-16 a premiéri V4 rokovali v Bratislave.'},
   '2026-09-11':{line:'Podľa predsedu klubu SNS podá premiér do 15. septembra návrh na odvolanie Tarabu, schôdza bude mať takmer 300 bodov a nadácia upozornila na možný konflikt záujmov pri dotácii Fondu na podporu umenia.'},
@@ -41,6 +43,156 @@ export const newsDays:Record<string,{line?:string;analyzed?:number}>={
   '2026-10-03':{line:'Premiér Fico pre virózu odriekol účasť na duklianskych oslavách, kde prezident varoval pred zbrojením, Vučić ohlásil Fica ako hosťa mítingu v Belehrade a RÚZ nepríde na tripartitu k rozpočtu.',analyzed:9},
 };
 export const politicalNews:PoliticalNews[]=[
+{
+  "id": "vlada-rozpocet-2027-05",
+  "rank": 1,
+  "published": "2026-10-05",
+  "category": "Vláda",
+  "title": "Vláda schválila návrh rozpočtu s deficitom 4,94 percenta HDP, RRZ varuje pred rastom dlhu",
+  "summary": "Vláda schválila návrh rozpočtu verejnej správy na rok 2027 so schodkom 4,94 percenta HDP, o ktorom ešte rozhodne parlament. Sociálni partneri s ním nesúhlasili a rozpočtová rada spochybnila jeho súlad s domácimi pravidlami.",
+  "detail": [
+    "Vláda v pondelok 5. októbra schválila návrh rozpočtu verejnej správy na roky 2027 až 2029. Na budúci rok plánuje deficit 7,443 miliardy eur, teda 4,94 percenta HDP. Samotný štátny rozpočet má mať schodok 7,754 miliardy eur. Návrh ešte musí prerokovať Národná rada. Premiér Robert Fico (Smer-SD) zdôraznil, že vláda nenavrhuje nové ani vyššie dane a odvody; na energopomoc vyčlenila 250 miliónov eur.",
+    "Hospodárska a sociálna rada sa na návrhu nezhodla. Sociálni partneri namietali krátky čas na prípravu, zamestnávatelia aj chýbajúce prorastové opatrenia. Prezidentka Konfederácie odborových zväzov Monika Uhlerová žiadala, aby sa výsledok rokovaní o valorizácii platov premietol do návrhu. PS a Hnutie Slovensko kritizovali ďalšie zadlžovanie; KDH vyčítalo návrhu chýbajúcu podporu rastu a ponechanie transakčnej dane.",
+    "Rada pre rozpočtovú zodpovednosť upozornila, že návrh nestabilizuje dlh a podľa nej nezodpovedá požiadavkám ústavného zákona o rozpočtovej zodpovednosti. Ministerstvo financií uviedlo, že návrh dodržiava fiškálne pravidlá EÚ. Pokles deficitu v rokoch 2028 a 2029 si podľa rezortu vyžiada ďalšie opatrenia. Rada plánuje podrobné hodnotenie pred rokovaním parlamentu."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/ekonomika/vlada-schvalila-navrh-rozpoctu-bud/997319-clanok.html"
+},
+{
+  "id": "lucivjansky-envirorezort-05",
+  "rank": 2,
+  "published": "2026-10-05",
+  "category": "Vláda",
+  "title": "Vláda vymenila šéfa služobného úradu envirorezortu, Chovana nahradí Lučivjanský",
+  "summary": "Vláda rozhodla, že generálnym tajomníkom služobného úradu ministerstva životného prostredia bude od 6. októbra Dávid Lučivjanský. Nahradí Mareka Chovana, ktorého odchod bol podľa rezortu politickou podmienkou SNS.",
+  "detail": [
+    "Vláda v pondelok 5. októbra schválila zmenu na poste generálneho tajomníka služobného úradu ministerstva životného prostredia. Dávid Lučivjanský má od utorka 6. októbra nahradiť Mareka Chovana. Rozhodnutie sa týka vedenia služobného úradu, nepredstavuje vymenovanie nového ministra životného prostredia.",
+    "Predseda SNS Andrej Danko už po piatkovom rokovaní s premiérom Robertom Ficom (Smer-SD) oznámil dohodu o výmene Chovana. Zmena súvisí s odvolaním ministra Tomáša Tarabu a so snahou SNS presadiť na jeho miesto štátneho tajomníka Filipa Kuffu. Odbor komunikácie ministerstva označil Chovanov odchod za politickú podmienku SNS.",
+    "Ministerstvo predstavilo Lučivjanského ako právnika so skúsenosťami z verejných a poradných funkcií, vrátane Legislatívnej rady vlády. Zároveň pripísalo odchádzajúcemu Chovanovi úspory a efektívnejšie riadenie úradu. Chovan poďakoval zamestnancom a novému vedeniu zaželal správne rozhodnutia. Informácie o dosiahnutých úsporách pochádzajú z hodnotenia rezortu a vyjadrenia Chovana."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/generalnym-tajomnikom-sluzobneho-ur/997322-clanok.html"
+},
+{
+  "id": "skolske-utoky-pomoc-kontrola-05",
+  "rank": 3,
+  "published": "2026-10-05",
+  "category": "Vláda",
+  "title": "Vláda vyčlenila 240-tisíc eur na pomoc po školských útokoch, polícia preveruje svoj postup",
+  "summary": "Vláda schválila 240-tisíc eur pre pozostalých a ťažko zranených po útokoch v Spišskej Starej Vsi a Staškove. Polícia zároveň oznámila kontrolu svojho postupu pred útokom v Staškove; jej výsledky ešte nezverejnila.",
+  "detail": [
+    "Kabinet v pondelok 5. októbra rozhodol o osobitnej finančnej pomoci po útokoch na školy v Spišskej Starej Vsi a Staškove. Pre rodiny obetí a ťažko zranené osoby vyčlenil celkovo 240-tisíc eur. Ministerstvo školstva predložilo návrh preto, že podľa neho zamestnancom škôl ani žiakom osobitný zákon nepriznáva takýto príspevok.",
+    "Podľa schváleného materiálu má každá pozostalá rodina dostať 50-tisíc eur, spolu 200-tisíc eur. Pre každú ťažko zranenú osobu sa počíta s 20-tisíc eurami, súhrnne 40-tisíc eurami. Ide o rozhodnutie vlády o osobitnej pomoci; správa o jeho schválení nepotvrdzuje, že peniaze už boli príjemcom vyplatené.",
+    "Prezidentka Policajného zboru Jana Maškarová v ten istý deň uviedla, že popri policajnej inšpekcii nariadila aj vlastnú kontrolu postupu polície. Pred útokom v Staškove polícia prijala oznámenie zo školy. Maškarová nechcela hovoriť o výsledkoch pred uzavretím preverovania; polícia zatiaľ nepotvrdila motív ani šírené tvrdenia o šikane."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/pozostalych-po-obetiach-v-spisskej-sta/997324-clanok.html"
+},
+{
+  "id": "sas-program-restart-05",
+  "rank": 4,
+  "published": "2026-10-05",
+  "category": "Opozícia",
+  "title": "SaS predstavila Reštart Slovenska, navrhuje rovnú daň a ponúka program opozícii",
+  "summary": "SaS predstavila program Reštart Slovenska – Deň po Ficovi s viac než 400 opatreniami v 18 oblastiach. Navrhuje návrat 19-percentnej rovnej dane a menší štát; program ponúka aj ako podklad na diskusiu opozície.",
+  "detail": [
+    "Opozičná SaS v pondelok 5. októbra predstavila program Reštart Slovenska – Deň po Ficovi. Viac než 400 navrhovaných opatrení rozdelila do 18 oblastí. Predseda strany Branislav Gröhling (SaS) uviedol, že s ním strana môže ísť do predčasných aj riadnych parlamentných volieb; zároveň ho ponúka ako základ rozhovorov s opozíciou.",
+    "V ekonomickej časti SaS navrhuje zrušiť transakčnú daň, obnoviť 19-percentnú rovnú daň a nezdaňovať reinvestovaný zisk. Sľubuje jednoduchšie pravidlá pre živnostníkov a menej byrokracie. Nižšie daňové príjmy chce podľa svojho vyjadrenia nahradiť menším a efektívnejším štátom, nie ďalším rastom dlhu.",
+    "Medzi ďalšie priority strana zaradila vzdelávanie, vedu, zdravotníctvo a zmeny bezpečnostných a justičných inštitúcií. V zahraničnej politike chce posilniť dôveryhodnosť Slovenska medzi spojencami v EÚ a NATO. Ide o návrhy jednej strany; oznámenie programu ešte neznamená, že ich prijali ostatné opozičné strany alebo parlament."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/opozicna-sas-predstavila-program-rest/997366-clanok.html"
+},
+{
+  "id": "d1-hubova-ivachnova-otvorenie-05",
+  "rank": 5,
+  "published": "2026-10-05",
+  "category": "Vláda",
+  "title": "D1 pri Ružomberku otvorili motoristom, nový úsek možno využívať bez diaľničnej známky",
+  "summary": "Úsek D1 Hubová – Ivachnová po slávnostnom otvorení sprístupnili v pondelok večer aj motoristom v oboch smeroch. Takmer 15-kilometrový obchvat Ružomberka s tunelom Čebrať možno využívať bez diaľničnej známky.",
+  "detail": [
+    "Novým úsekom D1 Hubová – Ivachnová v pondelok 5. októbra večer prešli prví motoristi. Žilinská krajská policajná hovorkyňa Zuzana Šefčíková potvrdila otvorenie pre TASR. Národná diaľničná spoločnosť uviedla, že úsek je prístupný v oboch smeroch; obchvat Ružomberka môžu vodiči používať bez diaľničnej známky.",
+    "Takmer 15-kilometrová trasa zahŕňa 19 mostov, tri križovatky a 3,6-kilometrový tunel Čebrať. Minister dopravy Jozef Ráž (nominant Smeru-SD) pri otvorení uviedol, že analýzy predpokladajú úsporu 16 minút a v špičke aj viac. Ide o očakávanú úsporu času, ktorá závisí od dopravnej situácie.",
+    "Národná diaľničná spoločnosť upozornila na nové dopravné riešenie najmä pri Ivachnovej a vyzvala vodičov, aby sledovali značenie. Jej generálny riaditeľ Filip Macháček povedal, že zosuvné územia pri Likavke budú ďalej monitorovať. Úsek nadväzuje na pripravovanú stavbu Turany – Hubová; celé spojenie D1 tým ešte nie je dokončené."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/novym-usekom-dialnice-d1-hubova-iv/997486-clanok.html"
+},
+{
+  "id": "rozpocet-deficit-zmos-04",
+  "rank": 1,
+  "published": "2026-10-04",
+  "category": "Vláda",
+  "title": "ZMOS kritizuje čas na posúdenie rozpočtu, návrh počíta so schodkom 4,94 percenta HDP",
+  "summary": "Návrh rozpočtu pre pondelkovú tripartitu počíta v roku 2027 s deficitom 4,94 percenta HDP. ZMOS kritizuje, že rozsiahle podklady dostal až v nedeľu ráno, a napriek výhradám sa na rokovaní zúčastní.",
+  "detail": [
+    "TASR v nedeľu 4. októbra informovala o návrhu rozpočtu verejnej správy na roky 2027 až 2029, ktorý ministerstvo financií predkladá na pondelkovú tripartitu. Pre rok 2027 počíta so schodkom 4,94 percenta HDP. Tohtoročný deficit rezort očakáva na úrovni 4,37 percenta HDP namiesto pôvodne plánovaných 4,1 percenta.",
+    "Predseda Združenia miest a obcí Slovenska Jozef Božik namieta, že partneri dostali rozsiahle podklady až v nedeľu ráno a stanovisko majú predložiť v pondelok. Podľa neho sa tak nedajú zodpovedne posúdiť dôsledky pre samosprávy. ZMOS napriek výhradám oznámil účasť na rokovaní.",
+    "Návrh počíta v ďalších dvoch rokoch s poklesom deficitu na 4,5 a 4 percentá HDP, na ktorý však podľa rezortu budú potrebné ďalšie konsolidačné kroky. Ide o predložený plán, nie schválený rozpočet. Božik uviedol, že rokovanie vlády o materiáli očakáva v stredu 7. októbra."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/ekonomika/rezort-financii-deficit-rozpoctu-ma/997177-clanok.html"
+},
+{
+  "id": "taraba-preferencne-hlasy-04",
+  "rank": 2,
+  "published": "2026-10-04",
+  "category": "Parlament",
+  "title": "Taraba odmieta zníženie počtu preferenčných hlasov zo štyroch na dva",
+  "summary": "Nezaradený poslanec Tomáš Taraba odmietol podporiť zníženie počtu preferenčných hlasov zo štyroch na dva. V nedeľnej diskusii svoj postoj vysvetlil tým, že takáto zmena nie je súčasťou programového vyhlásenia vlády.",
+  "detail": [
+    "Nezaradený poslanec a bývalý minister životného prostredia Tomáš Taraba v nedeľu 4. októbra v relácii TA3 V politike oznámil, že nepodporí zníženie počtu preferenčných hlasov zo štyroch na dva. Ako dôvod uviedol, že takéto opatrenie nie je v programovom vyhlásení vlády, ku ktorému sa naďalej hlási.",
+    "Volebnú novelu predložil Smer-SD a podľa nedeľného prehľadu TASR zostáva v druhom čítaní. SNS k nej navrhla zmeny preferenčného hlasovania. Denník N spojil dohodu o obmedzení krúžkov s presadením rušenia voľby poštou zo zahraničia. Tarabovo vyjadrenie je oznámením jeho postoja k pripravovanej zmene.",
+    "Taraba zopakoval, že návrhy zákonov bude posudzovať samostatne. Na otázku o ďalších poslancoch uviedol, že ich nechce spájať proti vláde, no pripustil ďalšiu spoluprácu. Za prioritu označil skoršie zrušenie transakčnej dane. Ide o jeho avizované postoje, nie o výsledok parlamentného hlasovania."
+  ],
+  "sourceName": "Denník N · Minúta po minúte",
+  "source": "https://dennikn.sk/minuta/5601717"
+},
+{
+  "id": "blanar-diplomati-kyjev-04",
+  "rank": 3,
+  "published": "2026-10-04",
+  "category": "Vláda",
+  "title": "Slovensko sa pridalo k odmietnutiu ruských hrozieb diplomatom a zostáva v Kyjeve",
+  "summary": "Minister zahraničných vecí Juraj Blanár oznámil, že Slovensko podporilo spoločné vyhlásenie diplomatických misií proti ruským hrozbám v Kyjeve. Rezort nemení fungovanie zastupiteľských úradov na Ukrajine a podľa svojho vyjadrenia sleduje riziká.",
+  "detail": [
+    "Minister zahraničných vecí Juraj Blanár v nedeľu 4. októbra oznámil, že Slovensko pristúpilo k spoločnému stanovisku diplomatických misií v Kyjeve. Vyhlásenie odmieta hrozby ruského rezortu diplomacie voči zahraničným diplomatom a občanom. Blanár potvrdil zotrvanie v meste.",
+    "Ruské ministerstvo v sobotu vyzývalo cudzincov a diplomatov na odchod z Kyjeva a varovalo pred ďalšími masívnymi údermi. Prípadné následky pripísalo tým, ktorí výzvu neposlúchnu. Blanár s odkazom na spoločné stanovisko naopak zdôraznil povinnosti Ruska podľa medzinárodného práva.",
+    "Slovenský rezort uviedol, že nemení chod veľvyslanectva v Kyjeve ani generálneho konzulátu v Užhorode. Situáciu podľa neho sleduje spolu s bezpečnostnými zložkami a zahraničnými partnermi a v prípade potreby je pripravený aktivovať krízové opatrenia. Zotrvanie oznámila aj delegácia Európskej únie."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/blanar-sr-sa-pripojila-k-vyhlaseniu-k/997190-clanok.html"
+},
+{
+  "id": "grohling-opozicia-gubik-04",
+  "rank": 4,
+  "published": "2026-10-04",
+  "category": "Opozícia",
+  "title": "Gröhling vyzýva na zhodu opozície, Gubík kritizuje jeho postoj k účasti Maďarskej aliancie",
+  "summary": "Predseda SaS Branislav Gröhling vyzval opozíciu na zhodu v opatreniach po voľbách, no spochybnil účasť Maďarskej aliancie na podujatiach k 17. novembru. Jej predseda László Gubík uviedol, že dostal pozvanie a prijme ho.",
+  "detail": [
+    "Predseda SaS Branislav Gröhling v nedeľu 4. októbra v relácii Joj 24 Politika 24 navrhol hľadať spoločné opatrenia pre prípadný nástup opozície k moci. Ponúkol sa ako sprostredkovateľ a povedal, že komunikuje s predsedom Hnutia Slovensko Igorom Matovičom. Podporuje účasť opozície na novembrových podujatiach.",
+    "Pri Maďarskej aliancii však vyjadril pochybnosti. Argumentoval, že jej kandidáti v Nitrianskom a Trnavskom kraji súperia o županské funkcie s kandidátmi širšej koalície vrátane SaS. Preto si nevie predstaviť spoločnú účasť na novembrových podujatiach; ide o jeho hodnotenie politiky aliancie.",
+    "Predseda Maďarskej aliancie László Gubík namietol, že jeho strana chce rovnako zmenu vlády premiéra Roberta Fica (Smer-SD). Uviedol, že pozvanie na novembrové opozičné pódium dostal a prijme ho. Gröhlingovu výhradu označil za snahu vylúčiť alianciu zo spolupráce; spoločná dohoda strán v článkoch oznámená nebola."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/b-grohling-opozicia-ma-vediet-co/997142-clanok.html"
+},
+{
+  "id": "fpu-priority-kultura-04",
+  "rank": 5,
+  "published": "2026-10-04",
+  "category": "Vláda",
+  "title": "Rezort kultúry oznámil priority pre FPU, o zásadách podpory rozhodne rada fondu",
+  "summary": "Ministerka kultúry Martina Šimkovičová (nominantka SNS) oznámila Fondu na podporu umenia priority na rok 2027, na ktoré možno vyčleniť najviac sedem miliónov eur. Fond zbiera pripomienky a o konečnej podobe zásad rozhodne jeho rada.",
+  "detail": [
+    "TASR v nedeľu 4. októbra informovala, že ministerka kultúry Martina Šimkovičová (nominantka SNS) oznámila Fondu na podporu umenia priority rezortu na rok 2027. Zahŕňajú kultúrne podujatia, výročia národných dejín a osobností i prezentáciu slovenskej kultúry v zahraničí.",
+    "Riaditeľka odboru komunikácie rezortu Petra Demková uviedla aj podporu nehmotného dedičstva UNESCO, kultúry znevýhodnených skupín a obnovy kultúrnej infraštruktúry. Na ministerské priority možno podľa nej vyčleniť najviac sedem miliónov eur. Ročný príspevok štátneho rozpočtu pre celý fond je 30,2 milióna eur.",
+    "Dočasne poverený riaditeľ fondu František Kornaj oznámil zber pripomienok k zásadám podpory. Pod viac než 30 pripomienok a návrhov sa podpísalo 117 organizácií a 253 ľudí z kultúrnej oblasti. Podľa Kornaja podnety posúdia členovia rady, ktorí majú rozhodnúť o konečnom texte; samotné oznámenie priorít tento krok nenahrádza."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/ministerstvo-kultury-oznamilo-fondu-na/997130-clanok.html"
+},
   {id:'fico-dukla-belehrad-vucic-03',published:'2026-10-03',rank:1,category:'Vláda',title:'Fico pre virózu odriekol príhovor na Dukle, Vučić ho ohlásil ako hosťa mítingu v Belehrade',
    summary:'Premiér Robert Fico v sobotu pre virózu odriekol účasť na duklianskych oslavách, kde mal mať príhovor, a napísal, že sa pokúsi zotaviť, aby mohol večer cestovať do Belehradu. Bývalý srbský prezident Aleksandar Vučić ho ohlásil ako hosťa predvolebného mítingu svojej strany a nazval ho veľkým priateľom Srbska.',
    detail:['Premiér Robert Fico (Smer-SD) mal v sobotu 3. októbra vystúpiť s príhovorom na oslavách 82. výročia Karpatsko-duklianskej operácie pri pamätníku na Dukle. Ráno sa z podujatia ospravedlnil na Facebooku: podľa vlastných slov celý týždeň bojuje s virózou a potrebuje na niekoľko hodín vypnúť, aby zvládol ďalší pracovný program. Zároveň napísal, že sa pokúsi zotaviť tak, aby mohol večer odcestovať do Belehradu. Ako hosťa tamojšieho mítingu vládnej Srbskej pokrokovej strany ho v piatok večer ohlásil bývalý srbský prezident Aleksandar Vučić; míting sa mal podľa Denníka N začať o 17.00.',
