@@ -11,9 +11,10 @@ export type PoliticalNews = {id:string;published:string;rank?:number;category:Ne
   neodchádzal skôr, než dostane obsah; vydavateľ aj odkaz na originál sú v detaile,
   lebo zhrnutie stojí na jeho práci.
 */
-export const newsChecked='2026-10-06';
+export const newsChecked='2026-10-07';
 /** Veta dňa (neutrálne zhrnutie) a počet politických udalostí, z ktorých sme vyberali. */
 export const newsDays:Record<string,{line?:string;analyzed?:number}>={
+  "2026-10-06":{"line":"Parlament uvoľnil pravidlá rozpočtového provizória, prijal liekovú reformu a posunul reguláciu sociálnych sietí; envirorezort vymenil troch riaditeľov.","analyzed":46},
   "2026-10-04":{"line":"ZMOS kritizoval čas na posúdenie rozpočtu, Taraba odmietol menej preferenčných hlasov, opozícia riešila spoluprácu, diplomati zostávajú v Kyjeve a rezort kultúry oznámil priority FPU.","analyzed":17},
   "2026-10-05":{"line":"Vláda schválila návrh rozpočtu a pomoc po školských útokoch, zmenila vedenie úradu MŽP, SaS predstavila program a obchvat Ružomberka otvorili motoristom.","analyzed":27},
   '2026-09-09':{line:'SNS oznámila, že nebude blokovať otvorenie septembrovej schôdze a čaká návrh na odvolanie ministra životného prostredia; minister vnútra uviedol, že kontroly na hranici s Českom zatiaľ neočakáva.'},
@@ -43,6 +44,81 @@ export const newsDays:Record<string,{line?:string;analyzed?:number}>={
   '2026-10-03':{line:'Premiér Fico pre virózu odriekol účasť na duklianskych oslavách, kde prezident varoval pred zbrojením, Vučić ohlásil Fica ako hosťa mítingu v Belehrade a RÚZ nepríde na tripartitu k rozpočtu.',analyzed:9},
 };
 export const politicalNews:PoliticalNews[]=[
+{
+  "id": "provizorium-pravidla-schvalene-06",
+  "rank": 1,
+  "published": "2026-10-06",
+  "category": "Parlament",
+  "title": "Parlament uvoľnil pravidlá provizória, ročný výdavkový strop zostáva",
+  "summary": "Poslanci schválili zmeny, ktoré pri rozpočtovom provizóriu rušia mesačné obmedzenie výdavkov a umožnia ministrovi financií priebežné úpravy rozpočtu. Opozícia namieta oslabenie kontroly nad míňaním, minister zmeny obhajuje potrebou pružnejšieho fungovania štátu.",
+  "detail": [
+    "Národná rada SR v utorok 6. októbra večer schválila 76 hlasmi novelu zákona o rozpočtových pravidlách verejnej správy. Prijala aj pozmeňujúci návrh poslanca Daniela Karasa (Smer-SD) o rozpočtovom provizóriu. Ak štát nemá schválený rozpočet na daný rok, zostane viazaný celoročným stropom podľa predchádzajúceho roka, no zanikne obmedzenie výdavkov v jednotlivých mesiacoch.",
+    "Minister financií Ladislav Kamenický (Smer-SD) zmeny obhajoval tým, že štát potrebuje pružnejšie riadiť platby a presuny peňazí aj počas provizória. Poslanec Štefan Kišš (PS) namietal, že minister získa možnosť minúť celoročné prostriedky už za deväť mesiacov. Poslanec Marián Viskupič (SaS) spájal návrh s neistotou, či koalícia dokáže schváliť budúcoročný rozpočet.",
+    "Novela má nadobúdať účinnosť postupne 15. novembra 2026 a 1. januára 2027. Samotný štátny rozpočet na rok 2027 ešte parlament neschválil: diskusia o ňom je naplánovaná od stredy 7. októbra o 14.00 a hlasovanie najskôr na 14. októbra. Prijatá úprava provizória a rozhodnutie o budúcoročnom rozpočte sú teda dva odlišné kroky."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/ekonomika/administrativna-zataz-rozpoctovych/997776-clanok.html"
+},
+{
+  "id": "liekova-reforma-schvalena-06",
+  "rank": 2,
+  "published": "2026-10-06",
+  "category": "Parlament",
+  "title": "Poslanci schválili liekovú reformu, pacienti upozorňujú na jej zavedenie",
+  "summary": "Parlament prijal reformu, ktorá má podľa ministerstva zdravotníctva zlepšiť dostupnosť liekov a upraviť ich úhradu na výnimku. Pacientska platforma schválenie víta, no zdôrazňuje, že výsledok bude závisieť od vykonávacích pravidiel a financovania.",
+  "detail": [
+    "Národná rada SR v utorok 6. októbra prijala novelu pravidiel úhrady liekov, zdravotníckych pomôcok a dietetických potravín. Ministerstvo zdravotníctva ju predstavuje ako reformu, ktorá má uľahčiť vstup inovatívnych liekov na slovenský trh a prístup pacientov k liečbe hradenej z verejného zdravotného poistenia. Pacientska platforma upozorňuje, že skutočnú dostupnosť liečby preverí až prax.",
+    "Ministerstvo od novely očakáva presnejšie podmienky rozhodovania o nových liekoch a jednoznačnejšie lehoty. Pri úhradách na výnimku má podľa rezortu pomôcť aj pri liekoch, ktoré poisťovne bežne nepreplácajú. Ďalšou časťou reformy je podľa ministerstva obmedzenie nelegálneho reexportu, spolu s dôslednejším dohľadom nad obchodovaním s liekmi a falšovaním receptov.",
+    "Platforma pomáhajúcich organizácií – nezabudnutí prijatie novely ocenila a označila ho za výsledok viac ako roka a pol rokovaní. Upozornila však, že dostupnosť liečby bude závisieť od včasného prijatia vykonávacích predpisov, zrozumiteľných postupov a dostatočného financovania. Z pohľadu platformy je prijatie zákona začiatkom jeho uplatňovania, nie potvrdením vyriešeného prístupu pacientov k liekom."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/poslanci-schvalili-reformu-liekovej-pol/997619-clanok.html"
+},
+{
+  "id": "socialne-siete-druhe-citanie-06",
+  "rank": 3,
+  "published": "2026-10-06",
+  "category": "Parlament",
+  "title": "Vekový limit pre sociálne siete postúpil do druhého čítania",
+  "summary": "Poslanci posunuli návrh, ktorý má stanoviť vek 16 rokov pre účty na sociálnych sieťach a koordinovať prevenciu radikalizácie detí. Zákon ešte nie je prijatý; KDH kritizuje postup rokovania a Konzervatívci – Kresťanská únia žiadajú posilniť ochranu práv rodičov.",
+  "detail": [
+    "Poslanci Národnej rady SR v utorok 6. októbra posunuli do druhého čítania návrh ministerstva školstva o ochrane pred radikalizáciou a mobilizáciou k násiliu. Zahŕňa hranicu 16 rokov pre vytvorenie a používanie účtu na sociálnej sieti. Zmeny by mohli začať platiť od roku 2027, iba ak návrh prejde celým legislatívnym procesom; zatiaľ nejde o účinný zákaz.",
+    "Prevádzkovateľ siete má podľa návrhu pri overovaní veku dostať len informáciu, či používateľ vekovú podmienku spĺňa. Overovateľ zase nemá vedieť, pre ktorú službu overenie slúži. Navrhovaný systém prevencie by prepojil národného koordinátora, regionálnych koordinátorov, rady a koordinačné skupiny, aby spolupracovali pri identifikácii rizík a pomoci deťom.",
+    "Poslanec Ján Horecký (KDH) kritizoval, že parlament ešte nerokoval o vlastnom návrhu hnutia na bezpečnosť detí v digitálnom priestore. Konzervatívci – Kresťanská únia namietajú rozsah spracúvania údajov o deťoch a ich blízkych. Žiadajú jasné pravidlá informovania a zapojenia rodičov aj možnosť preskúmať postup koordinátorov; ide o výhrady strany k navrhovanej úprave."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/poslanci-posunuli-regulaciu-socialnych/997620-clanok.html"
+},
+{
+  "id": "ustavny-sud-pary-pravna-ochrana-06",
+  "rank": 4,
+  "published": "2026-10-06",
+  "category": "Politika",
+  "title": "Odôvodnenie Ústavného súdu: párom rovnakého pohlavia chýba právny rámec",
+  "summary": "TASR informovala o odôvodnení septembrového rozhodnutia Ústavného súdu, podľa ktorého Slovensku chýba právny rámec pre páry rovnakého pohlavia. Súd napadnuté ustanovenia o manželstve nezrušil a uviedol, že vytvorenie novej úpravy nepatrí do jeho právomoci.",
+  "detail": [
+    "TASR v utorok 6. októbra informovala o odôvodnení rozhodnutia Ústavného súdu SR z 23. septembra. Súd vtedy nevyhovel návrhu poslancov, ktorí napadli ustanovenia o manželstve. V odôvodnení upozorňuje, že páry rovnakého pohlavia nemajú na Slovensku alternatívny právny status zabezpečujúci uznanie a ochranu ich rodinného života. Novou informáciou sú dôvody rozhodnutia, nie ďalšie rozhodnutie súdu.",
+    "Podľa súdu problém nespočíva primárne v osobitnej ochrane manželstva muža a ženy, ale v chýbajúcej súbežnej úprave partnerského spolužitia. Napadnuté ustanovenia preto nezrušil. Vysvetlil, že vytvorenie nového právneho inštitútu nepatrí do jeho právomoci a nemôže nariadiť prijatie zákona ani záväzne určiť jeho konkrétnu podobu.",
+    "Podanie predložilo v roku 2023 spolu 33 poslancov z predchádzajúceho volebného obdobia. Napadli zákon o rodine aj ustanovenia ďalších zákonov spojené s manželským a rodinným statusom. Žiadali tiež posúdenie legislatívnej nečinnosti parlamentu; túto časť návrhu súd odmietol už v apríli 2024 pre nedostatok právomoci. Rozhodnutie samo nezavádza novú formu partnerského spolužitia."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/us-sr-chyba-alternativny-pravny-ra/997697-clanok.html"
+},
+{
+  "id": "enviro-organizacie-vedenie-audit-06",
+  "rank": 5,
+  "published": "2026-10-06",
+  "category": "Vláda",
+  "title": "Envirorezort vymenil troch riaditeľov a pozastavil vybrané rozhodnutia",
+  "summary": "Ministerstvo životného prostredia oznámilo odvolanie riaditeľov dvoch vodohospodárskych podnikov a Environmentálneho fondu. Štátny tajomník Filip Kuffa nariadil audit a obmedzil rozhodovanie o majetku, obstarávaní a personálnych otázkach.",
+  "detail": [
+    "Ministerstvo životného prostredia v utorok 6. októbra oznámilo zmeny vo vedení troch podriadených organizácií. Z funkcie generálneho riaditeľa Vodohospodárskej výstavby odvolali Petra Moldu, v Slovenskom vodohospodárskom podniku Jozefa Moravčíka a v Environmentálnom fonde Mareka Gibu. Organizácie dostali dočasné vedenia; oznámenie nepredstavuje výsledok pripravovaného auditu.",
+    "Vodohospodársku výstavbu dočasne vedie Andrej Kasana, doterajší riaditeľ úseku technicko-bezpečnostného dohľadu. Slovenský vodohospodársky podnik prevzal Miroslav Selecký, vedúci odboru vodohospodárskej prevádzky podniku. Vedením Environmentálneho fondu poverili Pavla Šmondrka, ktorý pôsobí ako riaditeľ jeho odboru kontroly. Tieto poverenia ministerstvo opísalo ako dočasné.",
+    "Štátny tajomník ministerstva Filip Kuffa nariadil audit prebiehajúcich procesov. Rozhodnutia o predaji majetku, rozbehnutých verejných obstarávaniach a personálnych veciach vyžadujú predchádzajúci písomný súhlas generálneho tajomníka služobného úradu. Podľa rezortu má opatrenie umožniť právny a ekonomický audit. Pokyn sa výslovne týka aj zastavenia predaja hotela Bobrovník na Liptovskej Mare vo vlastníctve Slovenského vodohospodárskeho podniku."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/v-troch-organizaciach-pod-envirorezort/997737-clanok.html"
+},
 {
   "id": "vlada-rozpocet-2027-05",
   "rank": 1,

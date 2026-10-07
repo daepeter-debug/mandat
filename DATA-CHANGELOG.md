@@ -1,5 +1,10 @@
 # Evidencia údajov a rozsahu
 
+## 7. 10. 2026 — Deň v politike: doplnený 6. október (Codex)
+
+Pridaných päť správ za utorok, veta dňa a 46 redakčne zlúčených politických a verejnopolitických línií z podkladov; newsChecked je 7. október. Autor čítal celé dostupné zdroje a samostatný druhý agent čerstvo načítal všetkých desať článkov pre vybrané správy; overil fakty, atribúcie, dátumy, jazyk aj formát. Audity a kompletné JSON sú mimo repozitára v outputs/automatizacia-lokalne/2026-10-07. Peter dnes výslovne povolil overené správy rovno nasadzovať bez ďalšieho schválenia jednotlivých dní. Dáta prieskumov a hlasovaní sa nemenili; nové oficiálne podklady zostávajú iba odkazmi na samostatné overenie.
+
+
 ## 6. 10. 2026 — Deň v politike: doplnené 4. a 5. októbra (Codex)
 
 Peter schválil oba celé pripravené dni pokynom „všetko prosím hneď nasadzuj na web“. Pridaných päť správ za nedeľu a päť za pondelok vrátane viet dňa a počtu redakčne prejdených skupín (17 / 27); newsChecked je 6. október. Vlastná druhá kontrola autora aj samostatný modelový overovateľ čítali úplné dostupné zdroje. Úplné návrhy a audity ostávajú mimo repozitára v outputs/automatizacia-lokalne/2026-10-05 a 2026-10-06. Nové odkazy na dnešné hlasovania NR SR zatiaľ nepreberajú neoverené čísla; dáta prieskumov a hlasovaní sa touto zmenou nemenia.
