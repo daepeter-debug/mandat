@@ -1,5 +1,10 @@
 # Evidencia údajov a rozsahu
 
+## 8. 10. 2026 — Deň v politike: doplnený 7. október (Codex)
+
+Pridaných päť správ za stredu, veta dňa a 24 zlúčených domácich politických a verejnopolitických línií zo zberu 63 položiek Denníka N a 83 titulkov TASR; newsChecked je 8. október. Autor vykonal vlastnú druhú kontrolu a samostatný agent čerstvo načítal všetkých 13 zdrojov vybraných správ vrátane oficiálneho októbrového modelu NMS. Overené fakty, atribúcie, dátumy, jazyk, formát a odlíšenie nového vývoja. Podklady a audity sú mimo repo v outputs/automatizacia-lokalne/2026-10-08. Publikovanie nadväzuje na Petrovo povolenie zo 7. októbra bez ďalšieho schvaľovania jednotlivých dní. Databázy prieskumov a hlasovaní sa nemenia; októbrový model NMS je zhrnutý v správe a označený na samostatné dátové overenie.
+
+
 ## 7. 10. 2026 — Deň v politike: doplnený 6. október (Codex)
 
 Pridaných päť správ za utorok, veta dňa a 46 redakčne zlúčených politických a verejnopolitických línií z podkladov; newsChecked je 7. október. Autor čítal celé dostupné zdroje a samostatný druhý agent čerstvo načítal všetkých desať článkov pre vybrané správy; overil fakty, atribúcie, dátumy, jazyk aj formát. Audity a kompletné JSON sú mimo repozitára v outputs/automatizacia-lokalne/2026-10-07. Peter dnes výslovne povolil overené správy rovno nasadzovať bez ďalšieho schválenia jednotlivých dní. Dáta prieskumov a hlasovaní sa nemenili; nové oficiálne podklady zostávajú iba odkazmi na samostatné overenie.

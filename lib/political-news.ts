@@ -11,9 +11,10 @@ export type PoliticalNews = {id:string;published:string;rank?:number;category:Ne
   neodchádzal skôr, než dostane obsah; vydavateľ aj odkaz na originál sú v detaile,
   lebo zhrnutie stojí na jeho práci.
 */
-export const newsChecked='2026-10-07';
+export const newsChecked='2026-10-08';
 /** Veta dňa (neutrálne zhrnutie) a počet politických udalostí, z ktorých sme vyberali. */
 export const newsDays:Record<string,{line?:string;analyzed?:number}>={
+  "2026-10-07":{"line":"Parlament otvoril rozpravu bez stanoviska NKÚ, JAVYS podpísal kúpu podielu ČEZ, Fico oznámil novembrové vlakové zľavy, NMS zverejnila nový model a SNS avizovala rokovanie o Kuffovi.","analyzed":24},
   "2026-10-06":{"line":"Parlament uvoľnil pravidlá rozpočtového provizória, prijal liekovú reformu a posunul reguláciu sociálnych sietí; envirorezort vymenil troch riaditeľov.","analyzed":46},
   "2026-10-04":{"line":"ZMOS kritizoval čas na posúdenie rozpočtu, Taraba odmietol menej preferenčných hlasov, opozícia riešila spoluprácu, diplomati zostávajú v Kyjeve a rezort kultúry oznámil priority FPU.","analyzed":17},
   "2026-10-05":{"line":"Vláda schválila návrh rozpočtu a pomoc po školských útokoch, zmenila vedenie úradu MŽP, SaS predstavila program a obchvat Ružomberka otvorili motoristom.","analyzed":27},
@@ -44,6 +45,81 @@ export const newsDays:Record<string,{line?:string;analyzed?:number}>={
   '2026-10-03':{line:'Premiér Fico pre virózu odriekol účasť na duklianskych oslavách, kde prezident varoval pred zbrojením, Vučić ohlásil Fica ako hosťa mítingu v Belehrade a RÚZ nepríde na tripartitu k rozpočtu.',analyzed:9},
 };
 export const politicalNews:PoliticalNews[]=[
+{
+  "id": "rozpocet-rozprava-stanovisko-nku-07",
+  "rank": 1,
+  "published": "2026-10-07",
+  "category": "Parlament",
+  "title": "Parlament otvoril rozpravu o rozpočte bez odborného stanoviska NKÚ",
+  "summary": "Poslanci začali rokovať o rozpočte na rok 2027 so schodkom 4,94 percenta HDP, no stanovisko NKÚ zatiaľ nemajú. Kontrolný úrad namieta krátky čas na posúdenie; minister financií návrh obhajuje a kritiku úradu odmieta.",
+  "detail": [
+    "Národná rada SR v stredu 7. októbra začala prerokúvať návrh štátneho rozpočtu na rok 2027. Minister financií Ladislav Kamenický (Smer-SD) ho predstavil s plánovaným schodkom verejných financií 4,94 percenta HDP, teda 7,443 miliardy eur. Parlament rozpočet ešte neschválil; hlasovanie je naplánované najskôr na 14. októbra.",
+    "Predseda Najvyššieho kontrolného úradu Ľubomír Andrassy upozornil, že pre spôsob a rýchlosť prípravy rozpočtu chýba odborné stanovisko úradu. NKÚ uviedol, že na jeho vypracovanie dostal iba 48 hodín, a komplexné hodnotenie dodá neskôr. Kamenický túto kritiku odmietol, vystúpenie označil za aktivizmus a tvrdil, že kontrolóri mohli stanovisko pripraviť.",
+    "Opoziční poslanci namietali zadlžovanie, chýbajúce prorastové opatrenia a nedostatok času na odborné posúdenie. Minister návrh opisuje ako sociálny a koaličný kompromis a tvrdí, že spĺňa európske fiškálne pravidlá. Rozprava má pokračovať vo štvrtok 8. októbra; spor o vyrovnaný rozpočet vláda a opozícia spájajú s očakávaným rozhodnutím Ústavného súdu."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/poslanci-ukoncili-den-rozpravou-o-rozp/998068-clanok.html"
+},
+{
+  "id": "jess-cez-podpis-zmluvy-07",
+  "rank": 2,
+  "published": "2026-10-07",
+  "category": "Vláda",
+  "title": "JAVYS podpísal kúpu podielu ČEZ v JESS, opozícia spochybňuje náklady",
+  "summary": "Slovenský JAVYS a český ČEZ podpísali zmluvu o prevode 49-percentného podielu v JESS za 189,4 milióna eur. Premiér očakáva rýchlejšiu prípravu jadrového zdroja, opozícia namieta cenu a transparentnosť projektu.",
+  "detail": [
+    "Generálni riaditelia spoločností JAVYS a ČEZ v stredu 7. októbra na Úrade vlády SR podpísali zmluvu o kúpe 49-percentného podielu ČEZ v Jadrovej energetickej spoločnosti Slovenska. Cenu 189,4 milióna eur schválila vláda 30. septembra. Slovensko má cez JAVYS získať úplné vlastníctvo JESS, ktorá pripravuje nový jadrový zdroj v Jaslovských Bohuniciach.",
+    "Premiér Robert Fico (Smer-SD) tvrdí, že získanie všetkých dokumentov a povolení spoločnosti umožní urýchliť prípravu elektrárne. Generálny riaditeľ ČEZ Daniel Beneš pripomenul štúdiu realizovateľnosti, environmentálne hodnotenie aj ďalšie povolenia a získané pozemky. Generálny riaditeľ JAVYS Miroslav Obert uviedol, že slovenská vláda preberá zodpovednosť za riadenie projektu.",
+    "SaS, Hnutie Slovensko, Za ľudí a PS na spoločnej tlačovej konferencii spochybnili cenu odkúpenia a prípravu ďalších výdavkov. Poslanec Karol Galek (SaS) upozornil aj na rozpočtovú položku pre národný jadrový program; predseda hnutia Michal Šimečka (PS) namietal nedostatok zverejnených analýz a konzultácií. Ide o výhrady opozície, nie o preukázané porušenie zákona. Podpis kúpy podielu ešte neznamená dokončenie elektrárne."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/ekonomika/slovensko-sa-stane-100-percentnym-vlast/997978-clanok.html"
+},
+{
+  "id": "vlakove-cestovne-november-07",
+  "rank": 3,
+  "published": "2026-10-07",
+  "category": "Vláda",
+  "title": "Fico oznámil pokračovanie polovičného cestovného vo vlakoch v novembri",
+  "summary": "Premiér oznámil, že polovičné cestovné v druhej triede vlakov vo verejnom záujme bude platiť aj v novembri. Možné pokračovanie v decembri zostáva otvorené; PS upozorňuje, že pomoc sa nedostane k ľuďom bez dostupnej železnice.",
+  "detail": [
+    "Premiér Robert Fico (Smer-SD) v stredu 7. októbra po rokovaní na ministerstve dopravy oznámil pokračovanie 50-percentnej zľavy v druhej triede vlakov jazdiacich vo verejnom záujme aj počas novembra. Pripustil jej predĺženie do decembra a podľa potreby tiež v roku 2027. Zľava sa začala uplatňovať 1. októbra; stredajšou novou informáciou je jej novembrové pokračovanie.",
+    "Fico opatrenie obhajoval zvýšeným počtom platiacich cestujúcich a pripravenosťou vlády ďalej financovať dotáciu. Informoval aj o polovičnom cestovnom v regionálnych autobusoch a MHD krajských miest, ktoré sa vo väčšine regiónov má začať 12. októbra. O ďalšej podpore týchto služieb chce vláda rozhodovať podľa výsledkov; premiér zároveň uviedol, že úplné údaje o autobusoch ešte nemá.",
+    "Poslanec Ján Hargaš (PS) namieta, že vlakovú zľavu nevyužijú obyvatelia miest bez železničného spojenia ani ľudia, ktorí potrebujú pri práci prepravovať vybavenie. Namiesto nej navrhuje cielenejšiu pomoc domácnostiam a zasiahnutým odvetviam. Novembrové pokračovanie premiér potvrdil, ďalšie mesiace však predstavil ako možnosť, nie ako konečné rozhodnutie."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/ekonomika/premier-znizene-cestovne-vo-vlakoc/997898-clanok.html"
+},
+{
+  "id": "nms-oktober-model-07",
+  "rank": 4,
+  "published": "2026-10-07",
+  "category": "Prieskumy",
+  "title": "NMS: PS zostáva prvé, náskok pred Smerom sa zmenšil",
+  "summary": "Októbrový model NMS dáva PS 19,5 percenta a Smeru-SD 17,8 percenta, tretia je Republika so 14,2 percenta. Prieskum vychádza z online zberu na začiatku mesiaca; výsledky sú odhadom podpory so štatistickou neistotou.",
+  "detail": [
+    "Agentúra NMS v stredu 7. októbra zverejnila nový volebný model. PS v ňom dosiahlo 19,5 percenta a Smer-SD 17,8 percenta, rozdiel je 1,7 percentuálneho bodu. Republika získala 14,2 percenta. Oproti septembru podpora PS klesla, zatiaľ čo Smer-SD si polepšil.",
+    "Nad päťpercentnou hranicou model uvádza aj Hnutie Slovensko, SaS, KDH a Hlas-SD. Demokratom nameral 4,9 percenta; agentúra však pri zohľadnení intervalu spoľahlivosti ich vstup do parlamentu nevylučuje. Čísla opisujú výsledok tohto merania, nie istý výsledok budúcich volieb.",
+    "NMS zbierala odpovede online od 1. do 5. októbra na vzorke 1 005 respondentov. Podľa metodiky vzorka reprezentuje online populáciu Slovenska nad 18 rokov a odpovede sú vážené podľa viacerých znakov. Výskum agentúra financovala sama; rozdiely treba čítať s prihliadnutím na štatistickú neistotu."
+  ],
+  "sourceName": "NMS Market Research Slovakia",
+  "source": "https://nms.global/sk/volebny-model-oktober-2026/"
+},
+{
+  "id": "sns-kuffa-babnic-odvolanie-07",
+  "rank": 5,
+  "published": "2026-10-07",
+  "category": "Vláda",
+  "title": "SNS plánuje piatkové rokovanie o Kuffovi, TANAP prišiel o riaditeľa",
+  "summary": "SNS chce v piatok rokovať s premiérom o vymenovaní Filipa Kuffu za ministra životného prostredia a trvá na jeho nominácii. V rezorte pokračovali personálne zmeny: Michala Babniča odvolali z čela Správy TANAP-u.",
+  "detail": [
+    "Predseda strany Andrej Danko (SNS) v stredu 7. októbra oznámil, že strana bude v piatok 9. októbra rokovať s premiérom o nominácii Filipa Kuffu na ministra životného prostredia. SNS na svojom kandidátovi naďalej trvá. Danko zároveň uviedol, že treba počkať aj na rozhodnutie prezidenta Petra Pellegriniho; vymenovanie Kuffu zatiaľ neoznámil.",
+    "V ten istý deň potvrdila Správa Tatranského národného parku aj ministerstvo životného prostredia odvolanie riaditeľa Michala Babniča. Rezort TASR neposkytol dôvody rozhodnutia ani meno jeho nástupcu. Babnič uviedol, že odvolanie berie na vedomie a v tej chvíli sa k nemu nechce podrobnejšie vyjadrovať.",
+    "Danko kritizoval stav ministerstva po bývalom ministrovi Tomášovi Tarabovi. Nechcel však povedať, či by nevymenovanie Kuffu spôsobilo problém pri schvaľovaní rozpočtu. Avizované piatkové rokovanie je ďalším krokom v riešení obsadenia rezortu; z jeho oznámenia nevyplýva konečná dohoda s premiérom ani rozhodnutie prezidenta."
+  ],
+  "sourceName": "Denník N · Minúta po minúte",
+  "source": "https://dennikn.sk/minuta/5608498"
+},
 {
   "id": "provizorium-pravidla-schvalene-06",
   "rank": 1,
