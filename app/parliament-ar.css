@@ -164,7 +164,7 @@
 .par3d-vote-search:focus-within{border-color:var(--mag-ink)}
 .par3d-vote-kinds{display:flex;flex-wrap:wrap;gap:5px}
 .par3d-vote-kinds button{display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:0 10px;border:1px solid var(--border);border-radius:99px;background:#fffefa;font:inherit;font-size:12px;font-weight:600;color:var(--mag-ink);cursor:pointer}
-.par3d-vote-kinds button small{font-weight:500;color:var(--text-3);font-variant-numeric:tabular-nums}
+.par3d-vote-kinds button small{font-size:11px;font-weight:500;color:var(--text-3);font-variant-numeric:tabular-nums}
 .par3d-vote-kinds button[aria-pressed=true]{border-color:#20392f;background:#20392f;color:#fff}
 .par3d-vote-kinds button[aria-pressed=true] small{color:#cfe0d6}
 .par3d-vote-list{list-style:none;display:grid;gap:6px;margin:0;padding:0}

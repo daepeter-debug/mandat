@@ -1,8 +1,8 @@
 // Generuje scripts/build-deputies.mjs z public/data/hlasovania (kluby k poslednému hlasovaniu). Needitovať ručne.
 export const parliamentClubs = {
-  "asOf": "2026-10-01",
-  "voteId": 58399,
-  "votes": 348,
+  "asOf": "2026-10-06",
+  "voteId": 58451,
+  "votes": 353,
   "deputies": 169,
   "since": "2023-11-22",
   "clubs": [
@@ -14,7 +14,7 @@ export const parliamentClubs = {
     {
       "club": "Klub HLAS - SD",
       "party": "hlas",
-      "seats": 25
+      "seats": 24
     },
     {
       "club": "Klub SNS",
@@ -24,7 +24,7 @@ export const parliamentClubs = {
     {
       "club": "Poslanci, ktorí nie sú členmi poslaneckých klubov",
       "party": "nezaradeni",
-      "seats": 8
+      "seats": 9
     },
     {
       "club": "Klub SLOVENSKO - ZA ĽUDÍ",

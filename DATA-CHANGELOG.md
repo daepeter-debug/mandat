@@ -1,5 +1,23 @@
 # Evidencia údajov a rozsahu
 
+## 8. 10. 2026 — Mobilná revízia, hlasovania zo 6. 10. a kontrola prieskumov (Claude)
+
+**Revízia mobilu (375 a 402 px):** prešli sme 12 sekcií, stránku `/parlament` a 5 hier.
+- **Merania:** pretekanie do šírky, prekrývajúce sa a orezané texty, malé dotykové plochy, drobné písmo, rozbité obrázky a chyby v konzole.
+- **Výsledok:** nikde nič nepreteká ani sa neprekrýva a konzola je bez chýb.
+
+**Opravené:**
+- **Kto by dnes vyhral:** pruh ukazoval šancu na prvé miesto (~97 : 3), hoci pôsobil ako pomer percent. Teraz je to pomer percent so stredovou čiarkou.
+- **Mierky bez stropu 25 %:** graf podľa agentúry a pruh podpory na kartách strán sa pri strane nad 25 % neorežú.
+- **Pás strán na úvode:** dlhý názov („PRÁVO NA PRAVDU“) sa zalomí na dva riadky namiesto odrezania.
+- **Prieskumy na mobile:** rebríček strán v agregátore už nemá vnútorné posúvanie s výškou 300 px, všetky strany sú viditeľné naraz.
+- **Vlastný model:** pripnutý riadok kresiel sa dá potiahnuť do strany. Na 375 px bola štvrtá strana odrezaná pod „Väčšina 76“.
+- **Parlament:** počty pri filtroch druhov hlasovaní majú 11 px namiesto 9,6 px.
+
+**Dáta:**
+- **Hlasovania NR SR:** pribudlo 5 záverečných hlasovaní z utorka 6. 10. a teraz ich je 353. Prepočítali sa aj kluby k 6. 10. (HLAS 24, nezaradení 9).
+- **Prieskumy:** nič nové. AKO má len septembrový, NMS ani FOCUS zatiaľ nemajú októbrový a októbrový Infostat neexistuje. Preto `dataVerified` = 2026-10-08.
+
 ## 8. 10. 2026 — Deň v politike: doplnený 7. október (Codex)
 
 Pridaných päť správ za stredu, veta dňa a 24 zlúčených domácich politických a verejnopolitických línií zo zberu 63 položiek Denníka N a 83 titulkov TASR; newsChecked je 8. október. Autor vykonal vlastnú druhú kontrolu a samostatný agent čerstvo načítal všetkých 13 zdrojov vybraných správ vrátane oficiálneho októbrového modelu NMS. Overené fakty, atribúcie, dátumy, jazyk, formát a odlíšenie nového vývoja. Podklady a audity sú mimo repo v outputs/automatizacia-lokalne/2026-10-08. Publikovanie nadväzuje na Petrovo povolenie zo 7. októbra bez ďalšieho schvaľovania jednotlivých dní. Databázy prieskumov a hlasovaní sa nemenia; októbrový model NMS je zhrnutý v správe a označený na samostatné dátové overenie.
