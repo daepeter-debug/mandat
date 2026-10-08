@@ -26,8 +26,9 @@
 .qa-duel-sides strong{font-size:clamp(34px,5vw,52px);font-weight:650;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
 .qa-duel-sides>span:first-child strong{color:var(--a)}.qa-duel-sides>span:last-child strong{color:var(--b)}
 .qa-duel-sides em{display:grid;place-items:center;width:40px;height:40px;margin-bottom:6px;border-radius:50%;background:#f0f3ec;font-style:normal;font-size:12px;font-weight:700;color:var(--text-2)}
-.qa-tug{display:flex;height:16px;margin-top:16px;border-radius:999px;overflow:hidden;background:#edf0e8;animation:qa-reveal .8s cubic-bezier(.2,.8,.2,1)}
+.qa-tug{position:relative;display:flex;gap:2px;height:16px;margin-top:16px;border-radius:999px;overflow:hidden;background:#edf0e8;animation:qa-reveal .8s cubic-bezier(.2,.8,.2,1)}
 .qa-tug-a{background:var(--a)}.qa-tug-b{flex:1;background:var(--b)}
+.qa-tug s{position:absolute;inset:3px auto 3px 50%;width:2px;margin-left:-1px;border-radius:1px;background:rgba(255,255,255,.9)}
 
 /* väčšina */
 .qa-seats{position:relative;display:flex;gap:3px;height:34px;animation:qa-reveal .8s cubic-bezier(.2,.8,.2,1)}

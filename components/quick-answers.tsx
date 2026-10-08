@@ -57,7 +57,8 @@ function Winner() {
       <em>vs</em>
       <span><b>{pb.short}</b><strong><CountUp value={b.value} digits={1} suffix=" %"/></strong></span>
     </div>
-    <div className="qa-tug" aria-hidden="true"><i className="qa-tug-a" style={{ width: `${fa / (fa + fb || 1) * 100}%` }}/><i className="qa-tug-b"/></div>
+    {/* Pruh = pomer percent oboch strán (nie podiel prepočtov s prvým miestom — ten je vo vete pod ním); čiarka v strede ukazuje, kto vedie. */}
+    <div className="qa-tug" aria-hidden="true"><i className="qa-tug-a" style={{ width: `${a.value / (a.value + b.value) * 100}%` }}/><i className="qa-tug-b"/><s/></div>
     <p className="qa-say">Prvé miesto v Modeli Mandát: <b>{pa.short} {inRuns(fa)}</b>{fb > 0.05 ? <>, {pb.short} {inRuns(fb)}</> : null}.</p>
     {under.length > 0 && <p className="qa-fine">Pozor: v roku 2023 prieskumy podcenili {under.map(x => x.short).join(" a ")} priemerne o {fmt(Math.abs(under[0].mean))} b.</p>}
   </div>;
