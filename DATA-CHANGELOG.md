@@ -1,5 +1,22 @@
 # Evidencia údajov a rozsahu
 
+## 9. 10. 2026 večer — Deň v politike: piatok 9. 10. a dokončená sobota 3. 10. (Claude)
+
+- **Piatok 9. 10. (6 správ z 34 udalostí):**
+  - Danko po rokovaní s Ficom trvá na Kuffovi a hovorí o dohode na strope odmien;
+  - zmluva na Slovensko.sk za vyše 90 mil. € čelí kritike;
+  - správny súd zrušil rozkaz, ktorým Šutaj Eštok postavil Čurillu mimo služby;
+  - Hlas sťahuje z volieb obvineného asistenta poslanca Slyška (obvinenie pripísané prokuratúre, prezumpcia neviny);
+  - SaS kritizuje obnovenie výmeny vojenských pridelencov s Ruskom;
+  - opoziční kandidáti na primátorov sa spájajú.
+  - Podklady sú do 23:00.
+- **Sobota 3. 10. dokončená:** doteraz bola len z podkladov do 12:10. Prejdených udalostí je teraz 17 namiesto 9.
+  - **Prepracovaná správa `fico-dukla-belehrad-vucic-03`:** Fico vynechal oslavy na Dukle aj míting v Belehrade. Dôvody sú pripísané zvlášť: Úrad vlády uvádza chorobu, Vučićova strana radu lekára po atentáte. Strana zverejnila prejav, ktorý mal Fico predniesť; nikde netvrdíme, že ho niekto prečítal. Zdroj je teraz TASR 997035.
+  - **Nová správa:** pri Dukle odhalili sochu maršala Koneva, prišiel minister Takáč aj ruský veľvyslanec.
+  - **Nová veta dňa.**
+- **Postup:** na každý deň jeden pisateľ a nezávislý overovateľ. Overovatelia opravili pripisovanie tvrdení, vety blízke zdroju a pri obvinení prezumpciu neviny.
+- **Pre automatiku:** obe zmeny v sobote 3. 10. zapisoval pomocný skript `revise-news-1009.mjs`. Výsledok, ktorý ide na web, je v `lib/political-news.ts`.
+
 ## 9. 10. 2026 — Deň v politike: doplnený 8. október (Codex)
 
 Pridaných päť správ za štvrtok, veta dňa a 40 zlúčených domácich politických a verejnopolitických línií zo zberu 71 položiek Denníka N a 84 titulkov TASR; newsChecked je 9. október. Autor vykonal vlastnú druhú kontrolu a samostatný agent čerstvo načítal všetkých 16 použitých úplných zdrojov. Overené fakty, atribúcie, dátumy, jazyk, originalita a formát. Podklady a audity sú mimo repo v outputs/automatizacia-lokalne/2026-10-09. Publikovanie nadväzuje na Petrovo povolenie zo 7. októbra bez ďalšieho schvaľovania jednotlivých dní. Databázy prieskumov a hlasovaní sa nemenia; nové regionálne mediálne podklady FOCUS a AKO sú označené odkazmi na samostatné overenie v monitoringu, bez prevzatia čísel.
