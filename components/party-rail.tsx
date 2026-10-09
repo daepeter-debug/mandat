@@ -1,5 +1,7 @@
 "use client";
 
+import { partyDelta } from "@/lib/mobile-insights";
+
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { ArrowRight, ArrowUpRight, ChartNoAxesCombined } from "lucide-react";
@@ -37,7 +39,7 @@ export function PartyStrip({selected,onSelect,onMore}:{selected:string|null;onSe
     <div className="party-strip-head"><span title={`Aktualizované ${date(aggregateUpdated)} · posledný zber ${date(aggregateLastDate)}`}>Model Mandát · {date(aggregateUpdated)}</span><button type="button" onClick={onMore} aria-label="Všetky strany a profily">Všetky strany <ArrowRight size={14} aria-hidden="true"/></button></div>
     <div className="party-strip-scroll">{ranked.map(p=>{const value=currentAggregate.values[p.id].value;return <button key={p.id} type="button" className="party-strip-item" aria-pressed={selected===p.id} aria-label={`${p.name}: ${fmt(value)} percent, ${selected===p.id?"zatvoriť":"otvoriť"} profil`} onClick={e=>onSelect(p,e.currentTarget.querySelector<HTMLElement>(".party-strip-logo"))}>
       <span className="party-strip-logo" style={{"--party-color":p.color} as CSSProperties}><span aria-hidden="true">{p.short.slice(0,2)}</span>{logoMap[p.id]&&<Image src={logoMap[p.id].src} alt="" width={36} height={36} unoptimized loading="eager"/>}</span>
-      <span className="party-strip-name">{p.short}</span><b className="party-strip-value">{fmt(value)}<small> %</small></b>
+      <span className="party-strip-name">{p.short}</span><b className="party-strip-value">{fmt(value)}<small> %</small></b>{partyDelta(p.id)!==null&&<small className="party-strip-delta" data-direction={partyDelta(p.id)!>0?"up":partyDelta(p.id)!<0?"down":"flat"} title="Zmena za 30 dní">{partyDelta(p.id)!>0?"▲":partyDelta(p.id)!<0?"▼":"·"} {fmt(Math.abs(partyDelta(p.id)!))} b.<span className="sr-only"> za 30 dní</span></small>}
     </button>;})}</div>
   </section>;
 }

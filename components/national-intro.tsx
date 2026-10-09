@@ -10,6 +10,7 @@ import QuickAnswers from "@/components/quick-answers";
 import MinuteLaunch from "@/components/minute-launch";
 import "@/app/aurora.css";
 import { edition, signedInt } from "@/lib/edition";
+import { termProgress } from "@/lib/mobile-insights";
 import { date } from "@/lib/polls";
 
 // Natural Earth 1:50m (public domain), equirectangular projection at 49° N.
@@ -32,6 +33,7 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
   const [year, month] = today.split("-").map(Number);
   // Only a month-level planning horizon is known. Never invent an election day.
   const months = today ? Math.max(0, (2027-year)*12+9-month) : null;
+  const elapsed = termProgress(today);
   const monthLabel = months === 1 ? "mesiac" : months !== null && months >= 2 && months <= 4 ? "mesiace" : "mesiacov";
   const w = edition.withPartners, b = edition.before, m = edition.majority;
   const dWithCoalition = w.coalition - b.withCoalition, dWithOpposition = w.opposition - b.withOpposition;
@@ -78,7 +80,8 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
           <g clipPath={`url(#${uid}-clip)`}><path d={mapPath} fill="#fffefa"/><path className="slovakia-blue" d="M0 95 Q145 65 290 105 T600 95 V300 H0Z" fill="#315b9a"/><path className="slovakia-red" d="M0 172 Q145 142 290 182 T600 172 V300 H0Z" fill="#c94d58"/></g><path d={mapPath} fill="none" stroke="#47614e" strokeWidth="3" strokeOpacity=".2"/>
         </svg>
       </div>
-      {months !== null && months > 0 ? <div className="election-clock" aria-label={`Orientačne ${months} ${monthLabel} do septembra 2027`}><span className="election-approx">približne</span><div className="election-digits" aria-hidden="true">{String(months).padStart(2,"0").split("").map((digit,i)=><span key={i}>{digit}</span>)}</div><span className="election-unit">{monthLabel}</span></div> : <div className="election-pending">{months===null ? "Načítavam odpočet…" : "Čakáme na potvrdený termín"}</div>}
+      {months !== null && months > 0 ? <div className="election-clock" role="timer" aria-label={`Orientačne ${months} ${monthLabel} do septembra 2027`}><span className="election-approx">približne</span><div className="election-digits" aria-hidden="true">{String(months).padStart(2,"0").split("").map((digit,i)=><span key={`${i}-${digit}`}>{digit}</span>)}</div><span className="election-unit">{monthLabel}</span></div> : <div className="election-pending">{months===null ? "Načítavam odpočet…" : "Čakáme na potvrdený termín"}</div>}
+      {elapsed !== null && <div className="election-term"><span>Uplynulo {elapsed} % orientačného volebného obdobia</span><div role="progressbar" aria-label="Orientačné volebné obdobie 2023 až september 2027" aria-valuemin={0} aria-valuemax={100} aria-valuenow={elapsed}><i style={{width:`${elapsed}%`}}/></div></div>}
       <p className="election-horizon"><CalendarDays size={14}/> Orientačný horizont: september 2027</p>
       <p className="election-unconfirmed">Presný deň volieb zatiaľ nemáme potvrdený.</p>
       <details className="election-explanation"><summary>O odpočte a zdrojoch</summary><p>Odpočítavame kalendárne mesiace do septembra 2027, nie dni do vyhlásených volieb. Ide o orientačný horizont riadnych volieb. Po overení oficiálneho termínu môžeme zobraziť presné odpočítavanie.</p><a href="https://www.minv.sk/?volby-nrsr" target="_blank" rel="noopener noreferrer">Voľby do NR SR · Ministerstvo vnútra <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noopener noreferrer">Obrys mapy · Natural Earth <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><p>Mapa je grafický motív. Farby nezobrazujú regionálnu podporu strán.</p></details>

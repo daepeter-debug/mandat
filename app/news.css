@@ -382,3 +382,18 @@ html .lab-input-row input[type=number]{width:68px}
 .parliament-now-open:hover{border-color:var(--mag-ink)}
 .parliament-now-open:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .parliament-now-open svg:last-child{color:var(--text-3)}
+
+/* Compact digits form one number; the term endpoint is only a month-level horizon. */
+.national-copy .election-digits{gap:1px}
+.national-copy .election-digits>span{min-width:18px;height:30px;border-radius:3px;background:var(--card);animation:election-flip .35s ease-out}
+.election-term{grid-column:1/-1;grid-row:4;margin:10px 0 2px;font-size:10px;color:var(--text-2)}
+.election-term>div{height:3px;background:var(--border);margin-top:6px;border-radius:2px;overflow:hidden}
+.election-term i{display:block;height:100%;background:var(--mag-ink)}
+.national-copy .election-explanation{grid-row:5}
+.party-strip-delta{font-size:9px;line-height:11px;font-variant-numeric:tabular-nums;color:var(--text-2)}
+.party-strip-delta[data-direction=up]{color:#2f6b3f}
+.party-strip-delta[data-direction=down]{color:#9a3b30}
+.party-strip-head button{min-height:40px}
+@keyframes election-flip{from{transform:rotateX(-35deg)}to{transform:rotateX(0)}}
+@media(prefers-reduced-motion:reduce){.national-copy .election-digits>span{animation:none}}
+@media(prefers-reduced-motion:no-preference){.national-copy .election-digits[data-flip]>span{animation:election-flip .35s ease-out}}

@@ -1,3 +1,7 @@
+## 9. 10. 2026 · Mobil: drobné živé detaily (Codex)
+
+Čitateľný orientačný odpočet, priebeh obdobia, zmeny podpory za 30 dní a spoločný katalóg hier. Dáta ani model sa nemenia.
+
 # Evidencia údajov a rozsahu
 
 ## 9. 10. 2026 večer — Deň v politike: piatok 9. 10. a dokončená sobota 3. 10. (Claude)

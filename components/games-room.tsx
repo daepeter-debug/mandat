@@ -19,8 +19,8 @@ const RepublicGame = lazy(() => import("@/components/republic-game"));
 const QuizGame = lazy(() => import("@/components/quiz-game"));
 const WordGame = lazy(() => import("@/components/word-game"));
 const seats = hemicycleSeats(150);
-export type GameId = "quiz" | "words" | "majority" | "december" | "republic";
-export const gameIds: GameId[] = ["quiz", "words", "majority", "december", "republic"];
+import { gameCount, type GameId } from "@/lib/game-catalog";
+export { gameIds, type GameId } from "@/lib/game-catalog";
 // Titulná grafika Koalície slov: dvanásť kachličiek ako v hre (písmeno a body); ilustráciu môže dokresliť Codex.
 const coverTiles: [string, number][] = [["K", 2], ["O", 1], ["A", 1], ["L", 2], ["Í", 3], ["C", 3], ["I", 1], ["A", 1], ["S", 1], ["L", 2], ["O", 1], ["V", 1]];
 
@@ -48,7 +48,7 @@ export default function GamesRoom({ game, onGame }: { game: GameId | null; onGam
         : game === "december" ? <Suspense fallback={<p className="chart-loading" role="status">Načítavame Mandátovce…</p>}><DecemberGame/></Suspense>
         : <Suspense fallback={<p className="chart-loading" role="status">Staviame Lipovú štvrť…</p>}><RepublicGame/></Suspense>}
     </> : <>
-      <div className="section-hero"><header className="games-room-heading"><h1>Herňa</h1><p>Na chvíľu vymeň prieskumy za vlastné ťahy. Päť hier, päť rôznych svetov a dôvod vrátiť sa aj zajtra.</p></header><SectionArt name="mala-republika"/></div>
+      <div className="section-hero"><header className="games-room-heading"><h1>Herňa</h1><p>Na chvíľu vymeň prieskumy za vlastné ťahy. {gameCount} hier, {gameCount} rôznych svetov a dôvod vrátiť sa aj zajtra.</p></header><SectionArt name="mala-republika"/></div>
       <div className="games-collection">
         <article className="games-entry games-quiz">
           <div className="games-quiz-art" aria-hidden="true"><span className="games-quiz-number">30</span><span className="games-quiz-dots"><i/><i/><i/><i/></span><span className="games-quiz-mark">?</span></div>

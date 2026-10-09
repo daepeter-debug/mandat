@@ -1,5 +1,7 @@
 "use client";
 
+import { gameCount } from "@/lib/game-catalog";
+
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Armchair, BarChart3, BookOpen, CalendarRange, FileText, Gamepad2, Home, Landmark, LayoutGrid, Newspaper, PieChart, Scale, SlidersHorizontal, Users, Wallet } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -25,7 +27,7 @@ const details: Record<string, { icon: ReactNode; text: string }> = {
   data: { icon: <PieChart/>, text: "Polkruhy, bloky a agentúry" },
   model: { icon: <SlidersHorizontal/>, text: "Posuňte percentá, zostavte väčšinu" },
   programmes: { icon: <FileText/>, text: "Programy strán a archív 2023" },
-  game: { icon: <Gamepad2/>, text: "Tri hry o rozhodovaní" },
+  game: { icon: <Gamepad2/>, text: `${gameCount} hier o rozhodovaní` },
   method: { icon: <BookOpen/>, text: "Zdroje, metodika a hranice dát" },
 };
 

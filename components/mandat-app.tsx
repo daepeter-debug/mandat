@@ -43,7 +43,7 @@ const ResponsibilityPage = lazy(() => import("@/components/responsibility-page")
 const GamesRoom = lazy(() => import("@/components/games-room"));
 // Parlament (/parlament): 3D sála, hlasovania a poslanci; 3D knižnica a model sa načítajú až po vstupe do sály.
 const ParliamentPage = lazy(() => import("@/components/parliament-page"));
-import { gameIds, type GameId } from "@/components/games-room";
+import { gameIds, type GameId } from "@/lib/game-catalog";
 import PoliticalNewsFeed, { NewsSheetMeta, NewsSheetNav } from "@/components/news-room";
 import { epigraph } from "@/lib/quote";
 import { newsById, newsChecked, newsNeighbors } from "@/lib/political-news";
@@ -107,7 +107,7 @@ function parseSearch(search:string):UiState {
     finance: pick("hv", v=>["years","taxes","governments","living","compare"].includes(v)) ?? defaults.finance,
     parliament: pick("pn", v=>parliamentViews.includes(v)) ?? defaults.parliament,
     parliamentPartners: pick("pp", v=>v==="1") !== null,
-    game: pick("g", v=>(gameIds as string[]).includes(v)) as GameId|null,
+    game: pick("g", v=>(gameIds as readonly string[]).includes(v)) as GameId|null,
     news: pick("sp", v=>newsById(v)!==null),
     newsDay: pick("den", v=>/^\d{4}-\d{2}-\d{2}$/.test(v)),
     agency: pick("f", v=>v==="all"||agencies.includes(v)) ?? defaults.agency,
