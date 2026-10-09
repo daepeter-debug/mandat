@@ -1,3 +1,7 @@
+## 9. 10. 2026 · Živý polkruh vydania (Codex)
+
+Kompaktných 150 kresiel pod titulkom, priamy vstup do parlamentu a jednorazový nábeh čísel; pri obmedzení pohybu konečný stav.
+
 ## 9. 10. 2026 · Deň za 30 sekúnd (Codex)
 
 Správy vybraného dňa ako prístupný príbeh, zdieľanie PNG a odkaz v URL. Spoločné ovládanie s Mandátom za minútu.

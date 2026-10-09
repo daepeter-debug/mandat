@@ -385,7 +385,7 @@ html .lab-input-row input[type=number]{width:68px}
 
 /* Compact digits form one number; the term endpoint is only a month-level horizon. */
 .national-copy .election-digits{gap:1px}
-.national-copy .election-digits>span{min-width:18px;height:30px;border-radius:3px;background:var(--card);animation:election-flip .35s ease-out}
+.national-copy .election-digits>span{min-width:18px;height:30px;border-radius:3px;background:var(--card)}
 .election-term{grid-column:1/-1;grid-row:4;margin:10px 0 2px;font-size:10px;color:var(--text-2)}
 .election-term>div{height:3px;background:var(--border);margin-top:6px;border-radius:2px;overflow:hidden}
 .election-term i{display:block;height:100%;background:var(--mag-ink)}
@@ -397,3 +397,18 @@ html .lab-input-row input[type=number]{width:68px}
 @keyframes election-flip{from{transform:rotateX(-35deg)}to{transform:rotateX(0)}}
 @media(prefers-reduced-motion:reduce){.national-copy .election-digits>span{animation:none}}
 @media(prefers-reduced-motion:no-preference){.national-copy .election-digits[data-flip]>span{animation:election-flip .35s ease-out}}
+
+.edition-seat-link{display:grid;justify-items:center;gap:1px;width:100%;max-width:380px;margin:0 0 14px;padding:0;border:0;background:none;color:var(--mag-ink);text-align:center;cursor:pointer}
+.edition-seat-arc{display:block;width:100%;height:150px}
+.edition-seat-link>span{font-size:10px;color:var(--text-2);min-height:26px;display:flex;align-items:center;gap:8px}
+.edition-seat-link:focus-visible{outline:2px solid var(--focus);outline-offset:4px;border-radius:6px}
+@media(prefers-reduced-motion:no-preference){.national-intro[data-enter] .edition-seat-arc circle{animation:edition-seat-light .2s ease-out both;animation-delay:var(--seat-delay)}}
+@keyframes edition-seat-light{from{opacity:.15}to{opacity:1}}
+@media(max-width:760px){.edition-seat-link{max-width:300px;margin:0 auto 14px}.edition-seat-arc{height:140px}}
+
+@media(max-width:760px){.with-party-rail .national-copy h1{font-size:30px}.national-copy>.edition-kicker{font-size:11px;line-height:1.45;margin-bottom:14px}}
+
+@media(max-width:760px){.party-strip{margin-inline:-20px;padding-inline:20px;overflow:clip}}
+
+@media(max-width:760px){.party-strip{contain:inline-size paint}}
+

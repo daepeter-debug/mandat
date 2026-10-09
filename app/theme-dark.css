@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 32 súborov (2a407d6c5a) — needitovať ručne. Pravidiel: 1570, prefarbených: 1218. */
+/* Generované scripts/build-dark.mjs z 32 súborov (7104a42d1a) — needitovať ručne. Pravidiel: 1573, prefarbených: 1221. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2801,6 +2801,18 @@ html[data-theme="dark"] .party-strip-delta[data-direction=up] {
 }
 html[data-theme="dark"] .party-strip-delta[data-direction=down] {
     color: #ed9c93
+}
+html[data-theme="dark"] .edition-seat-link {
+    border: 0;
+    background: none;
+    color: #d1e7de
+}
+html[data-theme="dark"] .edition-seat-link>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .edition-seat-link:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 4px
 }
 @media (max-width:760px) {
     html[data-theme="dark"] .archive-card {

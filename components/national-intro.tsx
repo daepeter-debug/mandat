@@ -1,7 +1,8 @@
 "use client";
 
-import { useId, useSyncExternalStore } from "react";
+import { useEffect, useRef, useId, useSyncExternalStore } from "react";
 import { ArrowDown, ArrowUpRight, CalendarDays } from "lucide-react";
+import EditionHemicycle from "@/components/edition-hemicycle";
 import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
@@ -28,11 +29,32 @@ const currentDay = () => new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/Brat
 const serverDay = () => "";
 
 export default function NationalIntro({ onNavigate, onYear, parliament, onParliament, parliamentPartners, onParliamentPartners, onOpenNews, onOpenNewsDay, onPlayDay }: { onNavigate: (view: string) => void; onYear: (year: number) => void; parliament: string; onParliament: (value: string) => void; parliamentPartners: boolean; onParliamentPartners: (value: boolean) => void; onOpenNews: (id: string) => void; onOpenNewsDay?: (day: string) => void; onPlayDay?: (day: string) => void }) {
+  const intro = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const node = intro.current;
+    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    try { if (sessionStorage.getItem("mandat-edition-entrance")) return; sessionStorage.setItem("mandat-edition-entrance", "1"); } catch { return; }
+    node.dataset.enter = "";
+    const counters = [...node.querySelectorAll<HTMLElement>("[data-count]")];
+    let frame = 0; const start = performance.now();
+    const draw = (now: number) => {
+      const t = Math.min(1, (now-start)/900), eased = 1-Math.pow(1-t,3);
+      counters.forEach(el => { el.textContent = String(Math.round(Number(el.dataset.count)*eased)); });
+      if (t < 1) frame = requestAnimationFrame(draw);
+    };
+    frame = requestAnimationFrame(draw);
+    return () => { cancelAnimationFrame(frame); counters.forEach(el => { el.textContent = el.dataset.count ?? ""; }); };
+  }, []);
   const uid = useId().replace(/:/g, "");
   const today = useSyncExternalStore(subscribeDay, currentDay, serverDay);
   const [year, month] = today.split("-").map(Number);
   // Only a month-level planning horizon is known. Never invent an election day.
   const months = today ? Math.max(0, (2027-year)*12+9-month) : null;
+  const previousMonths = useRef<number | null>(null);
+  useEffect(() => {
+    if (months !== null && previousMonths.current !== null && months !== previousMonths.current) intro.current?.querySelector(".election-digits")?.setAttribute("data-flip", "");
+    previousMonths.current = months;
+  }, [months]);
   const elapsed = termProgress(today);
   const monthLabel = months === 1 ? "mesiac" : months !== null && months >= 2 && months <= 4 ? "mesiace" : "mesiacov";
   const w = edition.withPartners, b = edition.before, m = edition.majority;
@@ -60,15 +82,16 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
     target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
   };
 
-  return <section className="national-intro has-qa" aria-labelledby="national-title">
+  return <section ref={intro} className="national-intro has-qa" aria-labelledby="national-title">
     <div className="national-copy">
       <div className="national-aurora" aria-hidden="true"><i/><i/><i/></div>
       <MinuteLaunch onYear={onYear} onNavigate={onNavigate}/>
       <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát · aktualizované {date(edition.updated)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
       <h1 id="national-title">{headline}</h1>
+      <EditionHemicycle onOpen={()=>onNavigate("parliament")}/>
       <p className="edition-lead">{lead}</p>
       <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">
-        {kpis.map(k => <div key={k.label}><dt>{k.label}</dt><dd>{k.value}</dd><small className={k.delta > 0 ? "up" : k.delta < 0 ? "down" : ""}>{k.note}</small></div>)}
+        {kpis.map(k => <div key={k.label}><dt>{k.label}</dt><dd data-count={k.value} aria-label={`${k.value} kresiel`}>{k.value}</dd><small className={k.delta > 0 ? "up" : k.delta < 0 ? "down" : ""}>{k.note}</small></div>)}
       </dl>
       <EditionBrief/>
       <div className="national-actions"><button className="mag-button" onClick={explore}>Preskúmať prieskumy <ArrowDown size={17}/></button><button className="mag-text-link" onClick={()=>onNavigate("model")}>Zostaviť scenár <ArrowUpRight size={17}/></button></div>
