@@ -1,3 +1,7 @@
+## 9. 10. 2026 · Polkruhy hlasovaní (Codex)
+
+150 hlasov v každej miniatúre, rozsadenie podľa klubov. Detaily sa načítajú pri zobrazení, obmedzená cache a pôvodný pruh pri nedostupných dátach. Náhľad je označený ako ilustrácia.
+
 ## 9. 10. 2026 · Živý polkruh vydania (Codex)
 
 Kompaktných 150 kresiel pod titulkom, priamy vstup do parlamentu a jednorazový nábeh čísel; pri obmedzení pohybu konečný stav.

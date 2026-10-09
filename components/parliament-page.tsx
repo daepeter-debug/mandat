@@ -3,6 +3,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowUpRight, Box, Check, ChevronLeft, ChevronRight, Link2, Pause, Play, Search, Share2, UserRound, X } from "lucide-react";
+import VoteMiniature from "@/components/vote-miniature";
 import Chamber2D from "@/components/chamber-2d";
 import { VOTES_INDEX, clubLabel, clubTotals, kindNames, markColors, markNames, marks, matchesQuery, required, seatMembers, skDay, voteSource, type Mark, type SeatedMember, type VoteIndex, type VoteKind, type VoteSummary } from "@/lib/votes";
 import { DEPUTIES_FILE, clubAgreement, clubStats, deputyProfile, deputyStats, differentAt, displayName, findDeputies, partyAt, unaffiliatedPresence, voteDetailAt, type DeputiesData, type DeputyRow } from "@/lib/deputies";
@@ -186,10 +187,10 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
     </div><figure className="parl-preview">
       <button type="button" aria-label="Preskúmať sálu v 3D" onPointerEnter={prefetch3d} onFocus={prefetch3d}
         onClick={() => { setView3d(true); stage.current?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); track("parlament", "3d"); }}>
-        <Image src="/models/chamber-clubs-2026-10-01.webp" width={1209} height={518} alt="Ilustračná 3D sála podľa klubov k 1. októbru 2026" unoptimized/>
+        <Image src="/models/chamber-clubs-2026-10-01.webp" width={1209} height={518} alt="Ilustračná 3D sála parlamentu" unoptimized/>
         <span><Box size={16} aria-hidden="true"/>Preskúmať v 3D<ArrowUpRight size={16} aria-hidden="true"/></span>
       </button>
-      <figcaption>Náhľad klubov k 1. 10. 2026 · ilustračná sála</figcaption>
+      <figcaption>Ilustračná sála · preskúmaj kluby a hlasovania</figcaption>
     </figure></section>
 
     <section className="parl-stage-block" aria-label="Sála">
@@ -277,10 +278,10 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
             <input type="search" value={query} placeholder="Hľadať v názvoch, napr. rozpočet" enterKeyHint="search" onChange={e => { setQuery(e.target.value); setLimit(PAGE); }}/></label>
           <div className="par3d-vote-kinds" role="group" aria-label="Druh hlasovania">{VOTE_KINDS.map(k => <button key={k} type="button" aria-pressed={kind === k} onClick={() => { setKind(k); setLimit(PAGE); }}>{k === "vsetky" ? "Všetky" : kindNames[k]}{index && <small>{k === "vsetky" ? index.hlasovania.length : index.hlasovania.filter(v => v.druh === k).length}</small>}</button>)}</div>
           {!index && !failed && <p className="parl-note" role="status">Načítavam hlasovania NR SR…</p>}
-          {index && <ol className="par3d-vote-list parl-vote-list">{voteList.slice(0, limit).map(v => { const c = votesCount(v); return <li key={v.id}><button type="button" aria-pressed={vote === v.id} onClick={() => chooseVote(v.id)}>
+          {index && <ol className="par3d-vote-list parl-vote-list">{voteList.slice(0, limit).map(v => { return <li key={v.id}><button type="button" aria-pressed={vote === v.id} onClick={() => chooseVote(v.id)}>
             <span className="par3d-vote-meta">{skDay(v.datum)} · {kindNames[v.druh]}</span>
             <b>{v.nazov}</b>
-            <span className="parl-mini-bar" aria-hidden="true">{marks.map(m => c[m] > 0 && <i key={m} style={{ flexGrow: c[m], background: markColors[m] }}/>)}</span>
+            <VoteMiniature vote={v}/>
             <span className="par3d-vote-result" data-passed={v.preslo}>{v.preslo ? <Check size={13} aria-hidden="true"/> : <X size={13} aria-hidden="true"/>}{v.preslo ? "Prešiel" : "Neprešiel"} · za {v.za}, proti {v.proti}, zdržalo sa {v.zdrzalo}</span>
           </button></li>; })}</ol>}
           {index && !voteList.length && <p className="parl-note">Nič sa nenašlo. Skús iné slovo alebo druh hlasovania.</p>}

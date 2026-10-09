@@ -189,3 +189,16 @@
   .parl-step .parl-play{padding:0 10px}
 }
 @media(prefers-reduced-motion:reduce){.parl-preview img{transition:none}.parl-preview button:hover img{transform:none}}
+
+.parl-vote-list>li>button{grid-template-columns:96px minmax(0,1fr);column-gap:12px;padding:12px}
+.parl-vote-list .par3d-vote-meta{grid-column:2;grid-row:1}
+.parl-vote-list>li>button>b{grid-column:2;grid-row:2;display:block;overflow:visible;-webkit-line-clamp:unset}
+.parl-vote-list .par3d-vote-result{grid-column:1/-1;grid-row:3;margin-top:5px}
+.vote-miniature{grid-column:1;grid-row:1/3;display:grid;align-items:center;width:96px;min-height:58px;align-self:center}
+.vote-mini-arc{display:block;width:96px;height:58px}
+.vote-mini-arc circle{stroke:var(--card);stroke-width:.009}
+.vote-miniature .parl-mini-bar{width:96px}
+@media(prefers-reduced-motion:no-preference){.vote-mini-arc{animation:vote-mini-reveal .2s ease-out}}
+@keyframes vote-mini-reveal{from{opacity:.4}to{opacity:1}}
+
+.vote-mini-arc circle[fill="#3a3f45"]{stroke:var(--text-3);stroke-width:.012}
