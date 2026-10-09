@@ -1,3 +1,7 @@
+## 9. 10. 2026 · Trendy a farebné profily strán (Codex)
+
+Abecedné predvolené poradie, voliteľné poradie podľa podpory v URL, krivky posledných šiestich bodov, 30-dňové zmeny a pásmo neistoty s kreslami v profile. Presun loga zostáva zachovaný.
+
 ## 9. 10. 2026 · Obrazový mobilný rozcestník (Codex)
 
 Dlaždice s miniatúrami existujúcich dát, rezervovanou výškou a lenivým načítaním. Počet hier zo spoločného katalógu.

@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 32 súborov (be27e5b2e7) — needitovať ručne. Pravidiel: 1586, prefarbených: 1233. */
+/* Generované scripts/build-dark.mjs z 32 súborov (ad1329a23b) — needitovať ručne. Pravidiel: 1599, prefarbených: 1246. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -2104,7 +2104,7 @@ html[data-theme="dark"] .directory-art {
 html[data-theme="dark"] .directory-art>svg {
     color: #d1e7de !important
 }
-html[data-theme="dark"] .directory-art svg text {
+html[data-theme="dark"] .directory-art svg:not(.mini-hemicycle) text {
     fill: #bfcec6
 }
 html[data-theme="dark"] .directory-seats .mini-hemicycle {
@@ -2138,6 +2138,51 @@ html[data-theme="dark"] .directory-document i {
         outline: 2px solid #77a998;
         outline-offset: 2px
     }
+}
+html[data-theme="dark"] .party-order {
+    background: #262c29;
+    border: 1px solid #41463d
+}
+html[data-theme="dark"] .party-order button {
+    color: #bfcec6;
+    border: 0;
+    background: none
+}
+html[data-theme="dark"] .party-order button[aria-pressed=true] {
+    background: var(--mag-ink);
+    color: #fffefa
+}
+html[data-theme="dark"] .party-order button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .party-card {
+    border-left: 3px solid var(--party)
+}
+html[data-theme="dark"] .party-card-stat>div:first-child>.party-card-trend {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-card-trend>small[data-direction=up] {
+    color: #b2e5c0
+}
+html[data-theme="dark"] .party-card-trend>small[data-direction=down] {
+    color: #ed9c93
+}
+html[data-theme="dark"] .party-card-trend>small>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-profile-sheet [data-slot=sheet-header] {
+    background: color-mix(in srgb,var(--party-color) 9%,#262c29);
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .party-profile-support strong {
+    color: #d1e7de
+}
+html[data-theme="dark"] .party-profile-support span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-profile-support figcaption {
+    color: #bfcec6
 }
 html[data-theme="dark"] .parliament-now {
     background: #1f2523;
@@ -3592,9 +3637,6 @@ html[data-theme="dark"] .news-story-card h2 {
 html[data-theme="dark"] .news-story-card p {
     color: #e3eee5
 }
-html[data-theme="dark"] .news-story-eyebrow {
-    color: #d1e4d4
-}
 html[data-theme="dark"] .news-story-date {
     color: #dcf59b
 }
@@ -4363,6 +4405,9 @@ html[data-theme="dark"] .parl-about a {
 }
 html[data-theme="dark"] .vote-mini-arc circle {
     stroke: #313734
+}
+html[data-theme="dark"] .vote-mini-arc circle[fill="#3a3f45"] {
+    stroke: #bccac2
 }
 html[data-theme="dark"] .pc-head h2 {
     color: #d1e7de
