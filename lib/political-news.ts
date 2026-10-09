@@ -11,9 +11,10 @@ export type PoliticalNews = {id:string;published:string;rank?:number;category:Ne
   neodchádzal skôr, než dostane obsah; vydavateľ aj odkaz na originál sú v detaile,
   lebo zhrnutie stojí na jeho práci.
 */
-export const newsChecked='2026-10-08';
+export const newsChecked='2026-10-09';
 /** Veta dňa (neutrálne zhrnutie) a počet politických udalostí, z ktorých sme vyberali. */
 export const newsDays:Record<string,{line?:string;analyzed?:number}>={
+  "2026-10-08":{"line":"SaS žiada veto zmien provizória, Svítka inšpekcia poslala preč, minister ohlásil vyššie platy policajtov, envirorezort preveruje odmeny a PS podáva dve oznámenia k tendrom MIRRI.","analyzed":40},
   "2026-10-07":{"line":"Parlament otvoril rozpravu bez stanoviska NKÚ, JAVYS podpísal kúpu podielu ČEZ, Fico oznámil novembrové vlakové zľavy, NMS zverejnila nový model a SNS avizovala rokovanie o Kuffovi.","analyzed":24},
   "2026-10-06":{"line":"Parlament uvoľnil pravidlá rozpočtového provizória, prijal liekovú reformu a posunul reguláciu sociálnych sietí; envirorezort vymenil troch riaditeľov.","analyzed":46},
   "2026-10-04":{"line":"ZMOS kritizoval čas na posúdenie rozpočtu, Taraba odmietol menej preferenčných hlasov, opozícia riešila spoluprácu, diplomati zostávajú v Kyjeve a rezort kultúry oznámil priority FPU.","analyzed":17},
@@ -45,6 +46,81 @@ export const newsDays:Record<string,{line?:string;analyzed?:number}>={
   '2026-10-03':{line:'Premiér Fico pre virózu odriekol účasť na duklianskych oslavách, kde prezident varoval pred zbrojením, Vučić ohlásil Fica ako hosťa mítingu v Belehrade a RÚZ nepríde na tripartitu k rozpočtu.',analyzed:9},
 };
 export const politicalNews:PoliticalNews[]=[
+{
+  "id": "provizorium-veto-prezident-08",
+  "rank": 1,
+  "published": "2026-10-08",
+  "category": "Parlament",
+  "title": "SaS žiada veto zmien provizória, prezident chce rokovať s rezortom financií",
+  "summary": "SaS vyzvala prezidenta, aby vrátil parlamentu zmeny rozpočtového provizória, a pri podpise avizuje podnet na Ústavný súd. Prezidentská kancelária ohlásila rokovanie s rezortom financií, ktorý úpravu obhajuje.",
+  "detail": [
+    "SaS vo štvrtok 8. októbra vyzvala prezidenta Petra Pellegriniho, aby vrátil parlamentu novelu rozpočtových pravidiel schválenú 6. októbra. Predseda strany Branislav Gröhling (SaS) tvrdí, že uvoľnenie provizória umožní minúť celoročné peniaze pred voľbami. Novým krokom je výzva na veto už prijatej úpravy.",
+    "Podpredsedníčka strany Mária Kolíková (SaS) avizovala, že ak prezident zákon podpíše, opozícia sa obráti na Ústavný súd, pretože úpravu považuje za protiústavnú. Hovorkyňa prezidenta uviedla, že Pellegrini sa v najbližších dňoch plánuje stretnúť s vedením ministerstva financií a prijaté zmeny podrobne posúdiť. Konečné rozhodnutie o podpise alebo vete zatiaľ neoznámil.",
+    "Minister financií Ladislav Kamenický (Smer-SD) zmenu obhajuje prípravou na alternatívy, aby štát fungoval aj bez schváleného rozpočtu. Poslanec Ján Blcháč (Hlas-SD) odmietol obavy z predčasného minutia peňazí a poukázal na pokračujúce príjmy aj zákonné výdavky. Parlament zároveň pokračoval v rozprave o rozpočte na rok 2027; hlasovanie je plánované najskôr na 14. októbra."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/ekonomika/sas-vyzyva-prezidenta-aby-vetoval-zmie/998205-clanok.html"
+},
+{
+  "id": "svitok-navrat-inspekcia-08",
+  "rank": 2,
+  "published": "2026-10-08",
+  "category": "Politika",
+  "title": "Svítka inšpekcia poslala preč, minister avizuje ponuku pracovného miesta",
+  "summary": "Policajt Juraj Svítok sa po súdnych rozhodnutiach prišiel prihlásiť na inšpekciu, jej šéf ho však poslal preč pre nedostatok práce. Minister sľúbil ponuku miesta; Úrad na ochranu oznamovateľov žiada napraviť porušenie zákona.",
+  "detail": [
+    "Bývalý zástupca riaditeľa policajnej inšpekcie Juraj Svítok sa vo štvrtok 8. októbra prišiel prihlásiť do práce v Bratislave po súdnych rozhodnutiach o jeho preradení. Riaditeľ inšpekcie Branislav Zurian ho poslal preč s vysvetlením, že funkcia bola zrušená a nemá preňho prácu. Svítok uviedol, že chce pracovať, a avizoval podanie trestného oznámenia na Zuriana.",
+    "Správny súd v Banskej Bystrici zrušil personálny rozkaz o ustanovení Svítka do nižšej funkcie v Bánovciach nad Bebravou. Skoršie rozhodnutie Správneho súdu v Bratislave zrušilo rozhodnutie ministerstva a vrátilo vec na ďalšie konanie. Podľa advokáta Petra Kubinu pri preradení chýbal zákonom požadovaný súhlas Úradu na ochranu oznamovateľov.",
+    "Minister vnútra Matúš Šutaj Eštok (Hlas-SD) tvrdí, že súdne rozhodnutia rešpektuje a personálna sekcia Svítkovi ponúkne adekvátne pracovné miesto. Úrad na ochranu oznamovateľov upozornil, že po súdnom rozhodnutí treba porušenie zákona napraviť a nemožno sa odvolávať na zmenené pomery. SaS avizovala mimoriadny parlamentný výbor; konkrétne nové zaradenie Svítka minister neoznámil."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/m-sutaj-estok-j-svitokovi-ponuknu/998237-clanok.html"
+},
+{
+  "id": "policajti-platy-rozpocet-08",
+  "rank": 3,
+  "published": "2026-10-08",
+  "category": "Vláda",
+  "title": "Šutaj Eštok ohlásil vyššie platy policajtov, naviazané sú na rozpočet",
+  "summary": "Minister vnútra ohlásil pre policajtov na rok 2027 priemerný rast príjmu o 350 eur, zložený z valorizácie a vyššieho rizikového príplatku. Odbory dohodu vítajú, no žiadajú systémové zmeny; SaS spochybňuje istotu financovania.",
+  "detail": [
+    "Minister vnútra Matúš Šutaj Eštok (Hlas-SD) vo štvrtok 8. októbra oznámil, že policajtom majú na budúci rok vzrásť platy v priemere o 350 eur. Uviedol, že s policajnými odborármi podpísal kolektívnu zmluvu a opatrenia sú zahrnuté v rozpočtovej kapitole rezortu. Zároveň zdôraznil, že zvýšenie je naviazané na schválenie štátneho rozpočtu.",
+    "Podľa ministra sa má rizikový príplatok zvýšiť o 150 eur od januára 2027 a od júla má nasledovať valorizácia o 8,4 percenta. Súčet opisuje priemerný nárast, nie rovnaké zvýšenie pre každého policajta už od januára. Hasičom a horským záchranárom minister ohlásil od júla priemerný rast miezd o 170 eur; spomenul tiež valorizáciu civilných zamestnancov.",
+    "Predseda Odborového zväzu polície Peter Jakubík dohodu privítal, ale žiada aj predvídateľný viacročný rast platov a modernizáciu tabuliek. Poslanec Juraj Krúpa (SaS) opatrenie označil za predvolebné a namieta neisté financovanie aj závislosť príplatkov od rozhodnutí ministra. Kým parlament rozpočet neschváli, zostáva aj podľa ministra realizácia ohláseného zvýšenia podmienená."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/sutaj-estok-policajtom-v-priemere-vzr/998199-clanok.html"
+},
+{
+  "id": "enviroaudit-odmeny-taraba-08",
+  "rank": 4,
+  "published": "2026-10-08",
+  "category": "Vláda",
+  "title": "Envirorezort preveruje odmeny nad 100-tisíc eur, Taraba ich obhajuje",
+  "summary": "Ministerstvo životného prostredia uviedlo, že dvaja zamestnanci dostali v roku 2026 každý odmeny nad 100-tisíc eur. Interný audit pokračuje; bývalý minister Tomáš Taraba tvrdí, že odmenení ľudia si peniaze zaslúžili.",
+  "detail": [
+    "Ministerstvo životného prostredia vo štvrtok 8. októbra zverejnilo prvé zistenia interného auditu. Podľa rezortu dostali dvaja zamestnanci pracujúci blízko bývalého vedenia v roku 2026 každý na odmenách viac ako 100-tisíc eur. V rámci rezortu malo byť za prvých deväť mesiacov vyplatených na zamestnaneckých odmenách vyše dva milióny eur.",
+    "Bývalý minister životného prostredia a nezaradený poslanec Tomáš Taraba odmeny obhajuje pracovným nasadením pri projektoch vrátane plánu obnovy, zonácie a prevodov majetku do národných parkov. Tvrdí, že išlo o peniaze určené na tento účel a zamestnanci si ich zaslúžili. Nové vedenie rezortu, naopak, považuje takú výšku individuálnych odmien za neobhájiteľnú.",
+    "Rezort avizoval ďalšie preverovanie a požiadavku na prísnejšie stropy odmeňovania vo verejnej správe. Vrátenie peňazí a prípadné právne kroky podmieňuje tým, že sa preukáže porušenie pravidiel pri priznávaní odmien. Zverejnené priebežné zistenia teda ešte neznamenajú konečný výsledok auditu ani preukázanú trestnú zodpovednosť konkrétnych osôb."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/slovensko/audit-na-envirorezorte-priniesol-prve-z/998230-clanok.html"
+},
+{
+  "id": "ps-migal-dve-oznamenia-08",
+  "rank": 5,
+  "published": "2026-10-08",
+  "category": "Opozícia",
+  "title": "PS podáva dve trestné oznámenia k tendrom MIRRI, rezort kritiku odmieta",
+  "summary": "Poslanci PS oznámili dve trestné oznámenia na ministra Samuela Migaľa pre digitálne dotácie a letnú výberovú súťaž. Ministerstvo výhrady odmieta a tvrdí, že pravidlá výziev už vysvetlilo; podanie oznámení nepreukazuje vinu ministra.",
+  "detail": [
+    "Poslanci Ján Hargaš (PS) a Branislav Vančo (PS) vo štvrtok 8. októbra pred Generálnou prokuratúrou oznámili podanie dvoch trestných oznámení na ministra investícií, regionálneho rozvoja a informatizácie Samuela Migaľa. Týkajú sa výzvy na digitálnu transformáciu financovanej z plánu obnovy približne za 50 miliónov eur a letnej výberovej súťaže rezortu.",
+    "Hargaš tvrdí, že pri digitálnych dotáciách minister podpisoval zmluvy mimo bodového poradia projektov. Vančo pri druhej súťaži namieta, že trvala len tri a pol dňa, čo podľa neho uchádzačom nedalo dostatok času na prípravu. Poslanci uviedli podozrenia z porušovania povinností pri správe cudzieho majetku a zo zneužívania právomoci verejného činiteľa.",
+    "Ministerstvo výhrady označilo za nepodložené a ich načasovanie spája s komunálnymi voľbami. Pri výzve na nájomné bývanie tvrdí, že ju vyhlásila samostatná spoločnosť MIRRI Developments, ktorú minister priamo neriadi, a bola otvorená do naplnenia zásobníka projektov. Oznámenia zachytávajú podozrenia opozície; ich podanie samo osebe nepreukazuje trestnú zodpovednosť ministra."
+  ],
+  "sourceName": "TASR / Teraz.sk",
+  "source": "https://www.teraz.sk/ekonomika/ps-na-ministra-s-migala-podavame-pre/998153-clanok.html"
+},
 {
   "id": "rozpocet-rozprava-stanovisko-nku-07",
   "rank": 1,

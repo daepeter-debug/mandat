@@ -1,5 +1,10 @@
 # Evidencia údajov a rozsahu
 
+## 9. 10. 2026 — Deň v politike: doplnený 8. október (Codex)
+
+Pridaných päť správ za štvrtok, veta dňa a 40 zlúčených domácich politických a verejnopolitických línií zo zberu 71 položiek Denníka N a 84 titulkov TASR; newsChecked je 9. október. Autor vykonal vlastnú druhú kontrolu a samostatný agent čerstvo načítal všetkých 16 použitých úplných zdrojov. Overené fakty, atribúcie, dátumy, jazyk, originalita a formát. Podklady a audity sú mimo repo v outputs/automatizacia-lokalne/2026-10-09. Publikovanie nadväzuje na Petrovo povolenie zo 7. októbra bez ďalšieho schvaľovania jednotlivých dní. Databázy prieskumov a hlasovaní sa nemenia; nové regionálne mediálne podklady FOCUS a AKO sú označené odkazmi na samostatné overenie v monitoringu, bez prevzatia čísel.
+
+
 ## 9. 10. 2026 — októbrový volebný model NMS (Claude)
 
 **Oprava predošlého záznamu:** 8. 10. sme uviedli „prieskumy: nič nové“, no NMS zverejnilo októbrový model už 7. 10. Článok zatiaľ nebol v zozname na ich stránke a hľadanie ho minulo. Deň v politike o ňom písal správne.
