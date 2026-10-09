@@ -1,3 +1,7 @@
+## 9. 10. 2026 · Obrazový mobilný rozcestník (Codex)
+
+Dlaždice s miniatúrami existujúcich dát, rezervovanou výškou a lenivým načítaním. Počet hier zo spoločného katalógu.
+
 ## 9. 10. 2026 · Polkruhy hlasovaní (Codex)
 
 150 hlasov v každej miniatúre, rozsadenie podľa klubov. Detaily sa načítajú pri zobrazení, obmedzená cache a pôvodný pruh pri nedostupných dátach. Náhľad je označený ako ilustrácia.
