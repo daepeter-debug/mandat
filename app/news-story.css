@@ -1,0 +1,22 @@
+/* News stories inherit the existing story shell; category colour stays dark in both themes. */
+.news-story{color:#f3f7ef}
+.news-story-stage{padding:18px 26px;overflow-y:auto;align-content:center}
+.news-story-card{display:grid;gap:20px;align-content:center;min-width:0}
+.news-story-card h2{font-size:clamp(26px,6.8vw,33px);line-height:1.13;letter-spacing:-.025em;font-weight:600;color:#f3f7ef;margin:0;text-wrap:balance}
+.news-story-card p{font-size:17px;line-height:1.6;color:#e3eee5;margin:0;text-wrap:pretty}
+.news-story-date{font-size:104px;font-weight:500;line-height:.95;letter-spacing:-.035em;color:#dcf59b}
+.news-story-date small{display:block;font-size:20px;letter-spacing:0;margin-top:8px}
+.news-story-source{font-size:12px;line-height:1.5;color:#cfdfd4}
+.news-story-rank{display:flex;align-items:center;gap:18px}
+.news-story-rank>b{font-size:68px;font-weight:500;line-height:1;color:#dcf59b;font-variant-numeric:tabular-nums}
+.news-story-rank .dip-chip{background:#ffffff18;color:#f3f7ef;border:1px solid #ffffff30;font-size:12px}
+.news-story-action{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;min-height:48px;border:0;border-radius:8px;background:#dcf59b;color:#193b2d;font-weight:650;text-align:left}
+.news-story-action small{flex-basis:100%;font-size:12px;font-weight:500}
+.news-story-action.secondary{background:#ffffff15;color:#f3f7ef;border:1px solid #ffffff40}
+.news-story-return{min-height:44px;border:0;background:none;color:#e3eee5;text-decoration:underline;text-underline-offset:4px}
+.news-play-day{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:7px 12px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--mag-ink);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.dip-day .news-play-day{margin-top:12px}
+.dip-digest-head .news-play-day{width:40px;padding:0}
+@media(min-width:761px){.news-story{width:min(420px,calc(100vw - 48px));height:min(760px,calc(100dvh - 48px))}}
+@media(max-height:680px){.news-story-stage{align-content:start;padding-top:14px}.news-story-card{gap:14px}.news-story-date{font-size:70px}.news-story-rank>b{font-size:48px}}
+@media(prefers-reduced-motion:reduce){.news-story,.news-story *{animation:none!important;transition:none!important}}

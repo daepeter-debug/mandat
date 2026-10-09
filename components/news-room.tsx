@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
-import { ArrowLeft, ArrowRight, BarChart3, Building2, Check, ChevronLeft, ChevronRight, Flag, Landmark, Megaphone, Newspaper, Share2, Vote } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BarChart3, Building2, Check, ChevronLeft, ChevronRight, Flag, Landmark, Megaphone, Newspaper, Play, Share2, Vote } from 'lucide-react';
 import { politicalNews, newsChecked, newsDayGroups, dayHeading, weekdayShort, relativeDay, readingMinutes, type NewsCategory, type NewsDay, type PoliticalNews } from '@/lib/political-news';
 import { date } from '@/lib/polls';
 import { track } from '@/lib/track';
 import '@/app/day-in-politics.css';
+import '@/app/news-story.css';
 
 const day=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Bratislava',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const subscribe=(onChange:()=>void)=>{const timer=setInterval(onChange,60000);return()=>clearInterval(timer);};
@@ -94,14 +95,14 @@ function DayStrip({days,current,today,onPick,compact=false}:{days:NewsDay[];curr
   </nav>;
 }
 
-function DayCard({d,today,onOpenNews,onPrev,onNext,onShare}:{d:NewsDay;today:string;onOpenNews:(id:string)=>void;onPrev?:()=>void;onNext?:()=>void;onShare:()=>void}){
+function DayCard({d,today,onOpenNews,onPrev,onNext,onShare,onPlayDay}:{d:NewsDay;today:string;onOpenNews:(id:string)=>void;onPrev?:()=>void;onNext?:()=>void;onShare:()=>void;onPlayDay?:(day:string)=>void}){
   const uid=useId();
   const rel=relativeDay(d.date,today);
   const swipe=useSwipe(onPrev,onNext);
   return <section className="dip-day" aria-labelledby={uid} style={{viewTransitionName:'dip-day'}}>
     <header className="dip-day-head">
       <p className="dip-kicker">Súhrn dňa{rel?<> · <b>{rel}</b></>:null}</p>
-      <h2 id={uid}>{dayHeading(d.date)}</h2>
+      <h2 id={uid}>{dayHeading(d.date)}</h2>{onPlayDay&&<button type="button" className="news-play-day" onClick={()=>onPlayDay(d.date)}><Play size={14} aria-hidden="true"/>Prehrať deň</button>}
       {d.line&&<p className="dip-line">{d.line}</p>}
       <p className="dip-meta">{count(d.items.length)}{d.analyzed?<> z {d.analyzed} politických udalostí dňa</>:null} · zoradené od najdôležitejšej</p>
     </header>
@@ -127,7 +128,7 @@ function NewsItem({n,rank,onOpen}:{n:PoliticalNews;rank:number;onOpen:()=>void})
 }
 
 /** Úvod: aktuálny deň, jeho správy s krátkym popisom a pás dní na presun do starších dní. */
-function DayDigest({days,today,onOpen,onOpenNews}:{days:NewsDay[];today:string;onOpen?:(day:string)=>void;onOpenNews:(id:string)=>void}){
+function DayDigest({days,today,onOpen,onOpenNews,onPlayDay}:{days:NewsDay[];today:string;onOpen?:(day:string)=>void;onOpenNews:(id:string)=>void;onPlayDay?:(day:string)=>void}){
   const uid=useId();
   const [selected,setSelected]=useState<string|null>(null);
   const index=Math.max(0,days.findIndex(d=>d.date===selected));
@@ -139,7 +140,7 @@ function DayDigest({days,today,onOpen,onOpenNews}:{days:NewsDay[];today:string;o
   return <section className="news-digest dip-digest" aria-labelledby={uid}>
     <header className="dip-digest-head">
       <h2 id={uid}><Newspaper size={18} strokeWidth={1.6} aria-hidden="true"/>Deň v politike</h2>
-      <div className="dip-digest-arrows">
+      <div className="dip-digest-arrows">{onPlayDay&&<button type="button" className="news-play-day" onClick={()=>onPlayDay(current.date)} aria-label="Prehrať deň"><Play size={16}/></button>}
         <button type="button" onClick={()=>go(newer,'newer')} disabled={!newer} aria-label={newer?`Novší deň: ${dayHeading(newer.date)}`:'Novší deň'}><ChevronLeft size={18} aria-hidden="true"/></button>
         <button type="button" onClick={()=>go(older,'older')} disabled={!older} aria-label={older?`Starší deň: ${dayHeading(older.date)}`:'Starší deň'}><ChevronRight size={18} aria-hidden="true"/></button>
       </div>
@@ -163,7 +164,7 @@ function DayDigest({days,today,onOpen,onOpenNews}:{days:NewsDay[];today:string;o
   </section>;
 }
 
-export default function PoliticalNewsFeed({compact=false,onOpen,onOpenNews,day:dayParam=null,onDay}:{compact?:boolean;onOpen?:(day:string)=>void;onOpenNews:(id:string)=>void;day?:string|null;onDay?:(d:string)=>void}){
+export default function PoliticalNewsFeed({compact=false,onOpen,onOpenNews,day:dayParam=null,onDay,onPlayDay}:{compact?:boolean;onOpen?:(day:string)=>void;onOpenNews:(id:string)=>void;day?:string|null;onDay?:(d:string)=>void;onPlayDay?:(day:string)=>void}){
   const uid=useId();
   const today=useSyncExternalStore(subscribe,day,()=>newsChecked);
   const days=newsDayGroups(politicalNews,today);
@@ -176,7 +177,7 @@ export default function PoliticalNewsFeed({compact=false,onOpen,onOpenNews,day:d
   const pick=(d:string,direction:'older'|'newer'|null=null)=>{transition(()=>{if(onDay)onDay(d);else setLocal(d);},direction);track('view',`den-${d}`);};
 
   if(!current) return <section className={compact?'news-digest dip-digest':'dip-page'} aria-labelledby={uid}><h2 id={uid}>Deň v politike</h2><p className="dip-meta">Súhrn zatiaľ nemáme.</p></section>;
-  if(compact) return <DayDigest days={days} today={today} onOpen={onOpen} onOpenNews={onOpenNews}/>;
+  if(compact) return <DayDigest days={days} today={today} onOpen={onOpen} onOpenNews={onOpenNews} onPlayDay={onPlayDay}/>;
 
   const older=days[index+1],newer=days[index-1];
   return <section className="dip-page" aria-labelledby={uid}>
@@ -187,7 +188,7 @@ export default function PoliticalNewsFeed({compact=false,onOpen,onOpenNews,day:d
       <p className="dip-checked">Súhrn nie je živý spravodajský prúd · kontrola zdrojov {date(newsChecked)}</p>
     </header>
     <DayStrip days={days} current={current.date} today={today} onPick={d=>pick(d,d<current.date?'older':'newer')}/>
-    <DayCard d={current} today={today} onOpenNews={onOpenNews} onPrev={older?()=>pick(older.date,'older'):undefined} onNext={newer?()=>pick(newer.date,'newer'):undefined} onShare={()=>void shareDay(current,say)}/>
+    <DayCard onPlayDay={onPlayDay} d={current} today={today} onOpenNews={onOpenNews} onPrev={older?()=>pick(older.date,'older'):undefined} onNext={newer?()=>pick(newer.date,'newer'):undefined} onShare={()=>void shareDay(current,say)}/>
     {days.length>1&&<section className="dip-archive" aria-labelledby={`${uid}-archive`}>
       <h2 id={`${uid}-archive`}>Predchádzajúce dni</h2>
       <ul>{days.filter(d=>d.date!==current.date).map(d=><li key={d.date}><button type="button" onClick={()=>{pick(d.date,d.date<current.date?'older':'newer');window.scrollTo({top:0,behavior:'smooth'});}}>

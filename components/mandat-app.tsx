@@ -1,6 +1,7 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useMemo, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
+import { politicalNews, newsDayGroups } from "@/lib/political-news";
 import { flushSync } from "react-dom";
 import { ArrowUpRight, ArrowRight, Info, Search, ChartNoAxesCombined, Table2, Check, BookOpen, ListFilter, ShieldCheck, ChevronRight, Activity, Rss } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -40,6 +41,7 @@ const PublicFinance = lazy(() => import("@/components/public-finance"));
 // Zodpovednosť za stav krajiny (čas strán vo vláde od 1993) má vlastnú záložku; načíta sa pri otvorení.
 const ResponsibilityPage = lazy(() => import("@/components/responsibility-page"));
 // Herňa (výber hier) sa načíta až pri otvorení záložky; samotné hry ešte o krok neskôr.
+const NewsStory = lazy(() => import("@/components/news-story"));
 const GamesRoom = lazy(() => import("@/components/games-room"));
 // Parlament (/parlament): 3D sála, hlasovania a poslanci; 3D knižnica a model sa načítajú až po vstupe do sály.
 const ParliamentPage = lazy(() => import("@/components/parliament-page"));
@@ -82,13 +84,13 @@ const hostname = (url:string) => { try { return new URL(url).hostname.replace(/^
    filter archívu (f), hľadanie (q), hľadanie strany (s), otvorené meranie (d), otvorená strana (strana), rok narodenia v Tvojom Slovensku (rok), porovnávané strany (porovnaj),
    na stránke Parlament hlasovanie (h), poslanec (poslanec) a režim 3D sály (rezim).
    Predvolené hodnoty sa do adresy nezapisujú; neznáme hodnoty sa ignorujú. */
-type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;parliamentPartners:boolean;game:GameId|null;news:string|null;newsDay:string|null;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null;birthYear:number|null;compare:string[];parlVote:number|null;parlDeputy:number|null;parlMode:string|null};
+type UiState = {view:string;trendAgency:string;period:string;mode:string;legend:string[];blocs:string[];caseParty:string|null;finance:string;parliament:string;parliamentPartners:boolean;game:GameId|null;news:string|null;newsDay:string|null;story:boolean;spread:string;agency:string;query:string;partyQuery:string;detail:string|null;party:string|null;birthYear:number|null;compare:string[];parlVote:number|null;parlDeputy:number|null;parlMode:string|null};
 const parliamentModes = ["strany","koalicia","bloky","vyvoj","hlasovania"];
 const parliamentViews = ["model","volby2023"];
 const ELECTION_VIEW = "volby2023";
 // Dátový prehľad má jednu grafiku parlamentu; prepínač vyberá, čo zobrazuje.
 const spreadOptions = [ELECTION_VIEW, ...primaryAgencies];
-const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",parliamentPartners:false,game:null,news:null,newsDay:null,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null,birthYear:null,compare:[],parlVote:null,parlDeputy:null,parlMode:null};
+const defaults:UiState = {view:"overview",trendAgency:"NMS",period:"9",mode:"chart",legend:defaultActive,blocs:[],caseParty:null,finance:"years",parliament:"model",parliamentPartners:false,game:null,news:null,newsDay:null,story:false,spread:"NMS",agency:"all",query:"",partyQuery:"",detail:null,party:null,birthYear:null,compare:[],parlVote:null,parlDeputy:null,parlMode:null};
 const partyIds = new Set(parties.map(p=>p.id));
 function parseSearch(search:string):UiState {
   const s = new URLSearchParams(search);
@@ -109,6 +111,7 @@ function parseSearch(search:string):UiState {
     parliamentPartners: pick("pp", v=>v==="1") !== null,
     game: pick("g", v=>(gameIds as readonly string[]).includes(v)) as GameId|null,
     news: pick("sp", v=>newsById(v)!==null),
+    story: pick("pribeh", v=>v==="1") !== null,
     newsDay: pick("den", v=>/^\d{4}-\d{2}-\d{2}$/.test(v)),
     agency: pick("f", v=>v==="all"||agencies.includes(v)) ?? defaults.agency,
     query: (s.get("q") ?? "").slice(0,80),
@@ -139,6 +142,7 @@ function serialize(state:UiState) {
   if(state.game) s.set("g",state.game);
   if(state.news) s.set("sp",state.news);
   if(state.newsDay) s.set("den",state.newsDay);
+  if(state.story && state.view==="news") s.set("pribeh","1");
   if(state.spread!==state.trendAgency) s.set("hs",state.spread);
   if(state.agency!==defaults.agency) s.set("f",state.agency);
   if(state.query) s.set("q",state.query);
@@ -254,6 +258,9 @@ export default function MandatApp({serverSearch=""}:{serverSearch?:string}) {
   const snapshots = primaryAgencies.map(a=>agencySeries(a,1)[0]).filter((p):p is Poll=>p!==undefined);
   const filtered = archive.filter(p=>(agency==="all" || p.agency===agency) && normalize(`${p.agency} ${p.month} ${p.published} ${p.client}`).includes(normalize(query)));
   const visibleParties = [...parties].sort((a,b)=>a.name.localeCompare(b.name,"sk")).filter(p=>normalize(`${p.name} ${p.short} ${partyProfiles[p.id]?.people.map(person=>person.name).join(" ")??""}`).includes(normalize(partyQuery)));
+  const storyDays = newsDayGroups(politicalNews,newsChecked);
+  const storyIndex = Math.max(0,storyDays.findIndex(d=>d.date===ui.newsDay));
+  const playDay = (day:string) => update({view:"news",newsDay:day,story:true},true);
   const verified = date(dataVerified);
 
   useEffect(()=>{ document.title = `${views.find(v=>v.id===view)?.label ?? "Prehľad"} · Mandát`; },[view]);
@@ -303,8 +310,8 @@ export default function MandatApp({serverSearch=""}:{serverSearch?:string}) {
     <Tabs value={view} onValueChange={changeView} activationMode="manual" className="page-tabs">
       <nav className="main-nav" aria-label="Hlavná navigácia"><TabsList className="nav-tabs">{views.map(v=><TabsTrigger key={v.id} value={v.id}>{v.label}{v.id==="polls"&&<span className="nav-count">{archive.length}</span>}</TabsTrigger>)}</TabsList><div className="nav-bottom"><span className="edition-number">{issuePoll.end.slice(5,7)} <span>/ {issuePoll.end.slice(0,4)}</span></span><p>Fakty pre váš<br/>vlastný názor.</p><span className="nav-project">Nezávislý projekt<br/>Bez reklamy · lokálny náhľad</span></div></nav>
       <main id="main">
-        <TabsContent value="overview"><PollTicker onOpen={id=>{update({view:"polls",detail:id},true);window.scrollTo({top:0,behavior:"instant"});}}/><PartyStrip selected={ui.party} onSelect={(p,logo)=>openParty(ui.party===p.id?null:p,logo)} onMore={()=>changeView("parties")}/><MandatMagazine poll={current} onAgency={setTrendAgency} onNavigate={changeView} onYear={y=>{update({view:"responsibility",birthYear:y},true);window.scrollTo({top:0,behavior:"instant"});}} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})} onOpenNewsDay={day=>{update({view:"news",newsDay:day},true);window.scrollTo({top:0,behavior:"instant"});}}/></TabsContent>
-        <TabsContent value="news"><PoliticalNewsFeed onOpenNews={id=>update({news:id})} day={ui.newsDay} onDay={d=>update({newsDay:d})}/></TabsContent>
+        <TabsContent value="overview"><PollTicker onOpen={id=>{update({view:"polls",detail:id},true);window.scrollTo({top:0,behavior:"instant"});}}/><PartyStrip selected={ui.party} onSelect={(p,logo)=>openParty(ui.party===p.id?null:p,logo)} onMore={()=>changeView("parties")}/><MandatMagazine onPlayDay={playDay} poll={current} onAgency={setTrendAgency} onNavigate={changeView} onYear={y=>{update({view:"responsibility",birthYear:y},true);window.scrollTo({top:0,behavior:"instant"});}} parliament={ui.parliament} onParliament={value=>update({parliament:value})} parliamentPartners={ui.parliamentPartners} onParliamentPartners={value=>update({parliamentPartners:value})} onOpenNews={id=>update({news:id})} onOpenNewsDay={day=>{update({view:"news",newsDay:day},true);window.scrollTo({top:0,behavior:"instant"});}}/></TabsContent>
+        <TabsContent value="news"><PoliticalNewsFeed onPlayDay={playDay} onOpenNews={id=>update({news:id})} day={ui.newsDay} onDay={d=>update({newsDay:d})}/></TabsContent>
         <TabsContent value="game"><Suspense fallback={<p className="chart-loading">Načítavame herňu…</p>}><GamesRoom game={ui.game} onGame={g=>update({game:g})}/></Suspense></TabsContent>
         <TabsContent value="parliament"><Suspense fallback={<p className="chart-loading">Načítavame parlament…</p>}><ParliamentPage vote={ui.parlVote} deputy={ui.parlDeputy} mode={ui.parlMode} onChange={p=>{const now=parseSearch(readSearch());navigateTo(serialize({...now,...("vote" in p?{parlVote:p.vote??null}:{}),...("deputy" in p?{parlDeputy:p.deputy??null}:{}),...("mode" in p?{parlMode:p.mode??null}:{})}),false);}} onNavigate={changeView}/></Suspense></TabsContent>
         <TabsContent value="responsibility"><Suspense fallback={<p className="chart-loading">Načítavame prehľad vlád…</p>}><ResponsibilityPage birthYear={ui.birthYear} onBirthYear={y=>update({birthYear:y})} onParty={id=>setParty(parties.find(p=>p.id===id)??null)} onFinance={()=>{update({view:"finance",finance:"governments"},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense></TabsContent>
@@ -397,6 +404,7 @@ export default function MandatApp({serverSearch=""}:{serverSearch?:string}) {
     <MobileDock views={views} active={view} onView={changeView}/>
     <Sheet open={openNews!==null} onOpenChange={open=>{if(!open)update({news:null});}}><SheetContent className="detail-sheet news-sheet">{openNews&&<><SheetHeader><SheetTitle>{openNews.title}</SheetTitle><SheetDescription>{newsAround?<NewsSheetMeta n={openNews} position={newsAround.position} count={newsAround.count}/>:<>{openNews.category} · {date(openNews.published)} · naše zhrnutie</>}</SheetDescription></SheetHeader><div className="sheet-body news-sheet-body">{openNews.detail.map((paragraph,i)=><p key={i}>{paragraph}</p>)}<div className="news-sheet-source"><h3>Zdroj</h3><p>Zhrnutie sme napísali z článku, ktorý vydal {openNews.sourceName}. Kontrola zdrojov {date(newsChecked)}.</p><a href={openNews.source} target="_blank" rel="noopener noreferrer">Čítať pôvodný článok<ArrowUpRight size={15} aria-hidden="true"/><span className="sr-only"> (otvorí sa v novej karte)</span></a></div></div>{newsAround&&<NewsSheetNav id={openNews.id} prev={newsAround.prev} next={newsAround.next} onOpen={openNewsInSheet}/>}<SheetClose className="sheet-bottom-close">Zavrieť</SheetClose></>}</SheetContent></Sheet>
     <Sheet open={detail!==null} onOpenChange={open=>{if(!open)setDetail(null);}}><SheetContent className="detail-sheet">{detail&&<><SheetHeader><SheetTitle>{detail.agency} · {detail.month.toLowerCase()} 2026</SheetTitle><SheetDescription>Detail merania · {detail.type.toLowerCase()} · publikované {date(detail.published)}</SheetDescription></SheetHeader><div className="sheet-body"><dl className="poll-facts"><div><dt>Zber dát</dt><dd>{date(detail.start)} – {date(detail.end)}</dd></div><div><dt>Celková vzorka</dt><dd>{detail.sample===null?"Neuvedené v použitom zdroji":`${detail.sample.toLocaleString("sk-SK")} respondentov`}</dd></div><div><dt>Metóda</dt><dd>{detail.method}</dd></div><div><dt>Zadávateľ</dt><dd>{detail.client}</dd></div></dl><div className="primary-source"><span>Pôvodná publikácia</span><Source poll={detail}/><SourceFallback poll={detail}/></div><PollValues poll={detail}/>{detail.other!==undefined&&<p className="other-results">Iné strany (kategória zdroja) <b>{fmt(detail.other)} %</b></p>}<div className="data-note standalone"><Info size={17}/><p>Prepísané výsledky môžu tvoriť iba časť distribúcie. Neuvedený subjekt neznamená nulovú podporu. Úplné výsledky a metodiku nájdete v zdroji.</p></div>{detail.note&&<div className="editor-note"><h3>Poznámka k údajom</h3><p>{detail.note}</p></div>}<SheetClose className="sheet-close-bottom">Zavrieť detail</SheetClose></div></>}</SheetContent></Sheet>
+    {ui.view==="news"&&ui.story&&storyDays[storyIndex]&&<Suspense fallback={null}><NewsStory key={storyDays[storyIndex].date} day={storyDays[storyIndex]} older={storyDays[storyIndex+1]} onClose={()=>update({story:false})} onOlder={d=>update({newsDay:d})} onDetail={id=>update({story:false,news:id})}/></Suspense>}
     <Sheet modal={false} open={party!==null} onOpenChange={open=>{if(!open)setParty(null);}}><SheetContent key={party?.id??"party"} id="party-profile" className="detail-sheet party-profile-sheet" data-morph={partyMorph?"":undefined} showOverlay={false} onInteractOutside={event=>event.preventDefault()}>{party&&<><SheetHeader><span className="party-sheet-logo" style={{"--party-color":party.color} as CSSProperties} aria-hidden="true">{partyLogoMap[party.id]?<Image src={partyLogoMap[party.id].src} alt="" width={44} height={44} unoptimized/>:<span>{party.short.slice(0,2)}</span>}</span><SheetTitle>{party.name}</SheetTitle><SheetDescription>{currentAggregate.values[party.id]===undefined?"Bez hodnoty v agregáte":`Model Mandát ${fmt(currentAggregate.values[party.id].value)} %`} · zameranie, osobnosti, prieskumy, programy</SheetDescription></SheetHeader><div className="sheet-body"><PartyProfileOverview partyId={party.id}/><h2 className="profile-polls-heading">Podpora v prieskumoch</h2><div className="party-detail-head"><span className="tone-text" style={{"--tone":party.color} as CSSProperties}>{currentAggregate.values[party.id]===undefined?"—":`${fmt(currentAggregate.values[party.id].value)} %`}</span><p>Model Mandát · vážený priemer<br/><Source poll={aggregatePoll}/></p></div><Table><TableCaptionText>{party.name} — posledné meranie každej z piatich agentúr</TableCaptionText><TableHeader><TableRow><TableHead>Posledné meranie</TableHead><TableHead className="number-cell">Podpora</TableHead><TableHead>Zdroj</TableHead></TableRow></TableHeader><TableBody>{snapshots.map(p=><TableRow key={p.id}><TableCell>{p.agency}<span className="cell-caption">{p.month} 2026</span></TableCell><TableCell className="number-cell">{p.values[party.id]===undefined?"—":`${fmt(p.values[party.id])} %`}</TableCell><TableCell><Source poll={p} compact/></TableCell></TableRow>)}</TableBody></Table><div className="data-note standalone"><Info size={17}/><p>Hlavné číslo je rovnaký vážený priemer ako v ľavom paneli. Nižšie je iba najnovšie dostupné meranie každej z piatich vstupných agentúr; ich rozdielne metódy môžu viesť k odlišným výsledkom.</p></div>{casesEnabled&&<Suspense fallback={null}><PartyCases partyId={party.id} onCases={id=>{update({party:null,view:"cases",caseParty:id},true);window.scrollTo({top:0,behavior:"instant"});}}/></Suspense>}<PartyDocuments partyId={party.id}/><div className="editor-note profile-next"><h3>Kandidátne listiny 2027</h3><p>Aktuálne osobnosti strany nie sú automaticky kandidátmi do ďalších volieb. Overené kandidátne listiny doplníme po ich zverejnení.</p></div><SheetClose className="sheet-close-bottom">Zavrieť profil</SheetClose></div></>}</SheetContent></Sheet>
   </div>;
 }

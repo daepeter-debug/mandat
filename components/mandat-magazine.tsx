@@ -19,12 +19,12 @@ export function AgencyPicker({value,onChange}:{value:string;onChange:(value:stri
   return <div className="mag-agencies" role="group" aria-label="Vybrať agentúru">{agencies.map(a=><button key={a} aria-pressed={value===a} onClick={()=>onChange(a)}>{a}{value===a&&<Check size={14}/>}</button>)}</div>;
 }
 
-export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onParliament,parliamentPartners,onParliamentPartners,onOpenNews,onOpenNewsDay}:{poll:Poll;onAgency:(a:string)=>void;onNavigate:(v:string)=>void;onYear:(year:number)=>void;parliament:string;onParliament:(v:string)=>void;parliamentPartners:boolean;onParliamentPartners:(v:boolean)=>void;onOpenNews:(id:string)=>void;onOpenNewsDay?:(day:string)=>void}) {
+export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onParliament,parliamentPartners,onParliamentPartners,onOpenNews,onOpenNewsDay,onPlayDay}:{poll:Poll;onAgency:(a:string)=>void;onNavigate:(v:string)=>void;onYear:(year:number)=>void;parliament:string;onParliament:(v:string)=>void;parliamentPartners:boolean;onParliamentPartners:(v:boolean)=>void;onOpenNews:(id:string)=>void;onOpenNewsDay?:(day:string)=>void;onPlayDay?:(day:string)=>void}) {
   const rows=rank(poll).filter(p=>poll.values[p.id]>1);
   const small=rows.filter(p=>poll.values[p.id]<5);
   const large=rows.filter(p=>poll.values[p.id]>=5);
   return <div className="magazine">
-    <NationalIntro onNavigate={onNavigate} onYear={onYear} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews} onOpenNewsDay={onOpenNewsDay}/>
+    <NationalIntro onPlayDay={onPlayDay} onNavigate={onNavigate} onYear={onYear} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews} onOpenNewsDay={onOpenNewsDay}/>
     <div className="mag-edition"><span>Slovensko · volebné prieskumy</span><span>{archive.length} meraní v archíve</span><button onClick={()=>onNavigate("method")}>Ako pracujeme so zdrojmi <ArrowUpRight size={16}/></button></div>
     <PollAggregator onMethod={()=>onNavigate("method")}/>
     <section className="mag-pulse" aria-labelledby="pulse-title"><div className="mag-section-head"><div><h2 id="pulse-title">Posledné meranie každej agentúry</h2><p>Agregát je hlavný pohľad. Tu si môžete skontrolovať každú agentúru osobitne.</p></div><AgencyPicker value={poll.agency} onChange={onAgency}/></div><div className="mag-poll-meta"><b>{poll.agency} · {poll.month.toLowerCase()} {poll.end.slice(0,4)}</b><span>Zber {date(poll.start)} – {date(poll.end)} · n = {poll.sample?.toLocaleString("sk-SK")??"neuvedené"}</span></div>

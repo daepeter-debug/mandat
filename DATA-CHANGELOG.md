@@ -1,3 +1,7 @@
+## 9. 10. 2026 · Deň za 30 sekúnd (Codex)
+
+Správy vybraného dňa ako prístupný príbeh, zdieľanie PNG a odkaz v URL. Spoločné ovládanie s Mandátom za minútu.
+
 ## 9. 10. 2026 · Mobil: drobné živé detaily (Codex)
 
 Čitateľný orientačný odpočet, priebeh obdobia, zmeny podpory za 30 dní a spoločný katalóg hier. Dáta ani model sa nemenia.

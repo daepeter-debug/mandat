@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { ArrowDownRight, ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, Share2, Volume2, VolumeX, X } from "lucide-react";
 import { MAJORITY } from "@/lib/blocs";
@@ -14,6 +14,7 @@ import { storyCardImage } from "@/components/story-image";
 import storyAudio from "@/lib/audio/story.json";
 import { voiceItem } from "@/lib/voice";
 import { audioBlobUrl, unlockAudio } from "@/lib/audio-play";
+import { StoryProgress, useStoryGestures, shareStoryImage } from "@/components/story-controls";
 import "@/app/story.css";
 
 /*
@@ -137,14 +138,12 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
   const [voiceOn, setVoiceOn] = useState(false);
   const voice = useRef<HTMLAudioElement | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const press = useRef<{ x: number; y: number; t: number } | null>(null);
   const slide = slides[index];
   const last = index === slides.length - 1;
   const next = () => setIndex(i => Math.min(slides.length - 1, i + 1));
   const prev = () => setIndex(i => Math.max(0, i - 1));
   const close = () => onOpenChange(false);
   const after = (run: () => void) => { close(); window.setTimeout(run, 60); };
-  const drag = (dy: number) => cardRef.current?.style.setProperty("--drag", `${Math.max(0, dy)}px`);
   const say = (text: string) => { setToast(text); window.setTimeout(() => setToast(""), 2600); };
   // Hlas: prvé spustenie musí byť po ťuknutí (prehliadače inak zvuk nepustia) — prvok sa odomkne hneď v ťuknutí
   // a všetky karty sa stiahnu dopredu (lib/audio-play: blob: adresy kvôli Safari); potom hrá každá karta sama.
@@ -183,61 +182,22 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
     try {
       const blob = await storyCardImage(slide.id);
       if (!blob) { say("Obrázok sa nepodarilo vytvoriť."); return; }
-      const file = new File([blob], `mandat-${slide.id}.png`, { type: "image/png" });
-      if (navigator.canShare?.({ files: [file] })) {
-        try { await navigator.share({ files: [file], title: `Mandát za minútu · ${slide.label}` }); } catch { /* zdieľanie zrušené */ }
-        return;
-      }
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a"); a.href = url; a.download = file.name; a.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-      say("Obrázok karty je uložený medzi stiahnutými súbormi.");
+      const result = await shareStoryImage(blob, `mandat-${slide.id}.png`, `Mandát za minútu · ${slide.label}`);
+      if (result === "downloaded") say("Obrázok karty je uložený medzi stiahnutými súbormi.");
     } finally { setSharing(false); }
   }
 
-  function onPointerDown(e: PointerEvent) {
-    if ((e.target as HTMLElement).closest("button,a,input,form,label")) return;
-    press.current = { x: e.clientX, y: e.clientY, t: performance.now() };
-    setHold(true);
-  }
-  function onPointerMove(e: PointerEvent) {
-    const p = press.current;
-    if (!p) return;
-    const dy = e.clientY - p.y;
-    if (dy > 0 && dy > Math.abs(e.clientX - p.x)) drag(dy);
-  }
-  function onPointerUp(e: PointerEvent<HTMLDivElement>) {
-    const p = press.current;
-    press.current = null;
-    setHold(false);
-    drag(0);
-    if (!p) return;
-    const dx = e.clientX - p.x, dy = e.clientY - p.y, dt = performance.now() - p.t;
-    if (dy > 90 && dy > Math.abs(dx)) { close(); return; }
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) next(); else prev(); return; }
-    if (dt < 300 && Math.abs(dx) < 12 && Math.abs(dy) < 12) {
-      const r = e.currentTarget.getBoundingClientRect();
-      if (e.clientX - r.left < r.width * 0.3) prev(); else next();
-    }
-  }
-  function onKeyDown(e: KeyboardEvent) {
-    if ((e.target as HTMLElement).closest("input")) return;
-    if (e.key === "ArrowRight") { e.preventDefault(); next(); }
-    else if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
-    else if (e.key === " ") { e.preventDefault(); setPaused(v => !v); }
-  }
+  const gestures = useStoryGestures({card:cardRef,next,prev,close,hold:setHold,pause:()=>setPaused(v=>!v)});
 
   return <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="story-overlay"/>
-      <DialogPrimitive.Content className="story" ref={cardRef} data-morph={morph ? "" : undefined} onKeyDown={onKeyDown} aria-describedby="story-help"
+      <DialogPrimitive.Content className="story" ref={cardRef} data-morph={morph ? "" : undefined} onKeyDown={gestures.onKeyDown} aria-describedby="story-help"
         style={{ "--story-bg": slide.bg, "--dur": `${duration}ms`, "--play": paused || hold || sharing ? "paused" : "running" } as CSSProperties}>
         <DialogPrimitive.Title className="sr-only">Mandát za minútu</DialogPrimitive.Title>
         <p id="story-help" className="sr-only">Šesť kariet s hlavnými číslami. Šípkami vľavo a vpravo prechádzate kartami, medzerníkom zastavíte, Esc zavrie. Tlačidlo Zdieľať uloží kartu ako obrázok.</p>
         <div className="story-top">
-          <div className="story-progress" aria-hidden="true">{slides.map((s, i) => <i key={s.id} className={i < index ? "is-done" : i === index ? "is-active" : undefined}>
-            {i === index ? <b key={`run-${index}`} onAnimationEnd={() => { if (!last) next(); }}/> : <b/>}
-          </i>)}</div>
+          <StoryProgress count={slides.length} index={index} onNext={next}/>
           <div className="story-bar">
             <span className="story-brand"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#f5f4ee"><circle cx="10" cy="43" r="4.6"/><circle cx="16.4" cy="27.4" r="4.6"/><circle cx="32" cy="21" r="4.6"/><circle cx="21" cy="43" r="4.6"/><circle cx="32" cy="32" r="4.6"/></g><g fill="#9dbb86"><circle cx="47.6" cy="27.4" r="4.6"/><circle cx="54" cy="43" r="4.6"/><circle cx="43" cy="43" r="4.6"/></g></svg>
               <span><b>Mandát za minútu</b><small>{index + 1}/{slides.length} · {slide.label}{voiceOn ? " · hlas AI" : ""}</small></span></span>
@@ -247,7 +207,7 @@ export default function MandatStory({ open, morph, onOpenChange, onYear, onNavig
             <DialogPrimitive.Close className="story-close" aria-label="Zavrieť"><X size={20}/></DialogPrimitive.Close>
           </div>
         </div>
-        <div className="story-stage" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={() => { press.current = null; setHold(false); drag(0); }}>
+        <div className="story-stage" onPointerDown={gestures.onPointerDown} onPointerMove={gestures.onPointerMove} onPointerUp={gestures.onPointerUp} onPointerCancel={gestures.onPointerCancel}>
           <section key={slide.id} className={`story-slide is-${slide.id}`} aria-label={`${index + 1} zo ${slides.length}: ${slide.label}`}>
             <p className="story-kicker">{slide.label}</p>
             <Slide id={slide.id} onYear={y => after(() => onYear(y))} onCoalition={() => after(() => { onNavigate("model"); let tries = 0; const seek = () => { const el = document.getElementById("koalicia"); if (el) el.scrollIntoView({ behavior: reducedMotion() ? "instant" : "smooth", block: "start" }); else if (tries++ < 25) window.setTimeout(seek, 80); }; window.setTimeout(seek, 160); })} onPolls={() => after(() => onNavigate("polls"))}/>

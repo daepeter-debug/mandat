@@ -12,6 +12,9 @@ import { currentSeatUncertainty, inRuns } from "@/lib/uncertainty";
 const W = 1080, H = 1920, X = 96, R = W - 96;
 const FONT = `"IBM Plex Sans Variable", "IBM Plex Sans", "Segoe UI", Arial, sans-serif`;
 const INK = "#f3f7ef", SOFT = "#cfe0d6", FAINT = "#b8ccbf", LIME = "#dcf59b";
+import { dayHeading, type NewsDay } from "@/lib/political-news";
+import { newsStoryTones, storySummary } from "@/lib/news-story";
+
 type Ctx = CanvasRenderingContext2D;
 
 const font = (ctx: Ctx, weight: number, size: number) => { ctx.font = `${weight} ${size}px ${FONT}`; };
@@ -55,7 +58,7 @@ function arrow(ctx: Ctx, cx: number, cy: number, upward: boolean, color: string)
 
 // Logo Mandátu: rovnaké bodky ako favicon (mriežka 64 × 64).
 const logoDots: [number, number, boolean][] = [[10, 43, true], [16.4, 27.4, true], [32, 21, true], [21, 43, true], [32, 32, true], [47.6, 27.4, false], [54, 43, false], [43, 43, false]];
-function frame(ctx: Ctx, bg: string, label: string, index: number) {
+function frame(ctx: Ctx, bg: string, label: string, index: number, series = `Mandát za minútu · ${index + 1}/${slides.length}`) {
   ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
   const g1 = ctx.createRadialGradient(W * 0.85, -H * 0.08, 0, W * 0.85, -H * 0.08, W * 1.25);
   g1.addColorStop(0, "rgba(255,255,255,0.13)"); g1.addColorStop(1, "rgba(255,255,255,0)");
@@ -67,7 +70,7 @@ function frame(ctx: Ctx, bg: string, label: string, index: number) {
   for (const [x, y, light] of logoDots) dot(ctx, X + x * 1.25, 150 + y * 1.25, 5.8, light ? "#f5f4ee" : "#9dbb86");
   font(ctx, 700, 58); ctx.fillStyle = INK; ctx.fillText("mandát", X + 92, 210);
   const w = ctx.measureText("mandát").width; ctx.fillStyle = "#9dbb86"; ctx.fillText(".", X + 92 + w, 210);
-  font(ctx, 600, 30); ctx.fillStyle = FAINT; ctx.textAlign = "right"; ctx.fillText(`Mandát za minútu · ${index + 1}/${slides.length}`, R, 204); ctx.textAlign = "left";
+  font(ctx, 600, 30); ctx.fillStyle = FAINT; ctx.textAlign = "right"; ctx.fillText(series, R, 204); ctx.textAlign = "left";
   // nadpis karty
   if ("letterSpacing" in ctx) (ctx as Ctx & { letterSpacing: string }).letterSpacing = "5px";
   font(ctx, 650, 34); ctx.fillStyle = LIME; ctx.fillText(label.toUpperCase(), X, 420);
@@ -207,4 +210,26 @@ export async function storyCardImage(id: SlideId): Promise<Blob | null> {
   frame(ctx, slides[index].bg, slides[index].label, index);
   draw[id](ctx);
   return new Promise(res => canvas.toBlob(res, "image/png"));
+}
+
+/** Shares the same canvas typography, frame and export size as Mandát za minútu. */
+export async function newsStoryCardImage(day: NewsDay, index: number): Promise<Blob | null> {
+  await document.fonts.ready;
+  const canvas = document.createElement("canvas"); canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d"); if (!ctx) return null;
+  const item = day.items[index - 1], last = index === day.items.length + 1;
+  frame(ctx, item ? newsStoryTones[item.category] : "#183c31", item?.category ?? dayHeading(day.date), index, `Deň v politike · ${index + 1}/${day.items.length + 2}`);
+  ctx.fillStyle = LIME; font(ctx, 500, 144);
+  ctx.fillText(item ? String(item.rank ?? index) : String(Number(day.date.slice(8))), X, 650);
+  const title = item?.title ?? (last ? "Si v obraze." : dayHeading(day.date));
+  let size = 72; font(ctx, 650, size);
+  while (wrap(ctx, title, R-X).length > 5 && size > 52) font(ctx, 650, --size);
+  ctx.fillStyle = INK; let y = para(ctx, title, X, 780, R-X, size * 1.18) + 44;
+  const summary = item ? storySummary(item) : last ? `${day.items.length} správ. ${day.line}` : day.line;
+  font(ctx, 450, 42); ctx.fillStyle = SOFT;
+  y = para(ctx, summary, X, y, R-X, 60);
+  font(ctx, 500, 30); ctx.fillStyle = FAINT;
+  para(ctx, item ? `Zdroj: ${item.sourceName}` : `${day.items.length} správ${day.analyzed !== null ? ` z ${day.analyzed} udalostí` : ""}`, X, Math.max(y+50,1400), R-X, 42);
+  footer(ctx, `${dayHeading(day.date)} · vlastné zhrnutia, pôvodné zdroje na webe`);
+  return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
 }
