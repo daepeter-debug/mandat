@@ -2,28 +2,28 @@
   "voice": "2ST3sI2j7fz4A5oXjnbA",
   "model": "eleven_multilingual_v2",
   "credit": "Hlas: ElevenLabs (AI)",
-  "generated": "2026-10-02",
+  "generated": "2026-10-09",
   "items": {
     "seats": {
       "src": "/audio/story/seats-f237fe302e.mp3",
       "hash": "f237fe302e",
       "chars": 300,
       "ms": 21394,
-      "edition": "2026-09-22"
+      "edition": "2026-10-05"
     },
     "debt": {
       "src": "/audio/story/debt-21a8fe5066.mp3",
       "hash": "21a8fe5066",
       "chars": 186,
       "ms": 12774,
-      "edition": "2026-09-22"
+      "edition": "2026-10-05"
     },
     "you": {
       "src": "/audio/story/you-dcc871b5f3.mp3",
       "hash": "dcc871b5f3",
       "chars": 107,
       "ms": 6922,
-      "edition": "2026-09-22"
+      "edition": "2026-10-05"
     }
   }
 }

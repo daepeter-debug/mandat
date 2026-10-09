@@ -93,11 +93,11 @@ for (const poll of archive) {
 }
 assert(polls.every(p=>p.agency==='NMS'), 'Trend nesmie miešať agentúry');
 assert(polls.every((p,i)=>i===0 || p.end>polls[i-1].end), 'Trend musí byť chronologický');
-assert.equal(difference(latest,previous,'rep'),2.3,'Zmena musí vychádzať z percent, nie z odlišného slovného komentára');
+assert.equal(difference(latest,previous,'rep'),-1.4,'Zmena musí vychádzať z percent, nie z odlišného slovného komentára');
 assert.equal(difference(latest,previous,'lsns'),null,'Chýbajúca hodnota nesmie byť nula');
-assert.equal(latest.values.sns,1.9,'NMS september: SNS overené v pôvodnom grafe');
-assert.equal(latest.values.zaludi,1.6,'NMS september: ZA ĽUDÍ overené v pôvodnom grafe');
-assert.equal(difference(latest,previous,'zaludi'),-.6,'Zmena po doplnení presnej hodnoty ZA ĽUDÍ');
+assert.equal(latest.values.sns,1.5,'NMS október: SNS overené v pôvodnom grafe');
+assert.equal(latest.values.zaludi,1.9,'NMS október: ZA ĽUDÍ overené v pôvodnom grafe');
+assert.equal(difference(latest,previous,'zaludi'),.3,'Zmena ZA ĽUDÍ z presných hodnôt grafu NMS');
 assert.equal(scenarioFromPoll({...latest,values:{ps:45,smer:45,dem:4.9}}).allocation.seats.dem,undefined,'Vlastný scenár: 4,9 % nezíska kreslo');
 assert(scenarioFromPoll({...latest,values:{ps:45,smer:45,dem:5}}).allocation.seats.dem>0,'Vlastný scenár: 5 % vstupuje do rozdelenia');
 assert.equal(polls.find(p=>p.id==='nms-2026-06').sample,1002,'Vzorka overená v metodike NMS 11. 6. 2026');
@@ -134,15 +134,15 @@ for(const position of positions){assert(partyIds.has(position.partyId)&&position
 
 // Agregátor: chýbajúce údaje sa nedopĺňajú nulou a každá agentúra vstupuje najviac raz.
 assert.deepEqual(aggregateAgencies,['AKO','FOCUS','INFOSTAT','IPSOS','NMS']);
-assert.equal(aggregateLastDate,'2026-09-22'); // koniec zberu septembrového Ipsosu
-assert.equal(aggregateUpdated,'2026-10-01'); // aktualizácia: septembrový AKO zverejnený 1. 10. so zberom do 21. 9.
+assert.equal(aggregateLastDate,'2026-10-05'); // koniec zberu októbrového NMS
+assert.equal(aggregateUpdated,'2026-10-07'); // aktualizácia: októbrový NMS zverejnený 7. 10.
 assert.equal(new Set(aggregatePolls.map(p=>p.agency)).size,aggregatePolls.length,'Jedna agentúra najviac raz v aktuálnom bode');
 assert(aggregatePolls.length>=3,'Aktuálny agregát potrebuje aspoň tri agentúry');
 assert.equal(currentAggregate.pollIds.length,aggregatePolls.length);
 for(const value of Object.values(currentAggregate.values)) { assert(value.lower<=value.value&&value.value<=value.upper,'Priemer musí ležať v pásme'); assert(value.agencies.length===value.polls,'Počet vstupov sedí'); }
 for(const point of [...aggregateSeries,currentAggregate]) { const sum=Object.values(point.values).reduce((a,v)=>a+v.value,0); assert(sum<=100.05,`Súčet Modelu Mandát ${point.date} je ${sum.toFixed(1)} % (nad 100 %)`); }
 assert.equal(currentAggregate.values.lsns,undefined,'Stranu, ktorú uvádza len menšina agentúr v bode, do priemeru nezaraďujeme');
-const missingAggregate=aggregateAt('2026-09-07',[{...latest,id:'missing-test',agency:'NMS',values:{ps:20}}]);
+const missingAggregate=aggregateAt(latest.end,[{...latest,id:'missing-test',agency:'NMS',values:{ps:20}}]);
 assert.equal(missingAggregate.values.smer,undefined,'Chýbajúca strana sa v agregáte nesmie zmeniť na nulu');
 assert.equal(missingAggregate.values.ps.value,20,'Jediný dostupný vstup sa zachová');
 // Parlament 2023 a prepočet kresiel

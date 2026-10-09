@@ -1,5 +1,35 @@
 # Evidencia údajov a rozsahu
 
+## 9. 10. 2026 — októbrový volebný model NMS (Claude)
+
+**Oprava predošlého záznamu:** 8. 10. sme uviedli „prieskumy: nič nové“, no NMS zverejnilo októbrový model už 7. 10. Článok zatiaľ nebol v zozname na ich stránke a hľadanie ho minulo. Deň v politike o ňom písal správne.
+
+**Meranie:**
+- **Zdroj:** NMS Market Research Slovakia, zverejnené 7. 10. 2026, zber 1.–5. 10., online, 1 005 respondentov ([tlačová správa](https://nms.global/sk/volebny-model-oktober-2026/)).
+- **Hodnoty:** z textu a z vloženého grafu NMS: PS 19,5, Smer 17,8, Republika 14,2, Slovensko 9,0, SaS 8,0, KDH 6,2, Hlas 5,9, Demokrati 4,9, Aliancia 3,3, Sme rodina 3,1, Právo na pravdu 2,3, Za ľudí 1,9, SNS 1,5.
+- **Čo sme neprepísali:** ĽSNS 0,9, KÚ 0,6 a Strana vidieka 0,5, rovnako ako pri predošlých meraniach NMS.
+
+**Model Mandát pred a po:**
+- **PS:** 19,0 → 18,8.
+- **SMER:** 17,2 → 17,5.
+- **REPUBLIKA:** 11,8 → 11,9.
+- **SaS:** 7,9 → 8,1.
+- **HLAS:** 7,6 → 7,3.
+- **KDH:** 7,0 → 6,9.
+- **SNS:** 3,4 → 3,1.
+- **Ostatné:** do 0,2 bodu.
+- **Kreslá sa nemenia:** PS 34, SMER 31, REPUBLIKA 21, SLOVENSKO 16, SaS 14, HLAS 13, KDH 12, DEMOKRATI 9.
+- **Dátumy:** bod modelu k 5. 10. 2026 (`aggregateLastDate`), aktualizované 7. 10. (`aggregateUpdated`). `dataVerified` = 9. 10.
+
+**Súvisiace úpravy:**
+- **3D model:** `parlament.glb` je pregenerovaný, varianty vývoja 2026 obsahujú október.
+- **Nahrávky:** `import-audio --restamp` prepečiatkoval platné na vydanie 5. 10., 8 nahrávok ostáva skrytých.
+- **Kontroly vo `verify-data`:**
+  - pripnutia posledného merania NMS sú posunuté na október (Republika −1,4, SNS 1,5, Za ľudí 1,9 a +0,3);
+  - test chýbajúcej hodnoty počíta k dátumu posledného merania, nie k pevnému 7. 9.
+
+**Ostatné agentúry 9. 10.:** FOCUS zatiaľ bez októbrového merania, AKO len septembrové a októbrový Infostat neexistuje.
+
 ## 8. 10. 2026 — Mobilná revízia, hlasovania zo 6. 10. a kontrola prieskumov (Claude)
 
 **Revízia mobilu (375 a 402 px):** prešli sme 12 sekcií, stránku `/parlament` a 5 hier.
