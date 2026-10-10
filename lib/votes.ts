@@ -68,3 +68,32 @@ export const skDay = (day: string) => `${Number(day.slice(8, 10))}. ${Number(day
 /** Vyhľadávanie bez diakritiky a veľkých písmen („trestny zakon“ nájde „Trestný zákon“). */
 export const fold = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 export const matchesQuery = (vote: VoteSummary, query: string) => fold(query).split(/\s+/).filter(Boolean).every(w => fold(`${vote.nazov} ${kindNames[vote.druh]} ${skDay(vote.datum)}`).includes(w));
+
+/*
+  Krátka téma do úzkych miest (lišta v 3D sále): mechanicky vystrihnutá z oficiálneho názvu, nič sa nedopĺňa ani nehodnotí.
+  Novela → „Novela zákona o …“, nový zákon → „Zákon o …“, nedôvera → komu; inak oficiálny názov bez čísla tlače.
+*/
+const LAW_REF = /(?:zákon|zákona)(?: Národnej rady Slovenskej republiky| Slovenskej národnej rady)? č\.\s*\d+\/\d+\s*(?:Z\.\s*z\.|Zb\.),?\s+/;
+const trimLawName = (s: string) => s.split(/ v znení | a o zmene | a o doplnení |,? a ktorým sa |, ktorým sa |, vrátený /)[0].replace(/[.,;\s]+$/, "");
+// Priezviská VEĽKÝMI → Priezvisko; malé „l“ medzi veľkými je v zdroji preklep za „I“ (DOLlNKOVEJ).
+const nameCase = (s: string) => s.replace(/\p{L}*\p{Lu}{2,}\p{L}*/gu, w => w.replace(/(?<=\p{Lu})l(?=\p{Lu})/gu, "I")).replace(/\p{L}+/gu, w => /\p{Lu}{2}/u.test(w) ? w[0] + w.slice(1).toLowerCase() : w);
+export function voteTopic(title: string) {
+  let t = title.replace(/\s+/g, " ").replace(/č\s+\./g, "č.").split(/ \(tlač/)[0].trim();
+  if ((t.match(/\)/g)?.length ?? 0) > (t.match(/\(/g)?.length ?? 0)) t = t.replace(/\)$/, "");
+  const distrust = t.match(/na vyslovenie nedôvery (vláde|(?:predsedovi|predsedníčke|podpredsedovi|podpredsedníčke|členovi|členke) vlády)(?: Slovenskej republiky)?\s*([^,(.]*)/);
+  if (distrust) return `Vyslovenie nedôvery ${distrust[1]} ${nameCase(distrust[2])}`.trim();
+  if (/ktorým sa (?:mení|dopĺňa|mení a dopĺňa) Ústava Slovenskej republiky/.test(t)) return "Novela Ústavy SR";
+  const related = t.match(/ktorým sa menia a dopĺňajú niektoré zákony (v súvislosti so? .+)/);
+  if (related) return `Zmeny zákonov ${trimLawName(related[1])}`;
+  // Novela novely („zákon č. 325/2022 Z. z., ktorým sa mení … zákon č. 305/2013 Z. z. o …“): téma je posledný menovaný zákon.
+  const amended = /ktorým sa (?:mení a dopĺňa|mení|dopĺňa|ruší) /.test(t) && t.split(LAW_REF).slice(1).find(s => !s.startsWith("ktorým"));
+  if (amended) {
+    const name = trimLawName(amended);
+    return name.startsWith("o ") ? `Novela zákona ${name}` : `Novela: ${name}`;
+  }
+  const created = t.match(/^(?:Vládny návrh zákona|Návrh .+? na vydanie zákona|Zákon z \d+\. \S+ \d{4}),?\s+(o .+|\p{Lu}.+|ktorým sa .+)$/u);
+  if (created) return created[1].startsWith("o ") || created[1].startsWith("ktorým") ? `Zákon${created[1].startsWith("o ") ? "" : ","} ${trimLawName(created[1])}` : trimLawName(created[1]);
+  const other = t.match(/^(?:Vládny návrh|Návrh .+? na prijatie) (.+)$/);
+  if (other) return /^Vládny/.test(t) ? (other[1].startsWith("o ") ? `Zákon ${trimLawName(other[1])}` : `Návrh ${other[1]}`) : `Prijatie ${other[1].replace(/ Národnej rady Slovenskej republiky\.?$/, " NR SR")}`;
+  return t;
+}

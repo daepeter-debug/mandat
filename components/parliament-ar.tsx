@@ -16,6 +16,7 @@ import { parliamentShareCard } from './parliament-share';
 import { ParliamentNavigation, type NavigableViewer } from './parliament-navigation';
 import Chamber2D from './chamber-2d';
 import { ParliamentWall } from './parliament-wall';
+import { ParliamentVotePicker } from './parliament-vote-picker';
 import type { WallScene } from '@/lib/parliament-wall';
 import { coalitionSelection, partyFocus, seatChanges, seatSweep, SEAT_SWEEP_MS, deputyView, lecternView } from '@/lib/parliament-experience';
 import type { TextureInfo, Texture } from '@google/model-viewer/lib/features/scene-graph/api.js';
@@ -54,6 +55,7 @@ type Props = {
   mode: Mode; onMode: (mode: Mode) => void;
   /** Vybrané hlasovanie a rozsadenie poslancov pri ňom (zo stránky); null mimo režimu Hlasovania. */
   vote: VoteSummary | null; voteSeats: SeatedMember[] | null;
+  voteOptions: VoteSummary[] | null; votesFailed: boolean; onVote: (id: number) => void;
   /** Rozsadenie pri poslednom hlasovaní: poslanci v kreslách „Klubov dnes“. */
   latestSeats: SeatedMember[] | null;
   deputy: number | null; onDeputy: (id: number | null) => void; onProfile: () => void;
@@ -214,6 +216,7 @@ export default function ParliamentChamber(props: Props) {
     root.style.overflow = 'hidden';
     surface?.querySelector<HTMLButtonElement>('.par3d-close')?.focus({ preventScroll: true });
     const key = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return;
       if (e.key === 'Escape') { e.preventDefault(); setExpanded(false); }
       if (e.key !== 'Tab' || !surface) return;
       const controls = [...surface.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),[tabindex="0"]')].filter(el => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
@@ -733,6 +736,7 @@ export default function ParliamentChamber(props: Props) {
           </model-viewer>
         : null}
       <ParliamentWall viewer={viewer} loaded={loaded} scene={wallScene} reduced={reduced}/>
+      {expanded && <ParliamentVotePicker votes={props.voteOptions} selected={mode === 'hlasovania' ? vote : null} failed={props.votesFailed} onSelect={props.onVote}/>}
       {!loaded && <div className="par3d-loading" role="status"><Chamber2D colors={posterColors} label="Náhľad sály"/><span>{failed ? '3D sálu sa nepodarilo načítať. Prepni na 2D alebo skús znova.' : 'Načítava sa 3D sála…'}</span></div>}
       {rotateHint && !expanded && <div className="par3d-rotate" role="status">
         <Smartphone size={22} aria-hidden="true"/>

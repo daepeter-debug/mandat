@@ -204,6 +204,7 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
       {view3d
         ? <Suspense fallback={<div className="parl-stage parl-stage-wait" role="status"><Chamber2D colors={colors} label={label2d}/><span>Načítava sa 3D sála…</span></div>}>
             <ParliamentChamber mode={mode3d} onMode={setMode3d} vote={summary} voteSeats={seated} latestSeats={latestSeats} deputy={deputy}
+              voteOptions={index?.hlasovania ?? null} votesFailed={failed} onVote={id => chooseVote(id, false)}
               onDeputy={id => chooseDeputy(id)} onProfile={showProfile} highlightDiff={highlight} differing={diffIds}/>
           </Suspense>
         : <div className="parl-stage">

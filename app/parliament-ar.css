@@ -24,6 +24,45 @@
 .par3d-legend i{width:10px;height:10px;border-radius:3px;flex:none}
 .par3d-legend b{font-variant-numeric:tabular-nums}
 .par3d-note{margin:0;font-size:11.5px;line-height:1.45;color:var(--text-3)}
+/* Lišta hlasovaní v rohu sály na celú obrazovku: zbalená = len téma zvoleného hlasovania, nad gestami kamery a mimo spodného ovládania. */
+.par3d-vote-picker{position:absolute;z-index:8;top:10px;right:10px;bottom:68px;width:320px;max-width:calc(100% - 20px);display:flex;flex-direction:column;align-items:flex-end;pointer-events:none}
+.par3d-vote-picker>*{pointer-events:auto}
+.par3d-vote-trigger{display:flex;align-items:center;gap:8px;flex:none;max-width:min(290px,100%);min-height:44px;padding:6px 10px 6px 11px;border:0;border-radius:10px;background:#fffefa;color:#20392f;font:inherit;text-align:left;box-shadow:0 4px 16px #0003;cursor:pointer}
+.par3d-vote-trigger[hidden]{display:none}
+.par3d-vote-trigger>svg{flex:none}
+.par3d-vote-trigger span{display:grid;gap:1px;min-width:0}
+.par3d-vote-trigger b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.3;font-weight:650;overflow-wrap:anywhere}
+.par3d-vote-trigger small{font-size:11px;font-weight:450;color:var(--text-2);font-variant-numeric:tabular-nums}
+.par3d-vote-trigger em{font-style:normal;font-weight:600;color:#93412d}
+.par3d-vote-trigger em[data-passed=true]{color:#285d42}
+.par3d-vote-menu{display:flex;flex-direction:column;width:100%;max-height:100%;min-height:0;overflow:hidden;border-radius:12px;background:#fffefa;color:var(--mag-ink);box-shadow:0 8px 28px #0005}
+/* Rozbalená lišta zaberie výšku sály; ovládanie kamery sa počas výberu skryje, aby sa zmestilo viac hlasovaní. */
+.par3d-vote-picker[data-open=true]{bottom:10px}
+.par3d.is-landscape:has(.par3d-vote-picker[data-open=true]) .par3d-navigation{visibility:hidden}
+.par3d-vote-close{display:grid;place-items:center;flex:none;width:40px;min-height:44px;margin-right:-4px;border:0;border-radius:6px;background:transparent;color:var(--mag-ink);cursor:pointer}
+.par3d-vote-filters{display:flex;gap:6px;flex:none;padding:8px 10px 0}
+.par3d-vote-search{display:flex;align-items:center;gap:5px;flex:1;min-width:0;padding-left:8px;border:1px solid var(--border);border-radius:6px;color:var(--text-2)}
+.par3d-vote-search svg{flex:none}
+.par3d-vote-search input{width:100%;min-width:0;min-height:44px;padding:0 4px;border:0;background:transparent;color:var(--mag-ink);font:inherit;font-size:16px;caret-color:var(--mag-ink)}
+.par3d-vote-search input::placeholder{color:var(--text-2);opacity:1}
+.par3d-vote-filters select{width:104px;min-width:0;min-height:44px;padding:0 4px;border:1px solid var(--border);border-radius:6px;background:#fffefa;color:var(--mag-ink);font:inherit;font-size:16px}
+.par3d-vote-search:focus-within{outline:2px solid var(--focus);outline-offset:1px}
+.par3d-vote-menu-count{flex:none;margin:0;padding:6px 12px;font-size:11px;line-height:1.4;color:var(--text-2)}
+.par3d-vote-results{min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:var(--text-3) transparent;-webkit-overflow-scrolling:touch}
+.par3d-vote-results ul{list-style:none;margin:0;padding:0}
+.par3d-vote-results li+li{border-top:1px solid var(--border)}
+.par3d-vote-results li button{display:grid;gap:4px;width:100%;min-height:44px;padding:8px 12px;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.par3d-vote-results li button:hover{background:#eef1e5}
+.par3d-vote-results li button[aria-pressed=true]{background:#e5eddb}
+.par3d-vote-results li button:focus-visible{outline-offset:-3px}
+.par3d-vote-option-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:var(--text-2);font-size:11px;font-variant-numeric:tabular-nums}
+.par3d-vote-option-meta svg{margin-left:auto;color:var(--mag-ink)}
+.par3d-vote-results b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.4;font-weight:600;overflow-wrap:anywhere}
+.par3d-vote-option-result{display:flex;justify-content:space-between;gap:8px;color:#93412d;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.par3d-vote-option-result[data-passed=true]{color:#285d42}
+.par3d-vote-option-result span{color:var(--text-2);font-weight:450}
+.par3d-vote-empty{margin:0;padding:12px;font-size:13px;line-height:1.5}
+.par3d-vote-more{width:100%;min-height:44px;padding:8px;border:0;border-top:1px solid var(--border);background:transparent;color:var(--mag-ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
 @media(min-width:761px){.par3d-stage{height:min(540px,64vh)}.par3d.is-expanded{padding:18px 28px}.par3d.is-expanded .par3d-stage{height:min(72dvh,820px)}}
 
 /* Ovládanie nad sálou: obsadenie (prieskumy / 2023), zafarbenie (strany / bloky), znova prehrať úvod */

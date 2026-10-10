@@ -1,3 +1,10 @@
+## 10. 10. 2026 · Výber hlasovaní v sále na šírku (Codex, dokončil Claude)
+
+Fullscreen 3D sála má v pravom hornom rohu rolovací výber hlasovaní s vyhľadávaním a filtrom druhu. Výber používa pôvodné dáta a handler bez posúvania stránky; výsledky sa zmenia bez opustenia sály. Panel sa zbalí, fokus sa vráti na tlačidlo, Escape najprv zatvorí panel. Zmeny dát, výpočtov, modelu a hier nie sú súčasťou tejto úpravy.
+
+- **Zbalená lišta (Claude):** ukazuje len tému zvoleného hlasovania, dátum a či návrh prešiel. Ťuknutie rozbalí zoznam, výber ho znova zbalí. Rozbalený zoznam siaha po spodok sály, ovládanie kamery sa počas výberu skryje a zoznam sa posunie na zvolené hlasovanie (aj staršie ako prvých 40).
+- **Téma hlasovania** (`voteTopic` v `lib/votes.ts`) sa mechanicky vystrihne z oficiálneho názvu: „Novela zákona o …“, „Zákon o …“, „Vyslovenie nedôvery …“, „Novela Ústavy SR“, „Zmeny zákonov v súvislosti s …“. Nič sa nedopĺňa ani nehodnotí; úplný názov ostáva v nápovede a hľadá sa podľa neho. Pokrýva všetkých 353 hlasovaní. Preklep v zdroji „DOLlNKOVEJ“ sa zobrazí ako „Dolinkovej“.
+
 ## 10. 10. 2026 · Vplyv merania a porovnanie agentúr (Codex)
 
 Úvod má dve dátové vizualizácie: kontrolované porovnanie modelu s najnovším publikovaným vstupom a bez neho pri rovnakom dátume, vrátane podpory a scenára kresiel; a bodkové porovnanie posledných hodnôt agentúr pre zvolenú stranu s dátumami, metódou a pôvodným zdrojom. Nejde o historickú publikovanú verziu, hodnotenie kvality agentúr ani predpoveď. Nový test overuje návrat k starším meraniam, 60-dňové okno, zhodné dátumy publikovania, chýbajúce hodnoty a konzerváciu 150 kresiel. Zdrojové dáta a jadro modelu sa nemenia.

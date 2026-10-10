@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 38 súborov (4b3e62e8a4) — needitovať ručne. Pravidiel: 1714, prefarbených: 1347. */
+/* Generované scripts/build-dark.mjs z 38 súborov (4e97c9c64e) — needitovať ručne. Pravidiel: 1737, prefarbených: 1368. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -4083,6 +4083,94 @@ html[data-theme="dark"] .par3d-party-logo {
 }
 html[data-theme="dark"] .par3d-note {
     color: #bccac2
+}
+html[data-theme="dark"] .par3d-vote-trigger {
+    border: 0;
+    background: #262c29;
+    color: #d1e7de;
+    box-shadow: 0 4px 16px #0003
+}
+html[data-theme="dark"] .par3d-vote-trigger small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-vote-trigger em {
+    color: #eea897
+}
+html[data-theme="dark"] .par3d-vote-trigger em[data-passed=true] {
+    color: #bae8d1
+}
+html[data-theme="dark"] .par3d-vote-menu {
+    background: #262c29;
+    color: #d1e7de;
+    box-shadow: 0 8px 28px #0005
+}
+html[data-theme="dark"] .par3d-vote-close {
+    border: 0;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-vote-search {
+    border: 1px solid #41463d;
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-vote-search input {
+    border: 0;
+    background: transparent;
+    color: #d1e7de;
+    caret-color: #d1e7de
+}
+html[data-theme="dark"] .par3d-vote-search input::placeholder {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-vote-filters select {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-vote-search:focus-within {
+    outline: 2px solid #77a998;
+    outline-offset: 1px
+}
+html[data-theme="dark"] .par3d-vote-menu-count {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-vote-results li+li {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .par3d-vote-results li button {
+    border: 0;
+    background: transparent;
+    color: inherit
+}
+html[data-theme="dark"] .par3d-vote-results li button:hover {
+    background: #25271e
+}
+html[data-theme="dark"] .par3d-vote-results li button[aria-pressed=true] {
+    background: #272d1f
+}
+html[data-theme="dark"] .par3d-vote-results li button:focus-visible {
+    outline-offset: -3px
+}
+html[data-theme="dark"] .par3d-vote-option-meta {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-vote-option-meta svg {
+    color: #d1e7de
+}
+html[data-theme="dark"] .par3d-vote-option-result {
+    color: #eea897
+}
+html[data-theme="dark"] .par3d-vote-option-result[data-passed=true] {
+    color: #bae8d1
+}
+html[data-theme="dark"] .par3d-vote-option-result span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .par3d-vote-more {
+    border: 0;
+    border-top: 1px solid #41463d;
+    background: transparent;
+    color: #d1e7de
 }
 html[data-theme="dark"] .par3d-controls {
     border: 0

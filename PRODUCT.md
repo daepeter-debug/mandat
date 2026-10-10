@@ -27,6 +27,8 @@ Výsledok nemení zdrojové politické údaje, výpočty modelu, GLB scény, eko
 
 ## Použitie a overenie
 
+10. októbra používateľ požiadal o rolovací výber hlasovaní priamo v rohu 3D sály na mobile na šírku. Výber patrí do fullscreen plochy a prepína existujúce hlasovania bez odchodu zo sály alebo posúvania stránky. Má vyhľadávanie podľa názvu/dátumu, filter druhu, viditeľné označenie zvoleného hlasovania a po výbere sa zbalí. Dostupný je aj v ručne otvorenej fullscreen sále na počítači. Politické údaje a scéna sa nemenia.
+
 10. októbra používateľ schválil dve ďalšie vizualizácie v úvode: vplyv najnovšieho merania na model a porovnanie agentúr. Prvý panel porovnáva rovnaký dátum výpočtu s najnovšími známymi publikovanými vstupmi a bez nich (všetky publikované v rovnaký posledný deň spolu); staršie meranie rovnakej agentúry nastúpi len v pôvodnom 60-dňovom okne. Nie je to rekonštrukcia historického publikovaného modelu. Posuny podpory aj kresiel vychádzajú z pôvodných funkcií, nulové zmeny sa priznávajú. Druhý panel zobrazuje presné zverejnené hodnoty aktuálnych vstupov, dátumy zberu, zdroje a model; prispôsobená os má viditeľné hranice. Chýbajúce hodnoty nie sú nuly, rozdiel medzi agentúrami nie je známka kvality ani pásmo chyby.
 
 Mobil má prednosť: šírky 375 a 402 px, žiadne vodorovné pretekanie, dotykové ciele aspoň 40 px a podpora obmedzeného pohybu. SVG, CSS a canvas dopĺňajú existujúce komponenty bez ďalšej ťažkej knižnice; obsah mimo prvého pohľadu sa načítava lenivo. Zachovávajú sa klávesnica, čítačky, URL stav aj existujúce ovládanie spodnej lišty.
