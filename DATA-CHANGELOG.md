@@ -1,3 +1,12 @@
+## 10. 10. 2026 · Bezpečnostné hlavičky a kontrola webu (Claude)
+
+- **Hlavičky na všetkých stránkach, API aj statických súboroch** (`next.config.ts`, `public/_headers`):
+  - Content-Security-Policy povoľuje len vlastný web a Stripe;
+  - zákaz vloženia do cudzej stránky (`frame-ancestors none`, `X-Frame-Options`);
+  - `nosniff`, Referrer-Policy, Permissions-Policy, HSTS a COOP.
+- **Kontrola:** história gitu aj build sú bez kľúčov; vkladané HTML je len na dvoch statických miestach; API overujú vstupy na serveri.
+- **Postup a kontrolný zoznam pre účty** (2FA a ďalšie): `docs/bezpecnost.md`. Stráži to `scripts/verify-security.mjs`.
+
 ## 10. 10. 2026 · Podpora Mandátu cez Stripe, ostré platby zapnuté (Claude)
 
 - **Ostré platby zapnuté 10. 10. 2026 popoludní (Petrovo rozhodnutie):**
