@@ -1,0 +1,41 @@
+.model-origins{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,4vw,64px);padding:30px 0 32px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0 0 28px;scroll-margin-top:90px;color:var(--mag-ink)}
+.model-origins:focus{outline:none}
+.model-origin-explanation h2{margin:0 0 12px;font-size:clamp(25px,2.4vw,32px);font-weight:550;line-height:1.16;letter-spacing:-.025em}
+.model-origin-explanation h2 span{color:var(--primary)}
+.model-origin-explanation>p{font-size:14px;line-height:1.65;color:var(--text-2);margin:0 0 18px;max-width:48ch}
+.model-origin-flow{border-radius:12px;background:var(--card);padding:16px 20px 18px;margin:18px 0;display:grid;justify-items:center}
+.model-age-chart{width:100%;max-width:340px;color:var(--primary)}
+.model-age-chart>b,.model-average-result>b{display:block;font-size:13px;font-weight:550;color:var(--mag-ink)}
+.model-age-chart svg{display:block;width:100%;height:110px;margin:6px 0}
+.model-age-chart svg text{font-family:inherit;font-size:12px;fill:currentColor}
+.model-age-chart>span{display:block;font-size:11px;line-height:1.5;color:var(--text-2)}
+.model-flow-arrow{margin:12px 0;color:var(--text-3)}
+.model-average-result{width:100%}
+.model-average-result>div{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px}
+.model-average-result>div>span{display:grid;grid-template-columns:8px 1fr;align-items:center;column-gap:5px;font-size:11px;color:var(--text-2)}
+.model-average-result i{height:7px;width:7px;border-radius:50%}
+.model-average-result strong{grid-column:2;font-size:19px;font-weight:600;color:var(--mag-ink);font-variant-numeric:tabular-nums}
+.model-origin-explanation>.model-origin-caution{font-size:12px;line-height:1.65;margin:0 0 8px}
+.model-origin-explanation>button{min-height:44px;font-size:13px}
+.model-origin-inputs header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:5px 12px;margin:0 0 9px}
+.model-origin-inputs h3{font-size:17px;font-weight:550;line-height:1.4;margin:0;letter-spacing:-.015em}
+.model-origin-inputs header>span{font-size:11px;color:var(--text-2)}
+.model-origin-inputs ul{list-style:none;margin:0;padding:0}
+.model-origin-inputs li{padding:9px 0 5px;border-bottom:1px solid var(--border)}
+.model-input-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.model-input-heading>a{display:flex;align-items:center;gap:8px;color:var(--mag-ink);text-decoration:none;min-height:40px;font-size:16px}
+.model-input-heading a>b{font-weight:600}
+.model-input-heading a>span{font-size:10px;background:var(--mag-lime);color:#20392f;padding:3px 6px;border-radius:4px}
+.model-input-heading>span{font-size:11px;white-space:nowrap;color:var(--text-2)}
+.model-input-weight{display:grid;grid-template-columns:minmax(0,1fr) 92px;align-items:center;gap:12px}
+.model-input-weight>div{height:5px;border-radius:3px;overflow:hidden;background:var(--line-soft)}
+.model-input-weight i{display:block;height:100%;border-radius:3px;background:currentColor;color:var(--primary)}
+.model-input-weight>span{font-size:11px;text-align:right;color:var(--text-2);font-variant-numeric:tabular-nums}
+.model-input-source{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.model-input-source>span{font-size:11px;line-height:1.5;color:var(--text-2)}
+.model-input-source>a{display:flex;align-items:center;gap:5px;min-height:40px;min-width:55px;font-size:11px;color:var(--primary);text-underline-offset:3px}
+.model-input-note{font-size:11px;line-height:1.6;color:var(--text-2);margin:12px 0 0;max-width:65ch}
+.model-origins a:focus-visible,.model-origins button:focus-visible,.model-origin-jump:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px}
+.model-origin-jump{display:flex;justify-content:center;align-items:center;gap:6px;min-height:40px;max-width:380px;margin:-8px 0 12px;font-size:11px;line-height:1.5;color:var(--primary);text-underline-offset:3px}
+@media(hover:hover){.model-input-heading>a:hover,.model-input-source>a:hover,.model-origin-jump:hover{color:var(--mag-ink);text-decoration:underline}}
+@media(max-width:760px){.model-origins{grid-template-columns:1fr;gap:25px;padding:24px 0;margin-bottom:22px}.model-origin-explanation h2{font-size:26px}.model-origin-flow{padding:15px 18px;margin:14px 0}.model-age-chart svg{height:110px}.model-origin-jump{margin-inline:auto;font-size:11px}.model-origin-inputs h3{font-size:17px}.model-input-heading>a{font-size:15px;gap:6px}}

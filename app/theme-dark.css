@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 32 súborov (ad1329a23b) — needitovať ručne. Pravidiel: 1599, prefarbených: 1246. */
+/* Generované scripts/build-dark.mjs z 33 súborov (626f91b722) — needitovať ručne. Pravidiel: 1625, prefarbených: 1269. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3627,6 +3627,93 @@ html[data-theme="dark"] .mobile-collapse {
 }
 html[data-theme="dark"] .mobile-collapse>.fold-toggle {
     color: #d1e7de
+}
+html[data-theme="dark"] .model-origins {
+    border-top: 1px solid #41463d;
+    border-bottom: 1px solid #41463d;
+    color: #d1e7de
+}
+html[data-theme="dark"] .model-origins:focus {
+    outline: none
+}
+html[data-theme="dark"] .model-origin-explanation h2 span {
+    color: #baead9
+}
+html[data-theme="dark"] .model-origin-explanation>p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-origin-flow {
+    background: #262c29
+}
+html[data-theme="dark"] .model-age-chart {
+    color: #baead9
+}
+html[data-theme="dark"] .model-age-chart>b,html[data-theme="dark"] .model-average-result>b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .model-age-chart svg text {
+    fill: currentColor
+}
+html[data-theme="dark"] .model-age-chart>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-flow-arrow {
+    color: #bccac2
+}
+html[data-theme="dark"] .model-average-result>div>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-average-result strong {
+    color: #d1e7de
+}
+html[data-theme="dark"] .model-origin-inputs header>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-origin-inputs li {
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .model-input-heading>a {
+    color: #d1e7de;
+    text-decoration: none
+}
+html[data-theme="dark"] .model-input-heading a>span {
+    background: var(--mag-lime);
+    color: #20392f
+}
+html[data-theme="dark"] .model-input-heading>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-input-weight>div {
+    background: #282a23
+}
+html[data-theme="dark"] .model-input-weight i {
+    background: currentColor;
+    color: #baead9
+}
+html[data-theme="dark"] .model-input-weight>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-input-source>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-input-source>a {
+    color: #baead9
+}
+html[data-theme="dark"] .model-input-note {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-origins a:focus-visible,html[data-theme="dark"] .model-origins button:focus-visible,html[data-theme="dark"] .model-origin-jump:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .model-origin-jump {
+    color: #baead9
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .model-input-heading>a:hover,html[data-theme="dark"] .model-input-source>a:hover,html[data-theme="dark"] .model-origin-jump:hover {
+        color: #d1e7de;
+        text-decoration: underline
+    }
 }
 html[data-theme="dark"] .news-story {
     color: #f3f7ef

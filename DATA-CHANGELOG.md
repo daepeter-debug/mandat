@@ -1,3 +1,7 @@
+## 10. 10. 2026 · Model Mandát zrozumiteľne v úvode (Codex)
+
+Grafický panel najnovších vstupov modelu s dátumami, vzorkami, základnými váhami a odkazmi na merania i originálne zdroje. Graf vysvetľuje polčas váhy 30 dní a okno 60 dní; výpočet používa spoločnú funkciu bez zmeny výsledkov. Pri titulku je priamy odkaz na vysvetlenie.
+
 ## 9. 10. 2026 · Trendy a farebné profily strán (Codex)
 
 Abecedné predvolené poradie, voliteľné poradie podľa podpory v URL, krivky posledných šiestich bodov, 30-dňové zmeny a pásmo neistoty s kreslami v profile. Presun loga zostáva zachovaný.

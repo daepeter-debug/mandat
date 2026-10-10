@@ -26,6 +26,13 @@ const msDay = 86_400_000;
 const dayDiff = (later:string, earlier:string) => Math.max(0, (Date.parse(`${later}T12:00:00Z`) - Date.parse(`${earlier}T12:00:00Z`)) / msDay);
 const round = (value:number) => Math.round(value * 10) / 10;
 
+/** Shared by the calculation and its explanation. Missing parties are normalized separately. */
+export function aggregatePollWeight(poll: Poll, asOf: string): number {
+  const recency = Math.pow(.5, dayDiff(asOf, poll.end) / aggregateHalfLifeDays);
+  const precision = Math.max(.7, Math.min(1.4, Math.sqrt((poll.sample ?? 1000) / 1000)));
+  return recency * precision;
+}
+
 export function pollsForAggregate(asOf:string, source:Poll[]=archive) {
   const eligible = source.filter(p => aggregateAgencies.includes(p.agency as typeof aggregateAgencies[number]) && p.end <= asOf && dayDiff(asOf,p.end) <= aggregateWindowDays);
   return aggregateAgencies.flatMap(agency => {
@@ -39,11 +46,8 @@ export function aggregateAt(asOf:string, source:Poll[]=archive):AggregatePoint {
   const values:Record<string,AggregateValue> = {};
   for(const party of parties) {
     const inputs = selected.filter(p=>p.values[party.id]!==undefined).map(p=>{
-      const age = dayDiff(asOf,p.end);
-      const recency = Math.pow(.5, age / aggregateHalfLifeDays);
       const sample = p.sample ?? 1000;
-      const precision = Math.max(.7,Math.min(1.4,Math.sqrt(sample/1000)));
-      return {poll:p,value:p.values[party.id],weight:recency*precision,sample};
+      return {poll:p,value:p.values[party.id],weight:aggregatePollWeight(p,asOf),sample};
     });
     if(!inputs.length || !reportedByMajority(inputs.length,selected.length)) continue;
     const weightSum=inputs.reduce((sum,x)=>sum+x.weight,0);

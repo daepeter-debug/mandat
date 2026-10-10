@@ -89,6 +89,7 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
       <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát · aktualizované {date(edition.updated)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
       <h1 id="national-title">{headline}</h1>
       <EditionHemicycle onOpen={()=>onNavigate("parliament")}/>
+      <a className="model-origin-jump" href="#model-mandat">Model Mandát = vážený priemer {edition.agencies.length} agentúr <ArrowDown size={13}/></a>
       <p className="edition-lead">{lead}</p>
       <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">
         {kpis.map(k => <div key={k.label}><dt>{k.label}</dt><dd data-count={k.value} aria-label={`${k.value} kresiel`}>{k.value}</dd><small className={k.delta > 0 ? "up" : k.delta < 0 ? "down" : ""}>{k.note}</small></div>)}
