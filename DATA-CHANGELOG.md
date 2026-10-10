@@ -1,4 +1,11 @@
-## 10. 10. 2026 · Podpora Mandátu cez Stripe, testovacia príprava (Claude)
+## 10. 10. 2026 · Podpora Mandátu cez Stripe, ostré platby zapnuté (Claude)
+
+- **Ostré platby zapnuté 10. 10. 2026 popoludní (Petrovo rozhodnutie):**
+  - v Cloudflare sú ostré kľúče (obmedzený `rk_live` len na Checkout Sessions), ostrý webhook a `PODPORA_OSTRA=ano`;
+  - doména je zaregistrovaná v ostrom režime;
+  - prvá skutočná platba 2 € cez Apple Pay prešla aj s potvrdením z webhooku.
+
+### Pôvodná príprava: 10. 10. 2026 · Podpora Mandátu cez Stripe, testovacia príprava (Claude)
 
 - **Čo pribudlo:** dobrovoľný jednorazový príspevok priamo na webe cez Stripe Embedded Checkout (Apple Pay, Google Pay, karta). Sumy 2, 5, 10 € (od 10. 10. popoludní, predtým 3, 5, 10, 20 €) alebo vlastná od 2 € do 500 €. Od 10. 10. popoludní aj Revolut Pay; iné metódy zo Stripe (Klarna, Link, prevody) sa neponúkajú.
 - **Kde:**
