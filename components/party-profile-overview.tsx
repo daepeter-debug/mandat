@@ -8,6 +8,7 @@ import { voiceItem } from '@/lib/voice';
 import { date, fmt } from '@/lib/polls';
 import { averageWage, fundingChecked, fundingForParty, fundingLaw, fundingThresholdPct } from '@/lib/party-funding';
 import { formatTenureDate, governmentTenure, tenureAsOf, tenureLabel, tenureMethodology } from '@/lib/government-tenure';
+import TenureTimeline from '@/components/tenure-timeline';
 
 const photoSet=(photo:string)=>[1,2,3].map(n=>`${photo.replace(/-2x\.webp$/,'')}-${n}x.webp ${n}x`).join(', ');
 const initials=(name:string)=>{const parts=name.trim().split(/\s+/);return (parts[0][0]+(parts.length>1?parts[parts.length-1][0]:'')).toUpperCase();};
@@ -66,6 +67,7 @@ function PartyGovernmentTenure({partyId}:{partyId:string}) {
     </summary>
     <div className="tenure-detail">
       <p className="tenure-method">{tenureMethodology.label}</p>
+      <TenureTimeline tenure={tenure}/>
       {tenure.periods.length>0?<ol>{tenure.periods.map(period=><li key={`${period.start}-${period.government}`}>
         <span><time dateTime={period.start}>{formatTenureDate(period.start)}</time> – {period.end?<time dateTime={period.end}>{formatTenureDate(period.end)}</time>:'súčasnosť'}</span>
         <strong>{period.government}</strong>

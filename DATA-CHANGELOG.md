@@ -1,3 +1,7 @@
+## 10. 10. 2026 · Čitateľnejšie trendy a časové osi (Codex)
+
+Trend označuje posledné hodnoty logami a popiskami, spoločný ukazovateľ aktualizuje číselný prehľad a dotyk vyberá dátum. Rozmiestnenie popiskov nemení krivky. V detaile účasti vo vláde je časová os podľa doterajších podkladov, porovnávač má ikony tém, logá a správnu šírku pri dvoch stranách. Detaily vybraných správ odkazujú na staršie zhrnutia k rovnakým explicitným témam bez vyvodzovania príčinných súvislostí. Politické údaje a výpočty bez zmien.
+
 ## 10. 10. 2026 · Grafické sprehľadnenie viacerých sekcií (Codex)
 
 Najnovší zverejnený prieskum v páse má podfarbenie a štítok (zhodné dátumy sa označia spoločne, neznáme sa nevymýšľajú). Profily zobrazujú pásmo neistoty voči 5 %, správy uvádzajú vydavateľa v zozname a hospodárenie porovnáva príjmy/výdavky za dva posledné roky na spoločnej stupnici. Zdrojové údaje bez zmien.

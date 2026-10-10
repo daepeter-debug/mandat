@@ -1,10 +1,15 @@
 "use client";
-import {useState} from "react";
-import {ArrowUpRight,BookOpen,FileText,Info,Check,Clock3} from "lucide-react";
+import {useState,type CSSProperties} from "react";
+import Image from 'next/image';
+import logos from '@/lib/party-logos.json';
+import {ArrowUpRight,BookOpen,FileText,Info,Check,Clock3,Landmark,HeartPulse,GraduationCap,Globe2,Scale,UsersRound,House,type LucideIcon} from "lucide-react";
 import {parties,date} from "@/lib/polls";
 import {programmes,programmeTopics,positions,statusLabel,type Programme} from "@/lib/programmes";
 import {MobileCollapse} from "@/components/mobile-fold";
 import "@/app/programmes-mobile.css";
+import "@/app/editorial-context.css";
+const topicIcons:Record<string,LucideIcon>={'Ekonomika a dane':Landmark,'Zdravotníctvo':HeartPulse,'Vzdelávanie':GraduationCap,'Zahraničná politika':Globe2,'Spravodlivosť':Scale,'Rodiny':UsersRound,'Bývanie':House};
+const partyLogos=logos as Record<string,{src:string}>;
 
 function DocumentLink({document}:{document:Programme}) {
   return <a className="document-open" href={document.url} target="_blank" rel="noopener noreferrer">Otvoriť pôvodný {document.format==="PDF"?"dokument":"zdroj"}<ArrowUpRight size={17}/><span className="sr-only"> v novej karte</span></a>;
@@ -23,11 +28,13 @@ function ProgrammeMatrix() {
   const availablePartyIds=[...new Set(programmes.map(p=>p.partyId))];
   const [selected,setSelected]=useState(["ps","kdh","dem"]);
   const [topic,setTopic]=useState("Ekonomika a dane");
+  const TopicIcon=topicIcons[topic]??BookOpen;
   const toggle=(id:string)=>setSelected(current=>current.includes(id)?(current.length>2?current.filter(x=>x!==id):current):(current.length<3?[...current,id]:current));
   return <section className="programme-matrix" aria-labelledby="matrix-title">
     <div className="matrix-intro"><div><h2 id="matrix-title">Porovnajte ich vedľa seba.</h2><p>Vyberte dve alebo tri strany a jednu tému. Každý bod je skrátený z označeného pôvodného zdroja.</p></div><div className="matrix-rule"><Info size={18}/><p>Aktuálna iniciatíva nie je automaticky volebný program 2027. Prázdne miesto znamená, že sme pre túto tému zatiaľ nenašli overený aktuálny dokument.</p></div></div>
-    <div className="matrix-controls"><div role="group" aria-label="Vybrať dve alebo tri strany" className="matrix-parties">{availablePartyIds.map(id=>{const p=parties.find(x=>x.id===id)!;const chosen=selected.includes(id);return <button key={id} aria-pressed={chosen} aria-disabled={!chosen&&selected.length===3} onClick={()=>toggle(id)}><i style={{background:p.color}}/>{chosen&&<Check size={14}/>} {p.short}</button>})}</div><div role="group" aria-label="Vybrať tému" className="matrix-topics">{programmeTopics.map(t=><button key={t} aria-pressed={topic===t} onClick={()=>setTopic(t)}>{t}</button>)}</div></div>
-    <div className="matrix-grid">{selected.map(id=>{const party=parties.find(p=>p.id===id)!;const position=positions.find(p=>p.partyId===id&&p.topic===topic);return <article key={id}><header><span className="party-label"><i style={{background:party.color}}/>{party.name}</span>{position&&<span className={`programme-status status-${position.status}`}>{statusLabel[position.status]}</span>}</header>{position?<><ul>{position.bullets.map(b=><li key={b}>{b}</li>)}</ul><a className="source-link" href={position.source} target="_blank" rel="noopener noreferrer">{position.sourceTitle}<ArrowUpRight size={14}/></a><time dateTime={position.asOf}>Stav zdroja {date(position.asOf)}</time></>:<div className="matrix-empty"><BookOpen size={22}/><strong>Zatiaľ bez overeného aktuálneho postoja</strong><p>Starší program môže byť v archíve nižšie, ale nebudeme ho vydávať za dnešný návrh.</p></div>}</article>})}</div>
+    <div className="matrix-controls"><div role="group" aria-label="Vybrať dve alebo tri strany" className="matrix-parties">{availablePartyIds.map(id=>{const p=parties.find(x=>x.id===id)!;const chosen=selected.includes(id);return <button key={id} aria-pressed={chosen} aria-disabled={!chosen&&selected.length===3} onClick={()=>toggle(id)}><i style={{background:p.color}}/>{chosen&&<Check size={14}/>} {p.short}</button>})}</div><div role="group" aria-label="Vybrať tému" className="matrix-topics">{programmeTopics.map(t=>{const Icon=topicIcons[t]??BookOpen;return <button key={t} aria-pressed={topic===t} onClick={()=>setTopic(t)}><Icon size={15} aria-hidden="true"/>{t}</button>})}</div></div>
+    <div className="matrix-theme-heading"><TopicIcon size={25} aria-hidden="true"/><h3>{topic}</h3></div>
+    <div className="matrix-grid" style={{"--matrix-columns":selected.length} as CSSProperties}>{selected.map(id=>{const party=parties.find(p=>p.id===id)!;const position=positions.find(p=>p.partyId===id&&p.topic===topic);return <article key={id}><header><span className="party-label">{partyLogos[id]&&<Image className="matrix-party-logo" src={partyLogos[id].src} alt="" width={24} height={24} unoptimized/>}{party.name}</span>{position&&<span className={`programme-status status-${position.status}`}>{statusLabel[position.status]}</span>}</header>{position?<><ul>{position.bullets.map(b=><li key={b}>{b}</li>)}</ul><a className="source-link" href={position.source} target="_blank" rel="noopener noreferrer">{position.sourceTitle}<ArrowUpRight size={14}/></a><time dateTime={position.asOf}>Stav zdroja {date(position.asOf)}</time></>:<div className="matrix-empty"><BookOpen size={22}/><strong>Zatiaľ bez overeného aktuálneho postoja</strong><p>Starší program môže byť v archíve nižšie, ale nebudeme ho vydávať za dnešný návrh.</p></div>}</article>})}</div>
   </section>;
 }
 

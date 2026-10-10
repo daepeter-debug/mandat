@@ -19,6 +19,8 @@ Používateľ schválil celý balík šiestich vylepšení z `../PROMPT-codex-mo
 
 Následne schválil zvýraznenie najnovšieho prieskumu v pohyblivom páse a samostatný výber ďalších grafických úprav na webe. Rozšírenie zahŕňa podfarbenie najnovšieho známeho dátumu publikácie, graf neistoty oproti hranici 5 % v profiloch, vydavateľa pri správach a porovnanie príjmov/výdavkov verejnej správy za posledné dva dostupné roky. Ide o zobrazenie existujúcich údajov.
 
+Ďalší schválený balík dopĺňa logá a hodnoty pri koncoch trendových kriviek, spoločný ukazovateľ s prehľadom hodnôt a dotykovým podržaním dátumu; zobrazenie účasti vo vláde na časovej osi v existujúcom detaile; ikonami označené témy a zarovnané zdroje programov; a chronologický výber starších správ z archívu v detaile správy. Koncové popisky patria poslednému bodu, prehľad pod grafom zvolenému dátumu. Mobilné skratky majú plné názvy pod grafom. Časová os vlády končí dátumom kontroly existujúcich údajov (13. 9. 2026). Archív správ vyhľadáva explicitné osoby/témy v titulkoch a nevyvodzuje príčinné súvislosti. Vznik strán ani nové historické tvrdenia sa bez ďalších overených podkladov nepridávajú.
+
 Rozšírenie zachováva redakčný vzhľad existujúceho webu: IBM Plex Sans, krémové a zelené plochy, zodpovedajúci tmavý režim, typografickú hierarchiu a navigáciu. Farby strán a hlasov vychádzajú z existujúcich dát. Nejde o nový dizajn celého webu.
 
 Výsledok nemení zdrojové politické údaje, výpočty modelu, GLB scény, ekonomiku hier ani nasadzovaciu konfiguráciu. Správy používajú skrátený súvislý úryvok overeného textu. Septembrový horizont volieb 2027 je orientačný; presný deň sa neprezentuje ako potvrdený.

@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 35 súborov (ee3fd4df55) — needitovať ručne. Pravidiel: 1645, prefarbených: 1286. */
+/* Generované scripts/build-dark.mjs z 37 súborov (b1bdeac9ae) — needitovať ručne. Pravidiel: 1667, prefarbených: 1301. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3327,6 +3327,52 @@ html[data-theme="dark"] .debt-clock-rates div {
 html[data-theme="dark"] .debt-clock-rates dt {
     color: #a9bf98
 }
+html[data-theme="dark"] .tenure-timeline {
+    color: #bfcec6
+}
+html[data-theme="dark"] .tenure-timeline text {
+    fill: currentColor
+}
+html[data-theme="dark"] .news-context {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .news-context h3 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .news-context>p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .news-context li::before {
+    background: #245c48
+}
+html[data-theme="dark"] .news-context li:not(:last-child)::after {
+    background: #2c3028
+}
+html[data-theme="dark"] .news-context button {
+    border: 0;
+    background: none;
+    color: #d1e7de
+}
+html[data-theme="dark"] .news-context time {
+    color: #bfcec6
+}
+html[data-theme="dark"] .news-context small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .news-context button:hover span {
+    text-decoration: underline
+}
+html[data-theme="dark"] .news-context button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .matrix-theme-heading {
+    border-top: 1px solid #6e897c;
+    color: #f4f7ef
+}
+html[data-theme="dark"] .matrix-grid .matrix-party-logo {
+    background: #fff
+}
 html[data-theme="dark"] .finance-budget {
     background: #262c29;
     color: #d1e7de
@@ -5823,6 +5869,33 @@ html[data-theme="dark"] .theme-toggle:hover {
 html[data-theme="dark"] .theme-toggle:focus-visible {
     outline: 2px solid #77a998;
     outline-offset: 2px
+}
+html[data-theme="dark"] .trend-endpoint-name,html[data-theme="dark"] .trend-endpoint-value {
+    fill: #d1e7de
+}
+html[data-theme="dark"] .trend-snapshot {
+    border-top: 1px solid #41463d;
+    color: #d1e7de
+}
+html[data-theme="dark"] .trend-snapshot-head small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .trend-snapshot-values button {
+    border: 0;
+    background: none;
+    color: #d1e7de
+}
+html[data-theme="dark"] .trend-snapshot-values button[aria-pressed=true] {
+    background: #282a23
+}
+html[data-theme="dark"] .trend-snapshot-values .trend-snapshot-logo {
+    background: #fff
+}
+html[data-theme="dark"] .trend-chart-hint {
+    color: #bfcec6
+}
+html[data-theme="dark"] .trend-endpoint-logo {
+    fill: #fff
 }
 html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#e3e8df"],html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#E3E8DF"] {
     stroke: #40453d
