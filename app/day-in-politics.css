@@ -51,6 +51,10 @@
 .dip-item p{margin:6px 0 0;font-size:15px;line-height:1.65;color:#465845;max-width:68ch}
 .dip-read{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:4px;padding:0;border:0;background:none;font:inherit;font-size:13.5px;font-weight:650;color:#2f5a3a;cursor:pointer}
 .dip-read svg{transition:transform .2s}
+.dip-item-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0 16px;margin-top:10px}
+.dip-source-name{display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.5;color:var(--text-2);max-width:100%}
+.dip-source-name svg{flex:none}
+.dip-item:not(.is-lead) .dip-rank{border-radius:9px;background:#edf2e6;border:0}
 @media(hover:hover){.dip-read:hover svg{transform:translateX(3px)}.dip-item h3 button:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}}
 
 /* Téma dňa: prvá správa ako výrazná karta. */

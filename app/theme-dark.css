@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 33 súborov (626f91b722) — needitovať ručne. Pravidiel: 1625, prefarbených: 1269. */
+/* Generované scripts/build-dark.mjs z 35 súborov (ee3fd4df55) — needitovať ručne. Pravidiel: 1645, prefarbených: 1286. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3108,6 +3108,13 @@ html[data-theme="dark"] .dip-read {
     background: none;
     color: #bee2c7
 }
+html[data-theme="dark"] .dip-source-name {
+    color: #bfcec6
+}
+html[data-theme="dark"] .dip-item:not(.is-lead) .dip-rank {
+    background: #23261d;
+    border: 0
+}
 @media (hover:hover) {
     html[data-theme="dark"] .dip-item h3 button:hover {
         text-decoration: underline
@@ -3319,6 +3326,48 @@ html[data-theme="dark"] .debt-clock-rates div {
 }
 html[data-theme="dark"] .debt-clock-rates dt {
     color: #a9bf98
+}
+html[data-theme="dark"] .finance-budget {
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .finance-budget header p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .finance-budget header [role=group] {
+    border: 1px solid #41463d
+}
+html[data-theme="dark"] .finance-budget button {
+    background: none;
+    border: 0;
+    color: #bfcec6
+}
+html[data-theme="dark"] .finance-budget button[aria-pressed=true] {
+    background: #20392f;
+    color: #fffefa
+}
+html[data-theme="dark"] .finance-budget button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .finance-budget-bars>div>div {
+    background: #282a23
+}
+html[data-theme="dark"] .finance-budget-bars i {
+    background: currentColor;
+    color: #baead9
+}
+html[data-theme="dark"] .finance-budget-bars [data-kind=expense] i {
+    color: #e9b691
+}
+html[data-theme="dark"] .finance-budget-axis {
+    color: #bfcec6
+}
+html[data-theme="dark"] .finance-budget-result {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .finance-budget-result>span {
+    color: #bfcec6
 }
 @media (max-width:760px) {
     html[data-theme="dark"] .fy-mobile {
@@ -4765,6 +4814,19 @@ html[data-theme="dark"] .ticker-track button:focus-visible {
 html[data-theme="dark"] .ticker-track b {
     color: #d1e7de
 }
+html[data-theme="dark"] .ticker-track li[data-newest] button {
+    background: #2a311d;
+    border-right-color: #4d5447
+}
+html[data-theme="dark"] .ticker-track .ticker-newest {
+    background: #245c48;
+    color: #fffefa
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .ticker-track li[data-newest] button:hover {
+        background: #2f3821
+    }
+}
 html[data-theme="dark"] .ticker-track time {
     color: #bccac2
 }
@@ -5563,6 +5625,15 @@ html[data-theme="dark"] .story-foot button {
     border: 0;
     background: #ffffff14;
     color: #f3f7ef
+}
+html[data-theme="dark"] .party-profile-support .support-range {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-range text {
+    fill: currentColor
+}
+html[data-theme="dark"] .party-profile-support .support-range figcaption {
+    color: #bfcec6
 }
 html[data-theme="dark"] .tax-head h2 {
     color: #d1e7de

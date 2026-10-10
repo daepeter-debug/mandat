@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Pause, Play } from "lucide-react";
-import { agencies, archive, fmt, rank } from "@/lib/polls";
+import { fmt, rank } from "@/lib/polls";
+import { latestAgencyPolls as latest, newestPollIds } from "@/lib/poll-freshness";
 import "@/app/poll-ticker.css";
 
 /*
@@ -10,17 +11,13 @@ import "@/app/poll-ticker.css";
   Plynulo beží, zastaví sa pod prstom alebo myšou a tlačidlom; pri „obmedziť pohyb“ stojí
   a dá sa posúvať prstom. Ťuknutie otvorí detail merania v archíve.
 */
-const latest = agencies
-  .map(a => archive.filter(p => p.agency === a).sort((x, y) => y.end.localeCompare(x.end))[0])
-  .filter(p => p !== undefined)
-  .sort((a, b) => b.end.localeCompare(a.end));
 const short = (d: string) => `${Number(d.slice(8, 10))}. ${Number(d.slice(5, 7))}.`;
 
 export default function PollTicker({ onOpen }: { onOpen: (pollId: string) => void }) {
   const [paused, setPaused] = useState(false);
-  const items = (copy: boolean) => latest.map(p => <li key={`${copy ? "b" : "a"}-${p.id}`} aria-hidden={copy || undefined}>
-    <button type="button" tabIndex={copy ? -1 : undefined} onClick={() => onOpen(p.id)} aria-label={copy ? undefined : `${p.agency}, zber do ${short(p.end)}: ${rank(p).slice(0, 3).map(x => `${x.short} ${fmt(p.values[x.id])} %`).join(", ")}. Otvoriť meranie.`}>
-      <b>{p.agency}</b><time dateTime={p.end}>{short(p.end)}</time>
+  const items = (copy: boolean) => latest.map(p => <li key={`${copy ? "b" : "a"}-${p.id}`} data-newest={newestPollIds.has(p.id)||undefined} aria-hidden={copy || undefined}>
+    <button type="button" tabIndex={copy ? -1 : undefined} onClick={() => onOpen(p.id)} aria-label={copy ? undefined : `${newestPollIds.has(p.id)?'Najnovší zverejnený prieskum. ':''}${p.agency}, zber do ${short(p.end)}: ${rank(p).slice(0, 3).map(x => `${x.short} ${fmt(p.values[x.id])} %`).join(", ")}. Otvoriť meranie.`}>
+      <b>{p.agency}</b>{newestPollIds.has(p.id)&&<span className="ticker-newest">Najnovší</span>}<time dateTime={p.end}>{short(p.end)}</time>
       {rank(p).slice(0, 3).map(x => <span key={x.id}><i style={{ background: x.color }} aria-hidden="true"/>{x.short} <em>{fmt(p.values[x.id])}</em></span>)}
     </button>
   </li>);

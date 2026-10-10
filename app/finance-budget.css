@@ -1,0 +1,19 @@
+.finance-budget{margin:20px 0 24px;padding:20px 24px;background:var(--card);border-radius:12px;color:var(--mag-ink)}
+.finance-budget header{display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:20px}
+.finance-budget h2{font-size:19px;font-weight:550;letter-spacing:-.02em;margin:0 0 4px;line-height:1.3}
+.finance-budget header p{font-size:12px;line-height:1.5;color:var(--text-2);margin:0}
+.finance-budget header [role=group]{display:flex;gap:4px;border:1px solid var(--border);padding:3px;border-radius:8px}
+.finance-budget button{min-height:40px;min-width:60px;padding:0 10px;background:none;border:0;border-radius:5px;color:var(--text-2);font:inherit;font-size:13px;font-variant-numeric:tabular-nums;cursor:pointer}
+.finance-budget button[aria-pressed=true]{background:#20392f;color:#fffefa}
+.finance-budget button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.finance-budget-bars{display:grid;gap:13px}
+.finance-budget-bars>div:not(.finance-budget-axis){display:grid;grid-template-columns:70px minmax(0,1fr) 64px;gap:12px;align-items:center;font-size:13px}
+.finance-budget-bars>div>div{height:18px;background:var(--line-soft);border-radius:3px;overflow:hidden}
+.finance-budget-bars i{height:100%;display:block;background:currentColor;color:#245c48;border-radius:3px}
+.finance-budget-bars [data-kind=expense] i{color:#9f6337}
+.finance-budget-bars b{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.finance-budget-axis{display:flex;justify-content:space-between;margin:0 76px 0 82px;font-size:10px;color:var(--text-2)}
+.finance-budget-result{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px 10px;padding-top:14px;border-top:1px solid var(--border);margin:16px 0 0;font-size:13px;line-height:1.6}
+.finance-budget-result strong{font-variant-numeric:tabular-nums;font-weight:600}
+.finance-budget-result>span{margin-left:auto;font-size:11px;color:var(--text-2)}
+@media(max-width:760px){.finance-budget{padding:18px 16px}.finance-budget h2{font-size:18px}.finance-budget-bars>div:not(.finance-budget-axis){grid-template-columns:57px minmax(0,1fr) 56px;gap:8px;font-size:12px}.finance-budget-axis{margin-inline:65px 64px}.finance-budget-result>span{width:100%;margin-left:0}}

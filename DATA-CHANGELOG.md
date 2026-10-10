@@ -1,3 +1,7 @@
+## 10. 10. 2026 · Grafické sprehľadnenie viacerých sekcií (Codex)
+
+Najnovší zverejnený prieskum v páse má podfarbenie a štítok (zhodné dátumy sa označia spoločne, neznáme sa nevymýšľajú). Profily zobrazujú pásmo neistoty voči 5 %, správy uvádzajú vydavateľa v zozname a hospodárenie porovnáva príjmy/výdavky za dva posledné roky na spoločnej stupnici. Zdrojové údaje bez zmien.
+
 ## 10. 10. 2026 · Model Mandát zrozumiteľne v úvode (Codex)
 
 Grafický panel najnovších vstupov modelu s dátumami, vzorkami, základnými váhami a odkazmi na merania i originálne zdroje. Graf vysvetľuje polčas váhy 30 dní a okno 60 dní; výpočet používa spoločnú funkciu bez zmeny výsledkov. Pri titulku je priamy odkaz na vysvetlenie.

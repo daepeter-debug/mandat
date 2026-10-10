@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import MiniHemicycle from "@/components/mini-hemicycle";
+import SupportRange from "@/components/support-range";
 import { aggregateSeries, currentAggregate } from "@/lib/aggregate";
 import { partyDelta } from "@/lib/mobile-insights";
 import { edition } from "@/lib/edition";
@@ -22,5 +23,6 @@ export function PartySupport({ party }: { party: Party }) {
   return <div className="party-profile-support" style={{ "--party-color":party.color } as CSSProperties}>
     <div><strong>{fmt(support.value)} <small>%</small></strong><span>Model Mandát · vážený priemer</span><span>Pásmo neistoty: {fmt(support.lower)}–{fmt(support.upper)} %</span></div>
     {support.value >= 5 && seats > 0 && <figure><MiniHemicycle colors={colors} label={`${party.short}: ${seats} zo 150 kresiel v scenári Modelu Mandát. Nejde o predpoveď.`}/><figcaption>{seats} kresiel · scenár</figcaption></figure>}
+    <SupportRange support={support}/>
   </div>;
 }

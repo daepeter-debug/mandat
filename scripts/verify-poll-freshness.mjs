@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { newestPublishedPollIds,latestAgencyPolls,newestPollIds } from '../lib/poll-freshness.ts';
+const base=latestAgencyPolls[0];
+const fixture=(id,published,end)=>({...base,id,published,end});
+assert.deepEqual([...newestPublishedPollIds([])],[]);
+assert.deepEqual([...newestPublishedPollIds([fixture('unknown',null,'2026-10-10')])],[]);
+assert.deepEqual([...newestPublishedPollIds([fixture('older','2026-10-05','2026-10-04'),fixture('new','2026-10-07','2026-09-20'),fixture('unknown',null,'2026-10-10')])],['new']);
+assert.deepEqual([...newestPublishedPollIds([fixture('one','2026-10-07','2026-10-04'),fixture('two','2026-10-07','2026-10-05')])],['one','two']);
+assert.equal(new Set(latestAgencyPolls.map(p=>p.agency)).size,latestAgencyPolls.length);
+for(const p of latestAgencyPolls)if(newestPollIds.has(p.id))assert.ok(p.published&&latestAgencyPolls.every(other=>!other.published||other.published<=p.published));
+console.log('PASS freshness: publication wins over fieldwork, tied dates, unknown dates and one row per agency.');

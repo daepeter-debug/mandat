@@ -17,6 +17,8 @@ Používateľ schválil celý balík šiestich vylepšení z `../PROMPT-codex-mo
 
 10. októbra 2026 používateľ doplnil zadanie: v úvode viditeľne vysvetliť Model Mandát a uviesť najnovšie prieskumy s prelinkami, s dôrazom na grafiku namiesto dlhého textu. Súčasťou je priama skratka z titulku, graf úbytku váhy v čase, východiskové váhy vstupov a odkazy na meranie i pôvodný zdroj.
 
+Následne schválil zvýraznenie najnovšieho prieskumu v pohyblivom páse a samostatný výber ďalších grafických úprav na webe. Rozšírenie zahŕňa podfarbenie najnovšieho známeho dátumu publikácie, graf neistoty oproti hranici 5 % v profiloch, vydavateľa pri správach a porovnanie príjmov/výdavkov verejnej správy za posledné dva dostupné roky. Ide o zobrazenie existujúcich údajov.
+
 Rozšírenie zachováva redakčný vzhľad existujúceho webu: IBM Plex Sans, krémové a zelené plochy, zodpovedajúci tmavý režim, typografickú hierarchiu a navigáciu. Farby strán a hlasov vychádzajú z existujúcich dát. Nejde o nový dizajn celého webu.
 
 Výsledok nemení zdrojové politické údaje, výpočty modelu, GLB scény, ekonomiku hier ani nasadzovaciu konfiguráciu. Správy používajú skrátený súvislý úryvok overeného textu. Septembrový horizont volieb 2027 je orientačný; presný deň sa neprezentuje ako potvrdený.

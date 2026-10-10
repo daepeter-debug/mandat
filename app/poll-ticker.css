@@ -10,6 +10,9 @@
 .ticker-track button:hover{background:#f6f8f2}
 .ticker-track button:focus-visible{outline:2px solid var(--focus);outline-offset:-3px}
 .ticker-track b{font-weight:700;color:var(--mag-ink)}
+.ticker-track li[data-newest] button{background:#e6f0d5;border-right-color:#bccdaf}
+.ticker-track .ticker-newest{font-size:10px;font-weight:650;padding:3px 7px;border-radius:4px;background:#245c48;color:#fffefa;letter-spacing:0;line-height:1.3}
+@media(hover:hover){.ticker-track li[data-newest] button:hover{background:#dcebc5}}
 .ticker-track time{font-size:11.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
 .ticker-track span{display:inline-flex;align-items:center;gap:5px}
 .ticker-track span i{width:7px;height:7px;border-radius:50%}

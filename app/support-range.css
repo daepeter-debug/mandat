@@ -1,0 +1,5 @@
+.party-profile-support .support-range{flex-basis:100%;width:100%;margin:3px 0 0;text-align:left;color:var(--text-2)}
+.party-profile-support .support-range svg{width:100%;max-width:360px;height:auto;display:block}
+.support-range text{fill:currentColor;font-family:inherit;font-size:11px}
+.party-profile-support .support-range figcaption{font-size:10px;line-height:1.5;color:var(--text-2)}
+.party-profile-support{flex-wrap:wrap}

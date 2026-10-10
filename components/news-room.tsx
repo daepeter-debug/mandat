@@ -122,7 +122,7 @@ function NewsItem({n,rank,onOpen}:{n:PoliticalNews;rank:number;onOpen:()=>void})
       <div className="dip-item-meta"><span className="dip-tier"><span className="sr-only">{rank}. · </span>{tier(rank)}</span><NewsCategoryChip category={n.category}/></div>
       <h3><button type="button" onClick={onOpen}>{n.title}</button></h3>
       <p>{n.summary}</p>
-      <button type="button" className="dip-read" onClick={onOpen}>Prečítať zhrnutie<span aria-hidden="true"> · {readingMinutes(n)} min</span><ArrowRight size={15} aria-hidden="true"/></button>
+      <div className="dip-item-footer"><span className="dip-source-name"><Newspaper size={13} aria-hidden="true"/>Zdroj: {n.sourceName}</span><button type="button" className="dip-read" onClick={onOpen}>Prečítať zhrnutie<span aria-hidden="true"> · {readingMinutes(n)} min</span><ArrowRight size={15} aria-hidden="true"/></button></div>
     </div>
   </li>;
 }
