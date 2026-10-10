@@ -1,5 +1,11 @@
 # Zmeny Mandátu
 
+## 10. október 2026 — Čitateľné Miesta a stabilnejšie otáčanie hry
+
+- Zoznam Miesta v šírkovom pláne slávnosti má vyhradený priestor pod herným ovládaním; názov štvrte a tlačidlo Mapa už neležia nad popismi. Zoznam sa roluje samostatne na svetlom podklade.
+- Fullscreen sleduje viditeľný viewport, zmenu orientácie, návrat do aplikácie a natívny fullscreen. Skrytá mapa nepreberá nulové rozmery a SVG má explicitnú výšku podľa kamery.
+- Zachované ovládanie z 2. októbra, pravidlá, uloženie aj ostatné časti webu. Overené opakované otočenie, malé mobilné rozmery, zbalenie panela a desktop. Fyzický Safari nebol k dispozícii; občasný polovičný obraz sa v emulácii nereprodukoval.
+
 ## 10. október 2026 — Návrat na pôvodné fullscreen ovládanie hry
 
 Na výslovný Petrov pokyn obnovené štyri UI súbory Malej republiky presne z 1aa563e (posledná fullscreen úprava 2. októbra). Odvolané dokovanie a dynamický tretí prepínač z 2072c55. Herné jadro a uloženie zachované, ostatné časti webu nedotknuté.

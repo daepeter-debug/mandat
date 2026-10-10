@@ -46,6 +46,44 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children,t
   useEffect(()=>{
     if(!expanded)return;
     const el=host.current;if(!el)return;
+    const viewport=window.visualViewport;
+    let frame=0;
+    const measure=()=>{
+      // Safari's visible viewport can settle after orientationchange and browser chrome.
+      // Keep the mounted game; only update its bounds, without touching the save or zoom.
+      const width=viewport?.width??window.innerWidth,height=viewport?.height??window.innerHeight;
+      if(width<=0||height<=0)return;
+      el.style.setProperty("--playfield-width",`${width}px`);
+      el.style.setProperty("--playfield-height",`${height}px`);
+      el.style.setProperty("--playfield-left",`${viewport?.offsetLeft??0}px`);
+      el.style.setProperty("--playfield-top",`${viewport?.offsetTop??0}px`);
+    };
+    const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(measure);};
+    const orientation=()=>{schedule();settle.forEach(clearTimeout);settle=[setTimeout(schedule,150),setTimeout(schedule,500)];};
+    let settle:ReturnType<typeof setTimeout>[]=[];
+    measure();
+    window.addEventListener("resize",schedule);
+    window.addEventListener("orientationchange",orientation);
+    window.addEventListener("pageshow",schedule);
+    document.addEventListener("visibilitychange",schedule);
+    document.addEventListener("fullscreenchange",orientation);
+    viewport?.addEventListener("resize",schedule);
+    viewport?.addEventListener("scroll",schedule);
+    return()=>{
+      cancelAnimationFrame(frame);settle.forEach(clearTimeout);
+      window.removeEventListener("resize",schedule);
+      window.removeEventListener("orientationchange",orientation);
+      window.removeEventListener("pageshow",schedule);
+      document.removeEventListener("visibilitychange",schedule);
+      document.removeEventListener("fullscreenchange",orientation);
+      viewport?.removeEventListener("resize",schedule);
+      viewport?.removeEventListener("scroll",schedule);
+      ["width","height","left","top"].forEach(key=>el.style.removeProperty(`--playfield-${key}`));
+    };
+  },[expanded]);
+  useEffect(()=>{
+    if(!expanded)return;
+    const el=host.current;if(!el)return;
     const previousBody=document.body.style.overflow,previousHtml=document.documentElement.style.overflow,scrollY=window.scrollY;
     document.body.style.overflow="hidden";document.documentElement.style.overflow="hidden";
     document.body.classList.add("republic-playfield-open");

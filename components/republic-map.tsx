@@ -60,9 +60,22 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
   const viewport=useRef<HTMLDivElement>(null),svg=useRef<SVGSVGElement>(null);
   useEffect(()=>{
     const el=viewport.current;if(!playfield?.expanded||!el)return;
-    const measure=()=>setExpandedFrame(mapFrame(el.clientWidth,el.clientHeight,window.matchMedia("(max-width:1100px) and (orientation:landscape)").matches,parseFloat(getComputedStyle(el).getPropertyValue("--map-safe-left"))||0));
-    measure();const observer=new ResizeObserver(measure);observer.observe(el);
-    return()=>observer.disconnect();
+    const landscape=window.matchMedia("(max-width:1100px) and (orientation:landscape)");
+    let frame=0;
+    const measure=()=>{
+      // Portrait's rotation prompt hides this pane. Never replace its last usable camera
+      // with a 1px frame; the next visible resize will fit the same board again.
+      if(el.clientWidth<=0||el.clientHeight<=0)return;
+      const next=mapFrame(el.clientWidth,el.clientHeight,landscape.matches,parseFloat(getComputedStyle(el).getPropertyValue("--map-safe-left"))||0);
+      setExpandedFrame(previous=>Object.keys(next).every(key=>next[key as keyof typeof next]===previous[key as keyof typeof next])?previous:next);
+    };
+    const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(measure);};
+    measure();const observer=new ResizeObserver(schedule);observer.observe(el);
+    landscape.addEventListener("change",schedule);
+    window.addEventListener("resize",schedule);
+    window.visualViewport?.addEventListener("resize",schedule);
+    document.addEventListener("visibilitychange",schedule);
+    return()=>{observer.disconnect();cancelAnimationFrame(frame);landscape.removeEventListener("change",schedule);window.removeEventListener("resize",schedule);window.visualViewport?.removeEventListener("resize",schedule);document.removeEventListener("visibilitychange",schedule);};
   },[playfield?.expanded]);
   const {scene,active,visible}=useLivingScene(town,viewport,scenePreview);
   const celebration=celebrationScene(town);
@@ -111,7 +124,7 @@ export default function RepublicMap({town,editing,inspectBuildingsWhileEditing=f
     {notice&&<div className="republic-map-notice" role="alert"><AlertTriangle size={20} aria-hidden="true"/><div><b>{notice.title}</b><span>{notice.detail}</span></div></div>}
     <div className="republic-map-stage" data-detail-side={inspect&&at(inspect.point).x>280?"left":"right"}>
     <div className="republic-map-window" ref={viewport} tabIndex={0} aria-label="Mapa štvrte. Šípkami vyber políčko; Enter otvorí detail. Pri priblížení posúvaj mapu prstom.">
-      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox={`${frame.x} ${frame.y} ${frame.width} ${frame.height}`} style={{width:playfield?.expanded?frame.pixels*currentZoom:`${currentZoom*100}%`,minWidth:playfield?.expanded?undefined:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
+      <svg ref={el=>{svg.current=el;if(captureRef)captureRef.current=el;}} onPointerLeave={()=>setHover(null)} viewBox={`${frame.x} ${frame.y} ${frame.width} ${frame.height}`} style={{width:playfield?.expanded?frame.pixels*currentZoom:`${currentZoom*100}%`,height:playfield?.expanded?frame.pixels*currentZoom*frame.height/frame.width:undefined,minWidth:playfield?.expanded?undefined:editing?640:undefined}} role="group" aria-label={`${town.name}, interaktívna mapa 6 krát 6`}>
         <defs>
           <pattern id={`${uid}-paving`} width="8" height="6" patternUnits="userSpaceOnUse" patternTransform="matrix(1 .558 -1 .558 0 0)">
             <rect width="8" height="6" fill="#d9cdb6"/><path d="M0 0H8M0 3H8M0 0V3M4 3V6" stroke="#b7aa94" strokeWidth=".45"/><path d="M.6.7H7.5M.6 3.7H7.5" stroke="#f4e9d2" strokeWidth=".5" opacity=".8"/>

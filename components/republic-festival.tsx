@@ -120,7 +120,7 @@ export default function RepublicFestival({town,blocked:saving,onCommand,onClose,
         {f.site&&<div className="festival-prepared"><h4>Čo už stojí</h4><ul><li>{themes[f.theme!].name} · {coords(f.site)}</li>{f.preparations.map(p=><li key={p.kind}>{supports[p.kind].name} · {coords(p)}</li>)}</ul></div>}
         {done&&<p>Pohľadnicu si vytvoríš po návrate pod mapou.</p>}
       </div>}>
-    {expanded=><div className="festival-layout" data-complete={done}>
+    {expanded=><div className="festival-layout" data-complete={done} data-view={list?"places":"map"}>
       {!expanded&&decisions}
       <div className="festival-scene"><div className="festival-scene-heading"><span>{f.theme?themes[f.theme].name:"Tvoja štvrť, tvoja slávnosť"}</span><button data-playfield-return aria-pressed={list} disabled={exporting} onClick={()=>setList(!list)}>{list?<Map size={16}/>:<List size={16}/>} {list?"Mapa":"Miesta"}</button></div>
         {done&&<div className="festival-celebration-caption"><p><strong>Slávnosť sa začala.</strong> {f.theme==="books"?"Deti otvárajú knihy a susedia sa pristavujú pri čítaní.":f.theme==="food"?"Susedia prinášajú jedlo a stretávajú sa pri pikniku.":"Koncert rozozvučal štvrť. Pod lampiónmi sa už tancuje."}</p><button disabled={exporting} onClick={()=>{setList(false);setReplay(n=>n+1);}}><Play size={15}/> Prehrať scénu</button></div>}
