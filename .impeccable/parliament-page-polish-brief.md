@@ -27,3 +27,13 @@ Overenie: desktop a 375/402 px v oboch témach, fullscreen, výber poslanca, hla
 Snímky `.impeccable/review/chamber-paper/`: desktop-light/dark, 375-light/dark, 402-light/dark, user-1906-light, 402-vote-dark a 402-selected-dark. Mobilné snímky ukazujú viewport sály, nie celý dokument. 402-dark zámerne zachytáva zvýraznenie SMER. Detektor raz: `[]`. Skontrolované zladenie motívov, vstup, výber klubu, poslanca a hlasovanie; export/fullscreen neboli v tejto úzkej revízii znovu testované.
 
 Documenter: existujúce DESIGN.md zostáva bez zmien; paleta papier/zelený atrament, IBM Plex Sans, transparentná dátová plocha, sémantické chamber premenné a oddelená večerná 3D paleta zodpovedajú kódu. Nová dizajnová identita ani raster sa nekanonizujú.
+
+### Revízia klubov a vizitiek, 10. 10. 2026
+
+Rozsah schváleného pokračovania: logá/počty pri 2D oblúku a vizitka zvoleného poslanca. Počet a umiestnenie označení vychádzajú zo skutočných kresiel; klik používa pôvodný focusClub. Vizitka používa skutočné meno, klub a prípadný hlas, fotku len z existujúcich licencovaných podkladov (osem presne spárovaných ID), inak monogram. Zdroj/licencia sú vo vizitke. Pôvodný profil, URL, hlasovanie a 3D sa nemenia.
+
+Desktop: označenia okolo oblúku a vizitka pri kresle. Mobil/tablet do 1120 px: kompaktný rad log nad mapou a vizitka pod ňou; prispôsobenie zachováva viditeľnú mapu a použiteľné dotykové ciele. Podľa potreby sa vizitka odkryje nad spodnou lištou, bez animácie pri reduced-motion. Súbory: components/chamber-inspection.tsx, lib/chamber-annotations.ts, lib/deputy-portraits.json, scripts/verify-chamber-annotations.mjs.
+
+Snímky chamber-details/: desktop-photo-light/dark, 375-light/dark, 402-light/dark, 402-vote-dark, 900-light; výber klubu, monogram/foto, profil, Escape a hlasovanie 58451 overené. Všetkých 28 verify skriptov, tsc, ESLint, build-dark --check a produkčný build prešli. Detektor raz: []. Dokončovací review inline podľa degraded kontraktu: ship, nejde o nezávislé overenie. Úplný päťsekčný review je chamber-details/REVIEW.md. Fyzický iPhone/Safari zostáva neoverený.
+
+Documenter: No changes to DESIGN.md/sidecar; checked app/parliament-page.css, app/theme-dark.css, chamber components and existing DESIGN.md. Palette: incumbent paper/pine and theme foregrounds. Type: IBM Plex Sans, 15 px person name/12 px club/11 px credits. Rules: 14 px inspection radius, desktop offset shadow/mobile border, genuine club colors, logo/count targets, responsive inspection placement. No new visual identity or unlicensed raster canonized; unrelated incumbent drift left untouched.

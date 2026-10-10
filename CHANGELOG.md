@@ -1,5 +1,14 @@
 # Zmeny Mandátu
 
+## 10. október 2026 — Kluby pri oblúku a vizitky poslancov
+
+- Logá a počty klubov priamo pri 2D oblúku, s jemnými farebnými sektormi a klikom na zvýraznenie. Počty aj polohy vychádzajú zo skutočne obsadených kresiel.
+- Vizitka zvoleného poslanca pri kresle na desktope a pod sálou na mobile: meno, klub, hlas pri zvolenom hlasovaní a skratka do pôvodného profilu.
+- Osem existujúcich licencovaných fotografií s autorom, licenciou a zdrojom; ostatní majú monogram. Bez nových fotografických podkladov.
+- Kompaktné označenia na mobile/tablete; vizitka sa pri potrebe odkryje nad spodnou navigáciou. Klávesnica, Escape a obmedzený pohyb zachované.
+
+Overenie: všetkých 28 verify skriptov, TypeScript, ESLint, generovaný tmavý režim a produkčný build prešli. Snímky pri 375/402/900/1280 px, oba motívy, výber klubu a poslanca, profil a hlasovanie 58451. Detektor raz: `[]`; inline dokončovací review implementátora: ship. Fyzický iPhone/Safari neoverený.
+
 ## 10. október 2026 — 2D sála zladená so stránkou
 
 - Odstránený veľký tmavý blok okolo pôdorysu parlamentu; transparentná plocha a jemný tón sledujú svetlý aj tmavý motív.

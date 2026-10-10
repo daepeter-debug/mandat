@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 41 súborov (a7c62bc9d3) — needitovať ručne. Pravidiel: 1835, prefarbených: 1461. */
+/* Generované scripts/build-dark.mjs z 41 súborov (61c7025281) — needitovať ručne. Pravidiel: 1851, prefarbených: 1472. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -4512,6 +4512,60 @@ html[data-theme="dark"] .parl-stage {
     border-top: 1px solid #41463d;
     border-bottom: 1px solid #41463d
 }
+html[data-theme="dark"] .chamber2d-club-arcs {
+    fill: none
+}
+html[data-theme="dark"] .parl-arc-clubs button {
+    border: 0;
+    background: #1c221f;
+    color: #d8e5e1
+}
+html[data-theme="dark"] .parl-arc-clubs button:hover {
+    background: #2a2f20
+}
+html[data-theme="dark"] .parl-arc-clubs button[aria-pressed=true] {
+    background: var(--mag-ink);
+    color: #fffefa
+}
+html[data-theme="dark"] .parl-inspect {
+    background: #262c29;
+    color: #d8e5e1;
+    box-shadow: 0 10px 32px #13291d26
+}
+html[data-theme="dark"] .parl-inspect-person>div>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-inspect-monogram {
+    background: #e5ebd8;
+    color: #202f2a
+}
+html[data-theme="dark"] .parl-inspect-close {
+    border: 0;
+    background: transparent;
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-inspect-close:hover {
+    background: #2a2f20
+}
+html[data-theme="dark"] .parl-inspect-actions>button {
+    border: 0;
+    background: #2a2f20;
+    color: #d8e5e1
+}
+html[data-theme="dark"] .parl-inspect-credit {
+    color: #bfcec6
+}
+html[data-theme="dark"] .parl-inspect-credit summary {
+    text-decoration: underline
+}
+html[data-theme="dark"] .parl-inspect-credit p {
+    background: #262c29;
+    border: 1px solid #41463d
+}
+html[data-theme="dark"] .parl-inspect-credit a {
+    color: inherit;
+    text-decoration: underline
+}
 html[data-theme="dark"] .parl-stage-wait {
     color: #bfcec6
 }
@@ -4844,6 +4898,15 @@ html[data-theme="dark"] .parl-about b {
 }
 html[data-theme="dark"] .parl-about a {
     color: #91bdeb
+}
+@media (max-width:1120px) {
+    html[data-theme="dark"] .parl-arc-clubs button {
+        background: transparent
+    }
+    html[data-theme="dark"] .parl-inspect {
+        box-shadow: none;
+        border: 1px solid #41463d
+    }
 }
 html[data-theme="dark"] .vote-mini-arc circle {
     stroke: #313734

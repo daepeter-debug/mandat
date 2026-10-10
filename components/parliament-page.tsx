@@ -2,9 +2,11 @@
 
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import Image from "next/image";
-import { ArrowUpRight, Box, Check, ChevronLeft, ChevronRight, Link2, Pause, Play, Search, Share2, UserRound, X } from "lucide-react";
+import { ArrowUpRight, Box, Check, ChevronLeft, ChevronRight, Link2, Pause, Play, Search, Share2, X } from "lucide-react";
 import VoteMiniature from "@/components/vote-miniature";
 import Chamber2D from "@/components/chamber-2d";
+import ChamberInspection from "@/components/chamber-inspection";
+import { chamberClubAnnotations, chamberSeatAnchor } from "@/lib/chamber-annotations";
 import { VOTES_INDEX, clubLabel, clubTotals, kindNames, markColors, markNames, marks, matchesQuery, required, seatMembers, skDay, voteSource, type Mark, type SeatedMember, type VoteIndex, type VoteKind, type VoteSummary } from "@/lib/votes";
 import { DEPUTIES_FILE, clubAgreement, clubStats, deputyProfile, deputyStats, differentAt, displayName, findDeputies, partyAt, unaffiliatedPresence, voteDetailAt, type DeputiesData, type DeputyRow } from "@/lib/deputies";
 import { CLUBS_AS_OF, TERM, UNAFFILIATED, clubEntries, clubSeatParty } from "@/lib/parliament-clubs";
@@ -27,6 +29,7 @@ export type ParliamentChange = { vote?: number | null; deputy?: number | null; m
 const logos = partyLogos as Record<string, { src: string }>;
 const clubInfo = (party: string | null) => clubEntries.find(c => c.id === (party ?? UNAFFILIATED.id)) ?? { id: party ?? UNAFFILIATED.id, short: party ? party.toUpperCase() : UNAFFILIATED.short, color: UNAFFILIATED.color, seats: 0, club: "" };
 const clubColors = clubSeatParty.map(id => clubInfo(id).color);
+const clubAnnotations = chamberClubAnnotations(clubEntries, clubSeatParty);
 const unaffiliatedToday = clubEntries.find(c => c.id === UNAFFILIATED.id)?.seats ?? 0;
 const VOTE_KINDS: (VoteKind | "vsetky")[] = ["vsetky", "ustavny", "nedovera", "rozpocet", "veto", "zakon"];
 const PAGE = 20;
@@ -88,6 +91,13 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
   const row = data && deputy !== null ? data.poslanci.find(r => r.id === deputy) ?? null : null;
   const stageSeats = seated ?? latestSeats;
   const spot = row && stageSeats ? stageSeats.find(s => s.id === row.id) ?? null : null;
+  const seatAnchor = spot ? chamberSeatAnchor(spot.seat) : null;
+  useEffect(() => {
+    if (!row || view3d || !matchMedia('(max-width:1120px)').matches) return;
+    const inspection = stage.current?.parentElement?.querySelector<HTMLElement>('.parl-inspect-anchor');
+    if (inspection && inspection.getBoundingClientRect().bottom > window.innerHeight - 96)
+      inspection.scrollIntoView({ block: 'nearest', behavior: reducedMotion() ? 'auto' : 'smooth' });
+  }, [row, view3d]);
   const mode3d: Mode3d = vote !== null ? "hlasovania" : mode && mode !== "hlasovania" ? mode as Mode3d : "strany";
   const voteList = useMemo(() => index ? index.hlasovania.filter(v => (kind === "vsetky" || v.druh === kind) && matchesQuery(v, query)) : [], [index, kind, query]);
   const playlist = useMemo(() => voteList.map(v => v.id).reverse(), [voteList]);
@@ -213,21 +223,26 @@ export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigat
               voteOptions={index?.hlasovania ?? null} votesFailed={failed} onVote={id => chooseVote(id, false)}
               onDeputy={id => chooseDeputy(id)} onProfile={showProfile} highlightDiff={highlight} differing={diffIds}/>
           </Suspense>
-        : <div className="parl-stage">
-            <Chamber2D colors={colors} label={label2d} spotlight={spot?.seat ?? null} rings={rings} dim={dim}
-              onSeat={seat => { const m = stageSeats?.[seat]; if (m) chooseDeputy(deputy === m.id ? null : m.id); }}/>
+        : <div className={`parl-stage${!summary ? ' parl-stage-annotated' : ''}`} onKeyDown={e => { if (e.key === 'Escape' && row) chooseDeputy(null); }}>
+            <div className="parl-chamber-wrap">
+              <Chamber2D colors={colors} label={label2d} spotlight={spot?.seat ?? null} rings={rings} dim={dim} annotations={!summary ? clubAnnotations : undefined}
+                onSeat={seat => { const m = stageSeats?.[seat]; if (m) chooseDeputy(deputy === m.id ? null : m.id); }}/>
+              {!summary && <div className="parl-arc-clubs" role="group" aria-label="Kluby pri oblúku sály">{clubAnnotations.map(c => <button key={c.id} type="button"
+                style={{ '--club-x': `${c.x}%`, '--club-y': `${c.y}%` } as CSSProperties} aria-label={`${c.short}, ${c.count} kresiel. Zvýrazniť klub.`}
+                aria-pressed={focusClub === c.id} title={`${c.short} · ${c.count} kresiel`} onClick={() => setFocusClub(focusClub === c.id ? null : c.id)}>
+                <ClubMark party={c.id === UNAFFILIATED.id ? null : c.id} size={20}/><b>{c.count}</b>
+              </button>)}</div>}
+              {row && <div className="parl-inspect-anchor" data-side={seatAnchor && seatAnchor.x > 50 ? 'left' : 'right'}
+                style={{ '--seat-x': `${seatAnchor?.x ?? 50}%`, '--seat-y': `${seatAnchor?.y ?? 50}%` } as CSSProperties}>
+                <ChamberInspection key={row.id} row={row} seat={spot} voting={!!seated} onProfile={showProfile} onClose={() => chooseDeputy(null)}/>
+              </div>}
+            </div>
             <button type="button" className="parl-enter" onPointerEnter={prefetch3d} onFocus={prefetch3d} onClick={() => { setView3d(true); track("parlament", "3d"); }}><Box size={18} aria-hidden="true"/>Vstúpiť do 3D sály</button>
             {playing && summary && <p className="parl-playing" role="status"><span>{skDay(summary.datum)}</span>{summary.nazov}</p>}
           </div>}
       {!view3d && (seated && summary
         ? <ul className="parl-legend" aria-label="Hlasy v sále">{marks.map(m => <li key={m}><i style={{ background: markColors[m] }} aria-hidden="true"/>{MARK_LABEL[m]} <b>{votesCount(summary)[m]}</b></li>)}{rings && <li><i className="parl-ring" aria-hidden="true"/>Inak ako klub <b>{rings.size}</b></li>}</ul>
         : <ul className="parl-legend parl-clubs-legend" aria-label="Kluby v sále">{clubEntries.map(c => <li key={c.id}><button type="button" aria-pressed={focusClub === c.id} onClick={() => setFocusClub(focusClub === c.id ? null : c.id)}><ClubMark party={c.id === UNAFFILIATED.id ? null : c.id}/>{c.short}<b>{c.seats}</b></button></li>)}</ul>)}
-      {!view3d && row && <div className="par3d-detail par3d-inspection parl-seat-card">
-        <ClubMark party={spot ? (spot.party === UNAFFILIATED.id ? null : spot.party) : null} size={22}/>
-        <span><b>{displayName(row.meno)}</b><small>{spot ? <>{clubLabel(spot.club)}{seated && <> · <em>{markNames[spot.mark]}</em></>}</> : "V tomto hlasovaní nebol poslancom."}</small></span>
-        <button type="button" onClick={showProfile}><UserRound size={15} aria-hidden="true"/>Profil</button>
-        <button type="button" className="parl-icon-button" aria-label="Zrušiť výber poslanca" onClick={() => chooseDeputy(null)}><X size={16}/></button>
-      </div>}
       {!view3d && !row && <p className="parl-hint">{summary ? "Ťukni na kreslo a uvidíš, kto tam sedí a ako hlasoval." : "Ťukni na kreslo a uvidíš poslanca. Klub zvýrazníš v zozname."} Kreslá sú podľa klubov, nie skutočný zasadací poriadok. Pozadie: večerná Bratislava, ilustrácia vytvorená pomocou AI.</p>}
     </section>
 

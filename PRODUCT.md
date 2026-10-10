@@ -60,3 +60,13 @@ Poďakovanie a rozmery platobného panela boli vizuálne overené pomocou fixtur
 Používateľ odmietol rozsiahly tmavý blok okolo 2D sály a požiadal o zladenie s pozadím stránky a nasadenie. 2D teraz používa transparentnú plochu, jemne tónovaný pôdorys podľa aktuálneho motívu a počet 150 miest v strede. Náhľad 3D má obraz až po okraj a zelený pás ovládania. Geometria, farby klubov a hlasov, výber poslanca a výsledky zostávajú pôvodné; večerná 3D scéna má vlastnú paletu vrátane načítavacej zálohy. Nové obrázky ani knižnice sa nepridávajú.
 
 Kontrola implementátora: šírky 375, 402, 1280 a pôvodných 1906 px, oba motívy, zvýraznenie klubu, výber Vladimíra Baláža a hlasovanie 58451. Bez vodorovného pretekania v kontrolovaných šírkach; konzola bez chýb. Snímky sú v `.impeccable/review/chamber-paper/`. Dokončovací review bol vykonaný v tom istom agente podľa inline kontraktu skillu, nie nezávislým overovateľom; disposition: ship. Existujúci dizajnový systém ostáva. Fyzický iPhone a Safari neboli týmto overením pokryté.
+
+## Orientácia v 2D sále, 10. október 2026
+
+Schválené pokračovanie pridáva označenia klubov pri oblúku a vizitku vybraného poslanca. Logá, farebné sektory, počty a poloha označení sa odvodzujú zo skutočne priradených 150 kresiel. Klik na označenie používa rovnaký stav zvýraznenia ako pôvodný zoznam klubov. Pri hlasovaní ostáva pôvodná legenda hlasov.
+
+Po výbere kresla je na desktope pri ňom vizitka s menom, skutočným klubom, hlasom pri konkrétnom hlasovaní a tlačidlom do pôvodného profilu. Na mobile a tablete je pod mapou; ak by ostala pod spodnou navigáciou, stránka ju jemne odkryje. Pri obmedzenom pohybe je posun okamžitý. Zatvorenie a Escape rušia výber. Nezmenili sa gestá, politické údaje ani 3D scéna.
+
+Malý index ôsmich fotografií v lib/deputy-portraits.json používa len existujúce licencované fotografie zo straníckych profilov. Autor, licencia a zdroj sú dostupné vo vizitke. Ostatní poslanci majú monogram; bez automatického preberania fotografií z NR SR. Test kontroluje totožnosť oficiálneho ID, mena, pôvodnej licencie a súboru fotografie.
+
+Lokálne overenie: 28 verify skriptov, TypeScript, ESLint, build-dark --check a build prešli. Prehliadačová kontrola pokryla šírky 375/402/900/1280 px, oba motívy, klub cez klik a Enter, Escape, monogram aj fotografiu, skratku do profilu a skutočné hlasovanie 58451. Bez vodorovného pretekania v kontrolovaných šírkach. Snímky: .impeccable/review/chamber-details/. Dokončovací review je inline kontrolou implementátora, nie nezávislým overením; disposition: ship. Fyzický telefón/Safari nebol dostupný.

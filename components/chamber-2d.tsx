@@ -15,9 +15,10 @@ const seats = chamberSeats.map(s => ({ x: Math.round(s.x * S * 10) / 10, y: Math
 const rows = Array.from({ length: CHAMBER.ROWS }, (_, k) => Math.round((rowRadius(k) + .004) * S));
 const arc = (r: number) => `M ${-r} 0 A ${r} ${r} 0 0 1 ${r} 0`;
 
-export default function Chamber2D({ colors, label, spotlight = null, rings, dim, onSeat, className = "" }: {
+export default function Chamber2D({ colors, label, spotlight = null, rings, dim, onSeat, className = "", annotations }: {
   colors: string[]; label: string; spotlight?: number | null; rings?: ReadonlySet<number>; dim?: ReadonlySet<number> | null;
   onSeat?: (seat: number) => void; className?: string;
+  annotations?: readonly { id: string; arc: string; line: string; color: string }[];
 }) {
   const svg = useRef<SVGSVGElement>(null);
   const press = useRef<{ x: number; y: number } | null>(null);
@@ -43,6 +44,9 @@ export default function Chamber2D({ colors, label, spotlight = null, rings, dim,
       <text className="chamber2d-total-value" x="0" y="-74">{seats.length}</text>
       <text className="chamber2d-total-label" x="0" y="-53">miest v sále</text>
     </g>
+    {annotations && <g className="chamber2d-club-arcs" aria-hidden="true">{annotations.map(a => <g key={a.id}>
+      <path d={a.arc} stroke={a.color}/><path d={a.line} stroke={a.color}/>
+    </g>)}</g>}
     <g className="chamber2d-seats">
       {seats.map((s, i) => <g key={i} className="chamber2d-seat" data-dim={dim?.has(i) || undefined}
         style={{ "--d": `${Math.round(i / 149 * 650)}ms`, "--fx": `${-s.x}px`, "--fy": `${22 - s.y}px` } as CSSProperties}>
