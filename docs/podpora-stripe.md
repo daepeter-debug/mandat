@@ -1,6 +1,6 @@
 # Podpora Mandátu cez Stripe
 
-Dobrovoľný jednorazový príspevok priamo na webe: karta, Apple Pay, Google Pay alebo Revolut Pay, bez registrácie a bez odchodu z Mandátu. **Stav k 10. 10. 2026: ostré platby sú zapnuté** (Petrovo rozhodnutie). Prvá ostrá platba 2 € cez Apple Pay prešla o 16:16: platba, ostrý webhook (`zaplatene`) aj poďakovanie. Účet Stripe je aktivovaný, typ podnikania je fyzická osoba-podnikateľ. Daňové zaradenie (živnosť, DPH) treba ešte doriešiť s účtovníkom (otázky nižšie).
+Dobrovoľný jednorazový príspevok priamo na webe: karta, Apple Pay, Google Pay alebo Revolut Pay, bez registrácie a bez odchodu z Mandátu. **Stav k 10. 10. 2026: ostré platby sú zapnuté** (Petrovo rozhodnutie). Prvá ostrá platba 2 € cez Apple Pay prešla o 16:16: platba, ostrý webhook (`zaplatene`) aj poďakovanie. Účet Stripe je aktivovaný, výplaty idú na účet živnosti. Daňové zaradenie (živnosť, DPH) treba ešte doriešiť s účtovníkom (otázky nižšie).
 
 ## Ako to funguje
 
