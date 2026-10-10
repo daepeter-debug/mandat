@@ -85,6 +85,10 @@ export function supportSessionParams(cents: number, origin: string, now = Date.n
     custom_text: { submit: { message: "Dobrovoľný jednorazový príspevok, nie predplatné. Nejde o dar charitatívnej organizácii ani politickej strane." } },
     metadata: { zdroj: SUPPORT_SOURCE },
     payment_intent_data: { description: `Dobrovoľný príspevok na Mandát (${formatEuros(cents)})`, metadata: { zdroj: SUPPORT_SOURCE } },
+    // 3D Secure vždy, keď ho karta podporuje (Peter 10. 10. 2026): príspevky sú pod 30 €, kde by banka overenie často
+    // vynechala a riziko podvodu by ostalo na Mandáte. Overená platba presúva zodpovednosť na banku a odradí skúšanie
+    // ukradnutých kariet. Apple Pay a Google Pay sú overené v telefóne, pre ne sa nič nemení.
+    payment_method_options: { card: { request_three_d_secure: "any" } },
   };
 }
 

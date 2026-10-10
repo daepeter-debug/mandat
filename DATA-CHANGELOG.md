@@ -3,7 +3,8 @@
 - **Ostré platby zapnuté 10. 10. 2026 popoludní (Petrovo rozhodnutie):**
   - v Cloudflare sú ostré kľúče (obmedzený `rk_live` len na Checkout Sessions), ostrý webhook a `PODPORA_OSTRA=ano`;
   - doména je zaregistrovaná v ostrom režime;
-  - prvá skutočná platba 2 € cez Apple Pay prešla aj s potvrdením z webhooku.
+  - prvá skutočná platba 2 € cez Apple Pay prešla aj s potvrdením z webhooku;
+  - platba kartou si vždy pýta 3D Secure, keď ho karta podporuje (`request_three_d_secure: any`). Pri sumách pod 30 € by ho banka inak často vynechala a riziko podvodu by ostalo na Mandáte. Apple Pay a Google Pay sa nemenia.
 
 ### Pôvodná príprava: 10. 10. 2026 · Podpora Mandátu cez Stripe, testovacia príprava (Claude)
 

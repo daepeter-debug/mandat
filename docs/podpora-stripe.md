@@ -10,6 +10,8 @@ Dobrovoľný jednorazový príspevok priamo na webe: karta, Apple Pay, Google Pa
 4. **Výsledok.** Po dokončení sa prehliadač opýta `GET /api/podpora?session=…` a server zistí stav priamo zo Stripe. Poďakovanie sa ukáže len pri stave „zaplatené“; samotný návrat na web nič nedokazuje.
 5. **Záznam o platbe.** Stripe pošle podpísanú udalosť na `/api/podpora/webhook`. Server overí podpis (HMAC-SHA256, najviac 5 minút starý) a zapíše do Workers Logs riadok `{"podpora":"zaplatene", …}`, teda sumu, režim a ID bez osobných údajov. Účtovná evidencia je v administrácii Stripe (výpisy, exporty).
 
+**3D Secure:** platba kartou si ho vyžiada vždy, keď ho karta podporuje (`payment_method_options.card.request_three_d_secure = any`). Pri overenej platbe nesie riziko podvodu banka a skúšanie ukradnutých kariet sa nevypláca. Apple Pay a Google Pay sú overené v telefóne.
+
 **Súbory:**
 - `lib/support.ts`: sumy a validácia, spoločné pre prehliadač aj server;
 - `lib/support-server.ts`: volania Stripe API cez `fetch` bez knižnice, režimy a podpis webhooku;
