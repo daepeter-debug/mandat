@@ -5,7 +5,7 @@
   - počítač: pilulka „Podporiť“ v hlavičke;
   - mobil: karta v paneli Viac;
   - všade: pätička a časť „Podpora a financovanie“ v O dátach.
-- **Zatiaľ vypnuté:** bez kľúčov Stripe v Cloudflare sa na webe nič nezobrazí. Testovací režim vidí len ten, kto otvorí `?podpora=test`. Ostré platby vyžadujú ostré kľúče a navyše `PODPORA_OSTRA=ano`.
+- **Režimy:** bez kľúčov Stripe v Cloudflare sa na webe nič nezobrazí. Testovací režim je od 10. 10. popoludní viditeľný všetkým (web zatiaľ pozná len Peter), so štítkom „Testovací režim“; na konci úvodnej stránky pribudla sekcia „Podporte nezávislý Mandát“. Ostré platby vyžadujú ostré kľúče a navyše `PODPORA_OSTRA=ano`.
 - **Bezpečnosť:**
   - sumu overuje server;
   - kľúče sú len v tajomstvách Workera;

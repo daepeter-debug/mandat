@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 40 súborov (f5e8575ddd) — needitovať ručne. Pravidiel: 1783, prefarbených: 1404. */
+/* Generované scripts/build-dark.mjs z 40 súborov (0189e8c81e) — needitovať ručne. Pravidiel: 1787, prefarbených: 1408. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -5968,6 +5968,19 @@ html[data-theme="dark"] .support-entry-more {
     color: #d1e7de
 }
 html[data-theme="dark"] .support-entry-more small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-section {
+    border: 1px solid #473e3a;
+    background: #1e1a18
+}
+html[data-theme="dark"] .support-section-mark {
+    color: #e79684
+}
+html[data-theme="dark"] .support-section h2 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-section p {
     color: #bfcec6
 }
 html[data-theme="dark"] .party-profile-support .support-range {

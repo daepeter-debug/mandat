@@ -167,7 +167,9 @@ export default function SupportSheet({ config, open, returnedSession, onOpenChan
             ? <div className="support-thanks" role="status">
                 <CircleCheck size={40} aria-hidden="true"/>
                 <h3>Ďakujeme!</h3>
-                <p>Váš príspevok{view.result.amount ? ` ${formatEuros(view.result.amount)}` : ""} sme prijali. Potvrdenie vám príde e-mailom od Stripe.</p>
+                <p>{test
+                  ? `Testovacia platba${view.result.amount ? ` ${formatEuros(view.result.amount)}` : ""} prebehla. Je to len skúška, nič sa nestrhlo.`
+                  : `Váš príspevok${view.result.amount ? ` ${formatEuros(view.result.amount)}` : ""} sme prijali. Potvrdenie vám príde e-mailom od Stripe.`}</p>
                 <button type="button" className="support-pay" onClick={() => change(false)}>Zavrieť</button>
               </div>
             : view.result?.state === "processing"

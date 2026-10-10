@@ -28,3 +28,13 @@
 /* O dátach: blok o podpore a financovaní */
 .support-method{display:grid;gap:12px;justify-items:start}
 .support-method p{margin:0}
+
+/* Prehľad: pokojná sekcia na konci úvodnej stránky */
+.support-section{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px 22px;margin:48px 0 8px;padding:24px 28px;border:1px solid #ecd6cc;border-radius:18px;background:#fdf8f5}
+.support-section-mark{color:#b4553f}
+.support-section h2{margin:0 0 4px;font-size:22px;font-weight:650;letter-spacing:-.02em;color:var(--mag-ink)}
+.support-section p{margin:0;max-width:60ch;font-size:14px;line-height:1.55;color:var(--text-2)}
+@media(max-width:760px){
+  .support-section{grid-template-columns:1fr;justify-items:start;margin:36px 0 4px;padding:20px}
+  .support-section h2{font-size:20px}
+}

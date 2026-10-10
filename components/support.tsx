@@ -8,40 +8,36 @@ import "@/app/support-entry.css";
 
 /*
   Vstupy do podpory Mandátu (hlavička, pätička, panel Viac, O dátach) a hostiteľ platobného panela.
-  Podpora sa ukáže, len keď ju server zapne (kľúče Stripe sú nastavené). V testovacom režime ju vidí iba ten,
-  kto otvoril web s ?podpora=test (pamätá sa do zatvorenia karty), aby sa testovacie okno neukazovalo verejnosti.
-  Stripe.js sa načíta až v paneli po výbere sumy, nie pri návšteve webu.
+  Podpora sa ukáže, len keď ju server zapne (kľúče Stripe sú nastavené). Testovací režim je viditeľný všetkým
+  (web zatiaľ nie je verejne propagovaný, Petrovo rozhodnutie 10. 10. 2026) a panel ho výrazne označuje; skutočnú
+  kartu Stripe v teste odmietne. Stripe.js sa načíta až v paneli po výbere sumy, nie pri návšteve webu.
+  Adresa ?podpora=1 (aj staršia ?podpora=test) panel otvorí rovno.
 */
 const OPEN_EVENT = "mandat:podpora";
-const TEST_KEY = "mandat:podpora-test";
 const SupportSheet = lazy(() => import("@/components/support-sheet"));
 
-type State = { config: SupportConfig | null; test: boolean };
-const initial: State = { config: null, test: false };
+type State = { config: SupportConfig | null };
+const initial: State = { config: null };
 let state = initial, started = false;
 const listeners = new Set<() => void>();
 
 function start() {
   if (started || typeof window === "undefined") return;
   started = true;
-  try {
-    if (new URLSearchParams(location.search).get("podpora") === "test") sessionStorage.setItem(TEST_KEY, "1");
-    state = { ...state, test: sessionStorage.getItem(TEST_KEY) === "1" };
-  } catch { /* súkromné okno bez úložiska */ }
   // Zistenie stavu až po načítaní stránky, nech nezdržiava prvé vykreslenie.
   setTimeout(() => {
     fetch(SUPPORT_ENDPOINT, { cache: "no-store" })
       .then(r => r.ok ? r.json() as Promise<SupportConfig> : { enabled: false as const })
       .catch(() => ({ enabled: false as const }))
-      .then(config => { state = { ...state, config }; listeners.forEach(l => l()); });
+      .then(config => { state = { config }; listeners.forEach(l => l()); });
   }, 800);
 }
 function subscribe(listener: () => void) { start(); listeners.add(listener); return () => { listeners.delete(listener); }; }
 
-/** Konfigurácia podpory, ak sa má tomuto návštevníkovi ukázať, inak null. */
+/** Konfigurácia podpory, ak je zapnutá, inak null. */
 export function useSupport() {
   const s = useSyncExternalStore(subscribe, () => state, () => initial);
-  return s.config?.enabled && (s.config.mode === "live" || s.test) ? s.config : null;
+  return s.config?.enabled ? s.config : null;
 }
 
 export const openSupport = () => window.dispatchEvent(new Event(OPEN_EVENT));
@@ -55,6 +51,20 @@ export function SupportButton({ variant, onBeforeOpen }: { variant: "header" | "
   return <button type="button" className={`support-entry support-entry-${variant}`} onClick={open} aria-label={variant === "header" ? "Podporiť Mandát" : undefined}>
     <Heart size={variant === "inline" ? 17 : 15} aria-hidden="true"/><span>{variant === "header" ? "Podporiť" : "Podporiť Mandát"}</span>
   </button>;
+}
+
+/** Pokojná sekcia na konci úvodnej stránky (Prehľad): text a jedno tlačidlo, bez vyskakovania. */
+export function SupportSection() {
+  const config = useSupport();
+  if (!config) return null;
+  return <section className="support-section" aria-labelledby="support-section-title">
+    <Heart className="support-section-mark" size={26} aria-hidden="true"/>
+    <div>
+      <h2 id="support-section-title">Podporte nezávislý Mandát</h2>
+      <p>Mandát je nezávislý projekt bez reklamy. Ak ho považujete za užitočný, môžete dobrovoľne prispieť na jeho prevádzku a ďalší rozvoj.</p>
+    </div>
+    <button type="button" className="support-entry support-entry-inline" onClick={openSupport}><Heart size={17} aria-hidden="true"/><span>Podporiť Mandát</span></button>
+  </section>;
 }
 
 /** Doplnok do „Súkromie a štatistika“: platí len vtedy, keď je podpora zapnutá. */

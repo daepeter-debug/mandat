@@ -23,7 +23,7 @@ Dobrovoľný jednorazový príspevok priamo na webe: Apple Pay, Google Pay alebo
 | Kľúče v Cloudflare | Čo vidí návštevník |
 |---|---|
 | žiadne alebo neúplné | nič, web je ako doteraz |
-| testovacie `sk_test_`/`rk_test_` + `pk_test_` | podporu vidí len ten, kto otvorí `…/?podpora=test` (do zatvorenia karty); v paneli je štítok „Testovací režim“ |
+| testovacie `sk_test_`/`rk_test_` + `pk_test_` | všetci (web zatiaľ nie je propagovaný, rozhodnutie 10. 10. 2026); panel má štítok „Testovací režim“, poďakovanie hovorí, že sa nič nestrhlo, a skutočnú kartu Stripe v teste odmietne |
 | ostré `sk_live_`/`rk_live_` + `pk_live_` **bez** `PODPORA_OSTRA=ano` | nič, ostré kľúče samé platby nezapnú |
 | ostré kľúče + `PODPORA_OSTRA=ano` | všetci |
 
@@ -32,7 +32,7 @@ Ak kľúče nesedia (testovací a ostrý), podpora je vypnutá.
 **Kde je podpora na webe:**
 - počítač: pilulka „Podporiť“ v hlavičke pred prepínačom tmavého režimu;
 - mobil: karta „Podporiť Mandát“ v paneli Viac. V hlavičke na 375 px nie je miesto, srdiečko by prekrylo logo;
-- všade: odkaz v pätičke a časť „Podpora a financovanie“ v O dátach (adresa `#podpora`);
+- všade: sekcia „Podporte nezávislý Mandát“ na konci úvodnej stránky, odkaz v pätičke a časť „Podpora a financovanie“ v O dátach (adresa `#podpora`);
 - odkaz `…/?podpora=1` otvorí panel rovno.
 
 Žiadne vyskakovacie okná ani pripomínanie.
@@ -75,7 +75,7 @@ Ak kľúče nesedia (testovací a ostrý), podpora je vypnutá.
 
 ## Test (testovací režim)
 
-1. Otvor `https://mandat-preview.mandat.workers.dev/?podpora=test`. Panel sa otvorí a v karte sa podpora zobrazuje do jej zatvorenia.
+1. Otvor web a klikni na „Podporiť Mandát“ (koniec úvodnej stránky, panel Viac alebo pätička). Odkaz `…/?podpora=1` otvorí panel rovno.
 2. Karty:
    - `4242 4242 4242 4242`: úspech;
    - `4000 0027 6000 3184`: overenie 3D Secure;
