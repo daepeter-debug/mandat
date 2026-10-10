@@ -95,6 +95,10 @@ Ak kľúče nesedia (testovací a ostrý), podpora je vypnutá.
 
 - [ ] Vyriešené právne a účtovné otázky nižšie.
 - [ ] Účet Stripe aktivovaný: totožnosť, IBAN, opis činnosti, kontakt a pravidlá vrátenia peňazí na webe (Stripe ich pri aktivácii vyžaduje).
+- [ ] Verejný kontakt v Settings → Business → Public details:
+  - samostatný support e-mail Mandátu;
+  - namiesto súkromného čísla samostatné telefónne číslo. Platitelia ho vidia v potvrdení platby a niekedy na výpise z karty.
+  - Potvrdenia o platbe (Customer emails → Successful payments) nechať zapnuté.
 - [ ] V ostrom režime:
   - nový restricted key `rk_live_…` a `pk_live_…`;
   - nový webhook s vlastným `whsec_…`;
