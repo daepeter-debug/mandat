@@ -1,5 +1,10 @@
 # Zmeny Mandátu
 
+## 10. október 2026 — Návrat na pôvodné fullscreen ovládanie hry
+
+Na výslovný Petrov pokyn obnovené štyri UI súbory Malej republiky presne z 1aa563e (posledná fullscreen úprava 2. októbra). Odvolané dokovanie a dynamický tretí prepínač z 2072c55. Herné jadro a uloženie zachované, ostatné časti webu nedotknuté.
+
+
 ## 10. október 2026 — Prehľadná stavebná mapa na mobile
 
 - Detail budovy, katalóg a potvrdenie stavby v šírkovom hernom pláne používajú pravý panel; mapa ostáva odkrytá v pôvodnej veľkosti.

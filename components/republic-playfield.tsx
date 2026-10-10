@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { ArrowRight, BookOpen, Boxes, Check, ChevronLeft, Coins, ListTodo, Minimize2, PanelRightClose, PanelRightOpen, RotateCw, Smartphone, Sparkles, MousePointer2 } from "lucide-react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { ArrowRight, BookOpen, Boxes, Check, ChevronLeft, Coins, ListTodo, Minimize2, PanelRightClose, PanelRightOpen, RotateCw, Smartphone, Sparkles } from "lucide-react";
 import RepublicArt from "@/components/republic-art";
 import { actionLabel } from "@/components/republic-plan";
 import { catalog, type ItemId, type RepublicState } from "@/lib/republic";
@@ -13,28 +13,14 @@ const PlayfieldContext=createContext<{expanded:boolean;open:(trigger:HTMLElement
 export const usePlayfield=()=>useContext(PlayfieldContext);
 const legend:ItemId[]=["house","school","library","clinic","park","garden","market","workshop","plaza","town-hall","station"];
 const focusable='button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),summary,[tabindex="0"]';
-const landscapeQuery="(max-width:1100px) and (orientation:landscape)";
-function watchLandscape(update:()=>void){const media=window.matchMedia(landscapeQuery);media.addEventListener("change",update);return()=>media.removeEventListener("change",update);}
-const isLandscape=()=>window.matchMedia(landscapeQuery).matches;
-const serverLandscape=()=>false;
 
 /** The same mounted map and game controls expand; the town and pending move never get copied. */
-export default function RepublicPlayfield({town,plan,blocked,onAction,children,taskContent,resources,workspace,kind="town"}:{
+export default function RepublicPlayfield({town,plan,blocked,onAction,children,taskContent,resources,kind="town"}:{
   town:RepublicState;plan?:ReturnType<typeof playerPlan>;blocked:boolean;
   onAction?:(a:PlanAction)=>void;children:ReactNode|((expanded:boolean)=>ReactNode);
   taskContent?:ReactNode;resources?:ReactNode;kind?:"town"|"festival";
-  workspace?:{key:string;title:string;kind:"detail"|"catalog"|"placement"}|null;
 }) {
-  const [expanded,setExpanded]=useState(false);
-  const docked=useSyncExternalStore(watchLandscape,isLandscape,serverLandscape);
-  const [panel,setPanel]=useState<{tab:"tasks"|"legend"|"workspace";key:string|null;rail:boolean}>({tab:"tasks",key:null,rail:true});
-  // Forget only the temporary tab choice after its selection closes. Reopening the same building must show its detail again.
-  if(!workspace&&panel.key!==null)setPanel({...panel,key:null,tab:panel.tab==="workspace"?"tasks":panel.tab});
-  // A new map selection opens its panel synchronously; switching tabs never cancels a pending build.
-  const fresh=docked&&!!workspace&&workspace.key!==panel.key;
-  const tab=!docked?(panel.tab==="legend"?"legend":"tasks"):fresh?"workspace":panel.tab==="workspace"&&!workspace?"tasks":panel.tab;
-  const rail=fresh||panel.rail;
-  const choose=(tab:"tasks"|"legend"|"workspace")=>setPanel({tab,key:workspace?.key??null,rail:true});
+  const [expanded,setExpanded]=useState(false),[tab,setTab]=useState<"tasks"|"legend">("tasks"),[rail,setRail]=useState(true);
   const host=useRef<HTMLDivElement>(null),closeButton=useRef<HTMLButtonElement>(null),trigger=useRef<HTMLElement|null>(null);
   const displayWanted=useRef(false),nativeEntered=useRef(false),orientationLocked=useRef(false);
   const close=useCallback(()=>{
@@ -77,8 +63,6 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children,t
     const nestedDialog=(target:Element|null)=>{const dialog=target?.closest('[role="dialog"]');return !!dialog&&dialog!==el;};
     function key(e:KeyboardEvent){
       if(e.defaultPrevented||e.composedPath().some(node=>node instanceof Element&&node.getAttribute("role")==="dialog"&&node!==el)||nestedDialog(e.target instanceof Element?e.target:null)||nestedDialog(document.activeElement))return;
-      // Let the focused card handle Escape before the fullscreen document listener.
-      if(e.key==="Escape"&&e.target instanceof Element&&e.target.closest(".info-card,.republic-catalog,.republic-placement"))return;
       if(e.key==="Escape"){e.preventDefault();close();return;}
       if(e.key!=="Tab")return;
       const nodes=Array.from(el!.querySelectorAll<HTMLElement>(focusable)).filter(n=>n.getClientRects().length&&getComputedStyle(n).visibility!=="hidden");
@@ -111,19 +95,19 @@ export default function RepublicPlayfield({town,plan,blocked,onAction,children,t
     else onAction?.(item.action);
   }
   return <PlayfieldContext.Provider value={{expanded,open}}>
-    <div ref={host} className={`${kind==="festival"?"festival-playfield":"republic-layout"} republic-playfield`} data-kind={kind} data-expanded={expanded||undefined} data-rail={rail||undefined} data-workspace={tab==="workspace"||undefined} data-workspace-kind={workspace?.kind} role={expanded?"dialog":undefined} aria-modal={expanded?true:undefined} aria-label={expanded?"Herný plán Malej republiky":undefined}>
+    <div ref={host} className={`${kind==="festival"?"festival-playfield":"republic-layout"} republic-playfield`} data-kind={kind} data-expanded={expanded||undefined} data-rail={rail||undefined} role={expanded?"dialog":undefined} aria-modal={expanded?true:undefined} aria-label={expanded?"Herný plán Malej republiky":undefined}>
       {expanded&&<>
         <header className="playfield-header">
           <strong>{town.name}</strong>
           <div className="playfield-funds">{resources??<><span><Coins size={15} aria-hidden="true"/><b>{town.coins}</b><span className="sr-only">mincí</span></span><span><Boxes size={15} aria-hidden="true"/><b>{town.materials}</b><span className="sr-only">materiálov</span></span></>}</div>
-          <button className="playfield-panel-toggle" type="button" onClick={()=>setPanel({tab,key:workspace?.key??null,rail:!rail})} aria-label={rail?"Zbaliť bočný panel":"Rozbaliť bočný panel"} aria-expanded={rail}>{rail?<PanelRightClose size={20}/>:<PanelRightOpen size={20}/>}</button>
+          <button className="playfield-panel-toggle" type="button" onClick={()=>setRail(v=>!v)} aria-label={rail?"Zbaliť panel úloh":"Rozbaliť panel úloh"} aria-expanded={rail}>{rail?<PanelRightClose size={20}/>:<PanelRightOpen size={20}/>}</button>
           <button ref={closeButton} type="button" onClick={close} aria-label="Zavrieť herný plán"><Minimize2 size={20}/></button>
         </header>
         <div className="playfield-rotate" role="status"><div className="playfield-rotate-icon"><Smartphone size={54} aria-hidden="true"/><RotateCw size={24} aria-hidden="true"/></div><h2>Otoč telefón na šírku</h2><p>Celá štvrť bude na mape a úlohy vpravo. Ak sa obraz neotočí, vypni zámok otáčania telefónu.</p><button type="button" onClick={close}>Späť k bežnej mape</button></div>
-        <aside className="playfield-rail" aria-label="Úlohy, legenda a výber na mape">
-          <nav aria-label="Panel herného plánu"><button type="button" aria-pressed={tab==="tasks"} aria-label="Úlohy" onClick={()=>choose("tasks")}><ListTodo size={18}/><span>Úlohy</span></button><button type="button" aria-pressed={tab==="legend"} aria-label="Legenda" onClick={()=>choose("legend")}><BookOpen size={18}/><span>Legenda</span></button>{workspace&&<button className="playfield-workspace-tab" type="button" aria-pressed={tab==="workspace"} aria-label={workspace.title} onClick={()=>choose("workspace")}><MousePointer2 size={18}/><span>{workspace.title}</span></button>}</nav>
-          {rail&&<div className="playfield-rail-content" data-workspace-placeholder={tab==="workspace"||undefined}>
-            {tab!=="legend"?taskContent??<>
+        <aside className="playfield-rail" aria-label="Úlohy a legenda herného plánu">
+          <nav aria-label="Panel herného plánu"><button type="button" aria-pressed={tab==="tasks"} aria-label="Úlohy" onClick={()=>{setTab("tasks");setRail(true);}}><ListTodo size={18}/><span>Úlohy</span></button><button type="button" aria-pressed={tab==="legend"} aria-label="Legenda" onClick={()=>{setTab("legend");setRail(true);}}><BookOpen size={18}/><span>Legenda</span></button></nav>
+          {rail&&<div className="playfield-rail-content">
+            {tab==="tasks"?taskContent??<>
               <h2>Dnes v štvrti</h2><p className="playfield-project">Projekt <b>{town.completed.length}/7</b></p>
               {plan?.blockers.map(b=><p className="playfield-blocker" key={b.key}>{b.title} {b.detail}</p>)}
               <ol className="playfield-tasks">{items.map(item=><li key={item.key} data-status={item.status}>

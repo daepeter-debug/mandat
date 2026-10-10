@@ -102,3 +102,8 @@ Overenie: všetkých 31 verify skriptov, TypeScript, ESLint, build-dark --check 
 ## Malá republika: pracovný panel na šírku, 10. október 2026
 
 Mobilný rozšírený režim používa pôvodný pravý panel aj pre detail budovy, katalóg a potvrdenie stavby. Žiadna veľká pracovná karta neprekrýva mapu; jej rozmery ostávajú. Nový výber otvorí pracovnú kartu, Úlohy/Legenda rozpracovanú stavbu zachovajú. Rovnaký detail funguje pri slávnosti. Escape v karte neukončí fullscreen. Desktop, pravidlá, uloženie, politické dáta a platby ostávajú. 31 verify skriptov, tsc, lint, dark check a build prešli; QA 667/844 na šírku, 375 na výšku a 1280 desktop. Fyzický telefón/Safari neoverený. Inline review implementátora: ship.
+
+
+## Obnovené ovládanie Malej republiky, 10. október 2026
+
+Peter odmietol dokovaný pracovný panel a potvrdil návrat na poslednú fullscreen verziu z 2. októbra (1aa563e). Štyri herné UI súbory sú opäť presne z tejto verzie. Rozšírenie „pracovný panel na šírku“ vyššie je odvolané; platí pôvodný panel Úlohy/Legenda a pôvodné karty detailu/stavby. Herné jadro, uloženie a ostatné časti webu sa nevracajú ani nemenia.
