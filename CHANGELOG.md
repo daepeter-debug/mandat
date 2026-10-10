@@ -1,5 +1,14 @@
 # Zmeny Mandátu
 
+## 10. október 2026 — Prehľadná stavebná mapa na mobile
+
+- Detail budovy, katalóg a potvrdenie stavby v šírkovom hernom pláne používajú pravý panel; mapa ostáva odkrytá v pôvodnej veľkosti.
+- Prepínanie Úlohy/Legenda/aktuálny výber zachová rozpracovanú stavbu, panel možno zbaliť. Rovnaká úprava pre mapu slávnosti.
+- Escape zavrie iba kartu; začatie stavby/cesty odstráni starý detail. Herné pravidlá a uloženie bez zmeny.
+
+Overenie: 31 verify skriptov, TypeScript, ESLint, dark check a build. UI pri 667×375, 844×390, 375×844 a 1280×900, skutočná lokálna stavba a slávnosť, bez pretekania a chýb konzoly. Detector raz: []; inline review: ship. Fyzický Safari neoverený.
+
+
 ## 10. október 2026 — Modelový lístok a meniaca sa obálka
 
 - Vlastný model má papierový lístok, autentické logá, presné percentá, dotykové kroky a okamžitý prepočet parlamentu. Pôvodné výpočty, koalície, reset a pravidlá platnosti zostávajú.

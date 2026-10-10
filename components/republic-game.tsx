@@ -215,7 +215,8 @@ function OwnRepublicGame() {
       onStart={()=>{setIntroStarted(true);requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-intro h2")?.focus({preventScroll:true}));}} onBuild={selectBuild} onMove={startMove} onFinish={()=>void run({type:"step"})}
       onContinue={()=>{if(town.completed.length>=2)void openStory();else {setCelebration(null);setIntroStarted(true);}}}
       onExplore={()=>{setExploring(true);setCelebration(null);cancel();requestAnimationFrame(()=>document.querySelector<HTMLElement>(".republic-stage")?.focus({preventScroll:true}));}}/>}
-    {!festivalOpen&&!welcome&&<RepublicPlayfield town={town} plan={plan} blocked={blocked} onAction={planAction}>
+    {!festivalOpen&&!welcome&&<RepublicPlayfield town={town} plan={plan} blocked={blocked} onAction={planAction}
+      workspace={panel?{key:`catalog:${panel}`,title:panel==="build"?"Stavby":"Zbierka",kind:"catalog"}:report?{key:report.key,title:"Detail",kind:"detail"}:intent?{key:`placement:${intent.kind}:${selected}:${target?coords(target):""}`,title:intent.kind==="road"?"Cesty":"Stavba",kind:"placement"}:null}>
       <div className="republic-stage" tabIndex={-1}>
         <div className="republic-view-switch" role="group" aria-label="Zobrazenie štvrte"><button aria-pressed={view==="map"} onClick={()=>setView("map")}><Map size={15}/> Mapa</button><button aria-pressed={view==="list"} onClick={()=>setView("list")}><List size={15}/> Zoznam a políčka</button><span>6 × 6 políčok</span></div>
         {view==="map"?<RepublicMap town={town} editing={!!intent} inspectBuildingsWhileEditing selected={selected} target={target} suggested={suggested} onCell={selectCell} onObject={inspectObject} notice={mapNotice} wishes={homeWishes(town)} inspect={inspect} suggestHint={advice?.why?`Fajka: ${advice.why}`:undefined}>{infoCard}</RepublicMap>:<div className="republic-list-view">
@@ -233,8 +234,8 @@ function OwnRepublicGame() {
           </>:mapNotice&&placing?<p className="plan-inline-warning" role="alert"><AlertTriangle size={17} aria-hidden="true"/><span><b>{mapNotice.title}</b> {mapNotice.detail}</span></p>:<p>Vyber políčko na mape alebo v zozname. {intent.kind==="move"?"Pôvodná budova zatiaľ zostáva na mieste.":intent.kind==="road"?"Klepnutie na cestu ju odstráni. Režim ostáva zapnutý, kým ho nezavrieš.":"Pred potvrdením uvidíš cenu a napojenie."}</p>}
         </div>}
         <div className="republic-actions">
-          <button aria-expanded={panel==="build"} onClick={()=>{setPendingTarget(null);setPanel(panel==="build"?null:"build");}}><Hammer size={18}/> Stavať</button>
-          <button aria-pressed={intent?.kind==="road"} onClick={()=>{setIntent(intent?.kind==="road"?null:{kind:"road"});setTarget(null);setPanel(null);}}><MapPinned size={18}/> Cesty</button>
+          <button aria-expanded={panel==="build"} onClick={()=>{clearInspect();setPendingTarget(null);setPanel(panel==="build"?null:"build");}}><Hammer size={18}/> Stavať</button>
+          <button aria-pressed={intent?.kind==="road"} onClick={()=>{clearInspect();setIntent(intent?.kind==="road"?null:{kind:"road"});setTarget(null);setPanel(null);}}><MapPinned size={18}/> Cesty</button>
           <button ref={parcelButton} className={town.charges||parcel?"parcel-ready":""} disabled={blocked} onClick={async()=>{setCard(null);if(parcel||await run({type:"parcel-open"}))setParcelOpen(true);}}><PackageOpen size={18}/> Zásielka <b>{parcel?"otvorená":town.charges}</b></button>
           <button aria-expanded={panel==="collection"} onClick={()=>setPanel(panel==="collection"?null:"collection")}><Archive size={18}/> Zbierka</button>
         </div>
