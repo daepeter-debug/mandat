@@ -39,6 +39,10 @@ export default function Chamber2D({ colors, label, spotlight = null, rings, dim,
       <rect x="-46" y="14" width="92" height="18" rx="5"/>
       <rect x="-20" y="-4" width="40" height="11" rx="3"/>
     </g>
+    <g className="chamber2d-total" aria-hidden="true">
+      <text className="chamber2d-total-value" x="0" y="-74">{seats.length}</text>
+      <text className="chamber2d-total-label" x="0" y="-53">miest v sále</text>
+    </g>
     <g className="chamber2d-seats">
       {seats.map((s, i) => <g key={i} className="chamber2d-seat" data-dim={dim?.has(i) || undefined}
         style={{ "--d": `${Math.round(i / 149 * 650)}ms`, "--fx": `${-s.x}px`, "--fy": `${22 - s.y}px` } as CSSProperties}>

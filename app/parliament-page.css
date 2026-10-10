@@ -4,10 +4,10 @@
 .parl-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.65fr);align-items:center;gap:24px;padding-bottom:0}
 .parl-intro .intro-description{max-width:65ch}
 .parl-preview{min-width:0;margin:0;display:grid;gap:6px}
-.parl-preview button{position:relative;display:grid;gap:10px;width:100%;padding:16px 14px 12px;border:0;border-radius:14px;background:#343b36;color:#fffefa;font:inherit;cursor:pointer;overflow:hidden}
+.parl-preview button{position:relative;display:grid;gap:0;width:100%;padding:0;border:0;border-radius:14px;background:var(--mag-green);color:var(--mag-ink);font:inherit;cursor:pointer;overflow:hidden}
 .parl-preview img{display:block;width:100%;height:auto;aspect-ratio:1209/518;object-fit:contain;transition:transform .3s cubic-bezier(.16,1,.3,1)}
 .parl-preview button:hover img{transform:translateY(-3px)}
-.parl-preview button>span{display:flex;align-items:center;justify-content:center;gap:8px;min-height:28px;font-size:13px;font-weight:600}
+.parl-preview button>span{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:8px 12px;font-size:13px;font-weight:600}
 .parl-preview figcaption{font-size:11px;line-height:1.45;color:var(--text-3)}
 .parl-preview button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 .parl-facts{display:flex;flex-wrap:wrap;gap:10px 26px;list-style:none;margin:16px 0 0;padding:0}
@@ -15,30 +15,36 @@
 .parl-facts b{font-size:28px;line-height:1.05;font-weight:620;letter-spacing:-.02em;color:var(--mag-ink);font-variant-numeric:tabular-nums}
 .parl-facts span{font-size:12px;color:var(--text-2)}
 
-/* Sála: prepínač 2D/3D, večerná scéna, legenda a karta poslanca */
+/* 2D pôdorys patrí na papier stránky; večerné materiály ostávajú v 3D. */
 .parl-stage-block{display:grid;gap:10px;min-width:0}
 .parl-stage-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;scroll-margin-top:12px}
 .parl-view button{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px}
 .parl-stage-label{font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
-.parl-stage{position:relative;display:grid;place-items:center;min-height:220px;padding:20px 12px 76px;border-radius:16px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 30%,#54564d 0%,#343b36 65%,#242d28 100%)}
-.parl-stage .chamber2d{position:relative;z-index:1;width:min(100%,600px);height:auto}
+.parl-stage{position:relative;display:grid;place-items:center;min-height:220px;padding:22px 12px 76px;overflow:hidden;isolation:isolate;background:transparent;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.parl-stage .chamber2d{position:relative;z-index:1;width:min(100%,680px);height:auto}
 .parl-stage-wait>span{position:relative;z-index:1}
-.parl-stage-wait{gap:14px;color:#f5f4ee;font-size:14px}
-.parl-enter{position:absolute;left:50%;bottom:16px;translate:-50% 0;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border:0;border-radius:999px;background:#fffefa;color:#20392f;font:inherit;font-size:15px;font-weight:650;white-space:nowrap;box-shadow:0 10px 28px #0006;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s}
-.parl-enter:hover{transform:translateY(-1px);box-shadow:0 14px 32px #0007}
+.parl-stage-wait{gap:14px;color:var(--text-2);font-size:14px}
+.parl-enter{position:absolute;left:50%;bottom:16px;translate:-50% 0;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border:0;border-radius:999px;background:var(--mag-ink);color:var(--card);font:inherit;font-size:15px;font-weight:650;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.parl-enter:hover{transform:translateY(-2px)}
 .parl-playing{position:absolute;left:12px;right:12px;top:10px;display:grid;gap:1px;margin:0;padding:8px 12px;border-radius:10px;background:#101b16cc;color:#f5f4ee;font-size:12.5px;line-height:1.35}
 .parl-playing span{font-size:11px;color:#cfe0d6;font-variant-numeric:tabular-nums}
 
-.chamber2d{display:block;overflow:visible;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.chamber2d-floor path{fill:none;stroke:#ffffff1c;stroke-width:1.2}
-.chamber2d-floor rect{fill:#ffffff24}
+.chamber2d{--chamber-ground:color-mix(in srgb,var(--mag-green) 36%,var(--mag-paper));--chamber-line:var(--border);--chamber-podium:var(--mag-green);--chamber-seat-outline:var(--card);--chamber-ink:var(--foreground);--chamber-secondary:var(--text-2);--chamber-focus:var(--focus);display:block;overflow:visible;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.chamber2d-floor path{fill:none;stroke:var(--chamber-line,var(--border));stroke-width:1.2}
+.chamber2d-floor rect{fill:var(--chamber-podium,var(--mag-green))}
 .chamber2d-seat{transition:opacity .25s;transform-box:fill-box;transform-origin:center;animation:parl-seat-in .65s cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(var(--d) * .45)}
-.chamber2d-dot{stroke:#fffefa40;stroke-width:.7;transition:fill .35s ease var(--d)}
-.chamber2d-seat[data-dim]{opacity:.24}
-.chamber2d-back{fill:none;stroke:#17271f;stroke-width:1.5;stroke-linecap:round;opacity:.65}
-.chamber2d-floor .chamber2d-rim{fill:#202a25;stroke:#b8ab8b;stroke-width:1.5}
-.chamber2d-rings circle{fill:none;stroke:#fffefa;stroke-width:2.4}
-.chamber2d-spot circle{fill:none;stroke:#dcf59b;stroke-width:3.2}
+.chamber2d-dot{stroke:var(--chamber-seat-outline,var(--card));stroke-width:1.5;transition:fill .35s ease var(--d)}
+.chamber2d-seat[data-dim]{opacity:.2}
+.chamber2d-back{fill:none;stroke:#17271f;stroke-width:1.5;stroke-linecap:round;opacity:.65;pointer-events:none}
+.chamber2d-floor .chamber2d-rim{fill:var(--chamber-ground);stroke:var(--chamber-line);stroke-width:1.5}
+.chamber2d-total{fill:var(--chamber-ink,var(--mag-ink));text-anchor:middle;font-variant-numeric:tabular-nums;pointer-events:none}
+.chamber2d-total-value{font-size:46px;font-weight:550;letter-spacing:-1px}
+.chamber2d-total-label{font-size:12px;fill:var(--chamber-secondary,var(--text-2))}
+.chamber2d-rings circle{fill:none;stroke:var(--chamber-ink,var(--mag-ink));stroke-width:2.4}
+.chamber2d-spot circle{fill:none;stroke:var(--chamber-focus,var(--focus));stroke-width:3.2}
+.chamber2d-seat:hover .chamber2d-dot{stroke:var(--chamber-focus,var(--focus));stroke-width:3}
+/* Záloha počas načítania 3D leží nad večernou scénou, preto má vlastnú paletu. */
+.par3d-loading .chamber2d{--chamber-ground:#202a25;--chamber-line:#758177;--chamber-podium:#3c5145;--chamber-seat-outline:#bcc9bd;--chamber-ink:#edf1e8;--chamber-secondary:#ccd8cc;--chamber-focus:#dcf59b}
 .chamber2d-spot-pulse{transform-box:fill-box;transform-origin:center;animation:parl-spot 1.4s ease-out 2;opacity:0}
 @keyframes parl-seat-in{from{transform:translate(var(--fx),var(--fy)) scale(.25);opacity:0}}
 @keyframes parl-spot{from{transform:scale(1);opacity:.85}to{transform:scale(2.3);opacity:0}}
@@ -177,12 +183,12 @@
 @media(min-width:1000px){.parl-columns{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}}
 @media(max-width:760px){
   .parl-intro{grid-template-columns:minmax(0,1fr);gap:16px}
-  .parl-preview button{grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:12px}
+  .parl-preview button{grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:0}
   .parl-preview img{height:92px}
   .parl-preview button>span{max-width:105px;flex-wrap:wrap;line-height:1.3;text-align:center}
   .parl-facts{display:grid;grid-template-columns:auto auto auto;justify-content:start;gap:6px 22px}
   .parl-facts b{font-size:24px}
-  .parl-stage{margin:0 -10px;padding:14px 6px 74px;border-radius:12px}
+  .parl-stage{margin:0 -10px;padding:14px 6px 74px}
   .parl-vote,.parl-profile{padding:14px 12px}
   .parl-vote-title{font-size:17px}
   .parl-profile-stats dd{font-size:19px}

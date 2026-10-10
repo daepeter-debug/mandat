@@ -54,3 +54,9 @@ Finálna kontrola implementátora: všetkých 27 overovacích skriptov prešlo d
 Po review sa doplnilo zachovanie lokálneho 3D stavu pri zmene URL režimu/hlasovania. Následný TypeScript, ESLint aj build prešli; pôvodné dátové overenia pred touto opravou sa týkajú nezmenených dát. CUA potvrdilo, že po vstupe s `sala=3d` a prepnutí na Hlasovania ostane 3D sála otvorená aj po zmiznutí vstupného parametra z URL; dôkaz je `desktop-3d-entry-vote.png`. Nasadené verejné správanie ešte nie je týmto lokálnym overením potvrdené.
 
 Poďakovanie a rozmery platobného panela boli vizuálne overené pomocou fixture; skutočná platba ani nová Stripe session neboli vytvorené. Verejný stav `/api/podpora` bol iba prečítaný a uvádzal zapnutý live režim. Ťahanie na fyzickom telefóne v Safari zatiaľ nebolo odskúšané.
+
+## Papierový pôdorys parlamentu, 10. október 2026
+
+Používateľ odmietol rozsiahly tmavý blok okolo 2D sály a požiadal o zladenie s pozadím stránky a nasadenie. 2D teraz používa transparentnú plochu, jemne tónovaný pôdorys podľa aktuálneho motívu a počet 150 miest v strede. Náhľad 3D má obraz až po okraj a zelený pás ovládania. Geometria, farby klubov a hlasov, výber poslanca a výsledky zostávajú pôvodné; večerná 3D scéna má vlastnú paletu vrátane načítavacej zálohy. Nové obrázky ani knižnice sa nepridávajú.
+
+Kontrola implementátora: šírky 375, 402, 1280 a pôvodných 1906 px, oba motívy, zvýraznenie klubu, výber Vladimíra Baláža a hlasovanie 58451. Bez vodorovného pretekania v kontrolovaných šírkach; konzola bez chýb. Snímky sú v `.impeccable/review/chamber-paper/`. Dokončovací review bol vykonaný v tom istom agente podľa inline kontraktu skillu, nie nezávislým overovateľom; disposition: ship. Existujúci dizajnový systém ostáva. Fyzický iPhone a Safari neboli týmto overením pokryté.

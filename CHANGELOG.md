@@ -1,5 +1,14 @@
 # Zmeny Mandátu
 
+## 10. október 2026 — 2D sála zladená so stránkou
+
+- Odstránený veľký tmavý blok okolo pôdorysu parlamentu; transparentná plocha a jemný tón sledujú svetlý aj tmavý motív.
+- Väčší pôdorys, počet 150 miest v strede, jemné zvýraznenie kresla a pokojnejší vstup do 3D.
+- Náhľad 3D bez tmavého rámu; večerná scéna i načítavacia záloha zachovávajú vlastnú paletu.
+- Opravené výnimky generátora tmavého režimu pre 2D sálu. Zdrojové údaje, výpočty a ovládanie bez zmeny.
+
+Vizuálne overené na 375/402/1280/1906 px, oba motívy, výber poslanca a hlasovanie 58451. Detektor: `[]`. Dokončovací review implementátora podľa inline kontraktu: ship, bez nezávislého overenia. Všetkých 27 overovacích skriptov, TypeScript, ESLint, kontrola tmavého motívu a produkčný build; fyzický Safari neoverený.
+
 ## 10. október 2026 — Vizuálne objavovanie
 
 - Perspektívny vstup do 3D parlamentu pod titulkom používa existujúci render historických klubov k 1. 10. 2026. Nahrádza polkruh vydania v úvode; titulok a modelový scenár 150 kresiel zostávajú. Zvolená 3D sála zostáva otvorená pri zmene režimu alebo hlasovania aj po zmiznutí vstupného parametra z URL.
