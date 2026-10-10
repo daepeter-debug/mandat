@@ -6,6 +6,7 @@ import { ArrowUpRight, Box, Check, ChevronLeft, ChevronRight, Link2, Pause, Play
 import VoteMiniature from "@/components/vote-miniature";
 import Chamber2D from "@/components/chamber-2d";
 import ChamberInspection from "@/components/chamber-inspection";
+import DeputyFootprint from "@/components/deputy-footprint";
 import { chamberClubAnnotations, chamberSeatAnchor } from "@/lib/chamber-annotations";
 import { VOTES_INDEX, clubLabel, clubTotals, kindNames, markColors, markNames, marks, matchesQuery, required, seatMembers, skDay, voteSource, type Mark, type SeatedMember, type VoteIndex, type VoteKind, type VoteSummary } from "@/lib/votes";
 import { DEPUTIES_FILE, clubAgreement, clubStats, deputyProfile, deputyStats, differentAt, displayName, findDeputies, partyAt, unaffiliatedPresence, voteDetailAt, type DeputiesData, type DeputyRow } from "@/lib/deputies";
@@ -394,7 +395,6 @@ function DeputyProfile({ data, byId, row, current, onVote, onStage, onClose }: {
   const day = (j: number) => { const v = byId.get(data.hlasovania[j]); return v ? skDay(v.datum) : ""; };
   const attendance = share(stats.present, stats.seated);
   const chips: [Filter, string, number][] = [["all", "Všetky", items.length], ["diff", "Inak ako klub", stats.differs.length], ["Z", "Za", stats.counts.Z], ["P", "Proti", stats.counts.P], ["?", "Zdržanie sa", stats.counts["?"]], ["N", "Nehlasovanie", stats.counts.N], ["0", "Neprítomnosť", stats.counts["0"]]];
-  const pickBar = (x: number, width: number) => { const k = n - 1 - Math.min(n - 1, Math.max(0, Math.floor(x / width * n))); if (row.h[k] !== "-") onVote(data.hlasovania[k]); };
   return <article id="poslanec" className="parl-profile" aria-labelledby="parl-profile-name" style={{ "--club": clubInfo(last?.party ?? null).color } as CSSProperties}>
     <header>
       <ClubMark party={last?.party ?? null} size={26}/>
@@ -410,16 +410,7 @@ function DeputyProfile({ data, byId, row, current, onVote, onStage, onClose }: {
     <div className="parl-profile-bar" role="img" aria-label={marks.map(m => `${markNames[m]} ${stats.counts[m]}`).join(", ")}>{marks.map(m => stats.counts[m] > 0 && <i key={m} style={{ flexGrow: stats.counts[m], background: markColors[m] }}/>)}</div>
     <p className="parl-profile-counts">{marks.map(m => <span key={m}><i style={{ background: markColors[m] }} aria-hidden="true"/>{markNames[m]} <b>{stats.counts[m]}</b></span>)}</p>
     {stats.segments.length > 1 && <p className="parl-profile-clubs"><b>Kluby v období:</b> {stats.segments.map((s, i) => <span key={i}>{i > 0 && " → "}{s.party ? clubLabel(s.club) : "nezaradený"} <small>({day(s.from)} – {day(s.to)})</small></span>)}</p>}
-    <figure className="parl-barcode">
-      <figcaption>Hlasovací pás: každá čiarka je jedno hlasovanie, zľava od najstaršieho. Značka hore = inak ako klub.</figcaption>
-      <svg viewBox={`0 0 ${n} 30`} preserveAspectRatio="none" shapeRendering="crispEdges" role="img" aria-label={`Hlasy v ${stats.seated} hlasovaniach v čase`}
-        onClick={e => { const r = e.currentTarget.getBoundingClientRect(); pickBar(e.clientX - r.left, r.width); }}>
-        {items.map(it => <rect key={it.j} x={n - 1 - it.j} y={8} width={1} height={22} fill={markColors[it.mark]}/>)}
-        {stats.differs.map(k => <rect key={`d${k}`} className="parl-barcode-diff" x={n - 1 - k} y={0} width={1} height={5}/>)}
-        {current !== null && <rect className="parl-barcode-now" x={n - 1 - current - .5} y={0} width={2} height={30}/>}
-      </svg>
-      <div className="parl-barcode-axis"><span>{day(n - 1)}</span><span>{day(0)}</span></div>
-    </figure>
+    <DeputyFootprint key={current ?? 'latest'} data={data} row={row} byId={byId} current={current} onVote={onVote}/>
     <div className="par3d-vote-kinds" role="group" aria-label="Filter hlasov">{chips.filter(([k, , c]) => k === "all" || c > 0).map(([k, label, count]) => <button key={k} type="button" aria-pressed={filter === k} onClick={() => { setFilter(k); setLimit(12); }}>{label}<small>{count}</small></button>)}</div>
     <ol className="parl-record">{shown.slice(0, limit).map(it => { const v = byId.get(it.id); return v && <li key={it.id}><button type="button" aria-pressed={current === it.j} onClick={() => onVote(it.id)}>
       <i style={{ background: markColors[it.mark] }} aria-hidden="true"/>

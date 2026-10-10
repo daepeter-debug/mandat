@@ -70,3 +70,17 @@ Po výbere kresla je na desktope pri ňom vizitka s menom, skutočným klubom, h
 Malý index ôsmich fotografií v lib/deputy-portraits.json používa len existujúce licencované fotografie zo straníckych profilov. Autor, licencia a zdroj sú dostupné vo vizitke. Ostatní poslanci majú monogram; bez automatického preberania fotografií z NR SR. Test kontroluje totožnosť oficiálneho ID, mena, pôvodnej licencie a súboru fotografie.
 
 Lokálne overenie: 28 verify skriptov, TypeScript, ESLint, build-dark --check a build prešli. Prehliadačová kontrola pokryla šírky 375/402/900/1280 px, oba motívy, klub cez klik a Enter, Escape, monogram aj fotografiu, skratku do profilu a skutočné hlasovanie 58451. Bez vodorovného pretekania v kontrolovaných šírkach. Snímky: .impeccable/review/chamber-details/. Dokončovací review je inline kontrolou implementátora, nie nezávislým overením; disposition: ship. Fyzický telefón/Safari nebol dostupný.
+
+## Redakčné profily a hlasovacia stopa, 10. október 2026
+
+Peter schválil body 2 a 3: grafické profily strán a interaktívnu hlasovaciu stopu poslanca. Porovnávanie dvoch hlasovaní nepatrí do tohto rozšírenia.
+
+Profily používajú autentické logo, jemnú farbu strany a väčšie existujúce licencované fotografie. Viditeľná história vlády stále končí dátumom kontroly podkladov 13. 9. 2026, nie dnešným dňom. Osobnosti nasledujú po zameraní a histórii vlády, pred financiami a meraniami. Aktuálne návrhy majú vlastný priestor; archív volieb 2023 je oddelený, bez premenovania na aktuálny program. Chýbajúce overenie nového dokumentu neznamená, že ho strana nemá.
+
+Mozaika zobrazuje existujúce záverečné hlasovania, najviac 42 na stránku, chronologicky v zobrazenom výreze. Roky, stránkovanie, dátumy a detaily vychádzajú z oficiálnych ID v archíve. Nečlenstvo sa nezamieňa s neprítomnosťou; rozdiel oproti klubu používa pôvodnú definíciu. Výber políčka ukáže skutočný hlas, názov a priamy zdroj NR SR, samostatné tlačidlo otvorí hlasovanie v pôvodnej sále. Farby nie sú hodnotením poslanca ani vysvetlením jeho motivácie.
+
+Systém ostáva: IBM Plex Sans; krémový papier a zelený atrament; autentické farby strán a hlasov; pôvodná navigácia a URL; jemné plochy a línie bez nových rasterov alebo knižníc. Dátové podklady, 3D scéna a platby sa nemenia.
+
+Lokálne overenie: všetkých 30 verify skriptov, TypeScript, ESLint, build-dark --check a produkčný build prešli. Nový dátový test zahŕňa všetkých 169 poslancov, členstvo, presné hlasy, rozdiely oproti klubu a stránkovanie bez strát či duplicít. Vizuálne šírky 375/402/1280 px, oba motívy, programy a portréty; klávesnica pre rok/hlas, staršie stránky a skutočné hlasovanie 58044 s prechodom do sály. Mobilný detail sa po výbere odkryje nad spodnou navigáciou; pri reduced-motion okamžite. Bez vodorovného pretekania v kontrolovaných šírkach.
+
+Detektor jedenkrát: [] v .impeccable/review/portraits-footprint/detector.json. Dve batched vizuálne kolá vrátane opráv; finálne snímky a review v .impeccable/review/portraits-footprint/. Dokončovací review a documenter boli inline kontrolou toho istého implementátora, nie nezávislým overením; disposition: ship. Fyzický telefón/Safari nebol dostupný.

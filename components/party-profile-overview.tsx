@@ -1,5 +1,6 @@
 "use client";
 import { useState } from 'react';
+import Image from 'next/image';
 import { ArrowUpRight, ChevronDown, Landmark } from 'lucide-react';
 import { partyProfiles, peopleImagesChecked, peopleWithPhoto, peopleWithoutPhoto, type Personality } from '@/lib/party-profiles';
 import ListenButton from '@/components/listen-button';
@@ -9,16 +10,31 @@ import { date, fmt } from '@/lib/polls';
 import { averageWage, fundingChecked, fundingForParty, fundingLaw, fundingThresholdPct } from '@/lib/party-funding';
 import { formatTenureDate, governmentTenure, tenureAsOf, tenureLabel, tenureMethodology } from '@/lib/government-tenure';
 import TenureTimeline from '@/components/tenure-timeline';
+import { SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import { PartySupport } from '@/components/party-insights';
+import partyLogos from '@/lib/party-logos.json';
+import type { Party } from '@/lib/polls';
+import '@/app/party-portrait.css';
 
-const photoSet=(photo:string)=>[1,2,3].map(n=>`${photo.replace(/-2x\.webp$/,'')}-${n}x.webp ${n}x`).join(', ');
+export function PartyProfileHeader({party}:{party:Party}) {
+  const logo=(partyLogos as Record<string,{src:string}>)[party.id];
+  return <SheetHeader className="party-portrait-header">
+    <span className="party-portrait-logo" aria-hidden="true">{logo?<Image src={logo.src} alt="" width={80} height={80} unoptimized/>:<span>{party.short.slice(0,2)}</span>}</span>
+    <SheetTitle>{party.name}</SheetTitle>
+    <SheetDescription>Zameranie, osobnosti, prieskumy a programy</SheetDescription>
+    <PartySupport party={party}/>
+  </SheetHeader>;
+}
+
+const photoSet=(photo:string)=>[1,2,3].map(n=>`${photo.replace(/-2x\.webp$/,'')}-${n}x.webp ${n*96}w`).join(', ');
 const initials=(name:string)=>{const parts=name.trim().split(/\s+/);return (parts[0][0]+(parts.length>1?parts[parts.length-1][0]:'')).toUpperCase();};
 function Portrait({person}:{person:Personality}) {
   const [failed,setFailed]=useState(false);
   // Bez voľne licencovanej fotografie (alebo pri chybe načítania) stojí na mieste portrétu monogram.
   if(!person.photo||failed)return <div className="person-portrait person-monogram" aria-hidden="true"><span>{initials(person.name)}</span></div>;
-  // Tri hustoty (96/192/288 px) vyrezané a zmenšené vopred, aby prehliadač nezmenšoval päťnásobne veľký obrázok.
-  // eslint-disable-next-line @next/next/no-img-element -- srcSet podľa hustoty displeja, next/image ho pri unoptimized nepodporuje
-  return <div className="person-portrait"><img src={person.photo} srcSet={photoSet(person.photo)} alt={person.name} width={192} height={234} loading="lazy" decoding="async" onError={()=>setFailed(true)}/></div>;
+  // Existing 96/192/288 px crops, selected for the rendered width and device density.
+  // eslint-disable-next-line @next/next/no-img-element -- responsive sources from existing licensed crops
+  return <div className="person-portrait"><img src={person.photo} srcSet={photoSet(person.photo)} sizes="(max-width:760px) 90px, 132px" alt={person.name} width={192} height={234} loading="lazy" decoding="async" onError={()=>setFailed(true)}/></div>;
 }
 const photoCredit=(p:Personality)=>`${p.imageAuthor}, ${p.imageYear} · ${p.imageLicense}`;
 
@@ -67,7 +83,6 @@ function PartyGovernmentTenure({partyId}:{partyId:string}) {
     </summary>
     <div className="tenure-detail">
       <p className="tenure-method">{tenureMethodology.label}</p>
-      <TenureTimeline tenure={tenure}/>
       {tenure.periods.length>0?<ol>{tenure.periods.map(period=><li key={`${period.start}-${period.government}`}>
         <span><time dateTime={period.start}>{formatTenureDate(period.start)}</time> – {period.end?<time dateTime={period.end}>{formatTenureDate(period.end)}</time>:'súčasnosť'}</span>
         <strong>{period.government}</strong>
@@ -85,8 +100,9 @@ export default function PartyProfileOverview({partyId}:{partyId:string}) {
   const profile=partyProfiles[partyId];
   if(!profile)return <div className="profile-overview"><section className="profile-summary"><h2>O strane</h2><p>Medailón a aktuálne vedenie tejto strany ešte nemáme overené. Dostupné merania a programové dokumenty nájdete nižšie.</p></section></div>;
   return <div className="profile-overview">
-    <section className="profile-summary" aria-label="Predstavenie strany"><div className="profile-meta-row"><PartyTags partyId={partyId}/><PartyGovernmentTenure partyId={partyId}/></div><h2>Čím sa profiluje</h2><ListenButton id={`profil-${partyId}`} src={voiceItem(profileAudio, partyId)?.src} ms={voiceItem(profileAudio, partyId)?.ms} label="Vypočuj si profil" credit={profileAudio.credit}/><p>{profile.summary}</p><a className="profile-source" href={profile.source} target="_blank" rel="noopener noreferrer">Podklad k zameraniu <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><p className="profile-editorial-note">Redakčné zhrnutie uvedených podkladov. Deklarované priority nie sú hodnotením výsledkov ani úplnou politologickou klasifikáciou.</p></section>
-    <PartyFunding partyId={partyId}/>
+    <section className="profile-summary" aria-label="Predstavenie strany"><PartyTags partyId={partyId}/><h2>Čím sa profiluje</h2><ListenButton id={`profil-${partyId}`} src={voiceItem(profileAudio, partyId)?.src} ms={voiceItem(profileAudio, partyId)?.ms} label="Vypočuj si profil" credit={profileAudio.credit}/><p>{profile.summary}</p><a className="profile-source" href={profile.source} target="_blank" rel="noopener noreferrer">Podklad k zameraniu <ArrowUpRight size={12}/><span className="sr-only"> (nová karta)</span></a><p className="profile-editorial-note">Redakčné zhrnutie uvedených podkladov. Deklarované priority nie sú hodnotením výsledkov ani úplnou politologickou klasifikáciou.</p></section>
+    {governmentTenure[partyId]&&<section className="profile-government" aria-label="História účasti vo vláde"><div className="profile-section-heading"><h2>Účasť vo vláde</h2><PartyGovernmentTenure partyId={partyId}/></div>{governmentTenure[partyId].periods.length?<TenureTimeline tenure={governmentTenure[partyId]}/>:<p className="profile-government-empty">{governmentTenure[partyId].note}</p>}<p className="profile-editorial-note">Od roku 1993 · stav overených podkladov k {formatTenureDate(tenureAsOf)}. Presné obdobia a zdroje otvoríš cez údaj „Vo vláde“.</p></section>}
     <section className="profile-people" aria-labelledby="profile-people-title"><div className="profile-section-heading"><h2 id="profile-people-title">Ľudia za stranou</h2><span>{profile.people.length===1?'Prvý medailón':'Výber osobností'}</span></div><div className="person-list">{profile.people.map(person=><article className="person-item" key={person.id}><Portrait person={person}/><div><h3>{person.name}</h3><span className="person-role">{person.role}</span><p>{person.bio}</p><div className="person-sources"><a href={person.source} target="_blank" rel="noopener noreferrer">Zdroj profilu <ArrowUpRight size={11}/></a>{person.photo?<a className="person-credit" href={person.imageSource} target="_blank" rel="noopener noreferrer" aria-label={`Fotografia na Wikimedia Commons: ${photoCredit(person)}`}>Foto: {photoCredit(person)} <ArrowUpRight size={11}/></a>:<span className="person-credit-missing">Bez voľne licencovanej fotografie</span>}</div></div></article>)}</div><p className="profile-editorial-note">Kontrola podkladov {date(profile.verified)}. Výber nie je rebríček popularity ani kandidátna listina pre voľby 2027.</p></section>
+    <PartyFunding partyId={partyId}/>
   </div>;
 }

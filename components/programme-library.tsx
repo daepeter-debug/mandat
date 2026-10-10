@@ -21,7 +21,12 @@ function Status({document}:{document:Programme}) {
 
 export function PartyDocuments({partyId}:{partyId:string}) {
   const docs=programmes.filter(p=>p.partyId===partyId).sort((a,b)=>Number(a.status==="archive-2023")-Number(b.status==="archive-2023"));
-  return <section className="profile-documents"><h3>Programové dokumenty</h3>{docs.length ? docs.map(d=><article key={d.url}><Status document={d}/><h4>{d.title}</h4><p>{d.note}</p><DocumentLink document={d}/></article>) : <div className="editor-note"><BookOpen size={22}/><h3>Dokument zatiaľ nie je overený</h3><p>V archíve ešte nemáme overený program tejto strany. Neznamená to, že ho strana nemá.</p></div>}</section>;
+  const current=docs.filter(d=>d.status!=="archive-2023"),archive=docs.filter(d=>d.status==="archive-2023");
+  const document=(d:Programme)=><article key={d.url}><Status document={d}/><h5>{d.title}</h5><p>{d.note}</p><DocumentLink document={d}/></article>;
+  return <section className="profile-documents"><h3>Programové dokumenty</h3>
+    <section className="profile-document-shelf" aria-label="Aktuálne programové podklady"><h4><BookOpen size={19} aria-hidden="true"/>Aktuálne návrhy</h4><p className="profile-document-context">Nové iniciatívy a dostupné programové podklady. Ich stav uvádzame pri každom dokumente.</p>{current.length?current.map(document):<p className="profile-document-empty">Aktuálny dokument zatiaľ nemáme overený. Neznamená to, že ho strana nemá.</p>}</section>
+    {archive.length>0&&<section className="profile-document-shelf profile-document-archive" aria-label="Historické programy volieb 2023"><h4><Clock3 size={19} aria-hidden="true"/>Archív volieb 2023</h4><p className="profile-document-context">Historické programy. Nie sú dnešnými sľubmi pre voľby 2027.</p>{archive.map(document)}</section>}
+  </section>;
 }
 
 function ProgrammeMatrix() {

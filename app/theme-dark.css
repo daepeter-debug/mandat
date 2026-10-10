@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 41 súborov (61c7025281) — needitovať ručne. Pravidiel: 1851, prefarbených: 1472. */
+/* Generované scripts/build-dark.mjs z 43 súborov (ceab39a9cd) — needitovať ručne. Pravidiel: 1902, prefarbených: 1515. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3327,6 +3327,103 @@ html[data-theme="dark"] .debt-clock-rates div {
 html[data-theme="dark"] .debt-clock-rates dt {
     color: #a9bf98
 }
+html[data-theme="dark"] .deputy-footprint {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .footprint-heading h4 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .footprint-heading>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-intro {
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-years button {
+    border: 1px solid #41463d;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .footprint-years button[aria-pressed=true] {
+    background: var(--mag-ink);
+    color: #f5f4ee;
+    border-color: #97aba3
+}
+html[data-theme="dark"] .footprint-grid button {
+    border: 1px solid transparent;
+    background: color-mix(in srgb,var(--vote-color) 12%,#262c29)
+}
+html[data-theme="dark"] .footprint-grid button>span {
+    background: var(--vote-color)
+}
+html[data-theme="dark"] .footprint-grid button:hover {
+    border-color: #4f6057
+}
+html[data-theme="dark"] .footprint-grid button[aria-pressed=true] {
+    border-color: #97aba3;
+    outline: 1px solid #97aba3;
+    outline-offset: 0
+}
+html[data-theme="dark"] .footprint-grid button[aria-current=true]::after {
+    background: var(--mag-ink)
+}
+html[data-theme="dark"] .footprint-grid button[data-differs]::before {
+    background: var(--mag-ink)
+}
+html[data-theme="dark"] .footprint-axis {
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-axis>span {
+    color: #bccac2
+}
+html[data-theme="dark"] .footprint-pager button {
+    border: 0;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .footprint-pager>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-key {
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-key .footprint-diff-key {
+    background: var(--mag-ink)
+}
+html[data-theme="dark"] .footprint-selection {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .footprint-selection>div:first-child {
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-selection strong {
+    color: #d1e7de
+}
+html[data-theme="dark"] .footprint-selection p {
+    color: #d8e5e1
+}
+html[data-theme="dark"] .footprint-selection-actions button {
+    border: 0;
+    background: #2a2f20;
+    color: #d1e7de
+}
+html[data-theme="dark"] .footprint-selection-actions a {
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-prompt {
+    border-top: 1px solid #41463d;
+    color: #bfcec6
+}
+html[data-theme="dark"] .footprint-note {
+    color: #bfcec6
+}
+html[data-theme="dark"] .deputy-footprint button:focus-visible,html[data-theme="dark"] .deputy-footprint a:focus-visible {
+    outline: 3px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .footprint-grid button>span {
+    border: 1px solid color-mix(in srgb,#9eaaa6 55%,var(--vote-color))
+}
 html[data-theme="dark"] .tenure-timeline {
     color: #bfcec6
 }
@@ -4807,21 +4904,6 @@ html[data-theme="dark"] .parl-profile-clubs {
 html[data-theme="dark"] .parl-profile-clubs small {
     color: #bccac2
 }
-html[data-theme="dark"] .parl-barcode figcaption {
-    color: #bccac2
-}
-html[data-theme="dark"] .parl-barcode svg {
-    background: #25241e
-}
-html[data-theme="dark"] .parl-barcode-diff {
-    fill: #d1e7de
-}
-html[data-theme="dark"] .parl-barcode-now {
-    fill: #91bdeb
-}
-html[data-theme="dark"] .parl-barcode-axis {
-    color: #bccac2
-}
 html[data-theme="dark"] .parl-record button {
     border: 1px solid #41463d;
     background: #262c29;
@@ -5056,6 +5138,97 @@ html[data-theme="dark"] .party-money-note {
 html[data-theme="dark"] .party-money-note a {
     color: #bedac5;
     text-decoration: underline
+}
+html[data-theme="dark"] .party-profile-sheet [data-slot=sheet-header].party-portrait-header {
+    background: var(--party-wash) !important
+}
+html[data-theme="dark"] .party-portrait-header>[data-slot=sheet-title] {
+    color: #d1e7de
+}
+html[data-theme="dark"] .party-portrait-header>[data-slot=sheet-description] {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-portrait-logo {
+    background: #fffefa
+}
+html[data-theme="dark"] .party-portrait-logo>span {
+    color: var(--party-color)
+}
+html[data-theme="dark"] .party-portrait-header>.party-profile-support {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .party-profile-sheet .party-tags li {
+    background: var(--party-wash);
+    color: #d1e7de;
+    border-color: #41463d
+}
+html[data-theme="dark"] .party-profile-sheet .profile-summary>p {
+    color: #d8e5e1
+}
+html[data-theme="dark"] .party-profile-sheet .profile-editorial-note {
+    color: #bfcec6 !important
+}
+html[data-theme="dark"] .profile-government {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .profile-government .government-tenure>summary {
+    background: var(--party-wash);
+    color: #d1e7de;
+    border-color: #41463d
+}
+html[data-theme="dark"] .profile-government .government-tenure>summary small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .profile-government-empty {
+    background: var(--party-wash);
+    color: #d8e5e1
+}
+html[data-theme="dark"] .party-profile-sheet .person-item {
+    border-color: #41463d
+}
+html[data-theme="dark"] .party-profile-sheet .person-role {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-profile-sheet .person-item p {
+    color: #d8e5e1
+}
+html[data-theme="dark"] .party-profile-sheet .person-sources a {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-profile-sheet .profile-source {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-profile-sheet .profile-documents {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .party-profile-sheet .profile-documents>h3 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .profile-document-shelf {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .profile-document-shelf>h4 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .profile-document-context,html[data-theme="dark"] .profile-document-empty {
+    color: #bfcec6
+}
+html[data-theme="dark"] .party-profile-sheet .profile-document-shelf>article {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .party-profile-sheet .profile-document-shelf>article:last-child {
+    border-bottom: 0
+}
+html[data-theme="dark"] .profile-document-shelf article h5 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .profile-document-shelf article p {
+    color: #d8e5e1
+}
+html[data-theme="dark"] .profile-document-archive {
+    background: color-mix(in srgb,#2c3028 22%,#262c29)
 }
 html[data-theme="dark"] .accuracy-head h2 {
     color: #d1e7de

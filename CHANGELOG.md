@@ -1,5 +1,14 @@
 # Zmeny Mandátu
 
+## 10. október 2026 — Redakčné profily a hlasovacia stopa
+
+- Profily strán majú autentické logo, jemné pozadie zo straníckej farby, väčšie existujúce licencované portréty a viditeľnú časovú os účasti vo vláde. Podpora ostáva rovnakým modelom ako v ľavom paneli; história vlády naďalej uvádza stav podkladov k 13. 9. 2026.
+- Aktuálne návrhy a iniciatívy sú oddelené od archívu programov volieb 2023. Chýbajúci overený aktuálny dokument sa neprezentuje ako neexistujúci program.
+- Hlasovacia stopa poslanca nahrádza drobný pruh interaktívnou mozaikou: rok, najviac 42 hlasovaní na stránku, skutočný dátum, hlas a názov. Značka ukazuje hlasovanie inak ako klub podľa pôvodnej definície. Detail odkazuje do sály a priamo na NR SR.
+- Mobilné políčka majú ciele aspoň 40 px; detail sa po výbere podľa potreby odkryje nad spodnou navigáciou. Obmedzený pohyb a klávesnica zachované. Žiadne nové politické podklady, skóre poslancov ani zmeny 3D scény.
+
+Overenie: všetkých 30 verify skriptov, TypeScript, ESLint, generovaný tmavý režim a produkčný build prešli. Nový test kontroluje všetkých 169 poslancov, totožnosť hlasovacích ID, nečlenstvo, hlasy, rozdiel oproti klubu a stránkovanie bez strát či duplicít. Vizuálna QA: 375/402/1280 px, oba motívy, zdroje portrétov, programy a skutočné hlasovanie 58044. Detektor raz: `[]`; inline dokončovací review implementátora: ship, bez nezávislého overovania. Fyzický iPhone/Safari zatiaľ neoverený.
+
 ## 10. október 2026 — Kluby pri oblúku a vizitky poslancov
 
 - Logá a počty klubov priamo pri 2D oblúku, s jemnými farebnými sektormi a klikom na zvýraznenie. Počty aj polohy vychádzajú zo skutočne obsadených kresiel.
