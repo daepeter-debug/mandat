@@ -3,6 +3,7 @@
 import { useEffect, useRef, useId, useSyncExternalStore } from "react";
 import { ArrowDown, ArrowUpRight, CalendarDays } from "lucide-react";
 import ChamberPreview from "@/components/chamber-preview";
+import MagazineCover from "@/components/magazine-cover";
 import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
@@ -85,15 +86,18 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
   return <section ref={intro} className="national-intro has-qa" aria-labelledby="national-title">
     <div className="national-copy">
       <div className="national-aurora" aria-hidden="true"><i/><i/><i/></div>
-      <MinuteLaunch onYear={onYear} onNavigate={onNavigate}/>
-      <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát · aktualizované {date(edition.updated)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
-      <h1 id="national-title">{headline}</h1>
-      <ChamberPreview/>
+
+
+      <MagazineCover today={today} onNavigate={onNavigate} onOpenNews={onOpenNews} onOpenNewsDay={onOpenNewsDay} onPlayDay={onPlayDay}/>
+      <p className="edition-model-meta">Model Mandát · aktualizované {date(edition.updated)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</p>
+      <h2 id="national-title" className="edition-model-heading">{headline}</h2>
       <a className="model-origin-jump" href="#model-mandat">Model Mandát = vážený priemer {edition.agencies.length} agentúr <ArrowDown size={13}/></a>
       <p className="edition-lead">{lead}</p>
       <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">
         {kpis.map(k => <div key={k.label}><dt>{k.label}</dt><dd data-count={k.value} aria-label={`${k.value} kresiel`}>{k.value}</dd><small className={k.delta > 0 ? "up" : k.delta < 0 ? "down" : ""}>{k.note}</small></div>)}
       </dl>
+      <MinuteLaunch onYear={onYear} onNavigate={onNavigate}/>
+      <ChamberPreview/>
       <EditionBrief/>
       <div className="national-actions"><button className="mag-button" onClick={explore}>Preskúmať prieskumy <ArrowDown size={17}/></button><button className="mag-text-link" onClick={()=>onNavigate("model")}>Zostaviť scenár <ArrowUpRight size={17}/></button></div>
       <div className="national-principles"><span>Nezávisle</span><span>So zdrojmi</span><span>Bez reklamy</span></div>

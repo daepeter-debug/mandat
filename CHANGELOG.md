@@ -1,5 +1,15 @@
 # Zmeny Mandátu
 
+## 10. október 2026 — Modelový lístok a meniaca sa obálka
+
+- Vlastný model má papierový lístok, autentické logá, presné percentá, dotykové kroky a okamžitý prepočet parlamentu. Pôvodné výpočty, koalície, reset a pravidlá platnosti zostávajú.
+- Na mobile tlačidlo Parlament odkryje výsledok; kompaktnejší úvod dáva priestor ovládaniu.
+- Úvod automaticky vyberá najnovší známy publikovaný obsah: deň v politike, prieskum alebo archivované hlasovanie. Ručne možno prepnúť všetky tri obálky, vždy s vlastným dátumom a zdrojom.
+- Správy majú klikateľný prehľad tém dňa, prieskum presné hodnoty agentúry a porovnávaciu rysku, hlasovanie súčet 150 hlasov. Pôvodný Model Mandát a 3D náhľad zostávajú pod obálkou.
+
+Overenie: 31 verify skriptov, TypeScript, ESLint, tmavý režim a build prešli; po oprave animácie opakovaný nový test a technické kontroly. QA 375/402/1280 px v oboch motívoch, bez vodorovného pretekania, zmena/reset/neplatný súčet, klávesnica a detail článku. Jeden detektor upozornil na animáciu šírky, nahradenú transformáciou; detektor neopakovaný. Inline review implementátora: ship. Fyzický Safari neoverený.
+
+
 ## 10. október 2026 — Redakčné profily a hlasovacia stopa
 
 - Profily strán majú autentické logo, jemné pozadie zo straníckej farby, väčšie existujúce licencované portréty a viditeľnú časovú os účasti vo vláde. Podpora ostáva rovnakým modelom ako v ľavom paneli; história vlády naďalej uvádza stav podkladov k 13. 9. 2026.

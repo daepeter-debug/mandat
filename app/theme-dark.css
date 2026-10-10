@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 43 súborov (ceab39a9cd) — needitovať ručne. Pravidiel: 1902, prefarbených: 1515. */
+/* Generované scripts/build-dark.mjs z 45 súborov (74201641ce) — needitovať ručne. Pravidiel: 1959, prefarbených: 1562. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3694,6 +3694,109 @@ html[data-theme="dark"] .listen-text small {
 html[data-theme="dark"] .listen-button[aria-pressed=true] .listen-icon {
     background: #2f6b3f
 }
+html[data-theme="dark"] .magazine-cover {
+    border-top: 1px solid #97aba3;
+    color: #d1e7de
+}
+html[data-theme="dark"] .cover-switch {
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .cover-switch button {
+    border: 0;
+    background: none;
+    color: #bfcec6
+}
+html[data-theme="dark"] .cover-switch button[aria-pressed=true] {
+    background: var(--mag-ink);
+    color: #f5f4ee
+}
+html[data-theme="dark"] .cover-latest {
+    background: currentColor
+}
+html[data-theme="dark"] .cover-deck {
+    color: #bfcec6
+}
+html[data-theme="dark"] .cover-article footer {
+    border-top: 1px solid #41463d;
+    color: #bfcec6
+}
+html[data-theme="dark"] .cover-article :is(footer a,footer button,.cover-more,.cover-news-actions button) {
+    background: none;
+    border: 0;
+    color: #d1e7de;
+    text-decoration: none
+}
+html[data-theme="dark"] .cover-article :is(a,button):focus-visible,html[data-theme="dark"] .cover-switch button:focus-visible {
+    outline: 3px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .cover-news-actions button {
+    color: #bfcec6 !important
+}
+html[data-theme="dark"] .cover-chart-note {
+    color: #bfcec6
+}
+html[data-theme="dark"] .cover-chart-note>i {
+    background: #4f6057
+}
+html[data-theme="dark"] .cover-party-logo img {
+    background: #fffefa
+}
+html[data-theme="dark"] .cover-poll-track {
+    background: #2c3028
+}
+html[data-theme="dark"] .cover-poll-track>i:first-child {
+    background: var(--cover-party)
+}
+html[data-theme="dark"] .cover-poll-track .cover-previous {
+    background: #202f2a
+}
+html[data-theme="dark"] .cover-news-art {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .cover-news-index {
+    border-left: 1px solid #41463d
+}
+html[data-theme="dark"] .cover-news-index>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .cover-news-index button {
+    background: none;
+    border: 0
+}
+html[data-theme="dark"] .cover-news-index button:after {
+    border: 1px solid #97aba3;
+    background: #2a2f20
+}
+html[data-theme="dark"] .cover-vote-art svg {
+    color: #d1e7de
+}
+html[data-theme="dark"] .cover-vote-art dt {
+    color: #bfcec6
+}
+html[data-theme="dark"] .cover-load-note,html[data-theme="dark"] .cover-empty {
+    color: #bfcec6
+}
+html[data-theme="dark"] .cover-load-note button {
+    background: none;
+    border: 0;
+    text-decoration: underline;
+    color: #d1e7de
+}
+html[data-theme="dark"] .edition-model-meta {
+    color: #bfcec6
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .cover-switch button:not(:disabled):not([aria-pressed=true]):hover {
+        background: #2a2f20
+    }
+    html[data-theme="dark"] .cover-news-index button:hover {
+        background: #2a2f20
+    }
+    html[data-theme="dark"] .cover-article :is(a,button):hover {
+        text-decoration: underline
+    }
+}
 html[data-theme="dark"] .minute-launch {
     border: 1px solid #41463d;
     background: #262c29;
@@ -3819,6 +3922,108 @@ html[data-theme="dark"] .mobile-collapse {
 }
 html[data-theme="dark"] .mobile-collapse>.fold-toggle {
     color: #d1e7de
+}
+html[data-theme="dark"] .model-ballot {
+    background: #262c29;
+    border: 1px solid #41463d;
+    color: #d8e5e1
+}
+html[data-theme="dark"] .ballot-heading button {
+    background: none;
+    border: 0;
+    color: #bfcec6
+}
+html[data-theme="dark"] .ballot-explanation,html[data-theme="dark"] .ballot-footnote {
+    color: #bfcec6
+}
+html[data-theme="dark"] .ballot-budget {
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .ballot-budget output {
+    color: #d1e7de
+}
+html[data-theme="dark"] .ballot-budget output small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .ballot-budget-track {
+    background: #2c3028
+}
+html[data-theme="dark"] .ballot-budget-track i {
+    background: var(--mag-ink)
+}
+html[data-theme="dark"] .ballot-budget p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .ballot-budget[data-invalid=true] output,html[data-theme="dark"] .ballot-budget[data-invalid=true] p {
+    color: #f1a69f
+}
+html[data-theme="dark"] .ballot-budget[data-invalid=true] .ballot-budget-track i {
+    background: #852d24
+}
+html[data-theme="dark"] .ballot-columns {
+    color: #bccac2
+}
+html[data-theme="dark"] .ballot-row {
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .ballot-row:last-child {
+    border-bottom: 0
+}
+html[data-theme="dark"] .ballot-logo {
+    background: #fffefa
+}
+html[data-theme="dark"] .ballot-name small {
+    color: #bccac2
+}
+html[data-theme="dark"] .ballot-number input {
+    background: #1c221f;
+    border: 1px solid #41463d;
+    color: #d1e7de;
+    caret-color: #d1e7de
+}
+html[data-theme="dark"] .ballot-number>span {
+    color: #bccac2
+}
+html[data-theme="dark"] .ballot-row[data-edited=true] .ballot-number input {
+    border-color: #97aba3
+}
+html[data-theme="dark"] .ballot-adjust button {
+    border: 0;
+    background: #1c221f;
+    color: #d1e7de
+}
+html[data-theme="dark"] .ballot-adjust input {
+    accent-color: var(--ballot-party)
+}
+html[data-theme="dark"] .ballot-outcome {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-ballot :is(button,input):focus-visible {
+    outline: 3px solid #77a998;
+    outline-offset: 3px
+}
+html[data-theme="dark"] .model-ballot ::selection {
+    background: #2a2f20;
+    color: #d1e7de
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .ballot-adjust button:not(:disabled):hover {
+        background: #2a2f20
+    }
+    html[data-theme="dark"] .ballot-heading button:hover {
+        color: #d1e7de
+    }
+}
+@media (max-width:760px) {
+    html[data-theme="dark"] .ballot-result-jump {
+        background: none;
+        border: 0;
+        color: #d1e7de
+    }
+    html[data-theme="dark"] .ballot-result-jump:focus-visible {
+        outline: 3px solid #77a998;
+        outline-offset: 3px
+    }
 }
 html[data-theme="dark"] .model-lens {
     color: #d1e7de;
