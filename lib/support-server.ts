@@ -59,7 +59,10 @@ export function supportSessionParams(cents: number, origin: string, now = Date.n
   return {
     ui_mode: "embedded",
     mode: "payment",
-    // Karty, Apple Pay a Google Pay dokončia platbu bez presmerovania; return_url je len pre metódy, ktoré presmerovanie vyžadujú.
+    // Len karta: Apple Pay a Google Pay sú v Checkout peňaženky nad kartou a ukážu sa podľa zariadenia (a registrovanej domény).
+    // Ostatné metódy z nastavení Stripe (Klarna, Revolut Pay, Link, bankové prevody…) sa tak neponúknu ani omylom.
+    payment_method_types: ["card"],
+    // Karta, Apple Pay a Google Pay dokončia platbu bez presmerovania; return_url je len poistka pre 3D Secure s presmerovaním.
     redirect_on_completion: "if_required",
     return_url: `${origin}/?podpora=hotovo&session_id={CHECKOUT_SESSION_ID}`,
     locale: "sk",

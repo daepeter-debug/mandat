@@ -37,7 +37,7 @@ assert(!JSON.stringify(supportConfig({ STRIPE_SECRET_KEY: "sk_test_ukazka", STRI
 
 // Parametre Checkout Session.
 const params = supportSessionParams(1250, "https://mandat.example", Date.UTC(2026, 9, 10));
-assert.equal(params.ui_mode, "embedded"); assert.equal(params.mode, "payment"); assert.equal(params.locale, "sk");
+assert.equal(params.ui_mode, "embedded"); assert.deepEqual(params.payment_method_types, ["card"], "len karta (+ Apple Pay a Google Pay)"); assert.equal(params.mode, "payment"); assert.equal(params.locale, "sk");
 assert.equal(params.line_items[0].price_data.currency, "eur"); assert.equal(params.line_items[0].price_data.unit_amount, 1250);
 assert.equal(params.return_url, "https://mandat.example/?podpora=hotovo&session_id={CHECKOUT_SESSION_ID}");
 assert.equal(params.expires_at, Date.UTC(2026, 9, 10) / 1000 + 1800);
@@ -48,6 +48,7 @@ const form = stripeForm(params);
 assert.equal(form.get("line_items[0][price_data][unit_amount]"), "1250");
 assert.equal(form.get("line_items[0][price_data][product_data][name]"), "Dobrovoľný príspevok na Mandát");
 assert.equal(form.get("metadata[zdroj]"), SUPPORT_SOURCE);
+assert.equal(form.get("payment_method_types[0]"), "card"); assert.equal(form.get("payment_method_types[1]"), null);
 assert.equal(form.get("custom_text[submit][message]"), params.custom_text.submit.message);
 assert(params.custom_text.submit.message.length <= 1200);
 

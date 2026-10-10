@@ -46,7 +46,7 @@ Ak kľúče nesedia (testovací a ostrý), podpora je vypnutá.
 2. **Kľúče** (Developers → API keys, v testovacom režime):
    - **Publishable key** `pk_test_…`.
    - Namiesto tajného kľúča odporúčam **Restricted key** `rk_test_…` s jediným oprávnením **Checkout Sessions: Write**, všetko ostatné None. Server nič iné nepotrebuje.
-3. **Platobné metódy** (Settings → Payment methods):
+3. **Platobné metódy** (Settings → Payment methods). Kód od 10. 10. povoľuje v Checkout Session len kartu (`payment_method_types: ["card"]`), takže Apple Pay, Google Pay a karta sa ukážu vždy a nič iné. Nastavenie v Stripe je len pre poriadok:
    - zapni Cards, Apple Pay, Google Pay;
    - metódy s presmerovaním (napríklad bankové prevody) nechaj vypnuté, platba tak ostane na webe;
    - Link je voliteľný.
