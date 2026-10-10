@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 38 súborov (4e97c9c64e) — needitovať ručne. Pravidiel: 1737, prefarbených: 1368. */
+/* Generované scripts/build-dark.mjs z 40 súborov (f5e8575ddd) — needitovať ručne. Pravidiel: 1783, prefarbených: 1404. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -5925,6 +5925,51 @@ html[data-theme="dark"] .story-foot button {
     background: #ffffff14;
     color: #f3f7ef
 }
+html[data-theme="dark"] .support-entry svg {
+    color: #e79684
+}
+html[data-theme="dark"] .support-entry:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .support-entry-header {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-entry-header:hover {
+    border-color: #544a47;
+    background: #1e1a18
+}
+html[data-theme="dark"] .support-entry-footer {
+    border: 0;
+    background: none;
+    color: #d1e7de;
+    text-decoration: underline;
+    text-decoration-color: #d8b3a6
+}
+html[data-theme="dark"] .support-entry-footer:hover {
+    text-decoration-color: currentColor
+}
+html[data-theme="dark"] .support-entry-inline {
+    border: 0;
+    background: var(--mag-ink);
+    color: #fffefa
+}
+html[data-theme="dark"] .support-entry-inline svg {
+    color: #f3b9a6
+}
+html[data-theme="dark"] .support-entry-inline:hover {
+    background: var(--mag-deep)
+}
+html[data-theme="dark"] .support-entry-more {
+    border: 1px solid #473e3a;
+    background: #1e1a18;
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-entry-more small {
+    color: #bfcec6
+}
 html[data-theme="dark"] .party-profile-support .support-range {
     color: #bfcec6
 }
@@ -5933,6 +5978,134 @@ html[data-theme="dark"] .support-range text {
 }
 html[data-theme="dark"] .party-profile-support .support-range figcaption {
     color: #bfcec6
+}
+html[data-theme="dark"] .support-sheet {
+    background: #262c29
+}
+html[data-theme="dark"] .support-sheet [data-slot=sheet-header] {
+    background: #1c221f
+}
+html[data-theme="dark"] .support-kicker {
+    color: #e8a494
+}
+html[data-theme="dark"] .support-test {
+    background: #fff1c7;
+    color: #6b4b00
+}
+html[data-theme="dark"] .support-copy {
+    color: #d8e5e1
+}
+html[data-theme="dark"] .support-amounts {
+    border: 0
+}
+html[data-theme="dark"] .support-amounts legend {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-amounts button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-amounts button:hover {
+    border-color: #535c4f
+}
+html[data-theme="dark"] .support-amounts button[aria-pressed=true] {
+    border-color: #97aba3;
+    background: var(--mag-ink);
+    color: #fffefa;
+    box-shadow: inset 0 0 0 2px var(--mag-lime)
+}
+html[data-theme="dark"] .support-amounts button:focus-visible,html[data-theme="dark"] .support-pay:focus-visible,html[data-theme="dark"] .support-checkout-head button:focus-visible,html[data-theme="dark"] .support-error button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
+html[data-theme="dark"] .support-custom {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-custom-field {
+    border: 1px solid #41463d;
+    background: #262c29
+}
+html[data-theme="dark"] .support-custom-field:focus-within {
+    outline: 2px solid #77a998;
+    outline-offset: 1px
+}
+html[data-theme="dark"] .support-custom input {
+    border: 0;
+    background: transparent;
+    color: #d1e7de;
+    outline: none
+}
+html[data-theme="dark"] .support-custom em {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-custom[data-invalid] .support-custom-field {
+    border-color: #b4553f
+}
+html[data-theme="dark"] .support-custom[data-invalid] small {
+    color: #f4a291
+}
+html[data-theme="dark"] .support-pay {
+    border: 0;
+    background: var(--mag-ink);
+    color: #fffefa
+}
+html[data-theme="dark"] .support-pay:hover:not(:disabled) {
+    background: var(--mag-deep)
+}
+html[data-theme="dark"] .support-pay:disabled {
+    background: #323830;
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-facts {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-facts svg {
+    color: #b2e5c0
+}
+html[data-theme="dark"] .support-note {
+    background: #2a2f20;
+    color: #d8e5e1
+}
+html[data-theme="dark"] .support-checkout-head button {
+    border: 0;
+    background: none;
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-checkout-head b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-test-hint {
+    background: #fff1c7;
+    color: #4d3a00
+}
+html[data-theme="dark"] .support-loading {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-error {
+    background: #291c17;
+    color: #f3c4b8
+}
+html[data-theme="dark"] .support-error button {
+    border: 1px solid #615855;
+    background: #262c29;
+    color: #f3c4b8
+}
+html[data-theme="dark"] .support-checkout:not(:empty) {
+    background: #262c29;
+    box-shadow: 0 0 0 1px #2c3028
+}
+html[data-theme="dark"] .support-thanks svg {
+    color: #b2e5c0
+}
+html[data-theme="dark"] .support-thanks h3 {
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-thanks p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .support-thanks.is-failed svg {
+    color: #e8a494
 }
 html[data-theme="dark"] .tax-head h2 {
     color: #d1e7de

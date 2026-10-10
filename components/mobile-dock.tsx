@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { Armchair, BarChart3, BookOpen, CalendarRange, FileText, Gamepad2, Home, Landmark, LayoutGrid, Newspaper, PieChart, Scale, SlidersHorizontal, Users, Wallet } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import InstallApp from "@/components/app-install";
+import { SupportButton } from "@/components/support";
 import "@/app/mobile-dock.css";
 
 /*
@@ -108,7 +109,7 @@ export default function MobileDock({ views, active, onView }: { views: { id: str
       <SheetContent side="bottom" className="mobile-more">
         <SheetHeader className="mobile-more-head"><SheetTitle>Všetky sekcie</SheetTitle><SheetDescription className="sr-only">Prejsť na inú sekciu Mandátu.</SheetDescription></SheetHeader>
         <ul>{rest.map(v => <li key={v.id}><button type="button" aria-current={active === v.id ? "page" : undefined} onClick={() => go(v.id)}>{details[v.id]?.icon ?? <CalendarRange/>}<b>{v.label}</b><small>{details[v.id]?.text ?? ""}</small></button></li>)}</ul>
-        <div className="mobile-more-settings"><InstallApp onPrepareHome={() => onView("overview")}/></div>
+        <div className="mobile-more-settings"><SupportButton variant="more" onBeforeOpen={() => setMore(false)}/><InstallApp onPrepareHome={() => onView("overview")}/></div>
       </SheetContent>
     </Sheet>
   </>;

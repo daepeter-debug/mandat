@@ -1,0 +1,53 @@
+/* Platobný panel podpory (components/support-sheet.tsx). Rám je .detail-sheet ako ostatné bočné panely. */
+.support-sheet{width:min(500px,100vw)!important;max-width:500px!important;background:#fffefa}
+.support-sheet [data-slot=sheet-header]{background:var(--mag-paper)}
+.support-kicker{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 10px;font-size:12px;font-weight:650;letter-spacing:.02em;color:#9a4a37}
+.support-kicker svg{flex:none}
+.support-test{padding:2px 8px;border-radius:999px;background:#fff1c7;color:#6b4b00;font-size:11px;font-weight:700}
+.support-body{display:grid;gap:18px;align-content:start}
+.support-copy{margin:0;font-size:15px;line-height:1.6;color:var(--foreground)}
+
+.support-amounts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0;padding:0;border:0;min-width:0}
+.support-amounts legend{margin-bottom:8px;padding:0;font-size:13px;font-weight:650;color:var(--text-2)}
+.support-amounts button{min-height:52px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--mag-ink);font:inherit;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums;cursor:pointer;transition:border-color .15s,background .15s}
+.support-amounts button:hover{border-color:#a9bba0}
+.support-amounts button[aria-pressed=true]{border-color:var(--mag-ink);background:var(--mag-ink);color:#fffefa;box-shadow:inset 0 0 0 2px var(--mag-lime)}
+.support-amounts .support-amount-custom{grid-column:1/-1;min-height:46px;font-size:14px}
+.support-amounts button:focus-visible,.support-pay:focus-visible,.support-checkout-head button:focus-visible,.support-error button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.support-custom{display:grid;gap:6px;font-size:13px;font-weight:600;color:var(--text-2)}
+.support-custom-field{display:flex;align-items:center;gap:6px;padding:0 14px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.support-custom-field:focus-within{outline:2px solid var(--focus);outline-offset:1px}
+.support-custom input{flex:1;min-width:0;min-height:50px;border:0;background:transparent;color:var(--mag-ink);font:inherit;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums;outline:none}
+.support-custom em{font-style:normal;font-size:16px;font-weight:650;color:var(--text-2)}
+.support-custom small{font-size:12px;font-weight:450}
+.support-custom[data-invalid] .support-custom-field{border-color:#b4553f}
+.support-custom[data-invalid] small{color:#9a3a26}
+
+.support-pay{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:54px;padding:0 18px;border:0;border-radius:999px;background:var(--mag-ink);color:#fffefa;font:inherit;font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;cursor:pointer}
+.support-pay:hover:not(:disabled){background:var(--mag-deep)}
+.support-pay:disabled{background:#c9d1c6;color:#4f6057;cursor:not-allowed}
+
+.support-facts{display:grid;gap:9px;margin:0;padding:0;list-style:none;font-size:13px;line-height:1.45;color:var(--text-2)}
+.support-facts li{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start}
+.support-facts svg{margin-top:1px;color:#2f6b3f}
+.support-note{margin:0;padding:12px 14px;border-radius:10px;background:var(--mag-green);font-size:12.5px;line-height:1.5;color:var(--foreground)}
+
+.support-checkout-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.support-checkout-head button{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 4px;border:0;background:none;color:var(--mag-ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.support-checkout-head b{font-size:20px;font-variant-numeric:tabular-nums;color:var(--mag-ink)}
+.support-test-hint{margin:0;padding:10px 12px;border-radius:10px;background:#fff1c7;color:#4d3a00;font-size:12.5px;line-height:1.5}
+.support-loading{display:flex;align-items:center;gap:10px;margin:0;padding:24px 0;font-size:14px;color:var(--text-2)}
+.support-error{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:start;padding:14px;border-radius:12px;background:#fbe9e3;color:#5c2416;font-size:14px;line-height:1.5}
+.support-error p{margin:0}
+.support-error svg{margin-top:2px}
+.support-error button{grid-column:2;justify-self:start;min-height:42px;padding:0 16px;border:1px solid #c98b78;border-radius:999px;background:#fff;color:#5c2416;font:inherit;font-weight:650;cursor:pointer}
+/* Vložený formulár Stripe má vlastné (svetlé) pozadie; rám ho drží ako kartu aj v tmavom režime */
+.support-checkout{min-height:0;border-radius:14px;overflow:hidden}
+.support-checkout:not(:empty){background:#fff;box-shadow:0 0 0 1px var(--border)}
+
+.support-thanks{display:grid;justify-items:center;gap:10px;padding:28px 6px 8px;text-align:center}
+.support-thanks svg{color:#2f6b3f}
+.support-thanks h3{margin:4px 0 0;font-size:26px;font-weight:650;letter-spacing:-.02em;color:var(--mag-ink)}
+.support-thanks p{margin:0 0 10px;max-width:34ch;font-size:15px;line-height:1.55;color:var(--text-2)}
+.support-thanks.is-failed svg{color:#9a4a37}

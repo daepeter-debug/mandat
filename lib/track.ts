@@ -5,7 +5,7 @@
   nič nedostanú. Pri „Do Not Track“ alebo Global Privacy Control a na lokálnom serveri sa neposiela nič.
   Zoznam povolených udalostí a údajov kontroluje aj server (app/api/udalost/route.ts).
 */
-export const TRACK_EVENTS = ["view", "story", "theme", "install", "rss", "share", "year", "tax", "ar", "listen", "parlament"] as const; // listen: detail = id nahrávky (story, kresla, profil-…, rychla-…); parlament: 3d, vote, deputy, play, card
+export const TRACK_EVENTS = ["view", "story", "theme", "install", "rss", "share", "year", "tax", "ar", "listen", "parlament", "podpora"] as const; // listen: detail = id nahrávky (story, kresla, profil-…, rychla-…); parlament: 3d, vote, deputy, play, card; podpora: otvorenie, platba, hotovo (bez súm)
 export type TrackEvent = typeof TRACK_EVENTS[number];
 export const TRACK_ENDPOINT = "/api/udalost";
 

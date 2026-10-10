@@ -1,0 +1,7 @@
+# Lokálne tajomstvá pre wrangler dev (podpora cez Stripe, docs/podpora-stripe.md).
+# Skopíruj ako .dev.vars (je v .gitignore) a doplň TESTOVACIE kľúče zo Stripe; hodnoty nikdy necommituj.
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+# Ostré platby len po výslovnom rozhodnutí: PODPORA_OSTRA=ano
+PODPORA_OSTRA=

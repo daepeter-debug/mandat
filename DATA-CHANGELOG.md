@@ -1,3 +1,20 @@
+## 10. 10. 2026 · Podpora Mandátu cez Stripe, testovacia príprava (Claude)
+
+- **Čo pribudlo:** dobrovoľný jednorazový príspevok priamo na webe cez Stripe Embedded Checkout (Apple Pay, Google Pay, karta). Sumy 3, 5, 10, 20 € alebo vlastná od 2 € do 500 €.
+- **Kde:**
+  - počítač: pilulka „Podporiť“ v hlavičke;
+  - mobil: karta v paneli Viac;
+  - všade: pätička a časť „Podpora a financovanie“ v O dátach.
+- **Zatiaľ vypnuté:** bez kľúčov Stripe v Cloudflare sa na webe nič nezobrazí. Testovací režim vidí len ten, kto otvorí `?podpora=test`. Ostré platby vyžadujú ostré kľúče a navyše `PODPORA_OSTRA=ano`.
+- **Bezpečnosť:**
+  - sumu overuje server;
+  - kľúče sú len v tajomstvách Workera;
+  - webhook s overeným podpisom;
+  - poďakovanie až podľa stavu zo Stripe;
+  - logy bez osobných údajov;
+  - Stripe.js sa načíta až pri platbe.
+- **Konfigurácia:** nasadzovacia konfigurácia sa nemenila. Pribudli `.dev.vars*` a `*.env` v `.gitignore` a `.dev.vars.example` bez hodnôt.
+- **Návod a otvorené právne otázky:** `docs/podpora-stripe.md`. Kontrola: `scripts/verify-support.mjs`.
 ## 10. 10. 2026 · Výber hlasovaní v sále na šírku (Codex, dokončil Claude)
 
 Fullscreen 3D sála má v pravom hornom rohu rolovací výber hlasovaní s vyhľadávaním a filtrom druhu. Výber používa pôvodné dáta a handler bez posúvania stránky; výsledky sa zmenia bez opustenia sály. Panel sa zbalí, fokus sa vráti na tlačidlo, Escape najprv zatvorí panel. Zmeny dát, výpočtov, modelu a hier nie sú súčasťou tejto úpravy.
