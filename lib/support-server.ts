@@ -62,7 +62,7 @@ async function stripe<T>(secret: string, method: "GET" | "POST", path: string, p
 export const SUPPORT_METHODS = ["card", "revolut_pay"] as const;
 
 /** Parametre Checkout Session pre vložený (embedded) platobný formulár. Samostatne kvôli kontrolám. */
-export function supportSessionParams(cents: number, origin: string, now = Date.now(), methods: readonly string[] = SUPPORT_METHODS) {
+export function supportSessionParams(cents: number, origin: string, now = Date.now(), methods: readonly string[] = SUPPORT_METHODS, hideLink = true) {
   return {
     ui_mode: "embedded",
     mode: "payment",
@@ -89,20 +89,26 @@ export function supportSessionParams(cents: number, origin: string, now = Date.n
     // vynechala a riziko podvodu by ostalo na Mandáte. Overená platba presúva zodpovednosť na banku a odradí skúšanie
     // ukradnutých kariet. Apple Pay a Google Pay sú overené v telefóne, pre ne sa nič nemení.
     payment_method_options: { card: { request_three_d_secure: "any" } },
+    // Bez tlačidla Link (Peter 10. 10. 2026): Stripe ho ku karte pridáva aj pri presne určených metódach.
+    ...(hideLink ? { wallet_options: { link: { display: "never" } } } : {}),
   };
 }
 
 export async function createSupportSession(secret: string, cents: number, origin: string) {
-  const create = (methods: readonly string[]) => stripe<{ id: string; client_secret: string }>(secret, "POST", "/checkout/sessions", supportSessionParams(cents, origin, Date.now(), methods));
-  let session;
-  try { session = await create(SUPPORT_METHODS); }
-  catch (e) {
-    // Neplatná požiadavka (napr. Revolut Pay nie je v účte zapnutý): zopakuje sa len s kartou, chyba ostane v logu.
-    if (!String(e).includes("Stripe 400")) throw e;
-    console.error(JSON.stringify({ podpora: "metody", error: String(e), fallback: "card" }));
-    session = await create(["card"]);
+  const create = (methods: readonly string[], hideLink: boolean) => stripe<{ id: string; client_secret: string }>(secret, "POST", "/checkout/sessions", supportSessionParams(cents, origin, Date.now(), methods, hideLink));
+  // Od najúplnejšej požiadavky po najjednoduchšiu: ak Stripe niečo odmietne (400, napr. Revolut Pay nie je v účte
+  // zapnutý alebo verzia API nepozná skrytie Linku), platba sa pripraví jednoduchšie a dôvod ostane v logu.
+  const attempts: [readonly string[], boolean, string][] = [[SUPPORT_METHODS, true, ""], [SUPPORT_METHODS, false, "s-linkom"], [["card"], false, "len-karta"]];
+  for (const [i, [methods, hideLink, label]] of attempts.entries()) {
+    try {
+      const session = await create(methods, hideLink);
+      return { id: session.id, clientSecret: session.client_secret };
+    } catch (e) {
+      if (!String(e).includes("Stripe 400") || i === attempts.length - 1) throw e;
+      console.error(JSON.stringify({ podpora: "metody", error: String(e), fallback: attempts[i + 1][2] }));
+    }
   }
-  return { id: session.id, clientSecret: session.client_secret };
+  throw new Error("Stripe: platbu sa nepodarilo pripraviť");
 }
 
 type Session = { status: "open" | "complete" | "expired" | null; payment_status: "paid" | "unpaid" | "no_payment_required"; amount_total: number | null; metadata?: Record<string, string> | null };

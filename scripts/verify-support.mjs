@@ -49,6 +49,8 @@ assert.equal(form.get("line_items[0][price_data][unit_amount]"), "1250");
 assert.equal(form.get("line_items[0][price_data][product_data][name]"), "Dobrovoľný príspevok na Mandát");
 assert.equal(form.get("metadata[zdroj]"), SUPPORT_SOURCE);
 assert.equal(form.get("payment_method_options[card][request_three_d_secure]"), "any", "3D Secure vždy, keď ho karta podporuje");
+assert.equal(form.get("wallet_options[link][display]"), "never", "bez tlačidla Link");
+assert.equal(supportSessionParams(500, "https://mandat.example", 0, ["card"], false).wallet_options, undefined, "záložný variant bez skrytia Linku");
 assert.equal(form.get("payment_method_types[0]"), "card"); assert.equal(form.get("payment_method_types[1]"), "revolut_pay"); assert.equal(form.get("payment_method_types[2]"), null);
 assert.equal(form.get("custom_text[submit][message]"), params.custom_text.submit.message);
 assert(params.custom_text.submit.message.length <= 1200);
