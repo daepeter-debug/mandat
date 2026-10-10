@@ -11,6 +11,7 @@ import DebtClock from '@/components/debt-clock';
 import TaxReceipt from '@/components/tax-receipt';
 import FinanceYearsMobile from '@/components/finance-years-mobile';
 import FinanceBudget from '@/components/finance-budget';
+import SpendingHundred from '@/components/spending-hundred';
 
 const FinanceChart = lazy(() => import('@/components/finance-chart'));
 const LivingChart = lazy(() => import('@/components/living-chart'));
@@ -291,6 +292,7 @@ export default function PublicFinance({ view, onView }: { view: string; onView: 
     {financeViews && <>
       <Kpis row={last}/>
       <FinanceBudget/>
+      <SpendingHundred/>
       <DebtClock/>
       <div className="finance-chart-wrap">
         <Suspense fallback={<p className="chart-loading">Načítavame graf…</p>}><FinanceChart rows={chartRows}/></Suspense>

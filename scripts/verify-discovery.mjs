@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {timelineEvents,coalitionSelection} from '../lib/discovery.ts';
+import {receiptRows,spendingAreas} from '../lib/tax-receipt.ts';
+const item=(id,date,rank=1,category='Vláda')=>({id,published:date,rank,category});
+const items=[item('outside','2026-08-01'),item('low','2026-09-01',2),item('high','2026-09-02'),item('poll','2026-09-03',1,'Prieskumy'),item('week2','2026-09-09')];
+assert.deepEqual(timelineEvents(items,'2026-09-01','2026-09-30').map(n=>n.id),['high','week2']);
+assert.deepEqual(timelineEvents([...items].reverse(),'2026-09-01','2026-09-30'),timelineEvents(items,'2026-09-01','2026-09-30'));
+assert.deepEqual(timelineEvents(items,'2026-10-01','2026-10-02'),[]);
+assert.deepEqual(coalitionSelection(['a','a','stale'],['a','b'],'b',true),['a','b']);
+assert.deepEqual(coalitionSelection(['a','b'],['a','b'],'a',false),['b']);
+assert.deepEqual(coalitionSelection(['a'],['a','b'],'unknown',true),['a']);
+assert.equal(receiptRows(100).reduce((sum,r)=>sum+r.amount,0),100);
+assert.equal(spendingAreas.length,10);
+assert.ok(Math.abs(spendingAreas.reduce((sum,r)=>sum+r.share,0)-1)<.00001);
+assert.ok(receiptRows(100).every(r=>r.amount>=0&&Number.isInteger(r.amount)));
+console.log('Discovery: deterministické udalosti, platné koaličné výbery a presne 100 výdavkových políčok OK.');

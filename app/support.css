@@ -1,5 +1,6 @@
 /* Platobný panel podpory (components/support-sheet.tsx). Rám je .detail-sheet ako ostatné bočné panely. */
-.support-sheet{width:min(500px,100vw)!important;max-width:500px!important;background:#fffefa}
+.support-sheet{width:min(500px,100%)!important;max-width:500px!important;background:#fffefa;overscroll-behavior:contain}
+.support-sheet [data-slot=sheet-header],.support-body{flex-shrink:0}
 .support-sheet [data-slot=sheet-header]{background:var(--mag-paper)}
 .support-kicker{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 10px;font-size:12px;font-weight:650;letter-spacing:.02em;color:#9a4a37}
 .support-kicker svg{flex:none}
@@ -51,3 +52,10 @@
 .support-thanks h3{margin:4px 0 0;font-size:26px;font-weight:650;letter-spacing:-.02em;color:var(--mag-ink)}
 .support-thanks p{margin:0 0 10px;max-width:34ch;font-size:15px;line-height:1.55;color:var(--text-2)}
 .support-thanks.is-failed svg{color:#9a4a37}
+.support-thanks-mark{display:grid;justify-items:center;margin-bottom:10px}
+.support-thanks-mark svg{overflow:visible;fill:var(--mag-ink)}
+.support-thanks-mark circle{animation:support-seat-arrive .65s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--thanks-delay)}
+.support-thanks-mark b{font-size:27px;letter-spacing:-.025em;color:var(--mag-ink)}
+.support-thanks-mark b span{color:#b45c45}
+@keyframes support-seat-arrive{from{transform:translateY(.12px);opacity:.35}to{transform:translateY(0);opacity:1}}
+@media(prefers-reduced-motion:reduce){.support-thanks-mark circle{animation:none}}

@@ -36,3 +36,21 @@ Mobil má prednosť: šírky 375 a 402 px, žiadne vodorovné pretekanie, dotyko
 Kontroly zahŕňajú TypeScript, ESLint, všetky dátové overovacie skripty, konzistenciu tmavého režimu, build a prehliadačové snímky v oboch režimoch pri troch šírkach. Overenie v emulovanom Chrome nenahrádza skúšku na fyzickom iPhone v Safari; tá zatiaľ neprebehla.
 
 Pracovný predpoklad, nie výskum publika: návštevník chce rýchlo pochopiť aktuálne slovenské politické údaje a podľa potreby otvoriť podrobnosti.
+
+## Schválené vizuálne objavovanie, 10. október 2026
+
+Používateľ schválil všetkých päť aktuálnych grafických návrhov a požiadal zapracovať aj predchádzajúce nápady. Výsledok rozširuje existujúci magazín:
+
+1. Pod titulkom úvodu je kompaktný perspektívny vstup do parlamentu s odkazom `/parlament?sala=3d`. Používa existujúci render `public/models/chamber-clubs-2026-10-01.webp`, výslovne označený ako náhľad historických klubov k 1. 10. 2026. Nahrádza skorší kompaktný polkruh vydania; titulok aj 150-kreslový modelový scenár zostávajú. Na počítači je v ľavom úvode vedľa denných správ, na mobile sa obsah skladá pod seba. Živé 3D sa otvára až po vstupe a zostáva otvorené pri prepínaní režimu či hlasovania.
+2. Pri trende sú udalosti z existujúceho zdrojovaného archívu politických správ. Výber označí presný dátum publikácie a pripne najbližší týždenný bod modelu. Dátum správy a dátum modelového bodu nie sú zamieňané; časová súvislosť sa neprezentuje ako príčina zmeny podpory.
+3. Koaličné kartičky s autentickými logami umožňujú klik, klávesnicu a presun za samostatný úchyt vo volebnom laboratóriu aj v koaličnom režime 3D sály. Výber, farby kresiel a súčet čítajú rovnaký riadený stav; hranica väčšiny je 76 kresiel.
+4. Financie obsahujú interaktívnu mriežku 100 € verejných výdavkov a zoznam presných súm. Mriežka zaokrúhľuje celé políčka, hodnoty ostávajú dostupné textom. Používa existujúce funkčné rozdelenie Eurostat COFOG za 2024 pre celú verejnú správu; nejde o konkrétnu osobnú daň ani plán štátneho rozpočtu na 2025.
+5. Po serverom potvrdenom stave platby `paid` sa zobrazí značka Mandát s jemným pohybom rešpektujúcim obmedzený pohyb. Mobilný panel podpory využíva celú dostupnú šírku, aby sa neorezal.
+
+Predchádzajúce rozšírenia zostávajú súčasťou produktu, s výslovnou náhradou polkruhu vydania v úvode uvedenou vyššie. Tento balík používa incumbentnú rodinu IBM Plex Sans, krémový papier, zelený atrament, existujúce logá a render; nevytvára nový vizuálny systém ani nové zdrojové politické či finančné tvrdenia.
+
+Finálna kontrola implementátora: všetkých 27 overovacích skriptov prešlo dvakrát; TypeScript, ESLint, build a kontrola generovaného tmavého režimu prešli. Detektor v `.impeccable/review/visual-discovery-detector.json` vrátil `[]`. Nezávislý dokončovací reviewer odporučil odovzdať výsledok bez materiálnej opravy a prijal 13 snímok skutočných funkcií. Prehliadačová QA pokryla mobil 375/402 px, desktop 1280 px, oba motívy a zhodný koaličný súčet po kliknutí aj Enter. Snímky sú v `.impeccable/review/visual-discovery/`.
+
+Po review sa doplnilo zachovanie lokálneho 3D stavu pri zmene URL režimu/hlasovania. Následný TypeScript, ESLint aj build prešli; pôvodné dátové overenia pred touto opravou sa týkajú nezmenených dát. CUA potvrdilo, že po vstupe s `sala=3d` a prepnutí na Hlasovania ostane 3D sála otvorená aj po zmiznutí vstupného parametra z URL; dôkaz je `desktop-3d-entry-vote.png`. Nasadené verejné správanie ešte nie je týmto lokálnym overením potvrdené.
+
+Poďakovanie a rozmery platobného panela boli vizuálne overené pomocou fixture; skutočná platba ani nová Stripe session neboli vytvorené. Verejný stav `/api/podpora` bol iba prečítaný a uvádzal zapnutý live režim. Ťahanie na fyzickom telefóne v Safari zatiaľ nebolo odskúšané.

@@ -1,6 +1,6 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowUpRight, Box, Check, ChevronLeft, ChevronRight, Link2, Pause, Play, Search, Share2, UserRound, X } from "lucide-react";
 import VoteMiniature from "@/components/vote-miniature";
@@ -36,6 +36,9 @@ const percent = (v: number) => `${(Math.round(v * 10) / 10).toLocaleString("sk-S
 const plural = (n: number, one: string, few: string, many: string) => n === 1 ? one : n >= 2 && n <= 4 ? few : many;
 const votesCount = (v: Pick<VoteSummary, "za" | "proti" | "zdrzalo" | "nehlasovalo" | "nepritomni">): Record<Mark, number> => ({ Z: v.za, P: v.proti, "?": v.zdrzalo, N: v.nehlasovalo, "0": v.nepritomni });
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const subscribeEntry = () => () => {};
+const sceneEntry = () => new URLSearchParams(window.location.search).get('sala') === '3d';
+const serverEntry = () => false;
 
 let indexPromise: Promise<VoteIndex> | null = null, deputiesPromise: Promise<DeputiesData> | null = null;
 const getJson = <T,>(url: string) => fetch(url).then(r => r.ok ? r.json() as Promise<T> : Promise.reject(new Error(`${r.status}`)));
@@ -51,13 +54,16 @@ function ClubMark({ party, size = 18 }: { party: string | null; size?: number })
 
 export default function ParliamentPage({ vote, deputy, mode, onChange, onNavigate }: { vote: number | null; deputy: number | null; mode: string | null; onChange: (change: ParliamentChange) => void; onNavigate: (view: string) => void }) {
   const [index, setIndex] = useState<VoteIndex | null>(null), [data, setData] = useState<DeputiesData | null>(null), [failed, setFailed] = useState(false);
-  const [view3d, setView3d] = useState(false), [reduced, setReduced] = useState(false);
+  const [sceneOverride, setView3d] = useState<boolean|null>(null), [reduced, setReduced] = useState(false);
+  const entry3d = useSyncExternalStore(subscribeEntry, sceneEntry, serverEntry);
+  const view3d = sceneOverride ?? entry3d;
   const [query, setQuery] = useState(""), [kind, setKind] = useState<VoteKind | "vsetky">("vsetky"), [limit, setLimit] = useState(PAGE);
   const [highlight, setHighlight] = useState(false), [playing, setPlaying] = useState(false), [focusClub, setFocusClub] = useState<string | null>(null);
   const [card, setCard] = useState<{ preview: string; file: File; native: boolean } | null>(null), [message, setMessage] = useState("");
   const [deputyQuery, setDeputyQuery] = useState("");
   const stage = useRef<HTMLDivElement>(null), change = useRef(onChange);
-  useEffect(() => { change.current = onChange; });
+  // The entry hint is discarded by URL serialization; retain the chosen view before changing a vote or mode.
+  useEffect(() => { change.current = patch => { setView3d(view3d); onChange(patch); }; });
 
   useEffect(() => {
     let alive = true;

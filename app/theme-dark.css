@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 40 súborov (0189e8c81e) — needitovať ručne. Pravidiel: 1787, prefarbených: 1408. */
+/* Generované scripts/build-dark.mjs z 41 súborov (ff6ef700af) — needitovať ručne. Pravidiel: 1833, prefarbených: 1448. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -6120,6 +6120,15 @@ html[data-theme="dark"] .support-thanks p {
 html[data-theme="dark"] .support-thanks.is-failed svg {
     color: #e8a494
 }
+html[data-theme="dark"] .support-thanks-mark svg {
+    fill: #d1e7de
+}
+html[data-theme="dark"] .support-thanks-mark b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .support-thanks-mark b span {
+    color: #e39885
+}
 html[data-theme="dark"] .tax-head h2 {
     color: #d1e7de
 }
@@ -6336,6 +6345,152 @@ html[data-theme="dark"] .trend-chart-hint {
 html[data-theme="dark"] .trend-endpoint-logo {
     fill: #fff
 }
+html[data-theme="dark"] .chamber-preview {
+    background: #142c25;
+    color: #fffefa;
+    text-decoration: none
+}
+html[data-theme="dark"] .chamber-preview-action {
+    background: linear-gradient(transparent,#10231aee)
+}
+html[data-theme="dark"] .chamber-preview-action small {
+    color: #edf1e8
+}
+html[data-theme="dark"] .chamber-preview-caption {
+    color: #d6e1d5;
+    background: #142c25
+}
+html[data-theme="dark"] .chamber-preview:focus-visible {
+    outline: 3px solid #77a998;
+    outline-offset: 4px
+}
+html[data-theme="dark"] .trend-events {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .trend-events-heading {
+    color: #d1e7de
+}
+html[data-theme="dark"] .trend-events-heading>span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .trend-events-scale>div {
+    background: #2c3028
+}
+html[data-theme="dark"] .trend-events-scale i {
+    background: #4f6057
+}
+html[data-theme="dark"] .trend-events-scale i[data-selected=true] {
+    background: var(--mag-ink);
+    outline: 3px solid #404437
+}
+html[data-theme="dark"] .trend-events-scale span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .trend-events-picks button {
+    border: 1px solid #41463d;
+    background: #262c29;
+    color: #d1e7de
+}
+html[data-theme="dark"] .trend-events-picks time {
+    color: #bfcec6
+}
+html[data-theme="dark"] .trend-events-picks button[aria-pressed=true] {
+    background: #2a2f20;
+    border-color: #97aba3
+}
+html[data-theme="dark"] .trend-event-detail p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .trend-event-detail a {
+    color: #d1e7de
+}
+html[data-theme="dark"] .trend-events-note,html[data-theme="dark"] .trend-events-empty {
+    color: #bfcec6
+}
+html[data-theme="dark"] .coalition-cards-help {
+    color: #bfcec6
+}
+html[data-theme="dark"] .coalition-card-zone {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .coalition-card-zone[data-over=true] {
+    background: #2a2f20
+}
+html[data-theme="dark"] .coalition-card-zone output span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .coalition-card {
+    border: 1px solid #41463d;
+    background: #262c29
+}
+html[data-theme="dark"] .coalition-card:before {
+    background: var(--member-color)
+}
+html[data-theme="dark"] .coalition-card-choice {
+    border: 0;
+    background: none;
+    color: #d1e7de
+}
+html[data-theme="dark"] .coalition-card-choice small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .coalition-card-logo {
+    background: #fffefa
+}
+html[data-theme="dark"] .coalition-card-grip {
+    border: 0;
+    border-left: 1px solid #41463d;
+    background: #1b1e22;
+    color: #bfcec6
+}
+html[data-theme="dark"] .coalition-card-choice[aria-pressed=true] {
+    background: #2a2f20
+}
+html[data-theme="dark"] .coalition-card-empty {
+    color: #bfcec6
+}
+html[data-theme="dark"] .coalition-drag-ghost {
+    background: #262c29;
+    color: #cde7dc;
+    box-shadow: 0 8px 24px #10231a30
+}
+html[data-theme="dark"] .spending-hundred {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .spending-hundred header>p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .spending-hundred-scale {
+    color: #bfcec6
+}
+html[data-theme="dark"] .spending-hundred-detail strong {
+    color: #d1e7de
+}
+html[data-theme="dark"] .spending-hundred-detail p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .spending-hundred-total {
+    color: #bfcec6
+}
+html[data-theme="dark"] .spending-hundred-areas button {
+    border: 0;
+    border-bottom: 1px solid #41463d;
+    background: transparent;
+    color: #d1e7de
+}
+html[data-theme="dark"] .spending-hundred-areas button[aria-pressed=true] {
+    background: #2a2f20
+}
+html[data-theme="dark"] .spending-hundred footer a {
+    color: #d1e7de
+}
+html[data-theme="dark"] .spending-hundred footer p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .coalition-cards button:focus-visible,html[data-theme="dark"] .trend-events button:focus-visible,html[data-theme="dark"] .spending-hundred button:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 2px
+}
 html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#e3e8df"],html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#E3E8DF"] {
     stroke: #40453d
 }
@@ -6356,6 +6511,9 @@ html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-na
 }
 html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [fill="#fcfdf9"],html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [fill="#FCFDF9"] {
     fill: #171c1a
+}
+html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#9c7a2b"],html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#9C7A2B"] {
+    stroke: #f1d490
 }
 html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#fcfdf9"],html[data-theme="dark"] :is([data-slot="chart"],.resp-timeline,.resp-timeline-names) [stroke="#FCFDF9"] {
     stroke: #333735

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useId, useSyncExternalStore } from "react";
 import { ArrowDown, ArrowUpRight, CalendarDays } from "lucide-react";
-import EditionHemicycle from "@/components/edition-hemicycle";
+import ChamberPreview from "@/components/chamber-preview";
 import outline from "@/lib/slovakia-outline.json";
 import PoliticalNewsFeed from "@/components/news-room";
 import ParliamentNow from "@/components/parliament-now";
@@ -88,7 +88,7 @@ export default function NationalIntro({ onNavigate, onYear, parliament, onParlia
       <MinuteLaunch onYear={onYear} onNavigate={onNavigate}/>
       <p className="edition-kicker"><span>Vydanie {edition.month} {edition.year}</span><span>Model Mandát · aktualizované {date(edition.updated)} · {edition.agencies.length} agentúr · scenár, nie predpoveď</span></p>
       <h1 id="national-title">{headline}</h1>
-      <EditionHemicycle onOpen={()=>onNavigate("parliament")}/>
+      <ChamberPreview/>
       <a className="model-origin-jump" href="#model-mandat">Model Mandát = vážený priemer {edition.agencies.length} agentúr <ArrowDown size={13}/></a>
       <p className="edition-lead">{lead}</p>
       <dl className="edition-kpis" aria-label="Kreslá podľa blokov v scenári Modelu Mandát">

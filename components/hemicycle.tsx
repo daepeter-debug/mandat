@@ -8,8 +8,8 @@ const logoAssets = import.meta.glob<string>("/public/logos/*.svg", { eager: true
 const percent = (value: number) => value.toLocaleString("sk-SK", { maximumFractionDigits: 2, minimumFractionDigits: 1 });
 
 /** The same ordered rows drive both the coloured seats and their textual equivalent. */
-export default function Hemicycle({ label, seats, total = 150, caption }: {
-  label: string; seats: ScenarioRow[]; total?: number; caption: ReactNode;
+export default function Hemicycle({ label, seats, total = 150, caption, highlight }: {
+  label: string; seats: ScenarioRow[]; total?: number; caption: ReactNode; highlight?: string[];
 }) {
   const titleId = useId();
   const ordered = [...seats].sort((a, b) => b.seats - a.seats || b.share - a.share || a.name.localeCompare(b.name, "sk"));
@@ -23,7 +23,7 @@ export default function Hemicycle({ label, seats, total = 150, caption }: {
     <div className="hemicycle-drawing">
       <svg viewBox="-1.08 -1.08 2.16 1.2" role="img" aria-label={summary}>
         {points.map((point, index) => <circle key={index} className="hemicycle-seat" cx={point.x} cy={point.y} r={0.032}
-          fill={colours[index]?.color ?? "var(--border)"} style={{ "--seat-delay": `${index * 3}ms` } as CSSProperties}/>) }
+          fill={colours[index]?.color ?? "var(--border)"} opacity={highlight?.length&&!highlight.includes(colours[index]?.id)?0.18:1} style={{ "--seat-delay": `${index * 3}ms` } as CSSProperties}/>) }
       </svg>
       <div className="hemicycle-total" aria-hidden="true"><strong>{assigned}</strong><span>kresiel</span></div>
     </div>

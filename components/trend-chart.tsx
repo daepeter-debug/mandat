@@ -18,6 +18,7 @@ export const timestamp = (value: string) => Date.parse(`${value}T12:00:00Z`);
 const monthTick = (value: number) => new Date(value).toLocaleDateString("sk-SK", { month: "short" });
 
 export type TrendChartProps = {
+  eventDate?: string | null;
   uid: string;
   data: Record<string, unknown>[];
   ranked: Party[];
@@ -38,7 +39,7 @@ export type TrendChartProps = {
   onPick: (date: string) => void;
 };
 
-export default function TrendChart({ uid, data, ranked, chartParties, focus, focused, points, point, current, monthTicks, monthlyPoints, yMin, yMax, showBand, showMonths, onMove, onLeave, onPick }: TrendChartProps) {
+export default function TrendChart({ eventDate, uid, data, ranked, chartParties, focus, focused, points, point, current, monthTicks, monthlyPoints, yMin, yMax, showBand, showMonths, onMove, onLeave, onPick }: TrendChartProps) {
   const host=useRef<HTMLDivElement>(null),[size,setSize]=useState({width:900,height:360});
   useEffect(()=>{if(!host.current)return;const observer=new ResizeObserver(entries=>setSize({width:entries[0].contentRect.width,height:entries[0].contentRect.height}));observer.observe(host.current);return()=>observer.disconnect();},[]);
   const latest=points.at(-1)!;
@@ -59,6 +60,7 @@ export default function TrendChart({ uid, data, ranked, chartParties, focus, foc
       <Line type="monotone" dataKey={focus} stroke={focused.color} strokeWidth={3} dot={false} activeDot={false} connectNulls={false} isAnimationActive={false}/>
       {showMonths && monthlyPoints.map((p, i) => p.values[focus] && <ReferenceDot key={p.date} className="studio-month-dot" x={timestamp(p.date)} y={p.values[focus].value} r={3.5} fill="#fcfdf9" stroke={focused.color} strokeWidth={2} label={i<monthlyPoints.length-1&&(!compact||i%3===0)?{ position: "top", value: `${fmt(p.values[focus].value)} %`, fontSize: 11, fontWeight: 600, fill: "#20392f", offset: 12 }:false}/>)}
       <ReferenceLine x={timestamp(point.date)} stroke={focused.color} strokeOpacity={.38} strokeDasharray="3 4"/>
+      {eventDate&&<ReferenceLine x={timestamp(eventDate)} stroke="#9c7a2b" strokeDasharray="2 4" label={{value:`Správa ${new Date(timestamp(eventDate)).toLocaleDateString('sk-SK',{day:'numeric',month:'numeric'})}`,position:'insideTopLeft',fontSize:10,fill:'#59695f'}}/>}
       {current && <ReferenceDot x={timestamp(point.date)} y={current.value} r={5} fill={focused.color} stroke="#fcfdf9" strokeWidth={3}/>}
       {chartParties.filter(p=>p.id!==focus&&point.values[p.id]).map(p=><ReferenceDot key={`cursor-${p.id}`} x={timestamp(point.date)} y={point.values[p.id].value} r={3} fill={p.color} stroke="#fcfdf9" strokeWidth={1.5}/>)}
       {endpoints.map(p=><ReferenceDot key={`end-${p.id}`} x={timestamp(latest.date)} y={p.value} r={2.5} shape={({cx,cy}:{cx?:number;cy?:number})=>{if(cx===undefined||cy===undefined)return <g/>;const y=labels[p.id];return <g className="trend-endpoint" data-party={p.id} aria-label={`${p.short}: ${fmt(p.value)} percent k ${latest.date}`}><path d={`M${cx} ${cy} H${cx+6} L${cx+18} ${y} H${cx+22}`} fill="none" stroke={p.color} strokeOpacity=".65"/><circle cx={cx} cy={cy} r={3} fill={p.color}/><rect x={cx+23} y={y-9} width={18} height={18} rx={3} className="trend-endpoint-logo"/>{partyLogos[p.id]&&<image href={partyLogos[p.id].src} x={cx+25} y={y-7} width={14} height={14}/>}<text x={cx+46} y={y+4} className="trend-endpoint-name">{compact?(shortLabels[p.id]??p.short):p.short}</text><text x={cx+(compact?(many?116:46):164)} y={y+(compact&&!many?18:4)} textAnchor={compact&&!many?"start":"end"} className="trend-endpoint-value">{fmt(p.value)}{compact&&!many?" %":""}</text></g>}}/>)}

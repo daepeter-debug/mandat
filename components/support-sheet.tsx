@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, CircleCheck, CreditCard, Heart, Lock, Repeat2, TriangleAlert } from "lucide-react";
+import { ArrowLeft, CreditCard, Heart, Lock, Repeat2, TriangleAlert } from "lucide-react";
+import SupportThanksMark from '@/components/support-thanks-mark';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
 import { formatEuros, parseSupportAmount, SUPPORT_AMOUNTS, SUPPORT_DEFAULT, SUPPORT_ENDPOINT, SUPPORT_MAX, SUPPORT_MIN, type SupportConfig, type SupportStatus } from "@/lib/support";
@@ -165,7 +166,7 @@ export default function SupportSheet({ config, open, returnedSession, onOpenChan
           ? <p className="support-loading" role="status"><Spinner/>Overujeme platbu u Stripe…</p>
           : view.result?.state === "paid"
             ? <div className="support-thanks" role="status">
-                <CircleCheck size={40} aria-hidden="true"/>
+                <SupportThanksMark/>
                 <h3>Ďakujeme!</h3>
                 <p>{test
                   ? `Testovacia platba${view.result.amount ? ` ${formatEuros(view.result.amount)}` : ""} prebehla. Je to len skúška, nič sa nestrhlo.`
