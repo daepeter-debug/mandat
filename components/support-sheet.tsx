@@ -143,7 +143,7 @@ export default function SupportSheet({ config, open, returnedSession, onOpenChan
             <Lock size={16} aria-hidden="true"/>{cents !== null ? `Pokračovať k platbe · ${formatEuros(cents)}` : "Pokračovať k platbe"}
           </button>
           <ul className="support-facts">
-            <li><CreditCard size={16} aria-hidden="true"/>Apple Pay, Google Pay alebo karta Visa či Mastercard, podľa vášho zariadenia.</li>
+            <li><CreditCard size={16} aria-hidden="true"/>Apple Pay, Google Pay, Revolut Pay alebo karta Visa či Mastercard, podľa vášho zariadenia.</li>
             <li><Repeat2 size={16} aria-hidden="true"/>Jednorazovo a bez registrácie. Nejde o predplatné.</li>
             <li><Lock size={16} aria-hidden="true"/>Platbu bezpečne spracuje Stripe. Údaje o vašej karte Mandát nevidí.</li>
           </ul>

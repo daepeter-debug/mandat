@@ -54,15 +54,21 @@ async function stripe<T>(secret: string, method: "GET" | "POST", path: string, p
   return json;
 }
 
+/*
+  Ponúkané metódy: karta (Apple Pay a Google Pay sú v Checkout peňaženky nad kartou, ukážu sa podľa zariadenia
+  a registrovanej domény) a Revolut Pay. Ostatné metódy z nastavení Stripe (Klarna, Link, bankové prevody…) sa
+  neponúknu ani omylom. Ak Revolut Pay v účte Stripe nie je zapnutý, platba sa pripraví len s kartou.
+*/
+export const SUPPORT_METHODS = ["card", "revolut_pay"] as const;
+
 /** Parametre Checkout Session pre vložený (embedded) platobný formulár. Samostatne kvôli kontrolám. */
-export function supportSessionParams(cents: number, origin: string, now = Date.now()) {
+export function supportSessionParams(cents: number, origin: string, now = Date.now(), methods: readonly string[] = SUPPORT_METHODS) {
   return {
     ui_mode: "embedded",
     mode: "payment",
-    // Len karta: Apple Pay a Google Pay sú v Checkout peňaženky nad kartou a ukážu sa podľa zariadenia (a registrovanej domény).
-    // Ostatné metódy z nastavení Stripe (Klarna, Revolut Pay, Link, bankové prevody…) sa tak neponúknu ani omylom.
-    payment_method_types: ["card"],
-    // Karta, Apple Pay a Google Pay dokončia platbu bez presmerovania; return_url je len poistka pre 3D Secure s presmerovaním.
+    payment_method_types: [...methods],
+    // Karta, Apple Pay a Google Pay dokončia platbu bez presmerovania; Revolut Pay na mobile odbočí do aplikácie Revolut
+    // a vráti sa na return_url, kde stav platby overí server (SupportHost → ?podpora=hotovo).
     redirect_on_completion: "if_required",
     return_url: `${origin}/?podpora=hotovo&session_id={CHECKOUT_SESSION_ID}`,
     locale: "sk",
@@ -83,7 +89,15 @@ export function supportSessionParams(cents: number, origin: string, now = Date.n
 }
 
 export async function createSupportSession(secret: string, cents: number, origin: string) {
-  const session = await stripe<{ id: string; client_secret: string }>(secret, "POST", "/checkout/sessions", supportSessionParams(cents, origin));
+  const create = (methods: readonly string[]) => stripe<{ id: string; client_secret: string }>(secret, "POST", "/checkout/sessions", supportSessionParams(cents, origin, Date.now(), methods));
+  let session;
+  try { session = await create(SUPPORT_METHODS); }
+  catch (e) {
+    // Neplatná požiadavka (napr. Revolut Pay nie je v účte zapnutý): zopakuje sa len s kartou, chyba ostane v logu.
+    if (!String(e).includes("Stripe 400")) throw e;
+    console.error(JSON.stringify({ podpora: "metody", error: String(e), fallback: "card" }));
+    session = await create(["card"]);
+  }
   return { id: session.id, clientSecret: session.client_secret };
 }
 
