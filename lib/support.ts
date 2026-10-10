@@ -4,7 +4,7 @@
   prehliadaču sa neverí. Postup nastavenia Stripe a prechodu na ostré platby: docs/podpora-stripe.md.
 */
 
-export const SUPPORT_AMOUNTS = [3, 5, 10, 20] as const; // eurá, ponuka v okne
+export const SUPPORT_AMOUNTS = [2, 5, 10] as const; // eurá, ponuka v okne (Peter 10. 10. 2026), inak vlastná suma
 export const SUPPORT_DEFAULT = 5;
 export const SUPPORT_MIN = 2;    // € · pod 2 € by väčšinu príspevku zjedol poplatok (EÚ karta ~1,5 % + 0,25 €)
 export const SUPPORT_MAX = 500;  // € · vyššie sumy len po dohode, nie anonymne cez web

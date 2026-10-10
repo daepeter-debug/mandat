@@ -1,6 +1,6 @@
 ## 10. 10. 2026 · Podpora Mandátu cez Stripe, testovacia príprava (Claude)
 
-- **Čo pribudlo:** dobrovoľný jednorazový príspevok priamo na webe cez Stripe Embedded Checkout (Apple Pay, Google Pay, karta). Sumy 3, 5, 10, 20 € alebo vlastná od 2 € do 500 €. Od 10. 10. popoludní aj Revolut Pay; iné metódy zo Stripe (Klarna, Link, prevody) sa neponúkajú.
+- **Čo pribudlo:** dobrovoľný jednorazový príspevok priamo na webe cez Stripe Embedded Checkout (Apple Pay, Google Pay, karta). Sumy 2, 5, 10 € (od 10. 10. popoludní, predtým 3, 5, 10, 20 €) alebo vlastná od 2 € do 500 €. Od 10. 10. popoludní aj Revolut Pay; iné metódy zo Stripe (Klarna, Link, prevody) sa neponúkajú.
 - **Kde:**
   - počítač: pilulka „Podporiť“ v hlavičke;
   - mobil: karta v paneli Viac;

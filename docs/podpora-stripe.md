@@ -4,7 +4,7 @@ Dobrovoľný jednorazový príspevok priamo na webe: Apple Pay, Google Pay alebo
 
 ## Ako to funguje
 
-1. **Výber sumy.** Návštevník klikne na „Podporiť Mandát“ a otvorí sa bočný panel (na mobile cez celú obrazovku). Vyberie 3, 5, 10, 20 € alebo vlastnú sumu od 2 € do 500 €.
+1. **Výber sumy.** Návštevník klikne na „Podporiť Mandát“ a otvorí sa bočný panel (na mobile cez celú obrazovku). Vyberie 2, 5, 10 € alebo vlastnú sumu od 2 € do 500 €.
 2. **Vytvorenie platby.** Prehliadač pošle sumu na `POST /api/podpora`. Server ju overí znova a vytvorí Stripe Checkout Session (`ui_mode=embedded`) na overenú sumu.
 3. **Platobný formulár.** Do panela sa vloží formulár Stripe (Embedded Checkout). Stripe.js sa načíta z `js.stripe.com` až v tejto chvíli, nie pri návšteve webu. Apple Pay a Google Pay ukáže Stripe podľa zariadenia a prehliadača.
 4. **Výsledok.** Po dokončení sa prehliadač opýta `GET /api/podpora?session=…` a server zistí stav priamo zo Stripe. Poďakovanie sa ukáže len pri stave „zaplatené“; samotný návrat na web nič nedokazuje.

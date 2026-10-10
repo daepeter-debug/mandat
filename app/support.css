@@ -7,7 +7,7 @@
 .support-body{display:grid;gap:18px;align-content:start}
 .support-copy{margin:0;font-size:15px;line-height:1.6;color:var(--foreground)}
 
-.support-amounts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0;padding:0;border:0;min-width:0}
+.support-amounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;padding:0;border:0;min-width:0}
 .support-amounts legend{margin-bottom:8px;padding:0;font-size:13px;font-weight:650;color:var(--text-2)}
 .support-amounts button{min-height:52px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--mag-ink);font:inherit;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums;cursor:pointer;transition:border-color .15s,background .15s}
 .support-amounts button:hover{border-color:#a9bba0}
