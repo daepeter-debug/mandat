@@ -99,7 +99,7 @@ export async function createSupportSession(secret: string, cents: number, origin
   // Od najúplnejšej požiadavky po najjednoduchšiu: ak Stripe niečo odmietne (400, napr. Revolut Pay nie je v účte
   // zapnutý alebo verzia API nepozná skrytie Linku), platba sa pripraví jednoduchšie a dôvod ostane v logu.
   const attempts: [readonly string[], boolean, string][] = [[SUPPORT_METHODS, true, ""], [SUPPORT_METHODS, false, "s-linkom"], [["card"], false, "len-karta"]];
-  for (const [i, [methods, hideLink, label]] of attempts.entries()) {
+  for (const [i, [methods, hideLink]] of attempts.entries()) {
     try {
       const session = await create(methods, hideLink);
       return { id: session.id, clientSecret: session.client_secret };
