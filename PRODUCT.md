@@ -27,6 +27,8 @@ Výsledok nemení zdrojové politické údaje, výpočty modelu, GLB scény, eko
 
 ## Použitie a overenie
 
+10. októbra používateľ schválil dve ďalšie vizualizácie v úvode: vplyv najnovšieho merania na model a porovnanie agentúr. Prvý panel porovnáva rovnaký dátum výpočtu s najnovšími známymi publikovanými vstupmi a bez nich (všetky publikované v rovnaký posledný deň spolu); staršie meranie rovnakej agentúry nastúpi len v pôvodnom 60-dňovom okne. Nie je to rekonštrukcia historického publikovaného modelu. Posuny podpory aj kresiel vychádzajú z pôvodných funkcií, nulové zmeny sa priznávajú. Druhý panel zobrazuje presné zverejnené hodnoty aktuálnych vstupov, dátumy zberu, zdroje a model; prispôsobená os má viditeľné hranice. Chýbajúce hodnoty nie sú nuly, rozdiel medzi agentúrami nie je známka kvality ani pásmo chyby.
+
 Mobil má prednosť: šírky 375 a 402 px, žiadne vodorovné pretekanie, dotykové ciele aspoň 40 px a podpora obmedzeného pohybu. SVG, CSS a canvas dopĺňajú existujúce komponenty bez ďalšej ťažkej knižnice; obsah mimo prvého pohľadu sa načítava lenivo. Zachovávajú sa klávesnica, čítačky, URL stav aj existujúce ovládanie spodnej lišty.
 
 Kontroly zahŕňajú TypeScript, ESLint, všetky dátové overovacie skripty, konzistenciu tmavého režimu, build a prehliadačové snímky v oboch režimoch pri troch šírkach. Overenie v emulovanom Chrome nenahrádza skúšku na fyzickom iPhone v Safari; tá zatiaľ neprebehla.

@@ -9,6 +9,7 @@ import Hemicycle from "@/components/hemicycle";
 import PollAggregator from "@/components/poll-aggregator";
 import NationalIntro from "@/components/national-intro";
 import ModelOrigins from "@/components/model-origins";
+import ModelLens from "@/components/model-lens";
 import OverviewDirectory from "@/components/overview-directory";
 import SectionArt from "@/components/section-art";
 
@@ -27,6 +28,7 @@ export function MandatMagazine({poll,onAgency,onNavigate,onYear,parliament,onPar
   return <div className="magazine">
     <NationalIntro onPlayDay={onPlayDay} onNavigate={onNavigate} onYear={onYear} parliament={parliament} onParliament={onParliament} parliamentPartners={parliamentPartners} onParliamentPartners={onParliamentPartners} onOpenNews={onOpenNews} onOpenNewsDay={onOpenNewsDay}/>
     <ModelOrigins onMethod={()=>onNavigate("method")}/>
+    <ModelLens/>
     <div className="mag-edition"><span>Slovensko · volebné prieskumy</span><span>{archive.length} meraní v archíve</span><button onClick={()=>onNavigate("method")}>Ako pracujeme so zdrojmi <ArrowUpRight size={16}/></button></div>
     <PollAggregator onMethod={()=>onNavigate("method")}/>
     <section className="mag-pulse" aria-labelledby="pulse-title"><div className="mag-section-head"><div><h2 id="pulse-title">Posledné meranie každej agentúry</h2><p>Agregát je hlavný pohľad. Tu si môžete skontrolovať každú agentúru osobitne.</p></div><AgencyPicker value={poll.agency} onChange={onAgency}/></div><div className="mag-poll-meta"><b>{poll.agency} · {poll.month.toLowerCase()} {poll.end.slice(0,4)}</b><span>Zber {date(poll.start)} – {date(poll.end)} · n = {poll.sample?.toLocaleString("sk-SK")??"neuvedené"}</span></div>

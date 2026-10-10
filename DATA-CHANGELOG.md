@@ -1,3 +1,7 @@
+## 10. 10. 2026 · Vplyv merania a porovnanie agentúr (Codex)
+
+Úvod má dve dátové vizualizácie: kontrolované porovnanie modelu s najnovším publikovaným vstupom a bez neho pri rovnakom dátume, vrátane podpory a scenára kresiel; a bodkové porovnanie posledných hodnôt agentúr pre zvolenú stranu s dátumami, metódou a pôvodným zdrojom. Nejde o historickú publikovanú verziu, hodnotenie kvality agentúr ani predpoveď. Nový test overuje návrat k starším meraniam, 60-dňové okno, zhodné dátumy publikovania, chýbajúce hodnoty a konzerváciu 150 kresiel. Zdrojové dáta a jadro modelu sa nemenia.
+
 ## 10. 10. 2026 · Čitateľnejšie trendy a časové osi (Codex)
 
 Trend označuje posledné hodnoty logami a popiskami, spoločný ukazovateľ aktualizuje číselný prehľad a dotyk vyberá dátum. Rozmiestnenie popiskov nemení krivky. V detaile účasti vo vláde je časová os podľa doterajších podkladov, porovnávač má ikony tém, logá a správnu šírku pri dvoch stranách. Detaily vybraných správ odkazujú na staršie zhrnutia k rovnakým explicitným témam bez vyvodzovania príčinných súvislostí. Politické údaje a výpočty bez zmien.

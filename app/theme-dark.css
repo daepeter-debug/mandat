@@ -1,4 +1,4 @@
-/* Generované scripts/build-dark.mjs z 37 súborov (b1bdeac9ae) — needitovať ručne. Pravidiel: 1667, prefarbených: 1301. */
+/* Generované scripts/build-dark.mjs z 38 súborov (4b3e62e8a4) — needitovať ručne. Pravidiel: 1714, prefarbených: 1347. */
 html[data-theme="dark"] {
     color-scheme: dark;
     --background: #1c221f;
@@ -3722,6 +3722,171 @@ html[data-theme="dark"] .mobile-collapse {
 }
 html[data-theme="dark"] .mobile-collapse>.fold-toggle {
     color: #d1e7de
+}
+html[data-theme="dark"] .model-lens {
+    color: #d1e7de;
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .model-lens header h2 span {
+    color: #baead9
+}
+html[data-theme="dark"] .model-lens header p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-impact header a {
+    color: #baead9
+}
+html[data-theme="dark"] .impact-switch {
+    background: #282a23
+}
+html[data-theme="dark"] .impact-switch button {
+    border: 0;
+    color: #bfcec6;
+    background: transparent
+}
+html[data-theme="dark"] .impact-switch button[aria-pressed=true] {
+    color: #d1e7de;
+    background: #262c29
+}
+html[data-theme="dark"] .impact-arc {
+    color: #baead9
+}
+html[data-theme="dark"] .impact-parliament p {
+    color: #bfcec6
+}
+html[data-theme="dark"] .impact-parliament span {
+    color: #bfcec6
+}
+html[data-theme="dark"] .impact-change-head {
+    color: #bfcec6;
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .impact-delta-scale {
+    color: #bfcec6
+}
+html[data-theme="dark"] .impact-changes li {
+    border-bottom: 1px solid #3e4139
+}
+html[data-theme="dark"] .model-lens-logo {
+    background: #fff
+}
+html[data-theme="dark"] .impact-party small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .impact-delta-track {
+    stroke: #454a41;
+    fill: none
+}
+html[data-theme="dark"] .impact-delta small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .lens-expand {
+    color: #baead9;
+    background: none;
+    border: 0
+}
+html[data-theme="dark"] .lens-method {
+    color: #bfcec6
+}
+html[data-theme="dark"] .lens-method summary {
+    color: #baead9
+}
+html[data-theme="dark"] .lens-method a {
+    color: #baead9
+}
+html[data-theme="dark"] .agreement-picker {
+    border-bottom: 1px solid #41463d
+}
+html[data-theme="dark"] .agreement-picker select {
+    background: transparent;
+    color: #d1e7de;
+    border: 0
+}
+html[data-theme="dark"] .agreement-key {
+    color: #bfcec6
+}
+html[data-theme="dark"] .agreement-key svg {
+    stroke: #baead9;
+    fill: #baead9
+}
+html[data-theme="dark"] .agreement-key span:first-child circle {
+    fill: #262c29
+}
+html[data-theme="dark"] .agreement-axis {
+    color: #bfcec6
+}
+html[data-theme="dark"] .agreement-row {
+    border: 0;
+    color: #d1e7de;
+    background: none
+}
+html[data-theme="dark"] .agreement-row[aria-pressed=true] {
+    background: #2a2f20
+}
+html[data-theme="dark"] .agreement-agency small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .agreement-row>strong small {
+    color: #bfcec6
+}
+html[data-theme="dark"] .agreement-track {
+    fill: none;
+    stroke: #454a41
+}
+html[data-theme="dark"] .agreement-grid {
+    stroke: #42453d;
+    fill: none
+}
+html[data-theme="dark"] .agreement-model-line {
+    stroke: #baead9;
+    fill: none
+}
+html[data-theme="dark"] .agreement-dot {
+    border: 2px solid #81ae9e;
+    background: #262c29
+}
+html[data-theme="dark"] .agreement-row[aria-pressed=true] .agreement-dot {
+    background: #245c48
+}
+html[data-theme="dark"] .agreement-model {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .agreement-diamond {
+    color: #baead9;
+    background: currentColor
+}
+html[data-theme="dark"] .agreement-detail {
+    border-top: 1px solid #41463d
+}
+html[data-theme="dark"] .agreement-detail>div {
+    color: #bfcec6
+}
+html[data-theme="dark"] .agreement-detail b {
+    color: #d1e7de
+}
+html[data-theme="dark"] .agreement-detail>a {
+    color: #baead9
+}
+html[data-theme="dark"] .agreement-note {
+    color: #bfcec6
+}
+html[data-theme="dark"] .model-lens button:focus-visible,html[data-theme="dark"] .model-lens a:focus-visible,html[data-theme="dark"] .model-lens select:focus-visible,html[data-theme="dark"] .model-lens summary:focus-visible {
+    outline: 2px solid #77a998;
+    outline-offset: 3px
+}
+@media (hover:hover) {
+    html[data-theme="dark"] .agreement-row:hover {
+        background: #282a23
+    }
+    html[data-theme="dark"] .model-lens a:hover,html[data-theme="dark"] .lens-expand:hover {
+        color: #d1e7de;
+        text-decoration: underline
+    }
+}
+@media (max-width:760px) {
+    html[data-theme="dark"] .agency-agreement {
+        border-top: 1px solid #41463d
+    }
 }
 html[data-theme="dark"] .model-origins {
     border-top: 1px solid #41463d;
